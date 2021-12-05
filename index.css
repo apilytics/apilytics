@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #00a3ff;
+  --color-secondary: #6900ff;
+}
+
+@layer base {
+  * {
+    @apply break-words;
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .outline-secondary {
+    border: 0.1rem solid var(--color-secondary);
+  }
+
+  a {
+    @apply underline;
+    color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  ol,
+  ul {
+    @apply list-inside;
+    @apply list-disc;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold;
+    @apply my-2;
+  }
+
+  p {
+    @apply my-2;
+  }
+}
