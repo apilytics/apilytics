@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import type { NextPage } from 'next';
-import { Layout } from 'components';
-import { FormEvent, useState } from 'react';
+import type { FormEvent } from 'react';
+
+import { Layout } from 'src/components';
 
 const Home: NextPage = () => {
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [_emailError, setEmailError] = useState('');
+  const [_loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     const unexpectedEmailError = 'Unexpected error.';
@@ -44,7 +46,7 @@ const Home: NextPage = () => {
           type="email"
           name="email"
           value={email}
-          onChange={({ target }) => setEmail(target.value)}
+          onChange={({ target }): void => setEmail(target.value)}
           placeholder="Your email"
           required
           autoFocus

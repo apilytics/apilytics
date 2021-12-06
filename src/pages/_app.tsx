@@ -1,9 +1,10 @@
-import type { AppProps } from 'next/app';
 import 'index.css';
 import '@fontsource/ubuntu';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
-}
+import type { AppProps } from 'next/app';
 
-export default MyApp;
+const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+  return <Component {...pageProps} />;
+};
+
+export default App;
