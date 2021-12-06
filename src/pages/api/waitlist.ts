@@ -1,47 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { AWS_SES } from 'ses';
-import { encrypt } from 'encryption';
-
-const getEmailBody = (email: string) => `
-Thanks for joining the waitlist for Apilytics!
-
-Unsubscribe: https://apilytics.io/unsubscribe/${encrypt(email)}
-`;
-
-const sendWelcomeEmail = async (recipientEmail: string) => {
-  const params = {
-    Source: process.env.EMAIL_ADDRESS || '',
-    Destination: {
-      ToAddresses: [recipientEmail],
-    },
-    Message: {
-      Body: {
-        Text: {
-          Charset: 'UTF-8',
-          Data: getEmailBody(recipientEmail),
-        },
-      },
-      Subject: {
-        Charset: 'UTF-8',
-        Data: 'Welcome to Apilytics!',
-      },
-    },
-  };
-
-  if (process.env.NODE_ENV === 'production') {
-    try {
-      await AWS_SES.sendEmail(params).promise();
-    } catch (e) {
-      console.error(e);
-    }
-  } else {
-    console.log(params.Message.Subject);
-    console.log(params.Message.Body);
-  }
-};
-
-const generateReferralCode = (): string => Math.random().toString(36).substr(2, 5);
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   if (req.method !== 'POST') {
@@ -49,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     return;
   }
 
-  const { email, usedReferralCode } = req.body;
+  const { email } = req.body;
 
   if (!email) {
     res.status(400).json({ message: 'Missing email.' });
@@ -78,7 +36,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     throw e;
   }
 
-  sendWelcomeEmail(email);
   res.status(201);
 };
 
