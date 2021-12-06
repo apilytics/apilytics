@@ -3,7 +3,7 @@ version: "3.7"
 services:
   apilytics-db:
     container_name: apilytics-db
-    image: postgres:12.4-alpine@sha256:4c493832e4865189e3cab86281a1706a074ea6796b525a7f191b3f48546c25a8
+    image: postgres:12.8-alpine3.14@sha256:e88c1e9e117d09730cc9da8414f99ce36bda5d435eca273d6feca8919b2b445c
     ports:
       - "5434:5432"
     environment:
@@ -23,13 +23,13 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .:/home/user/app
-      - /home/user/app/node_modules
-      - /home/user/app/.next
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    env_file: .env
     depends_on:
       - apilytics-db
     restart: unless-stopped
-    env_file: ./.env.local
 
 volumes:
   apilytics_postgres_data:
