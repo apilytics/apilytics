@@ -1,9 +1,11 @@
-import { Layout } from 'components';
-import { GetStaticProps, NextPage } from 'next';
-import React from 'react';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import type { GetStaticProps, NextPage } from 'next';
+
+import { Layout } from 'src/components';
 
 interface Props {
   content: string;
