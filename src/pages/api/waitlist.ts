@@ -1,5 +1,13 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+import prisma from 'src/prismaClient';
+
+interface RequestBody {
+  email: string;
+}
+
+const EMAIL_REGEX = /^.+@.+$/;
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   if (req.method !== 'POST') {
@@ -7,19 +15,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     return;
   }
 
-  const { email } = req.body;
+  const { email }: RequestBody = req.body;
 
   if (!email) {
     res.status(400).json({ message: 'Missing email.' });
     return;
   }
 
-  if (!email.includes('@')) {
+  if (!email.match(EMAIL_REGEX)) {
     res.status(400).json({ message: 'Invalid email.' });
     return;
   }
-
-  const prisma = new PrismaClient();
 
   try {
     await prisma.user.create({ data: { email } });

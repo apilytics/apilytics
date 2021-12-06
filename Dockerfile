@@ -28,4 +28,5 @@ COPY . .
 
 CMD yarn lint \
     && yarn tsc \
+    && yarn test \
     && yarn build
