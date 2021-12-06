@@ -1,5 +1,5 @@
 This is a registry and privacy policy in accordance with the EU General Data
-Protection Regulation (GDPR). Last updated on 2021-12-05.
+Protection Regulation (GDPR). Last updated on 2021-12-06.
 
 ### 1. General
 
@@ -23,12 +23,12 @@ pre-defined purposes. Uses include:
 - Fulfillment of legal obligations and requirements
 - Ensuring the security of the service
 - Customer communication and answering contact requests
-- Improving the usability of the service, e.g showing personalized content
+- Improving the usability of the service, e.g. showing personalized content
 - Prevention of abuse and harassment
 
 ### 3. What personal information about me is collected and from what sources?
 
-We collect personal information about you directly from you or you device when
+We collect personal information about you directly from you or your device when
 you use our service or contact us.
 
 When you join the waitlist we collect your email address and your answers to the survey questions.
@@ -67,32 +67,22 @@ and email service ([Namecheap](https://www.namecheap.com)). In these situations,
 will take the necessary steps to protect your information, e.g. by signing
 appropriate data processing agreements with the processors.
 
-To get critical information about the behavior of our visitors, we use [Simple
-Analytics](https://simpleanalytics.com). This analytics software gives us
-insight about our visitors only in general, but not about individuals per say,
-as it does not track visitors and does not store any personal identifiable
-information. [Go to their
-documentation](https://docs.simpleanalytics.com/what-we-collect) to find out
-what Simple Analytics collects (and most importantly what they don't).
-
 We may also disclose your information to third parties or relevant authorities
 when required by law or by a competent authority, and to relevant third parties
 in connection of a planned share or business acquisition or sale.
 
 ### 6. Will my data be disclosed outside the EU?
 
-Your data wont generally be transferred or processed outside of the EU/EEA.
-However, there are situations where our partner or subcontractor used for
-providing the service, either resides or needs to transfer information outside
-of the EU/EEA. These partners or subcontractors may process personal data when
-providing, for example, IT- or hosting services. In these cases, sufficient
-data protection is ensured by using approved transfer mechanisms, such as
-signing EU Commission’s standard contractual clauses in connection with the
-transfer.
+Your data won't generally be transferred or processed outside the EU/EEA. However, there are
+situations where our partner or subcontractor used for providing the service, either resides or
+needs to transfer information outside the EU/EEA. These partners or subcontractors may process
+personal data when providing, for example, IT- or hosting services. In these cases, sufficient data
+protection is ensured by using approved transfer mechanisms, such as signing EU Commission’s
+standard contractual clauses in connection with the transfer.
 
 ### 7. How long will my personal information be kept?
 
-We will utomatically delete your data after two years of inactivity.
+We will automatically delete your data after two years of inactivity.
 
 ### 8. How is my information stored and protected?
 
