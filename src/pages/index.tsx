@@ -155,7 +155,7 @@ const Home: NextPage = () => {
             </ul>
           </div>
           <div className="mt-6 outline-primary rounded p-2">
-            <h3 className="text-xl text-primary">9,99$</h3>
+            <h3 className="text-xl text-primary">$9,99</h3>
           </div>
         </div>
         <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
@@ -170,7 +170,7 @@ const Home: NextPage = () => {
             </ul>
           </div>
           <div className="mt-6 outline-primary rounded p-2">
-            <h3 className="text-xl text-primary">19,99$</h3>
+            <h3 className="text-xl text-primary">$19,99</h3>
           </div>
         </div>
         <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
@@ -185,7 +185,7 @@ const Home: NextPage = () => {
             </ul>
           </div>
           <div className="mt-6 outline-primary rounded p-2">
-            <h3 className="text-xl text-primary">49,99$</h3>
+            <h3 className="text-xl text-primary">$49,99</h3>
           </div>
         </div>
         <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
