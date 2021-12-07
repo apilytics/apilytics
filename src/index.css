@@ -3,21 +3,38 @@
 @tailwind utilities;
 
 :root {
-  --color-primary: #00a3ff;
-  --color-secondary: #6900ff;
+  --color-primary: #5271ff;
+  --color-secondary: #a6a6a6;
 }
 
 @layer base {
   * {
     @apply break-words;
+    @apply text-white;
   }
 
   .bg-primary {
     background-color: var(--color-primary);
   }
 
+  .bg-secondary {
+    background-color: var(--color-secondary);
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .text-secondary {
+    color: var(--color-secondary);
+  }
+
+  .outline-primary {
+    border: 0.15rem solid var(--color-primary);
+  }
+
   .outline-secondary {
-    border: 0.1rem solid var(--color-secondary);
+    border: 0.15rem solid var(--color-secondary);
   }
 
   a {
@@ -37,10 +54,5 @@
   h5,
   h6 {
     @apply font-semibold;
-    @apply my-2;
-  }
-
-  p {
-    @apply my-2;
   }
 }

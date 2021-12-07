@@ -1,18 +1,17 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
+import { Layout } from 'components';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { GetStaticProps, NextPage } from 'next';
-
-import { Layout } from 'src/components';
 
 interface Props {
   content: string;
 }
 
 const Privacy: NextPage<Props> = ({ content }) => (
-  <Layout dense noIndex>
+  <Layout noIndex>
     <ReactMarkdown>{content}</ReactMarkdown>
   </Layout>
 );

@@ -2,22 +2,17 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-
-const TITLE = 'Monitor & analyze your API';
-
-const DESCRIPTION =
-  'Apilytics is a SaaS service that helps you monitor & analyse performance and security analytics and metrics from your API, throttle requests and much more!';
+import { DESCRIPTION, TITLE } from 'utils';
 
 const OG_IMAGE = '/og-image.png';
 
 interface Props {
-  dense?: boolean;
   noIndex?: boolean;
   customTags?: JSX.Element;
 }
 
-export const Layout: React.FC<Props> = ({ dense, noIndex, children }) => (
-  <div className="min-h-screen flex flex-col">
+export const Layout: React.FC<Props> = ({ noIndex, children }) => (
+  <div className="min-h-screen flex flex-col bg-black">
     <Head>
       <title>{TITLE}</title>
       <meta name="description" content={DESCRIPTION} />
@@ -31,25 +26,26 @@ export const Layout: React.FC<Props> = ({ dense, noIndex, children }) => (
       <meta name="twitter:image" content={OG_IMAGE} />
       {noIndex && <meta name="robots" content="NONE,NOARCHIVE" />}
     </Head>
-    <header className="h-20 flex items-center bg-gray-100">
-      <div className={`container p-5 ${dense ? 'max-w-4xl' : ''}`}>
+    <header className="h-20 flex items-center">
+      <div className="container p-5 max-w-4xl flex items-center justify-between">
         <Link href="/">
           <a>
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               layout="fixed"
               width={100}
-              height={60}
+              height={80}
               objectFit="contain"
               alt="Logo"
             />
           </a>
         </Link>
+        <p className="text-xl text-secondary">Beta</p>
       </div>
     </header>
-    <div className={`container flex-grow p-5 ${dense ? 'max-w-4xl mx-auto' : ''}`}>{children}</div>
-    <footer className="p-5 text-center bg-gray-100">
-      <div className={`container text-gray-500 ${dense ? 'max-w-4xl mx-auto' : ''}`}>
+    <div className="container flex-grow p-5 text-center max-w-4xl mx-auto">{children}</div>
+    <footer className="p-5 text-center">
+      <div className="container text-gray-500 max-w-4xl mx-auto">
         <p>© 2021 Apilytics</p>
         <p>
           <a href="mailto:hello@apilytics.io">hello@apilytics.io</a>

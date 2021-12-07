@@ -1,7 +1,6 @@
 import { mockNextApiReqRes, prismaMock } from '__tests__/__helpers__';
 import { Prisma } from '@prisma/client';
-
-import handler from 'src/pages/api/waitlist';
+import handler from 'pages/api/waitlist';
 
 describe('/api/waitlist', () => {
   const userData = { email: 'testuser@test.test' };
