@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import prisma from 'prismaClient';
 
-interface RequestBody {
+export interface WaitlistBody {
   email: string;
 }
 
@@ -15,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     return;
   }
 
-  const { email }: RequestBody = req.body;
+  const { email }: WaitlistBody = req.body;
 
   if (!email) {
     res.status(400).json({ message: 'Missing email.' });
