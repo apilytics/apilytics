@@ -28,7 +28,7 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => (
       {noIndex && <meta name="robots" content="NONE,NOARCHIVE" />}
     </Head>
     <div className="bg-filter">
-      <header className="h-20 p-5 flex items-center">
+      <header className="h-20 p-5 flex items-center animate-fade-in animation-delay-1200">
         <div className="container mt-2 max-w-4xl flex items-center justify-between">
           <Link href="/">
             <a>
