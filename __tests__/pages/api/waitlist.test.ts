@@ -1,5 +1,6 @@
-import { mockNextApiReqRes, prismaMock } from '__tests__/__helpers__';
 import { Prisma } from '@prisma/client';
+
+import { mockNextApiReqRes, prismaMock } from '__tests__/__helpers__';
 import handler from 'pages/api/waitlist';
 
 describe('/api/waitlist', () => {

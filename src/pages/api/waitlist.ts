@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
-import prisma from 'prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+import prisma from 'prismaClient';
 
 interface RequestBody {
   email: string;

@@ -1,10 +1,11 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { Layout } from 'components';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { GetStaticProps, NextPage } from 'next';
+
+import { Layout } from 'components';
 
 interface Props {
   content: string;

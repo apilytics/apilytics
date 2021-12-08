@@ -1,26 +1,16 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
+const fs = require('fs');
+const path = require('path');
+
 const builtins = require('module').builtinModules.join('|');
 
-const sourceCodeDirs = 'src|public';
+const modulesUnderSrc = fs.readdirSync('src').map((file) => path.parse(file).name);
+const ownModules = `${modulesUnderSrc.join('|')}|__tests__|public`;
 
 module.exports = {
   extends: ['next/core-web-vitals', 'eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
   plugins: ['simple-import-sort'],
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx'],
-      rules: {
-        '@typescript-eslint/explicit-function-return-type': ['error'],
-      },
-    },
-    {
-      files: ['index.ts'],
-      rules: {
-        'no-restricted-imports': 'off',
-      },
-    },
-  ],
   rules: {
     '@typescript-eslint/no-unused-vars': [
       'warn',
@@ -36,9 +26,9 @@ module.exports = {
         groups: [
           ['^\\u0000'],
           [`^(${builtins})(/.*)?(?<!\\u0000)$`, `^(${builtins})(/.*)?\\u0000$`],
-          [`^(?!${sourceCodeDirs})@?\\w`, `^(?!${sourceCodeDirs})@?\\w.*\\u0000$`],
+          [`^(?!${ownModules})@?\\w`, `^(?!${ownModules})@?\\w.*\\u0000$`],
           ['(?<!\\u0000)$', '(?<=\\u0000)$'],
-          [`^(${sourceCodeDirs})(/.*)?(?<!\\u0000)$`, `^(${sourceCodeDirs})(/.*)?\\u0000$`],
+          [`^(${ownModules})(/.*)?(?<!\\u0000)$`, `^(${ownModules})(/.*)?\\u0000$`],
           ['^\\.', '^\\..*\\u0000$'],
         ],
       },
@@ -47,9 +37,26 @@ module.exports = {
     'no-restricted-imports': [
       'error',
       {
-        patterns: [{ group: ['.*'], message: 'No relative imports' }],
+        patterns: [
+          { group: ['.*'], message: "Don't use relative imports!" },
+          { group: ['src/*'], message: "Don't prefix src/ to imports!" },
+        ],
       },
     ],
     'no-return-await': 'error',
   },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': ['error'],
+      },
+    },
+    {
+      files: ['index.ts'],
+      rules: {
+        'no-restricted-imports': 'off',
+      },
+    },
+  ],
 };
