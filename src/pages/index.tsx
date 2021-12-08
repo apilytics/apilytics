@@ -91,6 +91,7 @@ const Home: NextPage = () => {
           width={538}
           height={456}
           alt="Mock-up of the app"
+          priority
         />
       </div>
       <h1 className="text-5xl mt-16">
