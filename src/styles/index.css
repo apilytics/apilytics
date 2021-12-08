@@ -21,6 +21,10 @@
     background-color: var(--color-secondary);
   }
 
+  .bg-filter {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
   .text-primary {
     color: var(--color-primary);
   }
