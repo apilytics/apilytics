@@ -57,7 +57,7 @@ const Home: NextPage = () => {
         <h2 className="text-2xl text-secondary mt-8">{DESCRIPTION}</h2>
       </div>
       <form onSubmit={handleSubmit} className="mt-8 flex flex-col items-center">
-        <label htmlFor="email" className="text-xl mb-2">
+        <label htmlFor="email" className="text-2xl mb-2 text-secondary">
           Sign up for the free beta!
         </label>
         <div className="mt-2 flex flex-col sm:flex-row">
@@ -70,11 +70,11 @@ const Home: NextPage = () => {
             placeholder="Your email"
             required
             autoFocus
-            className="outline-primary rounded text-xl"
+            className="outline-primary rounded text-xl p-4"
           />
           <button
             type="submit"
-            className="outline-primary bg-white rounded p-2 text-xl text-primary sm:ml-1"
+            className="bg-primary rounded p-4 text-xl text-white mt-1 sm:mt-0 sm:ml-1"
           >
             Sign me up!
           </button>
@@ -100,7 +100,7 @@ const Home: NextPage = () => {
       <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
         <div className="flex flex-col items-center">
           <LightBulbIcon className="h-14 w-14 text-primary" />
-          <h2 className="text-2xl text-white mt-4">Route-specific metrics</h2>
+          <h2 className="text-2xl text-white my-4">Route-specific metrics</h2>
           <p className="text-secondary text-xl">
             Compare the usage of your routes from all sources. Gather time-series data for each
             endpoint.
@@ -108,28 +108,28 @@ const Home: NextPage = () => {
         </div>
         <div className="flex flex-col items-center">
           <ClockIcon className="h-14 w-14 text-primary" />
-          <h2 className="text-2xl text-white mt-4">Response times</h2>
+          <h2 className="text-2xl text-white my-4">Response times</h2>
           <p className="text-secondary text-xl">
             Track response times from your endpoints. See averages and spot bottlenecks in your API.
           </p>
         </div>
         <div className="flex flex-col items-center">
           <BellIcon className="h-14 w-14 text-primary" />
-          <h2 className="text-2xl text-white mt-4">Smart alerts</h2>
+          <h2 className="text-2xl text-white my-4">Smart alerts</h2>
           <p className="text-secondary text-xl">
             Configure smart alerts to notify you when your API is slow or gains unexpected traffic.
           </p>
         </div>
         <div className="flex flex-col items-center">
           <DocumentReportIcon className="h-14 w-14 text-primary" />
-          <h2 className="text-2xl text-white mt-4">Email/Slack reports</h2>
+          <h2 className="text-2xl text-white my-4">Email/Slack reports</h2>
           <p className="text-secondary text-xl">
             Get automatic weekly email and Slack reports for your API metrics.
           </p>
         </div>
         <div className="flex flex-col items-center">
           <SearchIcon className="h-14 w-14 text-primary" />
-          <h2 className="text-2xl text-white mt-4">Compare sources</h2>
+          <h2 className="text-2xl text-white my-4">Compare sources</h2>
           <p className="text-secondary text-xl">
             Does your API support multiple clients? Compare the usage of your routes from all
             sources.
@@ -149,20 +149,20 @@ const Home: NextPage = () => {
       <div className="grid gap-4 grid-cols-1 md:grid-cols-4 mt-16">
         <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
           <div>
-            <h2 className="text-2xl text-primary mb-4">Free</h2>
+            <h2 className="text-3xl text-primary mb-4">Free</h2>
             <ul className="text-left">
               <li className="text-secondary">10k requests/month</li>
               <li className="text-secondary">Route-specific metrics</li>
               <li className="text-secondary">Basic support</li>
             </ul>
           </div>
-          <div className="mt-6 outline-primary rounded p-2">
-            <h3 className="text-xl text-primary">$9,99</h3>
+          <div className="mt-6 bg-primary rounded p-2">
+            <h3 className="text-xl text-white">$9,99</h3>
           </div>
         </div>
         <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
           <div>
-            <h2 className="text-2xl text-primary mb-4">Startup</h2>
+            <h2 className="text-3xl text-primary mb-4">Startup</h2>
             <ul className="text-left">
               <li className="text-secondary">20k requests/month</li>
               <li className="text-secondary">Route-specific metrics</li>
@@ -171,13 +171,13 @@ const Home: NextPage = () => {
               <li className="text-secondary">Slack/email reports</li>
             </ul>
           </div>
-          <div className="mt-6 outline-primary rounded p-2">
-            <h3 className="text-xl text-primary">$19,99</h3>
+          <div className="mt-6 bg-primary rounded p-2">
+            <h3 className="text-xl text-white">$19,99</h3>
           </div>
         </div>
         <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
           <div>
-            <h2 className="text-2xl text-primary mb-4">Business</h2>
+            <h2 className="text-3xl text-primary mb-4">Business</h2>
             <ul className="text-left">
               <li className="text-secondary">50k requests/month</li>
               <li className="text-secondary">Route-specific metrics</li>
@@ -186,13 +186,13 @@ const Home: NextPage = () => {
               <li className="text-secondary">Slack/email reports</li>
             </ul>
           </div>
-          <div className="mt-6 outline-primary rounded p-2">
-            <h3 className="text-xl text-primary">$49,99</h3>
+          <div className="mt-6 bg-primary rounded p-2">
+            <h3 className="text-xl text-white">$49,99</h3>
           </div>
         </div>
         <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
           <div>
-            <h2 className="text-2xl text-primary mb-4">Enterprise</h2>
+            <h2 className="text-3xl text-primary mb-4">Enterprise</h2>
             <ul className="text-left">
               <li className="text-secondary">+50k requests/month</li>
               <li className="text-secondary">Route-specific metrics</li>
@@ -203,8 +203,8 @@ const Home: NextPage = () => {
             </ul>
           </div>
           <a href="mailto:hello@apilytics.io">
-            <button className="mt-6 outline-primary rounded p-2 text-xl text-primary w-full">
-              Contact us
+            <button className="mt-6 bg-primary rounded p-2 w-full">
+              <h3 className="text-xl text-white">Contact us</h3>
             </button>
           </a>
         </div>
@@ -230,7 +230,7 @@ const Home: NextPage = () => {
       </h1>
       <button
         onClick={(): void => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="mt-16 outline-primary bg-white rounded p-2 text-xl text-primary"
+        className="mt-16 bg-primary rounded p-4 text-xl text-white"
       >
         Get started
       </button>
