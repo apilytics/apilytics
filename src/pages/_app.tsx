@@ -1,4 +1,4 @@
-import 'index.css';
+import 'styles/index.css';
 import '@fontsource/ubuntu';
 
 import type { AppProps } from 'next/app';

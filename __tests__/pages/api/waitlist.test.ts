@@ -1,9 +1,11 @@
-import { mockNextApiReqRes, prismaMock } from '__tests__/__helpers__';
 import { Prisma } from '@prisma/client';
+
+import { mockNextApiReqRes, prismaMock } from '__tests__/__helpers__';
 import handler from 'pages/api/waitlist';
+import type { WaitlistBody } from 'pages/api/waitlist';
 
 describe('/api/waitlist', () => {
-  const userData = { email: 'testuser@test.test' };
+  const body: WaitlistBody = { email: 'testuser@test.test' };
 
   it('should only accept POST requests', async () => {
     const { req, res } = mockNextApiReqRes({
@@ -34,18 +36,18 @@ describe('/api/waitlist', () => {
   it('should add the user to the waitlist', async () => {
     const { req, res } = mockNextApiReqRes({
       method: 'POST',
-      body: userData,
+      body,
     });
 
     await handler(req, res);
-    expect(prismaMock.user.create).toHaveBeenCalledWith({ data: userData });
+    expect(prismaMock.user.create).toHaveBeenCalledWith({ data: body });
     expect(res._getStatusCode()).toBe(201);
   });
 
   it('should give an error if user is already on the waitlist', async () => {
     const { req, res } = mockNextApiReqRes({
       method: 'POST',
-      body: userData,
+      body,
     });
     prismaMock.user.create.mockImplementation(() => {
       throw new Prisma.PrismaClientKnownRequestError('', 'P2002', '');

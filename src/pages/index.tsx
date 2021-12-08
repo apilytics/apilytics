@@ -6,12 +6,13 @@ import {
   LightBulbIcon,
   SearchIcon,
 } from '@heroicons/react/solid';
-import { Layout } from 'components';
 import Image from 'next/image';
 import { useState } from 'react';
-import { DESCRIPTION, FRAMEWORKS_DATA, TITLE } from 'utils';
 import type { NextPage } from 'next';
 import type { FormEvent } from 'react';
+
+import { Layout } from 'components';
+import { DESCRIPTION, FRAMEWORKS_DATA, TITLE } from 'utils';
 
 const Home: NextPage = () => {
   const [email, setEmail] = useState('');

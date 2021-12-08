@@ -5,7 +5,7 @@ import type { DeepMockProxy } from 'jest-mock-extended';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Mocks, RequestOptions, ResponseOptions } from 'node-mocks-http';
 
-import prisma from 'src/prismaClient';
+import prisma from 'prismaClient';
 
 export const mockNextApiReqRes = createMocks as (
   reqOptions?: RequestOptions,
