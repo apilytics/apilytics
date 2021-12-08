@@ -6,34 +6,34 @@ export const DESCRIPTION =
 export const FRAMEWORKS_DATA = [
   {
     name: 'Node.js',
-    image: '/nodejs-logo.svg',
+    image: '/framework-logos/nodejs-logo.svg',
   },
   {
     name: 'Next.js',
-    image: '/nextjs-logo.png',
+    image: '/framework-logos/nextjs-logo.png',
   },
   {
     name: 'Django',
-    image: '/django-logo.svg',
+    image: '/framework-logos/django-logo.svg',
   },
   {
     name: 'Laravel',
-    image: '/laravel-logo.svg',
+    image: '/framework-logos/laravel-logo.svg',
   },
   {
     name: 'Rails',
-    image: '/rails-logo.svg',
+    image: '/framework-logos/rails-logo.svg',
   },
   {
     name: 'Spring Boot',
-    image: '/spring-boot-logo.svg',
+    image: '/framework-logos/spring-boot-logo.svg',
   },
   {
     name: 'FastAPI',
-    image: '/fastapi-logo.png',
+    image: '/framework-logos/fastapi-logo.png',
   },
   {
     name: 'Phoenix',
-    image: '/phoenix-logo.png',
+    image: '/framework-logos/phoenix-logo.png',
   },
 ];
