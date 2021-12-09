@@ -98,6 +98,20 @@ const Home: NextPage = () => {
       </div>
       <div className="mt-16 animate-fade-in-top animation-delay-1200">
         <h1 className="text-5xl">
+          Trivially <span className="text-primary">simple</span> setup
+        </h1>
+        <div className="flex flex-col items-center mt-8">
+          <p className="text-secondary text-xl">Sign up for Apilytics and get your API key.</p>
+          <p className="text-secondary text-xl">
+            Embed our open-source, framework specific middleware into your backend.
+          </p>
+          <p className="text-secondary text-xl">
+            Kick back and start visualizing your API usage from our dashboard.
+          </p>
+        </div>
+      </div>
+      <div className="mt-16 animate-fade-in-top animation-delay-1200">
+        <h1 className="text-5xl">
           Centralized metrics for your <span className="text-primary">backend</span>
         </h1>
         <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
