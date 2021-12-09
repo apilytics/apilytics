@@ -60,6 +60,10 @@
     @apply font-semibold;
   }
 
+  p {
+    @apply leading-8;
+  }
+
   .animation-delay-400 {
     opacity: 0;
     animation-delay: 400ms !important;
