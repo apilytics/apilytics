@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const Layout: React.FC<Props> = ({ noIndex, children }) => (
-  <div className="min-h-screen flex flex-col bg-background">
+  <div className="min-h-screen flex flex-col bg-background bg-no-repeat bg-cover">
     <Head>
       <title>{TITLE}</title>
       <meta name="description" content={DESCRIPTION} />
