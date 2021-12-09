@@ -3,10 +3,32 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
-      maxWidth: {
-        '1/4': '25%',
-        '1/2': '50%',
-        '3/4': '75%',
+      backgroundImage: {
+        background: "url('/background.jpg')",
+      },
+      keyframes: {
+        'fade-in': {
+          '0%': {
+            opacity: '0',
+          },
+          '100%': {
+            opacity: '1',
+          },
+        },
+        'fade-in-top': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(-30px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+      },
+      animation: {
+        'fade-in': 'fade-in 1s ease-out forwards',
+        'fade-in-top': 'fade-in-top 1s ease-out forwards',
       },
     },
     fontFamily: {
@@ -16,9 +38,6 @@ module.exports = {
     container: {
       center: true,
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [require('@tailwindcss/forms')],
 };

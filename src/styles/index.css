@@ -21,6 +21,10 @@
     background-color: var(--color-secondary);
   }
 
+  .bg-filter {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
   .text-primary {
     color: var(--color-primary);
   }
@@ -54,5 +58,30 @@
   h5,
   h6 {
     @apply font-semibold;
+  }
+
+  .animation-delay-400 {
+    opacity: 0;
+    animation-delay: 400ms !important;
+  }
+
+  .animation-delay-800 {
+    opacity: 0;
+    animation-delay: 800ms !important;
+  }
+
+  .animation-delay-1200 {
+    opacity: 0;
+    animation-delay: 1200ms !important;
+  }
+
+  .animation-delay-1600 {
+    opacity: 0;
+    animation-delay: 1600ms !important;
+  }
+
+  .animation-delay-2000 {
+    opacity: 0;
+    animation-delay: 2000ms !important;
   }
 }
