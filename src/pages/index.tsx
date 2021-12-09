@@ -162,74 +162,6 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="mt-16 animate-fade-in-top animation-delay-1600">
-        <h1 className="text-5xl">
-          Transparent pricing based on <span className="text-primary">usage</span>
-        </h1>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-4 mt-16">
-          <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
-            <div>
-              <h2 className="text-3xl text-primary mb-4">Free</h2>
-              <ul className="text-left">
-                <li className="text-secondary">10k requests/month</li>
-                <li className="text-secondary">Route-specific metrics</li>
-                <li className="text-secondary">Basic support</li>
-              </ul>
-            </div>
-            <div className="mt-6 bg-primary rounded p-2">
-              <h3 className="text-xl text-white">$9,99</h3>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
-            <div>
-              <h2 className="text-3xl text-primary mb-4">Startup</h2>
-              <ul className="text-left">
-                <li className="text-secondary">20k requests/month</li>
-                <li className="text-secondary">Route-specific metrics</li>
-                <li className="text-secondary">Email support</li>
-                <li className="text-secondary">Automatic alerts</li>
-                <li className="text-secondary">Slack/email reports</li>
-              </ul>
-            </div>
-            <div className="mt-6 bg-primary rounded p-2">
-              <h3 className="text-xl text-white">$19,99</h3>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
-            <div>
-              <h2 className="text-3xl text-primary mb-4">Business</h2>
-              <ul className="text-left">
-                <li className="text-secondary">50k requests/month</li>
-                <li className="text-secondary">Route-specific metrics</li>
-                <li className="text-secondary">Email support</li>
-                <li className="text-secondary">Automatic alerts</li>
-                <li className="text-secondary">Slack/email reports</li>
-              </ul>
-            </div>
-            <div className="mt-6 bg-primary rounded p-2">
-              <h3 className="text-xl text-white">$49,99</h3>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg p-4 outline-primary flex flex-col justify-between">
-            <div>
-              <h2 className="text-3xl text-primary mb-4">Enterprise</h2>
-              <ul className="text-left">
-                <li className="text-secondary">+50k requests/month</li>
-                <li className="text-secondary">Route-specific metrics</li>
-                <li className="text-secondary">Email support</li>
-                <li className="text-secondary">Automatic alerts</li>
-                <li className="text-secondary">Slack/email reports</li>
-                <li className="text-secondary">99,9% SLA</li>
-              </ul>
-            </div>
-            <a href="mailto:hello@apilytics.io">
-              <button className="mt-6 bg-primary rounded p-2 w-full">
-                <h3 className="text-xl text-white">Contact us</h3>
-              </button>
-            </a>
-          </div>
-        </div>
-      </div>
       <div className="mt-16 animate-fade-in-top animation-delay-2000">
         <h1 className="text-5xl">
           Integrates with the most popular <span className="text-primary">frameworks</span>
@@ -248,6 +180,17 @@ const Home: NextPage = () => {
             />
           ))}
         </div>
+      </div>
+      <div className="mt-16 animate-fade-in-top animation-delay-2400">
+        <h1 className="text-5xl">
+          Usable free-tier and <span className="text-primary">flexible</span> usage based pricing
+          plan
+        </h1>
+        <p className="mt-8 text-xl text-secondary">
+          Try Apilytics with the forgiving free-tier and upgrade to paid plans only after your
+          application gains traction.{' '}
+          <span className="text-white">Everything will be free during our beta period!</span>
+        </p>
       </div>
       <div className="mt-16 animate-fade-in-top animation-delay-2400">
         <h1 className="text-5xl">
