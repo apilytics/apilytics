@@ -1,7 +1,7 @@
 export const TITLE = 'Monitor & analyze your API';
 
 export const DESCRIPTION =
-  'Apilytics is a SaaS service that helps you monitor & analyse performance and security analytics and metrics from your API, throttle requests and much more!';
+  'Apilytics is a simple to setup service that helps you monitor and visualize the usage of your API, get security analytics & metrics, throttle requests and much more!';
 
 export const FRAMEWORKS_DATA = [
   {

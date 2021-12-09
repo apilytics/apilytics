@@ -59,7 +59,7 @@ const Home: NextPage = () => {
       <div className="mt-8 animate-fade-in-top animation-delay-400">
         <form onSubmit={handleSubmit} className="flex flex-col items-center">
           <label htmlFor="email" className="text-2xl mb-2 text-secondary">
-            Sign up for the free beta!
+            Sign up, and be the first to access the free beta!
           </label>
           <div className="mt-2 flex flex-col sm:flex-row">
             <input
