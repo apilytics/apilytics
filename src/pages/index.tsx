@@ -4,7 +4,7 @@ import {
   DatabaseIcon,
   DocumentReportIcon,
   LightBulbIcon,
-  SearchIcon,
+  ServerIcon,
 } from '@heroicons/react/solid';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -147,19 +147,17 @@ const Home: NextPage = () => {
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <SearchIcon className="h-14 w-14 text-primary" />
-            <h2 className="text-2xl text-white my-4">Compare sources</h2>
+            <DatabaseIcon className="h-14 w-14 text-primary" />
+            <h2 className="text-2xl text-white my-4">Your data</h2>
             <p className="text-secondary text-xl">
-              Does your API support multiple clients? Compare the usage of your routes from all
-              sources.
+              We value your privacy and will never expose your data to anyone else except you.
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <DatabaseIcon className="h-14 w-14 text-primary" />
-            <h2 className="text-2xl text-white mt-4">Your data</h2>
+            <ServerIcon className="h-14 w-14 text-primary" />
+            <h2 className="text-2xl text-white my-4">API first</h2>
             <p className="text-secondary text-xl">
-              We value your privacy and will never use or expose your data to anyone else except
-              you.
+              Access all of your raw data via our public API and do anything with it.
             </p>
           </div>
         </div>
