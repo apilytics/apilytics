@@ -1,11 +1,17 @@
 import { Prisma } from '@prisma/client';
 
 import { mockNextApiReqRes, prismaMock } from '__tests__/__helpers__';
-import handler from 'pages/api/waitlist';
-import type { WaitlistBody } from 'pages/api/waitlist';
+import handler from 'pages/api/signup';
+import type { SignUpBody } from 'pages/api/signup';
 
 describe('/api/waitlist', () => {
-  const body: WaitlistBody = { email: 'testuser@test.test' };
+  const body: SignUpBody = {
+    role: 'Software Engineer',
+    useCases: 'Making my API faster',
+    howThisCouldHelp: 'I need to get more data from my API.',
+    willingToPay: true,
+    email: 'testuser@test.test',
+  };
 
   it('should only accept POST requests', async () => {
     const { req, res } = mockNextApiReqRes({
@@ -15,13 +21,18 @@ describe('/api/waitlist', () => {
     expect(res._getStatusCode()).toBe(405);
   });
 
-  it('should reject a missing email', async () => {
-    const { req, res } = mockNextApiReqRes({
-      method: 'POST',
-      body: {},
-    });
-    await handler(req, res);
-    expect(res._getStatusCode()).toBe(400);
+  it('should reject missing values', async () => {
+    for (const key of Object.keys(body)) {
+      const { req, res } = mockNextApiReqRes({
+        method: 'POST',
+        body: {
+          ...body,
+          [key]: undefined,
+        },
+      });
+      await handler(req, res);
+      expect(res._getStatusCode()).toBe(400);
+    }
   });
 
   it('should reject an invalid email', async () => {
