@@ -59,7 +59,7 @@ const SignUp: NextPage = () => {
   return (
     <Layout noIndex>
       <div className="container max-w-lg">
-        <h2 className="text-2xl text-secondary mt-16">Sign up for the beta</h2>
+        <h2 className="text-2xl text-secondary mt-16">Sign up for the free beta</h2>
         <form onSubmit={handleSubmit} className="mt-4 text-left">
           <Input
             name="role"
