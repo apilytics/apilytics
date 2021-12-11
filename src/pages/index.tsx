@@ -43,17 +43,21 @@ const Home: NextPage = () => (
         priority
       />
     </div>
-    <div className="mt-16 animate-fade-in-top animation-delay-1200">
+    <div className="mt-16 animate-fade-in-top animation-delay-1200 flex flex-col items-center">
       <h1 className="text-5xl text-white">
         Trivially <span className="text-primary">simple</span> setup
       </h1>
-      <div className="flex flex-col items-center mt-8">
-        <p className="text-secondary text-xl">Sign up for Apilytics and get your API key.</p>
+      <div className="mt-8 text-left">
         <p className="text-secondary text-xl">
-          Embed our open-source, framework specific middleware into your backend.
+          <span className="text-primary">1.</span> Sign up for Apilytics and get your API key.
         </p>
         <p className="text-secondary text-xl">
-          Kick back and start visualizing your API usage from our dashboard.
+          <span className="text-primary">2.</span> Embed our open-source, framework specific
+          middleware into your backend.
+        </p>
+        <p className="text-secondary text-xl">
+          <span className="text-primary">3.</span> Kick back and start visualizing your API usage
+          from our dashboard.
         </p>
       </div>
     </div>
