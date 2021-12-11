@@ -76,7 +76,7 @@ const SignUp: NextPage = () => {
             value={formValues.useCases}
             onChange={handleChange}
             label="How would you use this?"
-            helperText="Please give your free word on how you would use a product like Apilytics. Would you use it professionally or in your side-projects?"
+            helperText="Please give your free word on how you would use a product like Apilytics. Would you use it professionally or in your side-projects? What frameworks do you use to build your APIs?"
             rows={4}
             required
           />
