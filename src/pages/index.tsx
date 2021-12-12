@@ -165,7 +165,7 @@ const Home: NextPage = () => {
           Try Apilytics for free and upgrade based on your monthly requests.{' '}
           <span className="text-white">Everything will be free for the beta users!</span>
         </h2>
-        <div className="mt-8 bg-white rounded-lg p-4 outline-primary">
+        <div className="mt-8 bg-white rounded-lg p-4 border-primary">
           <div className="flex justify-between">
             <div className="text-left">
               <p className="text-xl text-secondary">Monthly requests</p>
