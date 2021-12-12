@@ -727,6 +727,11 @@
   resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727.tgz#c68ede6aeffa9ef7743a32cfa6daf9172a4e15b3"
   integrity sha512-dRClHS7DsTVchDKzeG72OaEyeDskCv91pnZ72Fftn0mp4BkUvX2LvWup65hCNzwwQm5IDd6A88APldKDnMiEMA==
 
+"@prisma/prisma-fmt-wasm@3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727":
+  version "3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727"
+  resolved "https://registry.yarnpkg.com/@prisma/prisma-fmt-wasm/-/prisma-fmt-wasm-3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727.tgz#12c18e3c7e14e0030bedf55bfaced4ed3291c2f2"
+  integrity sha512-Nt4A2SZ4MASAliZ9OaXCYG1xr80lEcJABliUAi/tvzCU8r5W3V4Tp5XDqchxuN/w71XY/s+OaWce7PHnoMGpkA==
+
 "@rushstack/eslint-patch@^1.0.8":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"
@@ -4705,6 +4710,13 @@ prettier-linter-helpers@^1.0.0:
   integrity sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==
   dependencies:
     fast-diff "^1.1.2"
+
+prettier-plugin-prisma@3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-prisma/-/prettier-plugin-prisma-3.6.0.tgz#035bf35e79ed1cb0b110bef10e25ac783460081f"
+  integrity sha512-kXr+gNqkP7ryLQXtPb2ot/AJWtidbttysBvHamwlNT6K9wZM2fr2OcTwM6+L9WytIeLIcimtlCAWF1VUelY10w==
+  dependencies:
+    "@prisma/prisma-fmt-wasm" "3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727"
 
 prettier@2.5.1:
   version "2.5.1"

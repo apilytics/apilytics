@@ -6,8 +6,6 @@ import React from 'react';
 
 import { DESCRIPTION, FRONTEND_URL, TITLE } from 'utils';
 
-const OG_IMAGE = '/og-image.png';
-
 interface Props {
   noIndex?: boolean;
   customTags?: JSX.Element;
@@ -16,6 +14,7 @@ interface Props {
 export const Layout: React.FC<Props> = ({ noIndex, children }) => {
   const { asPath } = useRouter();
   const ogUrl = `${FRONTEND_URL}${asPath === '/' ? '' : asPath}`;
+  const ogImage = `${FRONTEND_URL}/og-image.png`;
 
   return (
     <div className="min-h-screen flex flex-col bg-background bg-no-repeat bg-cover">
@@ -26,10 +25,10 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
         <meta property="og:title" content={TITLE} />
         <meta property="og:description" content={DESCRIPTION} />
         <meta property="og:url" content={ogUrl} />
-        <meta property="og:image" content={OG_IMAGE} />
+        <meta property="og:image" content={ogImage} />
         <meta name="twitter:title" content={TITLE} />
         <meta name="twitter:description" content={DESCRIPTION} />
-        <meta name="twitter:image" content={OG_IMAGE} />
+        <meta name="twitter:image" content={ogImage} />
         {noIndex && <meta name="robots" content="noindex,noarchive,nosnippet,follow" />}
       </Head>
       <div className="bg-filter grow flex flex-col">
