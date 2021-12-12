@@ -25,7 +25,7 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => (
       <meta name="twitter:title" content={TITLE} />
       <meta name="twitter:description" content={DESCRIPTION} />
       <meta name="twitter:image" content={OG_IMAGE} />
-      {noIndex && <meta name="robots" content="NONE,NOARCHIVE" />}
+      {noIndex && <meta name="robots" content="noindex,noarchive,nosnippet,follow" />}
     </Head>
     <div className="bg-filter grow flex flex-col">
       <header className="h-20 p-5 flex items-center bg-black">
