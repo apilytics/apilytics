@@ -12,10 +12,12 @@ model User {
   email String @unique
 
   role             String
-  useCases         String
-  howThisCouldHelp String
-  willingToPay     Boolean
+  useCases         String  @map(name: "use_cases")
+  howThisCouldHelp String  @map(name: "how_this_could_help")
+  willingToPay     Boolean @map(name: "willing_to_pay")
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "users")
 }
