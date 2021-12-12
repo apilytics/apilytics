@@ -208,7 +208,7 @@ const Home: NextPage = () => {
               <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> 100% data ownership
             </p>
             <p className="flex items-center">
-              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> 2 months free
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> 1 month free
             </p>
           </div>
         </div>
