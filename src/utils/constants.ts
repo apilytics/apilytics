@@ -4,6 +4,7 @@ export const DESCRIPTION =
   'Apilytics is a simple to setup service that helps you monitor and visualize the usage of your API, get security analytics & metrics, throttle requests and much more!';
 
 export const FRONTEND_URL = 'https://www.apilytics.io';
+export const FRONTEND_DOMAIN = 'apilytics.io';
 
 export const FRAMEWORKS_DATA = [
   {
