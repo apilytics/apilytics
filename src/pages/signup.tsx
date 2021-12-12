@@ -59,8 +59,13 @@ const SignUp: NextPage = () => {
   return (
     <Layout noIndex>
       <div className="container max-w-lg">
-        <h2 className="text-2xl text-secondary mt-16">Sign up for the free beta</h2>
-        <form onSubmit={handleSubmit} className="mt-4 text-left">
+        <h2 className="text-2xl text-secondary mt-16 animate-fade-in-top animation-delay-400">
+          Sign up for the free beta
+        </h2>
+        <form
+          onSubmit={handleSubmit}
+          className="mt-4 text-left animate-fade-in-top animation-delay-800"
+        >
           <Input
             name="role"
             value={formValues.role}
