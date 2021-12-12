@@ -24,10 +24,10 @@ const Home: NextPage = () => {
   const price = (requests * 0.0001).toFixed();
 
   const getRequestsDisplay = (): string => {
-    if (requests < 1000000) {
+    if (requests < 1_000_000) {
       return `${requests / 1000}k`;
     } else {
-      return `${(requests / 1000000).toFixed(2)}M`;
+      return `${(requests / 1_000_000).toFixed(2)}M`;
     }
   };
 
