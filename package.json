@@ -5,7 +5,7 @@
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "dev": "next dev",
-    "build": "next build",
+    "build": "BUILD_DATE=\"$(date '+%Y-%m-%d')\" next build",
     "start": "next start",
     "format": "prettier --write '**/*.{ts,tsx,js,json,css}' && eslint --fix --max-warnings=0 --ext=.ts,.tsx,.js .",
     "lint": "prettier --check '**/*.{ts,tsx,js,json,css}' && eslint --max-warnings=0 --ext=.ts,.tsx,.js .",
