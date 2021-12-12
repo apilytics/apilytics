@@ -3,7 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import prisma from 'prismaClient';
 
-export interface WaitlistBody {
+export interface SignUpBody {
+  role: string;
+  useCases: string;
+  howThisCouldHelp: string;
+  willingToPay: boolean;
   email: string;
 }
 
@@ -15,10 +19,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     return;
   }
 
-  const { email }: WaitlistBody = req.body;
+  const { role, useCases, howThisCouldHelp, willingToPay, email }: SignUpBody = req.body;
 
-  if (!email) {
-    res.status(400).json({ message: 'Missing email.' });
+  if (!role || !useCases || !howThisCouldHelp || !willingToPay || !email) {
+    res.status(400).json({ message: 'Invalid input.' });
     return;
   }
 
@@ -28,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   }
 
   try {
-    await prisma.user.create({ data: { email } });
+    await prisma.user.create({ data: { role, useCases, howThisCouldHelp, willingToPay, email } });
   } catch (e) {
     // https://www.prisma.io/docs/concepts/components/prisma-client/handling-exceptions-and-errors
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
@@ -39,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     throw e;
   }
 
-  res.status(201);
+  res.status(201).json({ message: 'Successfully added to the waitlist.' });
 };
 
 export default handler;

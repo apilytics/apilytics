@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const Layout: React.FC<Props> = ({ noIndex, children }) => (
-  <div className="min-h-screen flex flex-col bg-background">
+  <div className="min-h-screen flex flex-col bg-background bg-no-repeat bg-cover">
     <Head>
       <title>{TITLE}</title>
       <meta name="description" content={DESCRIPTION} />
@@ -27,9 +27,9 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => (
       <meta name="twitter:image" content={OG_IMAGE} />
       {noIndex && <meta name="robots" content="NONE,NOARCHIVE" />}
     </Head>
-    <div className="bg-filter">
-      <header className="h-20 p-5 flex items-center animate-fade-in animation-delay-1200">
-        <div className="container mt-2 max-w-4xl flex items-center justify-between">
+    <div className="bg-filter flex-grow flex flex-col">
+      <header className="h-20 p-5 flex items-center bg-black">
+        <div className="container mt-2 max-w-4xl flex items-center justify-between animate-fade-in animation-delay-1200">
           <Link href="/">
             <a>
               <Image
@@ -46,7 +46,7 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => (
         </div>
       </header>
       <div className="container flex-grow p-5 text-center max-w-4xl mx-auto">{children}</div>
-      <footer className="p-5 text-center">
+      <footer className="p-5 text-center mt-16 bg-black">
         <div className="container text-gray-500 max-w-4xl mx-auto">
           <p>© 2021 Apilytics</p>
           <p>

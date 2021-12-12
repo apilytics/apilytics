@@ -10,7 +10,6 @@
 @layer base {
   * {
     @apply break-words;
-    @apply text-white;
   }
 
   .bg-primary {
@@ -58,6 +57,10 @@
   h5,
   h6 {
     @apply font-semibold;
+  }
+
+  p {
+    @apply leading-8;
   }
 
   .animation-delay-400 {

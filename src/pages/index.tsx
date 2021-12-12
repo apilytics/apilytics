@@ -1,5 +1,6 @@
 import {
   BellIcon,
+  CheckCircleIcon,
   ClockIcon,
   DatabaseIcon,
   DocumentReportIcon,
@@ -7,80 +8,51 @@ import {
   ServerIcon,
 } from '@heroicons/react/solid';
 import Image from 'next/image';
-import { useState } from 'react';
+import Link from 'next/link';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
-import type { FormEvent } from 'react';
 
 import { Layout } from 'components';
 import { DESCRIPTION, FRAMEWORKS_DATA, TITLE } from 'utils';
 
+const MIN_REQUESTS = 50_000;
+const MAX_REQUESTS = 5_000_000;
+const REQUESTS_STEP = 50_000;
+
 const Home: NextPage = () => {
-  const [email, setEmail] = useState('');
-  const [_emailError, setEmailError] = useState('');
-  const [_loading, setLoading] = useState(false);
+  const [requests, setRequests] = useState(MIN_REQUESTS);
+  const price = (requests * 0.0001).toFixed();
 
-  const handleSubmit = async (e: FormEvent): Promise<void> => {
-    e.preventDefault();
-    setLoading(true);
-    const unexpectedEmailError = 'Unexpected error.';
+  const getRequestsDisplay = (): string => {
+    if (requests < 1000000) {
+      return `${requests / 1000}k`;
+    } else {
+      return `${(requests / 1000000).toFixed(2)}M`;
+    }
+  };
 
-    try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        body: JSON.stringify({ email }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const { message } = await res.json();
-
-      if (res.status === 201) {
-        setEmail('');
-        setEmailError('');
-      } else {
-        setEmailError(message || unexpectedEmailError);
-      }
-    } catch {
-      setEmailError(unexpectedEmailError);
-    } finally {
-      setLoading(false);
+  const getPriceDisplay = (): string => {
+    if (requests === MAX_REQUESTS) {
+      return 'Contact us';
+    } else {
+      return `$${price}/month`;
     }
   };
 
   return (
     <Layout>
       <div className="max-w-2xl mx-auto mt-16 animate-fade-in-top">
-        <h1 className="text-5xl">
+        <h1 className="text-5xl text-white">
           {TITLE.split('API')[0]} <span className="text-primary">API</span>
         </h1>
         <h2 className="text-2xl text-secondary mt-8">{DESCRIPTION}</h2>
       </div>
-      <div className="mt-8 animate-fade-in-top animation-delay-400">
-        <form onSubmit={handleSubmit} className="flex flex-col items-center">
-          <label htmlFor="email" className="text-2xl mb-2 text-secondary">
-            Sign up, and be the first to access the free beta!
-          </label>
-          <div className="mt-2 flex flex-col sm:flex-row">
-            <input
-              id="email"
-              type="email"
-              name="email"
-              value={email}
-              onChange={({ target }): void => setEmail(target.value)}
-              placeholder="Your email"
-              required
-              autoFocus
-              className="outline-primary rounded text-xl p-4"
-            />
-            <button
-              type="submit"
-              className="bg-primary rounded p-4 text-xl text-white mt-1 sm:mt-0 sm:ml-1"
-            >
-              Sign me up!
-            </button>
-          </div>
-        </form>
+      <div className="mt-8 animate-fade-in-top animation-delay-400 flex flex-col items-center">
+        <Link href="/signup" passHref>
+          <button className="bg-primary rounded p-4 mt-4 text-xl text-white sm:mt-0 sm:ml-1">
+            Sign me up!
+          </button>
+        </Link>
       </div>
       <div className="rounded-md overflow-hidden mt-16 animate-fade-in-top animation-delay-800">
         <Image
@@ -97,21 +69,7 @@ const Home: NextPage = () => {
         />
       </div>
       <div className="mt-16 animate-fade-in-top animation-delay-1200">
-        <h1 className="text-5xl">
-          Trivially <span className="text-primary">simple</span> setup
-        </h1>
-        <div className="flex flex-col items-center mt-8">
-          <p className="text-secondary text-xl">Sign up for Apilytics and get your API key.</p>
-          <p className="text-secondary text-xl">
-            Embed our open-source, framework specific middleware into your backend.
-          </p>
-          <p className="text-secondary text-xl">
-            Kick back and start visualizing your API usage from our dashboard.
-          </p>
-        </div>
-      </div>
-      <div className="mt-16 animate-fade-in-top animation-delay-1200">
-        <h1 className="text-5xl">
+        <h1 className="text-5xl text-white">
           Centralized metrics for your <span className="text-primary">backend</span>
         </h1>
         <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
@@ -163,7 +121,7 @@ const Home: NextPage = () => {
         </div>
       </div>
       <div className="mt-16 animate-fade-in-top animation-delay-2000">
-        <h1 className="text-5xl">
+        <h1 className="text-5xl text-white">
           Integrates with the most popular <span className="text-primary">frameworks</span>
         </h1>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-4 mt-16 justify-items-center">
@@ -181,27 +139,88 @@ const Home: NextPage = () => {
           ))}
         </div>
       </div>
-      <div className="mt-16 animate-fade-in-top animation-delay-2400">
-        <h1 className="text-5xl">
-          Usable free-tier and <span className="text-primary">flexible</span> usage based pricing
-          plan
+      <div className="mt-16 animate-fade-in-top animation-delay-1200 flex flex-col items-center">
+        <h1 className="text-5xl text-white">
+          Trivially <span className="text-primary">simple</span> setup
         </h1>
-        <p className="mt-8 text-xl text-secondary">
-          Try Apilytics with the forgiving free-tier and upgrade to paid plans only after your
-          application gains traction.{' '}
-          <span className="text-white">Everything will be free during our beta period!</span>
-        </p>
+        <div className="mt-8 text-left">
+          <h2 className="text-2xl text-secondary">
+            <span className="text-primary">1.</span> Sign up and get your API key.
+          </h2>
+          <h2 className="text-2xl text-secondary">
+            <span className="text-primary">2.</span> Embed our open-source middleware into your
+            backend.
+          </h2>
+          <h2 className="text-2xl text-secondary">
+            <span className="text-primary">3.</span> Kick back and start analyzing your API usage
+            from our dashboard.
+          </h2>
+        </div>
       </div>
       <div className="mt-16 animate-fade-in-top animation-delay-2400">
-        <h1 className="text-5xl">
+        <h1 className="text-5xl text-white">
+          Flexible pricing with a <span className="text-primary">free trial</span>
+        </h1>
+        <h2 className="text-2xl text-secondary mt-8">
+          Try Apilytics for free and upgrade based on your monthly requests.{' '}
+          <span className="text-white">Everything will be free for the beta users!</span>
+        </h2>
+        <div className="mt-8 bg-white rounded-lg p-4 outline-primary">
+          <div className="flex justify-between">
+            <div className="text-left">
+              <p className="text-xl text-secondary">Monthly requests</p>
+              <p className="text-2xl font-bold text-primary">{getRequestsDisplay()}</p>
+            </div>
+            <div className="text-left">
+              <p className="text-xl text-secondary">Your price</p>
+              <p className="text-2xl font-bold text-primary">{getPriceDisplay()}</p>
+            </div>
+          </div>
+          <input
+            type="range"
+            value={requests}
+            onChange={({ target }): void => setRequests(Number(target.value))}
+            min={MIN_REQUESTS}
+            max={MAX_REQUESTS}
+            step={REQUESTS_STEP}
+            className="w-full mt-8 appearance-none bg-primary rounded-lg"
+          />
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mt-8 text-secondary text-left leading-normal">
+            <p className="flex items-center">
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> 50 APIs
+            </p>
+            <p className="flex items-center">
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> Email support
+            </p>
+            <p className="flex items-center">
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> Automatic alerts
+            </p>
+            <p className="flex items-center">
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> Email/Slack reports
+            </p>
+            <p className="flex items-center">
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> Unlimited team members
+            </p>
+            <p className="flex items-center">
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> Unlimited data retention
+            </p>
+            <p className="flex items-center">
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> 100% data ownership
+            </p>
+            <p className="flex items-center">
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> 2 months free
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="mt-16 animate-fade-in-top animation-delay-2400">
+        <h1 className="text-5xl text-white">
           Ready to boost your API <span className="text-primary">metrics</span>?
         </h1>
-        <button
-          onClick={(): void => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="mt-16 bg-primary rounded p-4 text-xl text-white"
-        >
-          Get started
-        </button>
+        <h2 className="text-2xl text-secondary mt-8">Sign up to join the free beta!</h2>
+        <Link href="/signup" passHref>
+          <button className="mt-8 bg-primary rounded p-4 text-xl text-white">Get started</button>
+        </Link>
       </div>
     </Layout>
   );
