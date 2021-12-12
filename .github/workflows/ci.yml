@@ -27,33 +27,20 @@ jobs:
     - name: "Checkout code (post merge)"
       uses: actions/checkout@v2
 
-    - name: "Set up Docker Buildx"
-      uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25  # v1.6.0
-
-    - name: "Set up Docker layer caching"
-      uses: ruohola/cache@main
+    - name: "Set up Node"
+      uses: actions/setup-node@v2
       with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
+        node-version: '14'
+        cache: 'yarn'
 
-    - name: "Build and cache the image"
-      uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229  # v2.7.0
-      with:
-        context: .
-        target: ci
-        tags: frontend-ci
-        load: true
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache-new
+    - name: "Install npm packages"
+      run: yarn install --frozen-lockfile
 
-    - name: "Move cache"
-      # https://github.com/docker/build-push-action/issues/252
-      # https://github.com/moby/buildkit/issues/1896
-      run: |
-        rm -rf /tmp/.buildx-cache
-        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+    - name: "Run linters"
+      run: yarn lint
 
-    - name: "Run linters, type-check, and tests"
-      run: docker run --name frontend-ci frontend-ci
+    - name: "Run type-checking"
+      run: yarn tsc
+
+    - name: "Run tests"
+      run: yarn test
