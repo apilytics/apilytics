@@ -120,7 +120,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="mt-16 animate-fade-in-top animation-delay-2000">
+      <div className="mt-16 animate-fade-in-top animation-delay-1600">
         <h1 className="text-5xl text-white">
           Integrates with the most popular <span className="text-primary">frameworks</span>
         </h1>
@@ -139,7 +139,7 @@ const Home: NextPage = () => {
           ))}
         </div>
       </div>
-      <div className="mt-16 animate-fade-in-top animation-delay-1200 flex flex-col items-center">
+      <div className="mt-16 animate-fade-in-top animation-delay-2000 flex flex-col items-center">
         <h1 className="text-5xl text-white">
           Trivially <span className="text-primary">simple</span> setup
         </h1>
@@ -213,7 +213,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="mt-16 animate-fade-in-top animation-delay-2400">
+      <div className="mt-16 animate-fade-in-top animation-delay-2800">
         <h1 className="text-5xl text-white">
           Ready to boost your API <span className="text-primary">metrics</span>?
         </h1>

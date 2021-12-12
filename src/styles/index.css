@@ -87,4 +87,14 @@
     opacity: 0;
     animation-delay: 2000ms !important;
   }
+
+  .animation-delay-2400 {
+    opacity: 0;
+    animation-delay: 2000ms !important;
+  }
+
+  .animation-delay-2800 {
+    opacity: 0;
+    animation-delay: 2000ms !important;
+  }
 }
