@@ -32,12 +32,12 @@
     color: var(--color-secondary);
   }
 
-  .outline-primary {
+  .border-primary {
     border: 0.15rem solid var(--color-primary);
   }
 
-  .outline-secondary {
-    border: 0.15rem solid var(--color-secondary);
+  .border-t-primary {
+    border-top-color: var(--color-primary);
   }
 
   a {
@@ -84,6 +84,16 @@
   }
 
   .animation-delay-2000 {
+    opacity: 0;
+    animation-delay: 2000ms !important;
+  }
+
+  .animation-delay-2400 {
+    opacity: 0;
+    animation-delay: 2000ms !important;
+  }
+
+  .animation-delay-2800 {
     opacity: 0;
     animation-delay: 2000ms !important;
   }
