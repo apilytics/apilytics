@@ -1,4 +1,4 @@
-FROM node:14.18.2-buster-slim@sha256:6fee35e171961ba4557a67f984e0f37d2f931667f1c80fe5b8f3ab9b3cc9c608 AS dev
+FROM node:14.18.2-buster-slim@sha256:6fee35e171961ba4557a67f984e0f37d2f931667f1c80fe5b8f3ab9b3cc9c608
 
 WORKDIR /app
 
@@ -20,13 +20,3 @@ ENV NODE_ENV=development
 RUN yarn install --frozen-lockfile && yarn cache clean
 
 CMD ["yarn", "dev"]
-
-
-FROM dev AS ci
-
-COPY . .
-
-CMD yarn lint \
-    && yarn tsc \
-    && yarn test \
-    && yarn build
