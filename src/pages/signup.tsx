@@ -15,7 +15,7 @@ const initialFormValues = {
 const SignUp: NextPage = () => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [error, setError] = useState('');
-  const [_loading, setLoading] = useState(false); // TODO: Add a loading indicator to represent the loading state.
+  const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: FormEvent): Promise<void> => {
@@ -111,8 +111,15 @@ const SignUp: NextPage = () => {
             required
           />
           {error && <p className="text-red-500">{error}</p>}
-          <button type="submit" className="mt-8 bg-primary rounded p-4 text-xl text-white w-full">
-            Sign up
+          <button
+            disabled={loading}
+            type="submit"
+            className="mt-8 bg-primary rounded p-4 text-xl text-white w-full flex justify-center items-center disabled:opacity-50"
+          >
+            Sign up{' '}
+            {loading && (
+              <div className="animate-spinner ease-linear rounded-full border-2 border-t-primary h-6 w-6 ml-4" />
+            )}
           </button>
           {submitted && (
             <p className="text-white mt-8">

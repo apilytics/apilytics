@@ -24,10 +24,19 @@ module.exports = {
             transform: 'translateY(0)',
           },
         },
+        spinner: {
+          '0%': {
+            transform: 'rotate(0deg)',
+          },
+          '100%': {
+            transform: 'rotate(360deg)',
+          },
+        },
       },
       animation: {
         'fade-in': 'fade-in 1s ease-out forwards',
         'fade-in-top': 'fade-in-top 1s ease-out forwards',
+        spinner: 'spinner 1.5s linear infinite',
       },
     },
     fontFamily: {
