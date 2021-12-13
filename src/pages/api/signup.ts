@@ -4,11 +4,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from 'prismaClient';
 
 export interface SignUpBody {
-  role: string;
-  useCases: string;
-  howThisCouldHelp: string;
-  willingToPay: boolean;
   email: string;
+  role: string;
+  useCases?: string;
+  howThisCouldHelp?: string;
 }
 
 const EMAIL_REGEX = /^.+@.+$/;
@@ -19,9 +18,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     return;
   }
 
-  const { role, useCases, howThisCouldHelp, willingToPay, email }: SignUpBody = req.body;
+  const { email, role, useCases, howThisCouldHelp }: SignUpBody = req.body;
 
-  if (!role || !useCases || !howThisCouldHelp || !willingToPay || !email) {
+  if (!email || !role) {
     res.status(400).json({ message: 'Invalid input.' });
     return;
   }
@@ -32,7 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   }
 
   try {
-    await prisma.user.create({ data: { role, useCases, howThisCouldHelp, willingToPay, email } });
+    await prisma.user.create({ data: { email, role, useCases, howThisCouldHelp } });
   } catch (e) {
     // https://www.prisma.io/docs/concepts/components/prisma-client/handling-exceptions-and-errors
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {

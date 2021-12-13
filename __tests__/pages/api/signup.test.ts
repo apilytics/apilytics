@@ -6,11 +6,10 @@ import type { SignUpBody } from 'pages/api/signup';
 
 describe('/api/waitlist', () => {
   const body: SignUpBody = {
+    email: 'testuser@test.test',
     role: 'Software Engineer',
     useCases: 'Making my API faster',
     howThisCouldHelp: 'I need to get more data from my API.',
-    willingToPay: true,
-    email: 'testuser@test.test',
   };
 
   it('should only accept POST requests', async () => {
@@ -22,7 +21,7 @@ describe('/api/waitlist', () => {
   });
 
   it('should reject missing values', async () => {
-    for (const key of Object.keys(body)) {
+    for (const key of ['email', 'role']) {
       const { req, res } = mockNextApiReqRes({
         method: 'POST',
         body: {
