@@ -1,8 +1,10 @@
+import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import type { FormEvent } from 'react';
 
 import { Input, Layout, Textarea } from 'components';
+import type { PlausibleEvents } from 'plausibleEvents';
 
 const initialFormValues = {
   role: '',
@@ -16,6 +18,8 @@ const SignUp: NextPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const plausible = usePlausible<PlausibleEvents>();
 
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
@@ -40,6 +44,7 @@ const SignUp: NextPage = () => {
         setFormValues(initialFormValues);
         setError('');
         setSubmitted(true);
+        plausible('signup');
       } else {
         setError(message || unexpectedError);
       }
