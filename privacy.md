@@ -1,5 +1,5 @@
 This is a registry and privacy policy in accordance with the EU General Data
-Protection Regulation (GDPR). Last updated on 2021-12-06.
+Protection Regulation (GDPR). Last updated on 2021-12-13.
 
 ### 1. General
 
@@ -62,10 +62,11 @@ maintained, and that the information is processed in a lawful manner.
 
 We may disclose your information to our contractual partners and/or
 subcontractors when it is necessary in order to provide our service. These
-partners include our hosting provider ([AWS](https://aws.amazon.com))
-and email service ([Namecheap](https://www.namecheap.com)). In these situations, we
-will take the necessary steps to protect your information, e.g. by signing
-appropriate data processing agreements with the processors.
+partners include our hosting providers ([Vercel](https://vercel.com),
+[AWS](https://aws.amazon.com)) and email service
+([Namecheap](https://www.namecheap.com)). In these situations, we will take the
+necessary steps to protect your information, e.g. by signing appropriate data
+processing agreements with the processors.
 
 We may also disclose your information to third parties or relevant authorities
 when required by law or by a competent authority, and to relevant third parties
