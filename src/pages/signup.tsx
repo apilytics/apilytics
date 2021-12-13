@@ -111,7 +111,7 @@ const SignUp: NextPage = () => {
             value={formValues.email}
             onChange={handleChange}
             label="Your email"
-            placeholder="e.g. john@doe@google.com"
+            placeholder="e.g. john.doe@google.com"
             helperText="We'll reach out to you with this email. You can use your work email or your personal one."
             required
           />
