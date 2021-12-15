@@ -17,7 +17,7 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
   const ogImage = `${FRONTEND_URL}/og-image.png`;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background bg-no-repeat bg-cover">
+    <div className="min-h-screen flex flex-col bg-black">
       <Head>
         <title>{TITLE}</title>
         <meta name="description" content={DESCRIPTION} />
@@ -31,9 +31,9 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
         <meta name="twitter:image" content={ogImage} />
         {noIndex && <meta name="robots" content="noindex,noarchive,nosnippet,follow" />}
       </Head>
-      <div className="bg-filter grow flex flex-col">
-        <header className="h-20 p-5 flex items-center bg-black">
-          <div className="container mt-2 max-w-4xl flex items-center justify-between animate-fade-in animation-delay-1200">
+      <div className="grow flex flex-col">
+        <header className="h-20 flex items-center">
+          <div className="container flex items-center justify-between animate-fade-in animation-delay-1200">
             <Link href="/">
               <a>
                 <Image
@@ -49,9 +49,9 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
             <p className="text-xl text-secondary">Beta</p>
           </div>
         </header>
-        <div className="container grow p-5 text-center max-w-4xl mx-auto">{children}</div>
-        <footer className="p-5 text-center mt-16 bg-black">
-          <div className="container text-gray-500 max-w-4xl mx-auto">
+        <div className="grow">{children}</div>
+        <footer className="text-center">
+          <div className="container py-16 text-secondary mx-auto">
             <p>© 2021 Apilytics</p>
             <p>
               <a href="mailto:hello@apilytics.io">hello@apilytics.io</a>
