@@ -33,7 +33,7 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
       </Head>
       <div className="grow flex flex-col">
         <header className="h-20 flex items-center">
-          <div className="container flex items-center justify-between animate-fade-in animation-delay-1200">
+          <div className="container animate-fade-in animation-delay-1200">
             <Link href="/">
               <a>
                 <Image
@@ -46,7 +46,6 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
                 />
               </a>
             </Link>
-            <p className="text-xl text-secondary">Beta</p>
           </div>
         </header>
         <div className="grow">{children}</div>
