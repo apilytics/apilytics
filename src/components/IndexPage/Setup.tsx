@@ -100,7 +100,7 @@ export const Setup: React.FC = () => {
             </h2>
           </div>
           <div className="mt-8 bg-gray-800 border-primary w-full max-w-3xl rounded-lg divide-y divide-primary">
-            <div className="p-4 flex space-x-4">
+            <div className="p-4 flex flex-wrap space-x-4">
               {SNIPPETS.map(({ name, image }) => (
                 <button
                   key={name}
