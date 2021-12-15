@@ -56,6 +56,11 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
               <a href="mailto:hello@apilytics.io">hello@apilytics.io</a>
             </p>
             <p>
+              <a href="https://twitter.com/apilytics" target="_blank" rel="noreferrer">
+                Twitter
+              </a>
+            </p>
+            <p>
               <Link href="/privacy">
                 <a>Privacy</a>
               </Link>
