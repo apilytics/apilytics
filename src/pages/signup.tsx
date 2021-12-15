@@ -109,7 +109,7 @@ const SignUp: NextPage = () => {
           <button
             disabled={loading}
             type="submit"
-            className="mt-8 bg-primary rounded p-4 text-xl text-white w-full flex justify-center items-center disabled:opacity-50"
+            className="bg-primary rounded-lg p-5 mt-8 text-2xl text-white w-full flex justify-center items-center disabled:opacity-50"
           >
             Sign up{' '}
             {loading && (

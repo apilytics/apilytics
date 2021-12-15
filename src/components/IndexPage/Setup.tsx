@@ -105,7 +105,7 @@ export const Setup: React.FC = () => {
                 <button
                   key={name}
                   className={`flex flex-col items-center p-2 rounded-lg ${
-                    selectedFramework === name ? 'bg-primary text-white' : ''
+                    selectedFramework === name ? 'border-primary' : ''
                   }`}
                   onClick={(): void => setSelectedFramework(name)}
                 >
