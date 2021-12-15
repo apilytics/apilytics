@@ -22,8 +22,7 @@ const SNIPPETS = [
 
 const getCodeSnippet = (framework: string): JSX.Element | null => {
   switch (framework) {
-    case 'Node.js':
-    case 'Next.js': {
+    case 'Node.js': {
       return (
         <pre className="overflow-hidden">
           {`$ npm install apilytics
@@ -50,6 +49,27 @@ MIDDLEWARE = [
 ...
 'apilytics',
 ]`}
+        </pre>
+      );
+    }
+
+    case 'Next.js': {
+      return (
+        <pre className="overflow-hidden">
+          {`$ npm i apilytics
+
+// In your code:
+import Apilytics from 'apilytics';
+
+const apilytics = Apilytics('<your_api_key>');
+
+async function handler(req, res) {
+  ...
+  apilytics(req, res);
+  ...
+};
+
+export default handler;`}
         </pre>
       );
     }
