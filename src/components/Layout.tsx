@@ -9,9 +9,10 @@ import { DESCRIPTION, FRONTEND_URL, TITLE } from 'utils';
 interface Props {
   noIndex?: boolean;
   customTags?: JSX.Element;
+  dense?: boolean;
 }
 
-export const Layout: React.FC<Props> = ({ noIndex, children }) => {
+export const Layout: React.FC<Props> = ({ noIndex, children, dense }) => {
   const { asPath } = useRouter();
   const ogUrl = `${FRONTEND_URL}${asPath === '/' ? '' : asPath}`;
   const ogImage = `${FRONTEND_URL}/og-image.png`;
@@ -33,7 +34,9 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
       </Head>
       <div className="grow flex flex-col">
         <header className="h-20 flex items-center">
-          <div className="container animate-fade-in animation-delay-1200">
+          <div
+            className={`container animate-fade-in animation-delay-1200 ${dense ? 'max-w-3xl' : ''}`}
+          >
             <Link href="/">
               <a>
                 <Image
@@ -48,7 +51,7 @@ export const Layout: React.FC<Props> = ({ noIndex, children }) => {
             </Link>
           </div>
         </header>
-        <div className="grow">{children}</div>
+        <div className={`grow ${dense ? 'container max-w-3xl mx-auto' : ''}`}>{children}</div>
         <footer className="text-center">
           <div className="container py-16 text-secondary mx-auto">
             <p>© 2021 Apilytics</p>
