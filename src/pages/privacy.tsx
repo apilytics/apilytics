@@ -12,7 +12,7 @@ interface Props {
 }
 
 const Privacy: NextPage<Props> = ({ content }) => (
-  <Layout noIndex>
+  <Layout noIndex dense>
     <ReactMarkdown className="text-left text-white">{content}</ReactMarkdown>
   </Layout>
 );

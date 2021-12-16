@@ -12,7 +12,7 @@ export const Select: React.FC<Props> = ({ label, helperText, className, ...props
     </label>
     <select
       id={props.name}
-      className={`block border-primary rounded text-xl p-4 w-full my-2 ${className}`}
+      className={`block border-primary rounded-lg text-xl p-4 w-full my-2 ${className}`}
       {...props}
     />
     {helperText && <p className="text-secondary text-lg">{helperText}</p>}
