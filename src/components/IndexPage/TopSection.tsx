@@ -53,6 +53,11 @@ export const TopSection: React.FC = () => (
               Get started
             </button>
           </Link>
+          <Link href="/demo" passHref>
+            <button className="bg-white border-primary rounded-lg p-5 mt-12 text-2xl text-primary w-full lg:w-auto lg:ml-4">
+              Live demo
+            </button>
+          </Link>
         </div>
         <div className="rounded-md overflow-hidden mt-8 lg:mt-0">
           <Image
