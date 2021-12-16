@@ -31,7 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   }
 
   try {
-    await prisma.user.create({ data: { email, role, useCases, howThisCouldHelp } });
+    await prisma.waitlistUser.create({ data: { email, role, useCases, howThisCouldHelp } });
   } catch (e) {
     // https://www.prisma.io/docs/concepts/components/prisma-client/handling-exceptions-and-errors
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {

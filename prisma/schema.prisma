@@ -7,7 +7,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
+model WaitlistUser {
   id    String @id @default(uuid()) @db.Uuid
   email String @unique
 
@@ -18,5 +18,5 @@ model User {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@map(name: "users")
+  @@map(name: "waitlist_users")
 }
