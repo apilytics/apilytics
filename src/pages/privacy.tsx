@@ -13,7 +13,13 @@ interface Props {
 
 const Privacy: NextPage<Props> = ({ content }) => (
   <Layout noIndex dense>
-    <ReactMarkdown className="text-left text-white">{content}</ReactMarkdown>
+    <div className="bg-background bg-no-repeat bg-cover">
+      <div className="bg-filter">
+        <div className="container max-w-3xl mx-auto py-16">
+          <ReactMarkdown className="text-left text-white">{content}</ReactMarkdown>
+        </div>
+      </div>
+    </div>
   </Layout>
 );
 
