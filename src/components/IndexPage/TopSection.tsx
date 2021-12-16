@@ -50,7 +50,7 @@ export const TopSection: React.FC = () => (
           </div>
           <Link href="/signup" passHref>
             <button className="bg-primary rounded-lg p-5 mt-12 text-2xl text-white w-full lg:w-auto">
-              Sign me up!
+              Get started
             </button>
           </Link>
         </div>
