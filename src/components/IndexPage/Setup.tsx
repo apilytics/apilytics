@@ -56,7 +56,7 @@ MIDDLEWARE = [
     case 'Next.js': {
       return (
         <pre className="overflow-hidden">
-          {`$ npm i apilytics
+          {`$ npm install apilytics
 
 // In your code:
 import Apilytics from 'apilytics';
