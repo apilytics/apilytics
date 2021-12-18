@@ -50,7 +50,7 @@ describe('/api/waitlist', () => {
     });
 
     await handler(req, res);
-    expect(prismaMock.user.create).toHaveBeenCalledWith({ data: body });
+    expect(prismaMock.waitlistUser.create).toHaveBeenCalledWith({ data: body });
     expect(res._getStatusCode()).toBe(201);
   });
 
@@ -59,7 +59,7 @@ describe('/api/waitlist', () => {
       method: 'POST',
       body,
     });
-    prismaMock.user.create.mockImplementation(() => {
+    prismaMock.waitlistUser.create.mockImplementation(() => {
       throw new Prisma.PrismaClientKnownRequestError('', 'P2002', '');
     });
 
