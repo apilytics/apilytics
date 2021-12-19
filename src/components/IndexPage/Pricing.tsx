@@ -85,7 +85,7 @@ export const Pricing: React.FC = () => {
         <h2 className="text-2xl text-secondary mt-8">Sign up for the free beta!</h2>
         <Link href="/signup" passHref>
           <button className="bg-primary rounded-lg p-5 mt-8 text-2xl text-white w-full lg:w-auto">
-            I'm interested
+            I&lsquo;m interested
           </button>
         </Link>
       </div>
