@@ -8,3 +8,17 @@ export const DESCRIPTION =
 export const FRONTEND_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${process.env.VERCEL_URL}`;
 
 export const FRONTEND_DOMAIN = new URL(FRONTEND_URL).host;
+
+export enum Method {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  PATCH = 'PATCH',
+}
+
+export const LAST_7_DAYS_VALUE = 7;
+export const LAST_30_DAYS_VALUE = 30;
+export const LAST_3_MONTHS_VALUE = 90;
+export const LAST_6_MONTHS_VALUE = 180;
+export const LAST_12_MONTHS_VALUE = 365;

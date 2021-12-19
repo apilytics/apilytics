@@ -49,7 +49,7 @@ export const Layout: React.FC<Props> = ({ noIndex, children, headerMaxWidth = 'f
             </Link>
           </div>
         </header>
-        <div className={'grow'}>{children}</div>
+        <div className="grow">{children}</div>
         <footer className="text-center">
           <div className="container py-16 text-secondary mx-auto">
             <p>© 2021 Apilytics</p>
