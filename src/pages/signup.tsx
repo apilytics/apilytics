@@ -61,7 +61,7 @@ const SignUp: NextPage = () => {
     setFormValues({ ...formValues, [target.name]: target.value });
 
   return (
-    <Layout noIndex dense>
+    <Layout noIndex headerMaxWidth="3xl">
       <div className="bg-background bg-no-repeat bg-cover">
         <div className="bg-filter">
           <div className="container max-w-3xl mx-auto py-16">

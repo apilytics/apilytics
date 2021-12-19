@@ -9,10 +9,10 @@ import { DESCRIPTION, FRONTEND_URL, TITLE } from 'utils';
 interface Props {
   noIndex?: boolean;
   customTags?: JSX.Element;
-  dense?: boolean;
+  headerMaxWidth?: string;
 }
 
-export const Layout: React.FC<Props> = ({ noIndex, children, dense }) => {
+export const Layout: React.FC<Props> = ({ noIndex, children, headerMaxWidth = 'full' }) => {
   const { asPath } = useRouter();
   const ogUrl = `${FRONTEND_URL}${asPath === '/' ? '' : asPath}`;
   const ogImage = `${FRONTEND_URL}/og-image.png`;
@@ -34,9 +34,7 @@ export const Layout: React.FC<Props> = ({ noIndex, children, dense }) => {
       </Head>
       <div className="grow flex flex-col">
         <header className="h-20 flex items-center">
-          <div
-            className={`container animate-fade-in animation-delay-1200 ${dense ? 'max-w-3xl' : ''}`}
-          >
+          <div className={`container animate-fade-in animation-delay-1200 max-w-${headerMaxWidth}`}>
             <Link href="/">
               <a>
                 <Image
