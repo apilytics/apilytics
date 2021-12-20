@@ -32,11 +32,11 @@
 
 ### My dependencies are not getting loaded from the built image?
 
-1. Run `docker-compose build frontend`
+1. Run `docker-compose build`
 2. Run `docker-compose up -V`, (same as [`--renew-anow-volumes`](https://docs.docker.com/compose/reference/up/)) this forces the anonymous `node_modules` volume to update its contents from the freshly built image.
 3. 🍻
 
-### My editor doesn't pick up latest Prisma typings
+### My editor doesn't pick up latest Prisma typings?
 
 1. Run `yarn prismage generate` outside the container, so the types matching the latest migrations populate your local `node_modules`.
 2. 🍻
