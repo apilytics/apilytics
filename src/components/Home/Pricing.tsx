@@ -80,9 +80,14 @@ export const Pricing: React.FC = () => {
         <div className="mt-16 flex flex-col items-center">
           <h1 className="text-5xl">Ready to boost your API metrics?</h1>
           <h2 className="text-3xl text-primary mt-8">Sign up for the beta.</h2>
-          <Link href="/signup" passHref>
-            <Button className="mt-8">Request access</Button>
-          </Link>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link href="/signup" passHref>
+              <Button>Request access</Button>
+            </Link>
+            <Link href="/demo" passHref>
+              <Button variant="secondary">See demo</Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
