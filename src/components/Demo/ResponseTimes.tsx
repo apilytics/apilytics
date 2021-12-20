@@ -20,7 +20,7 @@ export const ResponseTimes: React.FC<Props> = ({ routesData }) => {
     }));
 
   return (
-    <div className="bg-zinc-900 border-secondary rounded-lg flex flex-col p-4 text-secondary">
+    <div className="bg-zinc-900 rounded-lg flex flex-col p-4 text-secondary">
       <div className="p-2">
         <h2 className="text-xl">Response times</h2>
       </div>

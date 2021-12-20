@@ -75,7 +75,7 @@ export const RequestsOverview: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-zinc-900 border-secondary rounded-lg flex flex-col p-2 text-secondary">
+    <div className="bg-zinc-900 rounded-lg flex flex-col p-2 text-secondary">
       <div className="flex">
         <div className="p-4">
           <h2 className="text-xl">Requests</h2>

@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const RouteMetrics: React.FC<Props> = ({ routesData }) => (
-  <div className="bg-zinc-900 border-secondary rounded-lg flex flex-col p-2 text-secondary">
+  <div className="bg-zinc-900 rounded-lg flex flex-col p-2 text-secondary">
     <div className="p-2">
       <h2 className="text-xl">Requests per route</h2>
     </div>
