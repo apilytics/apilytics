@@ -2,7 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-import { DESCRIPTION, TITLE } from 'utils';
+import { Button } from 'components';
+import { DESCRIPTION } from 'utils';
 
 const FRAMEWORKS_DATA = [
   {
@@ -29,7 +30,9 @@ export const TopSection: React.FC = () => (
       <div className="container py-16 animate-fade-in-top animation-delay-400 grid gap-8 grid-cols-1 lg:grid-cols-2">
         <div className="text-left">
           <h1 className="text-7xl text-white">
-            {TITLE.split('APIs')[0]} <span className="text-primary">APIs</span>
+            <span className="text-primary">API Analytics</span>
+            <br />
+            made easy
           </h1>
           <h2 className="text-2xl text-secondary mt-12">{DESCRIPTION}</h2>
           <p className="text-secondary text-left mt-12">Integrates with:</p>
@@ -39,8 +42,8 @@ export const TopSection: React.FC = () => (
                 <Image
                   src={image}
                   layout="fixed"
-                  width={100}
-                  height={100}
+                  width={120}
+                  height={120}
                   objectFit="contain"
                   alt={name}
                   priority
@@ -48,16 +51,14 @@ export const TopSection: React.FC = () => (
               </div>
             ))}
           </div>
-          <Link href="/signup" passHref>
-            <button className="bg-primary rounded-lg p-5 mt-12 text-2xl text-white w-full lg:w-auto">
-              Get started
-            </button>
-          </Link>
-          <Link href="/demo" passHref>
-            <button className="bg-white border-primary rounded-lg p-5 mt-12 text-2xl text-primary w-full lg:w-auto lg:ml-4">
-              Live demo
-            </button>
-          </Link>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid">
+            <Link href="/signup" passHref>
+              <Button>Get started</Button>
+            </Link>
+            <Link href="/demo" passHref>
+              <Button variant="secondary">Live demo</Button>
+            </Link>
+          </div>
         </div>
         <div className="rounded-md overflow-hidden mt-8 lg:mt-0">
           <Image

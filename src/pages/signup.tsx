@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import type { FormEvent } from 'react';
 
-import { Input, Layout, Textarea } from 'components';
+import { Button, Input, Layout, Textarea } from 'components';
 import type { PlausibleEvents } from 'types';
 
 const initialFormValues = {
@@ -65,7 +65,7 @@ const SignUp: NextPage = () => {
         <div className="bg-filter">
           <div className="container max-w-3xl mx-auto py-16">
             <h2 className="text-2xl text-secondary animate-fade-in-top animation-delay-400">
-              Sign up for the free beta
+              Request beta access
             </h2>
             <form
               onSubmit={handleSubmit}
@@ -107,16 +107,12 @@ const SignUp: NextPage = () => {
                 helperText="What are you struggling with when it comes to monitoring & analyzing your APIs? What are the main areas you could need help with? What features would you like to see?"
               />
               {error && <p className="text-red-500">{error}</p>}
-              <button
-                disabled={loading}
-                type="submit"
-                className="bg-primary rounded-lg p-5 mt-8 text-2xl text-white w-full flex justify-center items-center disabled:opacity-50"
-              >
+              <Button disabled={loading} fullWidth type="submit" className="mt-8">
                 Sign up{' '}
                 {loading && (
                   <div className="animate-spinner ease-linear rounded-full border-2 border-t-primary h-6 w-6 ml-4" />
                 )}
-              </button>
+              </Button>
               {submitted && (
                 <p className="text-white mt-8">
                   Thank you for signing up! We&apos;ll be in touch when you can start using
