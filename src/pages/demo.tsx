@@ -1,8 +1,10 @@
 import dayjs from 'dayjs';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import {
+  Button,
   DashboardOptions,
   Layout,
   RequestsOverview,
@@ -212,6 +214,22 @@ const Demo: NextPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <RouteMetrics routesData={routesData} />
               <ResponseTimes routesData={routesData} />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+              <div>
+                <h2 className="text-3xl text-white">
+                  Want to see these metrics from your APIs?{' '}
+                  <span className="text-primary">Start for free now.</span>
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Link href="/signup" passHref>
+                  <Button>Get started</Button>
+                </Link>
+                <Link href="/" passHref>
+                  <Button variant="secondary">Learn more</Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
