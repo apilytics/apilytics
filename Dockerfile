@@ -11,12 +11,13 @@ RUN apt-get update \
 
 RUN mkdir .next
 
-COPY package.json .
-COPY yarn.lock .
-COPY prisma prisma/
-
 ENV NODE_ENV=development
 
+COPY package.json .
+COPY yarn.lock .
 RUN yarn install --frozen-lockfile && yarn cache clean
+
+COPY prisma prisma/
+RUN yarn prisma generate
 
 CMD ["yarn", "dev"]

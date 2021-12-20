@@ -8,7 +8,7 @@ generator client {
 }
 
 model Account {
-  id                String  @id @default(uuid()) @db.Uuid
+  id                String  @id @default(cuid())
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
@@ -23,7 +23,7 @@ model Account {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  userId String @map("user_id") @db.Uuid
+  userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
@@ -31,14 +31,15 @@ model Account {
 }
 
 model User {
-  id            String    @id @default(uuid()) @db.Uuid
-  email         String?   @unique
+  id            String    @id @default(cuid()) // next-auth doesn't support UUIDs for its models.
+  email         String    @unique
   emailVerified DateTime? @map("email_verified")
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   accounts Account[]
+  sites    Site[]
 
   @@map("users")
 }
@@ -67,4 +68,35 @@ model WaitlistUser {
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "waitlist_users")
+}
+
+model Site {
+  id     String @id @default(uuid()) @db.Uuid
+  domain String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  metrics Metric[]
+
+  @@unique([domain, userId])
+  @@map(name: "sites")
+}
+
+model Metric {
+  id         String @id @default(uuid()) @db.Uuid
+  path       String
+  method     String
+  timeMillis Int
+
+  // Metrics are immutable so no need to store `updatedAt` info.
+  createdAt DateTime @default(now()) @map(name: "created_at")
+
+  siteId String @map("site_id") @db.Uuid
+  site   Site   @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@map(name: "metrics")
 }
