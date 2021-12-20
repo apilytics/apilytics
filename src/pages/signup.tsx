@@ -4,7 +4,7 @@ import type { NextPage } from 'next';
 import type { FormEvent } from 'react';
 
 import { Input, Layout, Textarea } from 'components';
-import type { PlausibleEvents } from 'plausibleEvents';
+import type { PlausibleEvents } from 'types';
 
 const initialFormValues = {
   role: '',
@@ -18,7 +18,6 @@ const SignUp: NextPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
   const plausible = usePlausible<PlausibleEvents>();
 
   const handleSubmit = async (e: FormEvent): Promise<void> => {

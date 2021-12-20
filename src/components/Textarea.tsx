@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   helperText?: string;
 }

@@ -1,4 +1,4 @@
-import type { SessionUser } from 'lib-server/types';
+import type { SessionUser } from 'types';
 
 declare module 'next-auth' {
   // We have customized this in `[...nextauth].ts`.

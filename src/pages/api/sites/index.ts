@@ -1,21 +1,16 @@
 import { Prisma } from '@prisma/client';
-import type { Site } from '@prisma/client';
 
-import { getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
-import { withAuthRequired } from 'lib-server/middleware';
-import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
+import {
+  getSessionUser,
+  makeMethodsHandler,
+  sendConflict,
+  sendCreated,
+  sendInvalidInput,
+  sendOk,
+  withAuthRequired,
+} from 'lib-server';
 import prisma from 'prismaClient';
-import type { ApiHandler } from 'lib-server/types';
-
-export type SitesPostBody = Pick<Site, 'domain'>;
-
-export interface SitesListGetResponse {
-  data: Site[];
-}
-
-export interface SitesPostResponse {
-  data: Site;
-}
+import type { ApiHandler, SitesListGetResponse, SitesPostBody, SitesPostResponse } from 'types';
 
 const handleGet: ApiHandler<SitesListGetResponse> = async (req, res) => {
   const user = await getSessionUser(req);

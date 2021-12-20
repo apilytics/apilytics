@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 
 import { mockNextApiReqRes, prismaMock } from '__tests__/__helpers__';
 import handler from 'pages/api/signup';
-import type { SignUpBody } from 'pages/api/signup';
+import type { SignUpBody } from 'types';
 
 describe('/api/waitlist', () => {
   const body: SignUpBody = {

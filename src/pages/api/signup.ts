@@ -1,16 +1,8 @@
 import { Prisma } from '@prisma/client';
 
-import { makeMethodsHandler } from 'lib-server/apiHelpers';
-import { sendConflict, sendCreated, sendInvalidInput } from 'lib-server/responses';
+import { makeMethodsHandler, sendConflict, sendCreated, sendInvalidInput } from 'lib-server';
 import prisma from 'prismaClient';
-import type { ApiHandler } from 'lib-server/types';
-
-export interface SignUpBody {
-  email: string;
-  role: string;
-  useCases?: string;
-  howThisCouldHelp?: string;
-}
+import type { ApiHandler, SignUpBody } from 'types';
 
 const EMAIL_REGEX = /^.+@.+$/;
 
