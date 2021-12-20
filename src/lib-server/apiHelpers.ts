@@ -66,8 +66,12 @@ export const getIdFromReq = (req: NextApiRequest): string => {
   throw new Error(`Invalid id param in route: ${id}`);
 };
 
+export const safeGetSessionUser = async (req: NextApiRequest): Promise<SessionUser | null> => {
+  return (await getSession({ req }))?.user ?? null;
+};
+
 export const getSessionUser = async (req: NextApiRequest): Promise<SessionUser> => {
-  const user = (await getSession({ req }))?.user;
+  const user = await safeGetSessionUser(req);
   if (!user) {
     throw new UnauthorizedApiError();
   }
