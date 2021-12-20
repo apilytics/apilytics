@@ -1,6 +1,3 @@
-import NextAuth from 'next-auth'; // eslint-disable-line @typescript-eslint/no-unused-vars
-import types from 'next-auth/jwt/types'; // eslint-disable-line @typescript-eslint/no-unused-vars
-
 import type { SessionUser } from 'lib-server/types';
 
 declare module 'next-auth' {
