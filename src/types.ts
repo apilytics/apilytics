@@ -29,8 +29,6 @@ export interface RequestSource {
   name: string;
   totalRequests: number;
   totalRequestsGrowth: number;
-  requestsPerSession: number;
-  requestsPerSessionGrowth: number;
   requestsData: RequestData[];
   routesData: RouteData[];
 }

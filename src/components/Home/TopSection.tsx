@@ -32,8 +32,6 @@ export const TopSection: React.FC = () => {
   const {
     totalRequests = 0,
     totalRequestsGrowth = 0,
-    requestsPerSession = 0,
-    requestsPerSessionGrowth = 0,
     requestsData = [],
   } = sources.find((source) => source.name === sourceName) || {};
 
@@ -78,8 +76,6 @@ export const TopSection: React.FC = () => {
               timeFrame={timeFrame}
               totalRequests={totalRequests}
               totalRequestsGrowth={totalRequestsGrowth}
-              requestsPerSession={requestsPerSession}
-              requestsPerSessionGrowth={requestsPerSessionGrowth}
               requestsData={requestsData}
             />
           </div>

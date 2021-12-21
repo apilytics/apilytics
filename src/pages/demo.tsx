@@ -21,8 +21,6 @@ const Demo: NextPage = () => {
   const {
     totalRequests = 0,
     totalRequestsGrowth = 0,
-    requestsPerSession = 0,
-    requestsPerSessionGrowth = 0,
     requestsData = [],
     routesData = [],
   } = sources.find((source) => source.name === sourceName) || {};
@@ -43,8 +41,6 @@ const Demo: NextPage = () => {
               timeFrame={timeFrame}
               totalRequests={totalRequests}
               totalRequestsGrowth={totalRequestsGrowth}
-              requestsPerSession={requestsPerSession}
-              requestsPerSessionGrowth={requestsPerSessionGrowth}
               requestsData={requestsData}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">

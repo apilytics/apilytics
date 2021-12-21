@@ -150,16 +150,11 @@ export const mockApi = (timeFrame: TimeFrame): APIResponse => {
     ).toFixed(2),
   );
 
-  const requestsPerSession = Number((Math.max(Math.random(), 0.5) * 10).toFixed());
-  const requestsPerSessionGrowth = Number(Math.random().toFixed(2));
-
   return {
     sources: MOCK_REQUEST_SOURCES.map((name) => ({
       name,
       totalRequests,
       totalRequestsGrowth,
-      requestsPerSession,
-      requestsPerSessionGrowth,
       requestsData,
       routesData: MOCK_ROUTES_DATA,
     })),

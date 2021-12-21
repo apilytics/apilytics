@@ -18,8 +18,6 @@ interface Props {
   timeFrame: TimeFrame;
   totalRequests: number;
   totalRequestsGrowth: number;
-  requestsPerSession: number;
-  requestsPerSessionGrowth: number;
   requestsData: RequestData[];
 }
 
@@ -27,8 +25,6 @@ export const RequestsOverview: React.FC<Props> = ({
   timeFrame,
   totalRequests,
   totalRequestsGrowth,
-  requestsPerSession,
-  requestsPerSessionGrowth,
   requestsData,
 }) => {
   const tickFormatter = (date: string, index: number): string => {
@@ -78,20 +74,11 @@ export const RequestsOverview: React.FC<Props> = ({
     <div className="bg-zinc-900 rounded-lg flex flex-col p-2 text-secondary">
       <div className="flex">
         <div className="p-4">
-          <h2 className="text-xl">Requests</h2>
+          <h2 className="text-xl">Total requests</h2>
           <div className="flex items-center">
             <p className="text-secondary text-lg">{totalRequests}</p>
             <p className="text-secondary text-lg text-green-400 ml-2">
               +{(totalRequestsGrowth * 100).toFixed()}%
-            </p>
-          </div>
-        </div>
-        <div className="p-4">
-          <h2 className="text-xl">Avg. requests per session</h2>
-          <div className="flex items-center">
-            <p className="text-secondary text-lg">{requestsPerSession}</p>
-            <p className="text-secondary text-lg text-green-400 ml-2">
-              +{(requestsPerSessionGrowth * 100).toFixed()}%
             </p>
           </div>
         </div>
