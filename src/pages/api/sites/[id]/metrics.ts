@@ -1,20 +1,20 @@
-import type { Metric } from '@prisma/client';
-
-import { getIdFromReq, getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
-import { withAuthRequired } from 'lib-server/middleware';
-import { sendCreated, sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
+import {
+  getIdFromReq,
+  getSessionUser,
+  makeMethodsHandler,
+  sendCreated,
+  sendInvalidInput,
+  sendNotFound,
+  sendOk,
+  withAuthRequired,
+} from 'lib-server';
 import prisma from 'prismaClient';
-import type { ApiHandler } from 'lib-server/types';
-
-export type MetricsPostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
-
-export interface MetricsListGetResponse {
-  data: Metric[];
-}
-
-export interface MetricsPostResponse {
-  data: Metric;
-}
+import type {
+  ApiHandler,
+  MetricsListGetResponse,
+  MetricsPostBody,
+  MetricsPostResponse,
+} from 'types';
 
 const handleGet: ApiHandler<MetricsListGetResponse> = async (req, res) => {
   const user = await getSessionUser(req);

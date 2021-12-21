@@ -1,4 +1,4 @@
-import type { SessionUser } from 'lib-server/types';
+import type { SessionUser } from 'types';
 
 declare module 'next-auth' {
   // We have customized this in `[...nextauth].ts`.
@@ -14,4 +14,10 @@ declare module 'next-auth/jwt/types' {
   interface JWT {
     uid: string;
   }
+}
+
+declare global {
+  // Ignore: Must use `var` when declaring globals.
+  /* eslint no-var: off */
+  var prisma: PrismaClient;
 }

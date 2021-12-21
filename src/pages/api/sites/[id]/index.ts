@@ -1,18 +1,20 @@
-import type { Site } from '@prisma/client';
-
-import { getIdFromReq, getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
-import { withAuthRequired } from 'lib-server/middleware';
-import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
+import {
+  getIdFromReq,
+  getSessionUser,
+  makeMethodsHandler,
+  sendInvalidInput,
+  sendNoContent,
+  sendNotFound,
+  sendOk,
+  withAuthRequired,
+} from 'lib-server';
 import prisma from 'prismaClient';
-import type { ApiHandler } from 'lib-server/types';
-
-export type SitesDetailPutBody = Pick<Site, 'domain'>;
-
-export interface SitesDetailGetResponse {
-  data: Site;
-}
-
-export type SitesDetailPutResponse = SitesDetailGetResponse;
+import type {
+  ApiHandler,
+  SitesDetailGetResponse,
+  SitesDetailPutBody,
+  SitesDetailPutResponse,
+} from 'types';
 
 const handleGet: ApiHandler<SitesDetailGetResponse> = async (req, res) => {
   const user = await getSessionUser(req);

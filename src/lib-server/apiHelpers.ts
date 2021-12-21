@@ -1,8 +1,8 @@
 import { getSession } from 'next-auth/react';
 import type { NextApiRequest } from 'next';
 
-import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
-import type { ApiHandler, SessionUser } from 'lib-server/types';
+import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server';
+import type { ApiHandler, SessionUser } from 'types';
 
 class UnauthorizedApiError extends Error {}
 
