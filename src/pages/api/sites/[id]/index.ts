@@ -60,7 +60,7 @@ const handleDelete: ApiHandler = async (req, res) => {
   const id = getIdFromReq(req);
 
   const { count } = await prisma.site.deleteMany({
-    where: { id: id, userId: user.id },
+    where: { id, userId: user.id },
   });
 
   if (count === 0) {
