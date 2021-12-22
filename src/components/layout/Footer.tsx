@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import React from 'react';
 
+import { routes } from 'utils';
+
 export const Footer: React.FC = () => (
   <footer className="text-center">
     <div className="container py-16 text-secondary mx-auto">
@@ -14,7 +16,7 @@ export const Footer: React.FC = () => (
         </a>
       </p>
       <p>
-        <Link href="/privacy">
+        <Link href={routes.privacy}>
           <a>Privacy</a>
         </Link>
       </p>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 
 import { Button } from 'components';
+import { routes } from 'utils';
 
 const MIN_REQUESTS = 50_000;
 const MAX_REQUESTS = 5_000_000;
@@ -81,10 +82,10 @@ export const Pricing: React.FC = () => {
           <h1 className="text-5xl">Ready to boost your API metrics?</h1>
           <h2 className="text-3xl text-primary mt-8">Sign up for the beta.</h2>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link href="/signup" passHref>
+            <Link href={routes.signUp} passHref>
               <Button>Request access</Button>
             </Link>
-            <Link href="/demo" passHref>
+            <Link href={routes.demo} passHref>
               <Button variant="secondary">See demo</Button>
             </Link>
           </div>

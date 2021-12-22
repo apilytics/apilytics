@@ -10,7 +10,7 @@ import {
   ResponseTimes,
   RouteMetrics,
 } from 'components';
-import { LAST_7_DAYS_VALUE, mockApi } from 'utils';
+import { LAST_7_DAYS_VALUE, mockApi, routes } from 'utils';
 import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
@@ -55,10 +55,10 @@ const Demo: NextPage = () => {
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Link href="/signup" passHref>
+                <Link href={routes.signUp} passHref>
                   <Button>Get started</Button>
                 </Link>
-                <Link href="/" passHref>
+                <Link href={routes.root} passHref>
                   <Button variant="secondary">Learn more</Button>
                 </Link>
               </div>
