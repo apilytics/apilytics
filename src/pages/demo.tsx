@@ -2,15 +2,15 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
-import {
-  Button,
-  DashboardOptions,
-  Layout,
-  RequestsOverview,
-  ResponseTimes,
-  RouteMetrics,
-} from 'components';
-import { LAST_7_DAYS_VALUE, mockApi, routes } from 'utils';
+import { DashboardOptions } from 'components/Demo/DashboardOptions';
+import { RequestsOverview } from 'components/Demo/RequestsOverview';
+import { ResponseTimes } from 'components/Demo/ResponseTimes';
+import { RouteMetrics } from 'components/Demo/RouteMetrics';
+import { Layout } from 'components/layout/Layout';
+import { Button } from 'components/shared/Button';
+import { LAST_7_DAYS_VALUE } from 'utils/constants';
+import { mockApi } from 'utils/mockApi';
+import { routes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {

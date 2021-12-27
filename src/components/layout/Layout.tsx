@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { Footer, Head, Header } from 'components';
+import { Footer } from 'components/layout/Footer';
+import { Head } from 'components/layout/Head';
+import { Header } from 'components/layout/Header';
 import type { HeaderProps, HeadProps } from 'types';
 
 export const Layout: React.FC<HeadProps & HeaderProps> = ({

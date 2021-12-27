@@ -8,7 +8,7 @@ import type {
   LAST_12_MONTHS_VALUE,
   LAST_30_DAYS_VALUE,
   Method,
-} from 'utils';
+} from 'utils/constants';
 
 export interface RouteData {
   name: string;

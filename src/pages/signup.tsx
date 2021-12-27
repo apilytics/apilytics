@@ -3,8 +3,11 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import type { FormEvent } from 'react';
 
-import { Button, Input, Layout, Textarea } from 'components';
-import { apiRoutes } from 'utils';
+import { Layout } from 'components/layout/Layout';
+import { Button } from 'components/shared/Button';
+import { Input } from 'components/shared/Input';
+import { Textarea } from 'components/shared/Textarea';
+import { apiRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 const initialFormValues = {

@@ -1,13 +1,6 @@
-import {
-  getIdFromReq,
-  getSessionUser,
-  makeMethodsHandler,
-  sendInvalidInput,
-  sendNoContent,
-  sendNotFound,
-  sendOk,
-  withAuthRequired,
-} from 'lib-server';
+import { getIdFromReq, getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
+import { withAuthRequired } from 'lib-server/middleware';
+import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
 import type {
   ApiHandler,

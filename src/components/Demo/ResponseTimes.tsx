@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
-import { RouteValue } from 'components';
+import { RouteValue } from 'components/Demo/RouteValue';
 import type { RouteData } from 'types';
 
 interface Props {

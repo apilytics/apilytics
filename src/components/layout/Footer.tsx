@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-import { routes } from 'utils';
+import { routes } from 'utils/router';
 
 export const Footer: React.FC = () => (
   <footer className="text-center">

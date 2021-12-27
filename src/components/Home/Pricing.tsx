@@ -2,8 +2,8 @@ import { CheckCircleIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-import { Button } from 'components';
-import { routes } from 'utils';
+import { Button } from 'components/shared/Button';
+import { routes } from 'utils/router';
 
 const MIN_REQUESTS = 50_000;
 const MAX_REQUESTS = 5_000_000;

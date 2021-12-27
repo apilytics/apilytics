@@ -2,14 +2,15 @@ import NextHead from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { DESCRIPTION, FRONTEND_URL, TITLE } from 'utils';
+import { DESCRIPTION, FRONTEND_URL, TITLE } from 'utils/constants';
+import { routes } from 'utils/router';
 import type { HeadProps } from 'types';
 
 const OG_IMAGE = `${FRONTEND_URL}/og-image.png`;
 
 export const Head: React.FC<HeadProps> = ({ noIndex }) => {
   const { asPath } = useRouter();
-  const ogUrl = `${FRONTEND_URL}${asPath === '/' ? '' : asPath}`;
+  const ogUrl = `${FRONTEND_URL}${asPath === routes.root ? '' : asPath}`;
 
   return (
     <NextHead>

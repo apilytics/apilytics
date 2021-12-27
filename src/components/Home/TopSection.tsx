@@ -2,8 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-import { Button, RequestsOverview } from 'components';
-import { DESCRIPTION, LAST_12_MONTHS_VALUE, mockApi, routes } from 'utils';
+import { RequestsOverview } from 'components/Demo/RequestsOverview';
+import { Button } from 'components/shared/Button';
+import { DESCRIPTION, LAST_12_MONTHS_VALUE } from 'utils/constants';
+import { mockApi } from 'utils/mockApi';
+import { routes } from 'utils/router';
 
 const FRAMEWORKS_DATA = [
   {

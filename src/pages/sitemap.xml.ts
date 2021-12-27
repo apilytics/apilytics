@@ -1,6 +1,6 @@
 import type { GetServerSideProps } from 'next';
 
-import { FRONTEND_URL } from 'utils';
+import { FRONTEND_URL } from 'utils/constants';
 
 // https://www.sitemaps.org/protocol.html#xmlTagDefinitions
 interface Route {
