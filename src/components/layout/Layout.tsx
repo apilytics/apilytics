@@ -15,7 +15,7 @@ export const Layout: React.FC<HeadProps & HeaderProps> = ({
     <div className="min-h-screen flex flex-col bg-black">
       <div className="grow flex flex-col">
         <Header headerMaxWidth={headerMaxWidth} />
-        <div className="grow">{children}</div>
+        <div className="grow flex flex-col">{children}</div>
         <Footer />
       </div>
     </div>

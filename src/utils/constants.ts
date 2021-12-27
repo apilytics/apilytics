@@ -22,3 +22,5 @@ export const LAST_30_DAYS_VALUE = 30;
 export const LAST_3_MONTHS_VALUE = 90;
 export const LAST_6_MONTHS_VALUE = 180;
 export const LAST_12_MONTHS_VALUE = 365;
+
+export const UNEXPECTED_ERROR = 'Unexpected error.';

@@ -42,6 +42,7 @@ export type TimeFrame =
 
 export type PlausibleEvents = {
   signup: never;
+  login: never;
 };
 
 export interface HeadProps {
