@@ -6,5 +6,5 @@ export const routes = {
 };
 
 export const apiRoutes = {
-  signUp: '/api/sign-up',
+  signUp: '/api/signup',
 };
