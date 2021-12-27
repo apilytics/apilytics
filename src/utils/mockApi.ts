@@ -7,7 +7,7 @@ import {
   LAST_12_MONTHS_VALUE,
   LAST_30_DAYS_VALUE,
   Method,
-} from 'utils';
+} from 'utils/constants';
 import type { RequestData, RequestSource, TimeFrame } from 'types';
 
 const MOCK_ROUTES_DATA = [

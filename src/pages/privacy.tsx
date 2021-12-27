@@ -5,7 +5,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { GetStaticProps, NextPage } from 'next';
 
-import { Layout } from 'components';
+import { Layout } from 'components/layout/Layout';
 
 interface Props {
   content: string;

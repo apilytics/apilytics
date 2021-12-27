@@ -1,7 +1,11 @@
 import React from 'react';
 import type { NextPage } from 'next';
 
-import { Features, Layout, Pricing, Setup, TopSection } from 'components';
+import { Features } from 'components/Home/Features';
+import { Pricing } from 'components/Home/Pricing';
+import { Setup } from 'components/Home/Setup';
+import { TopSection } from 'components/Home/TopSection';
+import { Layout } from 'components/layout/Layout';
 
 const Home: NextPage = () => (
   <Layout>

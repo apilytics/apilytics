@@ -1,4 +1,4 @@
-import type { Metric, Site } from '@prisma/client';
+import type { Metric, Site, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import type {
@@ -8,7 +8,7 @@ import type {
   LAST_12_MONTHS_VALUE,
   LAST_30_DAYS_VALUE,
   Method,
-} from 'utils';
+} from 'utils/constants';
 
 export interface RouteData {
   name: string;
@@ -40,16 +40,31 @@ export type TimeFrame =
   | typeof LAST_6_MONTHS_VALUE
   | typeof LAST_12_MONTHS_VALUE;
 
-// Our custom user that next-auth holds in its sessions.
-export interface SessionUser {
-  id: string;
-  email: string;
+export type PlausibleEvents = {
+  signup: never;
+};
+
+export interface HeadProps {
+  noIndex?: boolean;
+  customTags?: JSX.Element;
 }
+
+export interface HeaderProps {
+  headerMaxWidth?: string;
+}
+
+// API types.
 
 export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,
 ) => Promise<void>;
+
+// Our custom user that next-auth holds in its sessions.
+export interface SessionUser {
+  id: string;
+  email: string;
+}
 
 export interface SignUpBody {
   email: string;
@@ -58,14 +73,8 @@ export interface SignUpBody {
   howThisCouldHelp?: string;
 }
 
-export type PlausibleEvents = {
-  signup: never;
-};
-
-type NewType = Site;
-
 export interface SitesListGetResponse {
-  data: NewType[];
+  data: Site[];
 }
 
 export interface SitesPostResponse {
@@ -84,7 +93,13 @@ export interface SitesDetailGetResponse {
   data: Site;
 }
 
+export interface AccountDetailGetResponse {
+  data: User;
+}
+
 export type SitesPostBody = Pick<Site, 'domain'>;
 export type MetricsPostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
 export type SitesDetailPutBody = Pick<Site, 'domain'>;
 export type SitesDetailPutResponse = SitesDetailGetResponse;
+export type AccountDetailPutResponse = AccountDetailGetResponse;
+export type AccountDetailPutBody = Pick<User, 'email'>;

@@ -1,14 +1,14 @@
 import React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 
-import { Select } from 'components';
+import { Select } from 'components/shared/Select';
 import {
   LAST_3_MONTHS_VALUE,
   LAST_6_MONTHS_VALUE,
   LAST_7_DAYS_VALUE,
   LAST_12_MONTHS_VALUE,
   LAST_30_DAYS_VALUE,
-} from 'utils';
+} from 'utils/constants';
 import type { RequestSource, TimeFrame } from 'types';
 
 const LAST_7_DAYS_LABEL = 'Last 7 days';

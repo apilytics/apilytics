@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 
-import { makeMethodsHandler, sendConflict, sendCreated, sendInvalidInput } from 'lib-server';
+import { makeMethodsHandler } from 'lib-server/apiHelpers';
+import { sendConflict, sendCreated, sendInvalidInput } from 'lib-server/responses';
 import prisma from 'prismaClient';
 import type { ApiHandler, SignUpBody } from 'types';
 

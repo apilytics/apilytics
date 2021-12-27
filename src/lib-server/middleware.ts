@@ -1,4 +1,5 @@
-import { safeGetSessionUser, sendUnauthorized } from 'lib-server';
+import { safeGetSessionUser } from 'lib-server/apiHelpers';
+import { sendUnauthorized } from 'lib-server/responses';
 import type { ApiHandler } from 'types';
 
 export const withAuthRequired = <T extends ApiHandler>(handler: T) => {

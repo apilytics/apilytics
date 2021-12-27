@@ -8,7 +8,7 @@ import {
   LAST_7_DAYS_VALUE,
   LAST_12_MONTHS_VALUE,
   LAST_30_DAYS_VALUE,
-} from 'utils';
+} from 'utils/constants';
 import type { RequestData, TimeFrame } from 'types';
 
 const DAY_AND_MONTH_FORMAT = 'ddd, D MMM';

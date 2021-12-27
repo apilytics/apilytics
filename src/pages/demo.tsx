@@ -2,15 +2,15 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
-import {
-  Button,
-  DashboardOptions,
-  Layout,
-  RequestsOverview,
-  ResponseTimes,
-  RouteMetrics,
-} from 'components';
-import { LAST_7_DAYS_VALUE, mockApi } from 'utils';
+import { DashboardOptions } from 'components/Demo/DashboardOptions';
+import { RequestsOverview } from 'components/Demo/RequestsOverview';
+import { ResponseTimes } from 'components/Demo/ResponseTimes';
+import { RouteMetrics } from 'components/Demo/RouteMetrics';
+import { Layout } from 'components/layout/Layout';
+import { Button } from 'components/shared/Button';
+import { LAST_7_DAYS_VALUE } from 'utils/constants';
+import { mockApi } from 'utils/mockApi';
+import { routes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
@@ -55,10 +55,10 @@ const Demo: NextPage = () => {
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Link href="/signup" passHref>
+                <Link href={routes.signUp} passHref>
                   <Button>Get started</Button>
                 </Link>
-                <Link href="/" passHref>
+                <Link href={routes.root} passHref>
                   <Button variant="secondary">Learn more</Button>
                 </Link>
               </div>

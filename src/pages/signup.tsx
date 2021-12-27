@@ -3,7 +3,11 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import type { FormEvent } from 'react';
 
-import { Button, Input, Layout, Textarea } from 'components';
+import { Layout } from 'components/layout/Layout';
+import { Button } from 'components/shared/Button';
+import { Input } from 'components/shared/Input';
+import { Textarea } from 'components/shared/Textarea';
+import { apiRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 const initialFormValues = {
@@ -29,7 +33,7 @@ const SignUp: NextPage = () => {
     const payload = { ...formValues };
 
     try {
-      const res = await fetch('/api/signup', {
+      const res = await fetch(apiRoutes.signUp, {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: {

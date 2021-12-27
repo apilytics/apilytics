@@ -52,11 +52,5 @@ module.exports = {
         '@typescript-eslint/explicit-function-return-type': ['error'],
       },
     },
-    {
-      files: ['index.ts'],
-      rules: {
-        'no-restricted-imports': 'off',
-      },
-    },
   ],
 };

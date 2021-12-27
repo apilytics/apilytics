@@ -33,11 +33,11 @@
   }
 
   .border-primary {
-    border: 0.1rem solid var(--color-primary);
+    border: 2px solid var(--color-primary);
   }
 
   .border-secondary {
-    border: 0.1rem solid var(--color-secondary);
+    border: 2px solid var(--color-secondary);
   }
 
   .border-t-primary {

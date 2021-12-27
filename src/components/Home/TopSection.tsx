@@ -2,8 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-import { Button, RequestsOverview } from 'components';
-import { DESCRIPTION, LAST_12_MONTHS_VALUE, mockApi } from 'utils';
+import { RequestsOverview } from 'components/Demo/RequestsOverview';
+import { Button } from 'components/shared/Button';
+import { DESCRIPTION, LAST_12_MONTHS_VALUE } from 'utils/constants';
+import { mockApi } from 'utils/mockApi';
+import { routes } from 'utils/router';
 
 const FRAMEWORKS_DATA = [
   {
@@ -63,10 +66,10 @@ export const TopSection: React.FC = () => {
               ))}
             </div>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid">
-              <Link href="/signup" passHref>
+              <Link href={routes.signUp} passHref>
                 <Button>Get started</Button>
               </Link>
-              <Link href="/demo" passHref>
+              <Link href={routes.demo} passHref>
                 <Button variant="secondary">Live demo</Button>
               </Link>
             </div>
