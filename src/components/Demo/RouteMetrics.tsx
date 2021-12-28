@@ -15,7 +15,7 @@ export const RouteMetrics: React.FC<Props> = ({ routesData }) => (
     </div>
     <div className="mt-4">
       <ResponsiveContainer height={400}>
-        <BarChart data={routesData.sort((a, b) => a.requests - b.requests)} layout="vertical">
+        <BarChart data={routesData.sort((a, b) => b.requests - a.requests)} layout="vertical">
           <Bar dataKey="requests" fill="#27272a" minPointSize={150}>
             <LabelList
               content={
