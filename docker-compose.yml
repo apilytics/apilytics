@@ -14,8 +14,8 @@ services:
       - apilytics_postgres_data:/var/lib/postgresql/data/
     restart: unless-stopped
 
-  apilytics-landing-page:
-    container_name: apilytics-landing-page
+  apilytics:
+    container_name: apilytics
     build:
       context: .
       dockerfile: Dockerfile

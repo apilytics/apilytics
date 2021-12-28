@@ -1,6 +1,6 @@
-# Apilytics Landing Page 📈
+# Apilytics 📈
 
-[![ci](https://github.com/blomqma/apilytics-landing-page/actions/workflows/ci.yml/badge.svg)](https://github.com/blomqma/apilytics-landing-page/actions)
+[![ci](https://github.com/blomqma/apilytics/actions/workflows/ci.yml/badge.svg)](https://github.com/blomqma/apilytics/actions)
 
 ## Prerequisites
 
@@ -12,9 +12,9 @@
 
 ## Get the development environment up and running
 
-1. Clone this repository with: `git clone git@github.com:blomqma/apilytics-landing-page.git`
+1. Clone this repository with: `git clone git@github.com:blomqma/apilytics.git`
 
-2. `cd apilytics-landing-page`
+2. `cd apilytics`
 
 3. [Follow the instructions for environment variables](#environment-variables)
 
