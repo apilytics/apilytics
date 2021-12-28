@@ -9,7 +9,7 @@ import {
   LAST_12_MONTHS_VALUE,
   LAST_30_DAYS_VALUE,
 } from 'utils/constants';
-import type { RequestSource, TimeFrame } from 'types';
+import type { TimeFrame } from 'types';
 
 const LAST_7_DAYS_LABEL = 'Last 7 days';
 const LAST_30_DAYS_LABEL = 'Last 30 days';
@@ -26,37 +26,28 @@ const TIME_FRAME_OPTIONS = {
 };
 
 interface Props {
-  apiName?: string;
-  sourceName: string;
-  setSourceName: Dispatch<SetStateAction<string>>;
-  sources: RequestSource[];
+  selectedSource: string;
+  setSelectedSource: Dispatch<SetStateAction<string>>;
+  sourceOptions: string[];
   timeFrame: TimeFrame;
   setTimeFrame: Dispatch<SetStateAction<TimeFrame>>;
 }
 
 export const DashboardOptions: React.FC<Props> = ({
-  apiName = 'apilytics.io',
-  sourceName,
-  setSourceName,
-  sources,
+  selectedSource,
+  setSelectedSource,
+  sourceOptions,
   timeFrame,
   setTimeFrame,
 }) => (
   <div className="flex items-center justify-between">
-    <div className="flex items-center">
-      <h1 className="text-white text-2xl">{apiName}</h1>
-      <Select
-        value={sourceName}
-        onChange={({ target }): void => setSourceName(target.value)}
-        containerProps={{ className: 'ml-4' }}
-      >
-        {sources.map(({ name }) => (
-          <option value={name} key={name}>
-            {name}
-          </option>
-        ))}
-      </Select>
-    </div>
+    <Select value={selectedSource} onChange={({ target }): void => setSelectedSource(target.value)}>
+      {sourceOptions.map((source) => (
+        <option value={source} key={source}>
+          {source}
+        </option>
+      ))}
+    </Select>
     <Select
       value={timeFrame}
       onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}

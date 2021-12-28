@@ -8,7 +8,7 @@ import {
   LAST_30_DAYS_VALUE,
   Method,
 } from 'utils/constants';
-import type { RequestData, RequestSource, TimeFrame } from 'types';
+import type { APIResponse, RequestData, TimeFrame } from 'types';
 
 const MOCK_ROUTES_DATA = [
   {
@@ -94,10 +94,6 @@ const MOCK_ROUTES_DATA = [
   },
 ];
 
-interface APIResponse {
-  sources: RequestSource[];
-}
-
 type RequestDataScope = 'day' | 'week' | 'month';
 
 const requestScopeToMultiplier = {
@@ -106,7 +102,7 @@ const requestScopeToMultiplier = {
   month: 30,
 };
 
-const generateMockRequestsData = ({
+const generateMockRequestsDataForTimeFrame = ({
   length,
   scope,
 }: {
@@ -126,37 +122,40 @@ const generateMockRequestsData = ({
 
 const MOCK_REQUEST_SOURCES = [
   'All sources',
-  'www.apilytics.io',
+  'Public REST API',
   'Internal REST API',
   'CLI Middleware',
 ];
 
-const mockRequestsData = {
-  [LAST_7_DAYS_VALUE]: generateMockRequestsData({ length: 7, scope: 'day' }),
-  [LAST_30_DAYS_VALUE]: generateMockRequestsData({ length: 30, scope: 'day' }),
-  [LAST_3_MONTHS_VALUE]: generateMockRequestsData({ length: 12, scope: 'week' }),
-  [LAST_6_MONTHS_VALUE]: generateMockRequestsData({ length: 24, scope: 'week' }),
-  [LAST_12_MONTHS_VALUE]: generateMockRequestsData({ length: 12, scope: 'month' }),
-};
+interface MockAPIParams {
+  source?: string;
+  timeFrame: TimeFrame;
+}
 
-export const mockApi = (timeFrame: TimeFrame): APIResponse => {
+export const mockApi = ({
+  source = MOCK_REQUEST_SOURCES[0],
+  timeFrame,
+}: MockAPIParams): APIResponse => {
+  const mockRequestsData = {
+    [LAST_7_DAYS_VALUE]: generateMockRequestsDataForTimeFrame({ length: 7, scope: 'day' }),
+    [LAST_30_DAYS_VALUE]: generateMockRequestsDataForTimeFrame({ length: 30, scope: 'day' }),
+    [LAST_3_MONTHS_VALUE]: generateMockRequestsDataForTimeFrame({ length: 12, scope: 'week' }),
+    [LAST_6_MONTHS_VALUE]: generateMockRequestsDataForTimeFrame({ length: 24, scope: 'week' }),
+    [LAST_12_MONTHS_VALUE]: generateMockRequestsDataForTimeFrame({ length: 12, scope: 'month' }),
+  };
+
   const requestsData = mockRequestsData[timeFrame];
   const totalRequests = requestsData.reduce((acc, { requests }) => acc + requests, 0);
-
-  const totalRequestsGrowth = Number(
-    (
-      (requestsData[requestsData.length - 1].requests - requestsData[0].requests) /
-      requestsData[requestsData.length - 1].requests
-    ).toFixed(2),
-  );
+  const first = requestsData[0];
+  const last = requestsData[requestsData.length - 1];
+  const totalRequestsGrowth = Number(((last.requests - first.requests) / last.requests).toFixed(2));
 
   return {
-    sources: MOCK_REQUEST_SOURCES.map((name) => ({
-      name,
-      totalRequests,
-      totalRequestsGrowth,
-      requestsData,
-      routesData: MOCK_ROUTES_DATA,
-    })),
+    source,
+    sourceOptions: MOCK_REQUEST_SOURCES,
+    totalRequests,
+    totalRequestsGrowth,
+    requestsData,
+    routesData: MOCK_ROUTES_DATA,
   };
 };

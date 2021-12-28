@@ -14,16 +14,16 @@ import { routes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
+  const [selectedSource, setSelectedSource] = useState('');
   const [timeFrame, setTimeFrame] = useState<TimeFrame>(LAST_7_DAYS_VALUE);
-  const { sources = [] } = mockApi(timeFrame);
-  const [sourceName, setSourceName] = useState(sources[0].name);
 
   const {
+    sourceOptions,
     totalRequests = 0,
     totalRequestsGrowth = 0,
     requestsData = [],
     routesData = [],
-  } = sources.find((source) => source.name === sourceName) || {};
+  } = mockApi({ source: selectedSource, timeFrame });
 
   return (
     <Layout noIndex headerMaxWidth="5xl">
@@ -31,9 +31,9 @@ const Demo: NextPage = () => {
         <div className="bg-filter">
           <div className="container max-w-5xl py-16 animate-fade-in-top animation-delay-400">
             <DashboardOptions
-              sourceName={sourceName}
-              setSourceName={setSourceName}
-              sources={sources}
+              selectedSource={selectedSource}
+              setSelectedSource={setSelectedSource}
+              sourceOptions={sourceOptions}
               timeFrame={timeFrame}
               setTimeFrame={setTimeFrame}
             />
@@ -47,7 +47,7 @@ const Demo: NextPage = () => {
               <RouteMetrics routesData={routesData} />
               <ResponseTimes routesData={routesData} />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 items-center">
               <div>
                 <h2 className="text-3xl text-white">
                   Want to see these metrics from your APIs?{' '}

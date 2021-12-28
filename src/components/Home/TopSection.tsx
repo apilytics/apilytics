@@ -29,14 +29,7 @@ const FRAMEWORKS_DATA = [
 
 export const TopSection: React.FC = () => {
   const timeFrame = LAST_12_MONTHS_VALUE;
-  const { sources = [] } = mockApi(timeFrame);
-  const sourceName = sources[0].name;
-
-  const {
-    totalRequests = 0,
-    totalRequestsGrowth = 0,
-    requestsData = [],
-  } = sources.find((source) => source.name === sourceName) || {};
+  const { totalRequests = 0, totalRequestsGrowth = 0, requestsData = [] } = mockApi({ timeFrame });
 
   return (
     <div className="bg-background bg-no-repeat bg-cover">

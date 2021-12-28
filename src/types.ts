@@ -25,8 +25,9 @@ export interface RequestData {
   requests: number;
 }
 
-export interface RequestSource {
-  name: string;
+export interface APIResponse {
+  source: string;
+  sourceOptions: string[];
   totalRequests: number;
   totalRequestsGrowth: number;
   requestsData: RequestData[];

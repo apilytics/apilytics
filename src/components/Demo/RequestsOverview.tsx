@@ -15,6 +15,7 @@ const DAY_AND_MONTH_FORMAT = 'ddd, D MMM';
 const MONTH_FORMAT = 'MMMM';
 
 interface Props {
+  siteName?: string;
   timeFrame: TimeFrame;
   totalRequests: number;
   totalRequestsGrowth: number;
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export const RequestsOverview: React.FC<Props> = ({
+  siteName = 'www.apilytics.io',
   timeFrame,
   totalRequests,
   totalRequestsGrowth,
@@ -74,9 +76,13 @@ export const RequestsOverview: React.FC<Props> = ({
     <div className="bg-zinc-900 rounded-lg flex flex-col p-2 text-secondary">
       <div className="flex">
         <div className="p-4">
+          <h2 className="text-secondary text-xl">API</h2>
+          <p className="text-primary text-lg">{siteName}</p>
+        </div>
+        <div className="p-4">
           <h2 className="text-xl">Total requests</h2>
           <div className="flex items-center">
-            <p className="text-secondary text-lg">{totalRequests}</p>
+            <p className="text-secondary text-lg">{(totalRequests / 100).toFixed(1)}k</p>
             <p className="text-secondary text-lg text-green-400 ml-2">
               +{(totalRequestsGrowth * 100).toFixed()}%
             </p>
