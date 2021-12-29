@@ -1,12 +1,12 @@
 _type: export
 __export_format: 4
-__export_date: 2021-12-19T23:10:59.554Z
+__export_date: 2021-12-28T22:02:07.193Z
 __export_source: insomnia.desktop.app:v2021.7.2
 resources:
-  - _id: req_2a0635b30bf34fd79905f4f75e2f02dc
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639683512098
-    created: 1639683391727
+  - _id: req_adc825807b5a4a38bb00d10c418f174b
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728892356
+    created: 1640728892356
     url: "{{ _.url }}/api/auth/signin"
     name: /api/auth/signin
     description: ""
@@ -24,18 +24,18 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: wrk_e2e2b7a103004a4a94e712bac0da1e22
+  - _id: wrk_3806cc3fdbc84cb3adf932ba1e391541
     parentId: null
-    modified: 1639683379453
-    created: 1639683379453
-    name: apilytics-landing-page
+    modified: 1640728892337
+    created: 1640728892337
+    name: apilytics
     description: ""
     scope: collection
     _type: workspace
-  - _id: req_3b2257baaefb49079360ab244beace6a
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639955429141
-    created: 1639955359482
+  - _id: req_55ab9d87d3d04dc891fe294c36737223
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728907196
+    created: 1640728892377
     url: "{{ _.url }}/api/signup"
     name: /api/signup
     description: ""
@@ -64,10 +64,10 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_6fc554f1895e468d974f7ab6afeb452c
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639928862746
-    created: 1639928856264
+  - _id: req_751c9755f8f54a0098b2d05619054baa
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728892362
+    created: 1640728892362
     url: "{{ _.url }}/api/sites"
     name: /api/sites
     description: ""
@@ -85,10 +85,10 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_8f5c9d22e89c46409359b4a6d3da03ed
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639954180172
-    created: 1639836106421
+  - _id: req_d2de2652fff24380b369538a419bca49
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728909068
+    created: 1640728892359
     url: "{{ _.url }}/api/sites"
     name: /api/sites
     description: ""
@@ -118,10 +118,10 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_f090416b73924700a1b711830f9a9c70
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639954081188
-    created: 1639953148213
+  - _id: req_6abc52208ecd43e1b80d4e61e5eca587
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728892365
+    created: 1640728892365
     url: "{{ _.url }}/api/sites/{{ _.siteId }}"
     name: /api/sites/[id]
     description: ""
@@ -143,10 +143,10 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_05eb3748c1b944ec8f077cdc30d291d0
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639954179220
-    created: 1639953153287
+  - _id: req_27e5ed24e92d44b88021fc066b267d13
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728910145
+    created: 1640728892367
     url: "{{ _.url }}/api/sites/{{ _.siteId }}"
     name: /api/sites/[id]
     description: ""
@@ -176,10 +176,10 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_3d232f46d48d4774b8a5249ff914464d
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639954178764
-    created: 1639953155736
+  - _id: req_8ad2e9cff01441b5977bf9ae102cdefa
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728910704
+    created: 1640728892370
     url: "{{ _.url }}/api/sites/{{ _.siteId }}"
     name: /api/sites/[id]
     description: ""
@@ -209,10 +209,10 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_6e4485c420724d7cb18dc5c1616756bb
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639954129200
-    created: 1639953170248
+  - _id: req_2ffeceb6c0384b9481e2c7495de45dbf
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728892372
+    created: 1640728892372
     url: "{{ _.url }}/api/sites/{{ _.siteId }}/metrics"
     name: /api/sites/[id]/metrics
     description: ""
@@ -234,10 +234,10 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_fea2a1a315e740fdae3359b42bfa8276
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639954177834
-    created: 1639953173170
+  - _id: req_0e743e6d79f44a8f94781b4b22c8333f
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728911809
+    created: 1640728892375
     url: "{{ _.url }}/api/sites/{{ _.siteId }}/metrics"
     name: /api/sites/[id]/metrics
     description: ""
@@ -269,10 +269,10 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: env_125d8f6e6ce0fb7bf7169771d76a3cec281f613d
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639683430874
-    created: 1639683379461
+  - _id: env_32ce5cfd6d7243678bb30f5a859267ed
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728892340
+    created: 1640728892340
     name: Base Environment
     data: {}
     dataPropertyOrder: {}
@@ -280,10 +280,10 @@ resources:
     isPrivate: false
     metaSortKey: 1639683379461
     _type: environment
-  - _id: jar_125d8f6e6ce0fb7bf7169771d76a3cec281f613d
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639953985671
-    created: 1639683379463
+  - _id: jar_de000d18f5904aff9a14bda8d33ad992
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728892348
+    created: 1640728892348
     name: Default Jar
     cookies:
       - id: 023156a5-a13f-44c3-80c4-1d79b4045165
@@ -295,18 +295,18 @@ resources:
         secure: false
         httpOnly: true
     _type: cookie_jar
-  - _id: spc_ef086919a85948d19454708264ebf565
-    parentId: wrk_e2e2b7a103004a4a94e712bac0da1e22
-    modified: 1639683379456
-    created: 1639683379456
-    fileName: apilytics-landing-page
+  - _id: spc_0990a12999064bc58d8eb29ac21586ec
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1640728892395
+    created: 1640728892351
+    fileName: apilytics
     contents: ""
     contentType: yaml
     _type: api_spec
-  - _id: env_3b1112335f6548ba95ecfefad15e13d7
-    parentId: env_125d8f6e6ce0fb7bf7169771d76a3cec281f613d
-    modified: 1639954186820
-    created: 1639683432853
+  - _id: env_3b986c752a0e4f40a30a9e80c68a8d09
+    parentId: env_32ce5cfd6d7243678bb30f5a859267ed
+    modified: 1640728897138
+    created: 1640728892342
     name: local
     data:
       url: http://localhost:3000

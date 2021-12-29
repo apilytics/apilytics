@@ -1,5 +1,5 @@
 {
-  "name": "apilytics-landing-page",
+  "name": "apilytics",
   "private": true,
   "scripts": {
     "migrate:dev": "prisma migrate dev",
