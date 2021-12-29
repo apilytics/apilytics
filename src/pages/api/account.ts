@@ -23,18 +23,16 @@ const handleGet: ApiHandler<AccountDetailGetResponse> = async (req, res) => {
 
 const handlePut: ApiHandler<AccountDetailPutResponse> = async (req, res) => {
   const user = await getSessionUser(req);
-  const { email } = req.body as AccountDetailPutBody;
+  const { name, email } = req.body as AccountDetailPutBody;
 
-  if (!email) {
+  if (!name || !email) {
     sendInvalidInput(res);
     return;
   }
 
   const where = { id: user.id };
-  const [, account] = await prisma.$transaction([
-    prisma.user.update({ where, data: { email } }),
-    prisma.user.findUnique({ where }),
-  ]);
+
+  const account = await prisma.user.update({ where, data: { name, email } });
 
   if (!account) {
     sendNotFound(res, 'Account');

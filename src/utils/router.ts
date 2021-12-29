@@ -1,13 +1,15 @@
 export const routes = {
   root: '/',
-  signUp: '/signup',
-  signIn: '/signin',
+  login: '/login',
+  logout: '/logout',
   demo: '/demo',
   privacy: '/privacy',
+  dashboard: '/dashboard',
+  account: '/account',
 };
 
 export const apiRoutes = {
-  signUp: '/api/signup',
   emailSignIn: '/api/auth/signin/email',
   csrfToken: '/api/auth/csrf',
+  account: '/api/account',
 };

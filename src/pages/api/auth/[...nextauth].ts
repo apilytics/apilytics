@@ -3,6 +3,7 @@ import NextAuth from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 
 import prisma from 'prismaClient';
+import { routes } from 'utils/router';
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -31,5 +32,11 @@ export default NextAuth({
   secret: process.env.SECRET_KEY,
   session: {
     strategy: 'jwt',
+  },
+  pages: {
+    signIn: routes.login,
+    signOut: routes.logout,
+    error: routes.login,
+    verifyRequest: routes.login,
   },
 });

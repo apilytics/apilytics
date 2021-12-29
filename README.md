@@ -22,7 +22,7 @@
 
 5. Run the app: `docker-compose up`
 
-7. Access the application from [localhost:3000](http://localhost:3000)
+6. Access the application from [localhost:3000](http://localhost:3000)
 
 ## Environment variables
 
@@ -38,5 +38,5 @@
 
 ### My editor doesn't pick up latest Prisma typings?
 
-1. Run `yarn prismage generate` outside the container, so the types matching the latest migrations populate your local `node_modules`.
+1. Run `yarn prisma generate` outside the container, so the types matching the latest migrations populate your local `node_modules`.
 2. 🍻

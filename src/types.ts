@@ -42,8 +42,9 @@ export type TimeFrame =
   | typeof LAST_12_MONTHS_VALUE;
 
 export type PlausibleEvents = {
-  signup: never;
   login: never;
+  logout: never;
+  'update-account': never;
 };
 
 export interface HeadProps {
@@ -53,6 +54,8 @@ export interface HeadProps {
 
 export interface HeaderProps {
   headerMaxWidth?: string;
+  headerContent?: JSX.Element | false;
+  hideLogin?: boolean;
 }
 
 // API types.
@@ -66,13 +69,7 @@ export type ApiHandler<T = unknown> = (
 export interface SessionUser {
   id: string;
   email: string;
-}
-
-export interface SignUpBody {
-  email: string;
-  role: string;
-  useCases?: string;
-  howThisCouldHelp?: string;
+  name: string;
 }
 
 export interface OriginsListGetResponse {
@@ -100,4 +97,4 @@ export type MiddlewarePostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
 export type OriginsDetailPutBody = Pick<Origin, 'domain'>;
 export type OriginsDetailPutResponse = OriginsDetailGetResponse;
 export type AccountDetailPutResponse = AccountDetailGetResponse;
-export type AccountDetailPutBody = Pick<User, 'email'>;
+export type AccountDetailPutBody = Pick<User, 'name' | 'email'>;

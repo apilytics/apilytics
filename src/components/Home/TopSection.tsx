@@ -59,7 +59,7 @@ export const TopSection: React.FC = () => {
               ))}
             </div>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid">
-              <Link href={routes.signUp} passHref>
+              <Link href={routes.login} passHref>
                 <Button>Get started</Button>
               </Link>
               <Link href={routes.demo} passHref>

@@ -55,7 +55,7 @@ const Demo: NextPage = () => {
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Link href={routes.signUp} passHref>
+                <Link href={routes.login} passHref>
                   <Button>Get started</Button>
                 </Link>
                 <Link href={routes.root} passHref>

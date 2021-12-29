@@ -6,6 +6,7 @@ import { Pricing } from 'components/Home/Pricing';
 import { Setup } from 'components/Home/Setup';
 import { TopSection } from 'components/Home/TopSection';
 import { Layout } from 'components/layout/Layout';
+import { withNoAuth } from 'hocs/withNoAuth';
 
 const Home: NextPage = () => (
   <Layout>
@@ -16,4 +17,4 @@ const Home: NextPage = () => (
   </Layout>
 );
 
-export default Home;
+export default withNoAuth(Home);

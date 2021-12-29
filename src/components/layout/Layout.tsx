@@ -9,13 +9,14 @@ export const Layout: React.FC<HeadProps & HeaderProps> = ({
   noIndex,
   children,
   headerMaxWidth = 'full',
+  hideLogin,
 }) => (
   <>
     <Head noIndex={noIndex} />
     <div className="min-h-screen flex flex-col bg-black">
       <div className="grow flex flex-col">
-        <Header headerMaxWidth={headerMaxWidth} />
-        <div className="grow flex flex-col">{children}</div>
+        <Header headerMaxWidth={headerMaxWidth} hideLogin={hideLogin} />
+        <div className="grow flex flex-col relative">{children}</div>
         <Footer />
       </div>
     </div>
