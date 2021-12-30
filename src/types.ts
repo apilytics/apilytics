@@ -1,40 +1,18 @@
 import type { Metric, Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Dispatch, SetStateAction } from 'react';
 
 import type {
   LAST_3_MONTHS_VALUE,
   LAST_6_MONTHS_VALUE,
   LAST_7_DAYS_VALUE,
   LAST_12_MONTHS_VALUE,
+  LAST_24_HOURS_VALUE,
   LAST_30_DAYS_VALUE,
-  Method,
 } from 'utils/constants';
 
-export interface RouteData {
-  name: string;
-  requests: number;
-  methods: Method[];
-  responseTime: number;
-  responseGreen: number;
-  responseYellow: number;
-  responseRed: number;
-}
-
-export interface RequestData {
-  date: string;
-  requests: number;
-}
-
-export interface APIResponse {
-  source: string;
-  sourceOptions: string[];
-  totalRequests: number;
-  totalRequestsGrowth: number;
-  requestsData: RequestData[];
-  routesData: RouteData[];
-}
-
 export type TimeFrame =
+  | typeof LAST_24_HOURS_VALUE
   | typeof LAST_7_DAYS_VALUE
   | typeof LAST_30_DAYS_VALUE
   | typeof LAST_3_MONTHS_VALUE
@@ -45,6 +23,9 @@ export type PlausibleEvents = {
   login: never;
   logout: never;
   'update-account': never;
+  'new-origin': never;
+  'update-origin': never;
+  'delete-origin': never;
 };
 
 export interface HeadProps {
@@ -53,9 +34,24 @@ export interface HeadProps {
 }
 
 export interface HeaderProps {
-  headerMaxWidth?: string;
-  headerContent?: JSX.Element | false;
+  maxWidth?: string;
   hideLogin?: boolean;
+}
+
+export type LayoutProps = HeadProps & HeaderProps;
+
+export interface AccountContextType {
+  user?: SessionUser;
+  status: 'authenticated' | 'unauthenticated' | 'loading';
+  accountComplete: boolean;
+  origins: AggregatedOrigin[];
+  setOrigins: Dispatch<SetStateAction<AggregatedOrigin[]>>;
+}
+export interface OriginContextType {
+  origin: Origin | null;
+  setOrigin: Dispatch<SetStateAction<Origin | null>>;
+  metrics: OriginMetrics | null;
+  setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
 }
 
 // API types.
@@ -72,16 +68,42 @@ export interface SessionUser {
   name: string;
 }
 
+export interface AggregatedOrigin extends Origin {
+  last24hRequests: number;
+}
+
 export interface OriginsListGetResponse {
-  data: Origin[];
+  data: AggregatedOrigin[];
 }
 
 export interface OriginsPostResponse {
   data: Origin;
 }
 
+export interface TimeFrameData {
+  requests: number;
+  time: string;
+}
+
+export interface RouteData {
+  requests: number;
+  name: string;
+  methods: string[];
+  response_time: number;
+  count_green: number;
+  count_yellow: number;
+  count_red: number;
+}
+
+export interface OriginMetrics {
+  totalRequests: number;
+  totalRequestsGrowth: string;
+  timeFrameData: TimeFrameData[];
+  routeData: RouteData[];
+}
+
 export interface MetricsListGetResponse {
-  data: Metric[];
+  data: OriginMetrics;
 }
 
 export interface OriginsDetailGetResponse {
@@ -92,9 +114,9 @@ export interface AccountDetailGetResponse {
   data: User;
 }
 
-export type OriginsPostBody = Pick<Origin, 'domain'>;
 export type MiddlewarePostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
-export type OriginsDetailPutBody = Pick<Origin, 'domain'>;
+export type OriginsPostBody = Pick<Origin, 'name'>;
+export type OriginsDetailPutBody = Pick<Origin, 'name'>;
 export type OriginsDetailPutResponse = OriginsDetailGetResponse;
 export type AccountDetailPutResponse = AccountDetailGetResponse;
 export type AccountDetailPutBody = Pick<User, 'name' | 'email'>;

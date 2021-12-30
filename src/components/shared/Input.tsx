@@ -12,7 +12,7 @@ export const Input: React.FC<Props> = ({ label, helperText, className, ...props 
     </label>
     <input
       id={props.name}
-      className={`block border-primary rounded-lg text-xl py-2 px-3 w-full my-2 ${className}`}
+      className={`block border-secondary rounded-lg text-xl text-white py-2 px-3 w-full my-2 bg-zinc-800 ${className}`}
       {...props}
     />
     {helperText && <p className="text-secondary text-lg">{helperText}</p>}

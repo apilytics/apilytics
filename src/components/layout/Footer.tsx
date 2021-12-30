@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-import { routes } from 'utils/router';
+import { staticRoutes } from 'utils/router';
 
 export const Footer: React.FC = () => (
   <footer className="text-center">
@@ -16,7 +16,7 @@ export const Footer: React.FC = () => (
         </a>
       </p>
       <p>
-        <Link href={routes.privacy}>
+        <Link href={staticRoutes.privacy}>
           <a>Privacy</a>
         </Link>
       </p>

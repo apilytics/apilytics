@@ -21,7 +21,7 @@ export const Select: React.FC<Props> = ({
     )}
     <select
       id={props.name}
-      className={`block border-primary rounded-lg text-xl py-2 px-y w-full my-2 text-primary ${className}`}
+      className={`block border-secondary rounded-lg text-xl py-1 px-2 px-y w-full my-2 text-primary bg-zinc-800 ${className}`}
       {...props}
     />
     {helperText && <p className="text-secondary text-lg">{helperText}</p>}

@@ -73,7 +73,8 @@ model WaitlistUser {
 
 model Origin {
   id     String @id @default(uuid()) @db.Uuid
-  domain String
+  name   String @unique
+  slug   String @unique
   apiKey String @unique @default(uuid()) @map("api_key") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -84,7 +85,6 @@ model Origin {
 
   metrics Metric[]
 
-  @@unique([domain, userId])
   @@map("origins")
 }
 

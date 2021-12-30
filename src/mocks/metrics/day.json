@@ -1,0 +1,158 @@
+{
+  "totalRequests": 229,
+  "totalRequestsGrowth": "0.98",
+  "timeFrameData": [
+    {
+      "requests": 2,
+      "time": "2022-01-04T19:00:00+00:00"
+    },
+    {
+      "requests": 3,
+      "time": "2022-01-04T20:00:00+00:00"
+    },
+    {
+      "requests": 7,
+      "time": "2022-01-04T21:00:00+00:00"
+    },
+    {
+      "requests": 14,
+      "time": "2022-01-04T22:00:00+00:00"
+    },
+    {
+      "requests": 20,
+      "time": "2022-01-04T23:00:00+00:00"
+    },
+    {
+      "requests": 1,
+      "time": "2022-01-05T00:00:00+00:00"
+    },
+    {
+      "requests": 17,
+      "time": "2022-01-05T01:00:00+00:00"
+    },
+    {
+      "requests": 11,
+      "time": "2022-01-05T02:00:00+00:00"
+    },
+    {
+      "requests": 12,
+      "time": "2022-01-05T03:00:00+00:00"
+    },
+    {
+      "requests": 18,
+      "time": "2022-01-05T04:00:00+00:00"
+    },
+    {
+      "requests": 9,
+      "time": "2022-01-05T05:00:00+00:00"
+    },
+    {
+      "requests": 18,
+      "time": "2022-01-05T06:00:00+00:00"
+    },
+    {
+      "requests": 11,
+      "time": "2022-01-05T07:00:00+00:00"
+    },
+    {
+      "requests": 3,
+      "time": "2022-01-05T08:00:00+00:00"
+    },
+    {
+      "requests": 6,
+      "time": "2022-01-05T09:00:00+00:00"
+    },
+    {
+      "requests": 6,
+      "time": "2022-01-05T10:00:00+00:00"
+    },
+    {
+      "requests": 11,
+      "time": "2022-01-05T11:00:00+00:00"
+    },
+    {
+      "requests": 1,
+      "time": "2022-01-05T12:00:00+00:00"
+    },
+    {
+      "requests": 11,
+      "time": "2022-01-05T13:00:00+00:00"
+    },
+    {
+      "requests": 6,
+      "time": "2022-01-05T14:00:00+00:00"
+    },
+    {
+      "requests": 7,
+      "time": "2022-01-05T15:00:00+00:00"
+    },
+    {
+      "requests": 8,
+      "time": "2022-01-05T16:00:00+00:00"
+    },
+    {
+      "requests": 20,
+      "time": "2022-01-05T17:00:00+00:00"
+    },
+    {
+      "requests": 7,
+      "time": "2022-01-05T18:00:00+00:00"
+    }
+  ],
+  "routeData": [
+    {
+      "requests": 44,
+      "name": "/login",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 70,
+      "count_green": 14,
+      "count_yellow": 12,
+      "count_red": 18
+    },
+    {
+      "requests": 35,
+      "name": "/posts",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 61,
+      "count_green": 14,
+      "count_yellow": 11,
+      "count_red": 10
+    },
+    {
+      "requests": 27,
+      "name": "/posts/123",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 63,
+      "count_green": 9,
+      "count_yellow": 12,
+      "count_red": 6
+    },
+    {
+      "requests": 39,
+      "name": "/profile",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 73,
+      "count_green": 12,
+      "count_yellow": 8,
+      "count_red": 19
+    },
+    {
+      "requests": 38,
+      "name": "/users",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 59,
+      "count_green": 16,
+      "count_yellow": 15,
+      "count_red": 7
+    },
+    {
+      "requests": 46,
+      "name": "/users/johndoe",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 71,
+      "count_green": 12,
+      "count_yellow": 18,
+      "count_red": 16
+    }
+  ]
+}

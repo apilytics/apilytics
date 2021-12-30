@@ -28,6 +28,10 @@
 
 - Copy the template env file: `cp .env.template .env` and add values for the \<placeholder\> variables in the `.env` file.
 
+## Seeding database with test data
+
+- Run `yarn prisma db seed` (or `yarn db:seed`) to manually seed your database with the seeding script in `prisma/seed.ts`. The script will also be automatically run with `prisma migrate dev` and `prisma migrate reset`. More info at: https://www.prisma.io/docs/guides/database/seed-database
+
 ## Troubleshooting
 
 ### My dependencies are not getting loaded from the built image?
@@ -38,5 +42,5 @@
 
 ### My editor doesn't pick up latest Prisma typings?
 
-1. Run `yarn prisma generate` outside the container, so the types matching the latest migrations populate your local `node_modules`.
+1. Run `yarn prisma generate` (or `yarn generate`) outside the container, so the types matching the latest migrations populate your local `node_modules`.
 2. 🍻

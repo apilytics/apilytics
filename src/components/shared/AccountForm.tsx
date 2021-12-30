@@ -1,15 +1,15 @@
-import { useSession } from 'next-auth/react';
 import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 
 import { Button } from 'components/shared/Button';
 import { Input } from 'components/shared/Input';
+import { useAccount } from 'hooks/useAccount';
 import { UNEXPECTED_ERROR } from 'utils/constants';
-import { apiRoutes } from 'utils/router';
+import { staticApiRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 export const AccountForm: React.FC = () => {
-  const { name = '', email = '' } = useSession()?.data?.user || {};
+  const { name = '', email = '' } = useAccount().user || {};
 
   const [formValues, setFormValues] = useState({
     name,
@@ -32,7 +32,7 @@ export const AccountForm: React.FC = () => {
     const payload = { ...formValues };
 
     try {
-      const res = await fetch(apiRoutes.account, {
+      const res = await fetch(staticApiRoutes.account, {
         method: 'PUT',
         body: JSON.stringify(payload),
         headers: {
@@ -60,7 +60,9 @@ export const AccountForm: React.FC = () => {
     <form onSubmit={handleSubmit} className="mt-4">
       <Input
         name="name"
-        label="Account name" // TODO: Brand this for individual users instead of teams/shared accounts once we have support for teams.
+        // TODO: Brand this for individual users instead of orgs once we have support for teams.
+        label="Account name"
+        helperText="This can be either your organization name or your personal one."
         value={formValues.name}
         onChange={handleChange}
         required
@@ -73,13 +75,10 @@ export const AccountForm: React.FC = () => {
         required
       />
       {error && <p className="text-red-500">{error}</p>}
-      <Button disabled={loading} fullWidth type="submit" className="mt-8">
-        Submit{' '}
-        {loading && (
-          <div className="animate-spinner ease-linear rounded-full border-2 border-t-primary h-6 w-6 ml-4" />
-        )}
+      <Button loading={loading} fullWidth type="submit" className="mt-8">
+        Submit
       </Button>
-      {submitted && <p className="text-white mt-8">Account details saved.</p>}
+      {submitted && <p className="text-white mt-8">Account settings saved.</p>}
     </form>
   );
 };
