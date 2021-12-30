@@ -10,7 +10,7 @@ import { Button } from 'components/shared/Button';
 import { Input } from 'components/shared/Input';
 import { withNoAuth } from 'hocs/withNoAuth';
 import { UNEXPECTED_ERROR } from 'utils/constants';
-import { apiRoutes } from 'utils/router';
+import { apiRoutes, routes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 // https://next-auth.js.org/configuration/pages#error-codes
@@ -40,7 +40,7 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
     setLoading(true);
     setSubmitted(false);
     setError('');
-    const body = new URLSearchParams({ csrfToken, email });
+    const body = new URLSearchParams({ csrfToken, email, callbackUrl: routes.root });
 
     try {
       const res = await fetch(apiRoutes.emailSignIn, {
