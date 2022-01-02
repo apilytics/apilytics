@@ -20,8 +20,8 @@ model Account {
   id_token          String?
   session_state     String?
 
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -35,8 +35,8 @@ model User {
   email         String    @unique
   emailVerified DateTime? @map("email_verified")
 
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   accounts Account[]
   sites    Site[]
@@ -50,7 +50,7 @@ model VerificationToken {
   expires    DateTime
 
   // Verification tokens are immutable so no need to store `updatedAt` info.
-  createdAt DateTime @default(now()) @map(name: "created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@unique([identifier, token])
   @@map("verification_tokens")
@@ -61,21 +61,21 @@ model WaitlistUser {
   email String @unique
 
   role             String
-  useCases         String? @map(name: "use_cases")
-  howThisCouldHelp String? @map(name: "how_this_could_help")
+  useCases         String? @map("use_cases")
+  howThisCouldHelp String? @map("how_this_could_help")
 
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map(name: "waitlist_users")
+  @@map("waitlist_users")
 }
 
 model Site {
   id     String @id @default(uuid()) @db.Uuid
   domain String
 
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -83,7 +83,7 @@ model Site {
   metrics Metric[]
 
   @@unique([domain, userId])
-  @@map(name: "sites")
+  @@map("sites")
 }
 
 model Metric {
@@ -93,10 +93,10 @@ model Metric {
   timeMillis Int
 
   // Metrics are immutable so no need to store `updatedAt` info.
-  createdAt DateTime @default(now()) @map(name: "created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
   siteId String @map("site_id") @db.Uuid
   site   Site   @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
-  @@map(name: "metrics")
+  @@map("metrics")
 }
