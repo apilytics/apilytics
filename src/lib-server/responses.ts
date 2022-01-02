@@ -1,7 +1,11 @@
 import type { NextApiResponse } from 'next';
 
-export const sendOk = <T>(res: NextApiResponse<T>, data: T): void => {
-  res.status(200).json(data);
+export const sendOk = <T>(res: NextApiResponse<T>, data?: T): void => {
+  if (data !== undefined) {
+    res.status(200).json(data);
+  } else {
+    res.status(200).end();
+  }
 };
 
 export const sendCreated = <T>(res: NextApiResponse<T>, data: T): void => {
@@ -16,8 +20,16 @@ export const sendInvalidInput = (res: NextApiResponse): void => {
   res.status(400).json({ message: 'Invalid input.' });
 };
 
+export const sendApiKeyMissing = (res: NextApiResponse): void => {
+  res.status(401).json({ message: 'Missing X-API-Key header.' });
+};
+
 export const sendUnauthorized = (res: NextApiResponse): void => {
   res.status(401).json({ message: 'Only allowed for logged in users.' });
+};
+
+export const sendInvalidApiKey = (res: NextApiResponse): void => {
+  res.status(403).json({ message: 'Invalid API key.' });
 };
 
 export const sendNotFound = (res: NextApiResponse, objectName: string): void => {

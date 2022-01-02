@@ -85,10 +85,6 @@ export interface MetricsListGetResponse {
   data: Metric[];
 }
 
-export interface MetricsPostResponse {
-  data: Metric;
-}
-
 export interface OriginsDetailGetResponse {
   data: Origin;
 }
@@ -98,7 +94,7 @@ export interface AccountDetailGetResponse {
 }
 
 export type OriginsPostBody = Pick<Origin, 'domain'>;
-export type MetricsPostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
+export type MiddlewarePostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
 export type OriginsDetailPutBody = Pick<Origin, 'domain'>;
 export type OriginsDetailPutResponse = OriginsDetailGetResponse;
 export type AccountDetailPutResponse = AccountDetailGetResponse;
