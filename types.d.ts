@@ -15,9 +15,3 @@ declare module 'next-auth/jwt/types' {
     uid: string;
   }
 }
-
-declare global {
-  // Ignore: Must use `var` when declaring globals.
-  /* eslint no-var: off */
-  var prisma: PrismaClient;
-}
