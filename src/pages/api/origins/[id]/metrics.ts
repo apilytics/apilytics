@@ -12,15 +12,17 @@ import type {
 const handleGet: ApiHandler<MetricsListGetResponse> = async (req, res) => {
   const user = await getSessionUser(req);
 
-  const siteId = getIdFromReq(req);
-  const sites = await prisma.metric.findMany({ where: { siteId, site: { userId: user.id } } });
-  sendOk(res, { data: sites });
+  const originId = getIdFromReq(req);
+  const origins = await prisma.metric.findMany({
+    where: { originId, origin: { userId: user.id } },
+  });
+  sendOk(res, { data: origins });
 };
 
 const handlePost: ApiHandler<MetricsPostResponse> = async (req, res) => {
   const user = await getSessionUser(req);
 
-  const siteId = getIdFromReq(req);
+  const originId = getIdFromReq(req);
 
   const { path, method, timeMillis } = req.body as MetricsPostBody;
   if (!path || !method || !timeMillis) {
@@ -28,14 +30,14 @@ const handlePost: ApiHandler<MetricsPostResponse> = async (req, res) => {
     return;
   }
 
-  const site = await prisma.site.findFirst({ where: { id: siteId, userId: user.id } });
-  if (!site) {
-    // Either the id was invalid, or the site with the given id didn't belong to this user.
-    sendNotFound(res, 'Site');
+  const origin = await prisma.origin.findFirst({ where: { id: originId, userId: user.id } });
+  if (!origin) {
+    // Either the id was invalid, or the origin with the given id didn't belong to this user.
+    sendNotFound(res, 'Origin');
   }
 
   const metric = await prisma.metric.create({
-    data: { siteId, path, method, timeMillis },
+    data: { originId, path, method, timeMillis },
   });
 
   sendCreated(res, { data: metric });

@@ -1,11 +1,11 @@
 _type: export
 __export_format: 4
-__export_date: 2021-12-28T22:02:07.193Z
+__export_date: 2022-01-02T18:36:47.220Z
 __export_source: insomnia.desktop.app:v2021.7.2
 resources:
   - _id: req_adc825807b5a4a38bb00d10c418f174b
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728892356
+    modified: 1641148153157
     created: 1640728892356
     url: "{{ _.url }}/api/auth/signin"
     name: /api/auth/signin
@@ -34,7 +34,7 @@ resources:
     _type: workspace
   - _id: req_55ab9d87d3d04dc891fe294c36737223
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728907196
+    modified: 1641148158301
     created: 1640728892377
     url: "{{ _.url }}/api/signup"
     name: /api/signup
@@ -66,10 +66,10 @@ resources:
     _type: request
   - _id: req_751c9755f8f54a0098b2d05619054baa
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728892362
+    modified: 1641148571069
     created: 1640728892362
-    url: "{{ _.url }}/api/sites"
-    name: /api/sites
+    url: "{{ _.url }}/api/origins"
+    name: /api/origins
     description: ""
     method: GET
     body: {}
@@ -87,10 +87,10 @@ resources:
     _type: request
   - _id: req_d2de2652fff24380b369538a419bca49
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728909068
+    modified: 1641148574959
     created: 1640728892359
-    url: "{{ _.url }}/api/sites"
-    name: /api/sites
+    url: "{{ _.url }}/api/origins"
+    name: /api/origins
     description: ""
     method: POST
     body:
@@ -120,10 +120,10 @@ resources:
     _type: request
   - _id: req_6abc52208ecd43e1b80d4e61e5eca587
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728892365
+    modified: 1641148577996
     created: 1640728892365
-    url: "{{ _.url }}/api/sites/{{ _.siteId }}"
-    name: /api/sites/[id]
+    url: "{{ _.url }}/api/origins/{{ _.siteId }}"
+    name: /api/origins/[id]
     description: ""
     method: GET
     body: {}
@@ -145,10 +145,10 @@ resources:
     _type: request
   - _id: req_27e5ed24e92d44b88021fc066b267d13
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728910145
+    modified: 1641148580208
     created: 1640728892367
-    url: "{{ _.url }}/api/sites/{{ _.siteId }}"
-    name: /api/sites/[id]
+    url: "{{ _.url }}/api/origins/{{ _.siteId }}"
+    name: /api/origins/[id]
     description: ""
     method: PUT
     body:
@@ -178,10 +178,10 @@ resources:
     _type: request
   - _id: req_8ad2e9cff01441b5977bf9ae102cdefa
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728910704
+    modified: 1641148584021
     created: 1640728892370
-    url: "{{ _.url }}/api/sites/{{ _.siteId }}"
-    name: /api/sites/[id]
+    url: "{{ _.url }}/api/origins/{{ _.siteId }}"
+    name: /api/origins/[id]
     description: ""
     method: DELETE
     body:
@@ -211,10 +211,10 @@ resources:
     _type: request
   - _id: req_2ffeceb6c0384b9481e2c7495de45dbf
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728892372
+    modified: 1641148586122
     created: 1640728892372
-    url: "{{ _.url }}/api/sites/{{ _.siteId }}/metrics"
-    name: /api/sites/[id]/metrics
+    url: "{{ _.url }}/api/origins/{{ _.siteId }}/metrics"
+    name: /api/origins/[id]/metrics
     description: ""
     method: GET
     body: {}
@@ -236,10 +236,10 @@ resources:
     _type: request
   - _id: req_0e743e6d79f44a8f94781b4b22c8333f
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728911809
+    modified: 1641148588689
     created: 1640728892375
-    url: "{{ _.url }}/api/sites/{{ _.siteId }}/metrics"
-    name: /api/sites/[id]/metrics
+    url: "{{ _.url }}/api/origins/{{ _.siteId }}/metrics"
+    name: /api/origins/[id]/metrics
     description: ""
     method: POST
     body:
@@ -305,13 +305,13 @@ resources:
     _type: api_spec
   - _id: env_3b986c752a0e4f40a30a9e80c68a8d09
     parentId: env_32ce5cfd6d7243678bb30f5a859267ed
-    modified: 1640728897138
+    modified: 1641148534484
     created: 1640728892342
     name: local
     data:
       url: http://localhost:3000
       siteId: 570957e8-d591-450d-8b91-dd954534ecc5
-      sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..YwgKhpTqsR_7dhds.2zevGjX0Q24tUr7CogXuhJ8QiSFDyzqo6IiFt81gMbPBqvukZ9YsD7D_TgK5y2bkDACq-B073Jtoqmqrr3IgtVF6pcuntufVi2EoNzpokyv1C-edOgydhAfWw-1PH9ctu5si80_wgG6qbBLT6nwnJ1Mxau83pMwM9auJvFGn5cMWwuLYeJ0zZIuTg_1nNDxD12MV5GVghwZW65u4zkIfoR-7PmNsXm5E7WV0sSmLTwLz.bUEZg83TkiUc6NkHRagi_Q
+      sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..KqhecZFo0WJsgxAQ.wwyvRJxBqO0gacx6im_xt04smeOpKGg58_s-90G16f0Q2ezYwE9ZfXqji8a2CiF__n6W1T09R9FHlogsm63EX-xHBJPDC40J0EYmTMfAtjAnHX3N0W0PCk8epkjbG1lX8fPf8NHlCMGsGvDibZIlnJ8nESPz0-PojjG8w9nBCpdsXPVAQKjKT9JK0VqNRCwxiqDSQFFTDa-eY5AFeAtrA2KHREW5rZNPisgKXWHmBV46.Bc2uB95xAw1nruJfPDU4qQ
     dataPropertyOrder:
       "&":
         - url

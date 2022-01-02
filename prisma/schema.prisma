@@ -39,7 +39,7 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   accounts Account[]
-  sites    Site[]
+  origins  Origin[]
 
   @@map("users")
 }
@@ -70,7 +70,7 @@ model WaitlistUser {
   @@map("waitlist_users")
 }
 
-model Site {
+model Origin {
   id     String @id @default(uuid()) @db.Uuid
   domain String
 
@@ -83,7 +83,7 @@ model Site {
   metrics Metric[]
 
   @@unique([domain, userId])
-  @@map("sites")
+  @@map("origins")
 }
 
 model Metric {
@@ -95,8 +95,8 @@ model Metric {
   // Metrics are immutable so no need to store `updatedAt` info.
   createdAt DateTime @default(now()) @map("created_at")
 
-  siteId String @map("site_id") @db.Uuid
-  site   Site   @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  originId String @map("origin_id") @db.Uuid
+  origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
 
   @@map("metrics")
 }
