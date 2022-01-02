@@ -4,38 +4,43 @@ import { getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import type { ApiHandler, SitesListGetResponse, SitesPostBody, SitesPostResponse } from 'types';
+import type {
+  ApiHandler,
+  OriginsListGetResponse,
+  OriginsPostBody,
+  OriginsPostResponse,
+} from 'types';
 
-const handleGet: ApiHandler<SitesListGetResponse> = async (req, res) => {
+const handleGet: ApiHandler<OriginsListGetResponse> = async (req, res) => {
   const user = await getSessionUser(req);
 
-  const sites = await prisma.site.findMany({ where: { userId: user.id } });
-  sendOk(res, { data: sites });
+  const origins = await prisma.origin.findMany({ where: { userId: user.id } });
+  sendOk(res, { data: origins });
 };
 
-const handlePost: ApiHandler<SitesPostResponse> = async (req, res) => {
+const handlePost: ApiHandler<OriginsPostResponse> = async (req, res) => {
   const user = await getSessionUser(req);
 
-  const { domain }: SitesPostBody = req.body;
+  const { domain }: OriginsPostBody = req.body;
   if (!domain) {
     sendInvalidInput(res);
     return;
   }
 
-  let site;
+  let origin;
   try {
-    site = await prisma.site.create({
+    origin = await prisma.origin.create({
       data: { userId: user.id, domain },
     });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-      sendConflict(res, 'Current user already has a site with the given domain.');
+      sendConflict(res, 'Current user already has a origin with the given domain.');
       return;
     }
     throw e;
   }
 
-  sendCreated(res, { data: site });
+  sendCreated(res, { data: origin });
 };
 
 const handler = withAuthRequired(makeMethodsHandler({ GET: handleGet, POST: handlePost }));

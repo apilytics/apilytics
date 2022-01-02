@@ -1,4 +1,4 @@
-import type { Metric, Site, User } from '@prisma/client';
+import type { Metric, Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import type {
@@ -73,33 +73,29 @@ export interface SignUpBody {
   howThisCouldHelp?: string;
 }
 
-export interface SitesListGetResponse {
-  data: Site[];
+export interface OriginsListGetResponse {
+  data: Origin[];
 }
 
-export interface SitesPostResponse {
-  data: Site;
+export interface OriginsPostResponse {
+  data: Origin;
 }
 
 export interface MetricsListGetResponse {
   data: Metric[];
 }
 
-export interface MetricsPostResponse {
-  data: Metric;
-}
-
-export interface SitesDetailGetResponse {
-  data: Site;
+export interface OriginsDetailGetResponse {
+  data: Origin;
 }
 
 export interface AccountDetailGetResponse {
   data: User;
 }
 
-export type SitesPostBody = Pick<Site, 'domain'>;
-export type MetricsPostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
-export type SitesDetailPutBody = Pick<Site, 'domain'>;
-export type SitesDetailPutResponse = SitesDetailGetResponse;
+export type OriginsPostBody = Pick<Origin, 'domain'>;
+export type MiddlewarePostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
+export type OriginsDetailPutBody = Pick<Origin, 'domain'>;
+export type OriginsDetailPutResponse = OriginsDetailGetResponse;
 export type AccountDetailPutResponse = AccountDetailGetResponse;
 export type AccountDetailPutBody = Pick<User, 'email'>;

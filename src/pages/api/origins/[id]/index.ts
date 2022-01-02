@@ -4,29 +4,29 @@ import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-serve
 import prisma from 'prismaClient';
 import type {
   ApiHandler,
-  SitesDetailGetResponse,
-  SitesDetailPutBody,
-  SitesDetailPutResponse,
+  OriginsDetailGetResponse,
+  OriginsDetailPutBody,
+  OriginsDetailPutResponse,
 } from 'types';
 
-const handleGet: ApiHandler<SitesDetailGetResponse> = async (req, res) => {
+const handleGet: ApiHandler<OriginsDetailGetResponse> = async (req, res) => {
   const user = await getSessionUser(req);
   const id = getIdFromReq(req);
 
-  const site = await prisma.site.findFirst({ where: { id, userId: user.id } });
+  const origin = await prisma.origin.findFirst({ where: { id, userId: user.id } });
 
-  if (!site) {
-    sendNotFound(res, 'Site');
+  if (!origin) {
+    sendNotFound(res, 'Origin');
     return;
   }
 
-  sendOk(res, { data: site });
+  sendOk(res, { data: origin });
 };
 
-const handlePut: ApiHandler<SitesDetailPutResponse> = async (req, res) => {
+const handlePut: ApiHandler<OriginsDetailPutResponse> = async (req, res) => {
   const user = await getSessionUser(req);
 
-  const { domain } = req.body as SitesDetailPutBody;
+  const { domain } = req.body as OriginsDetailPutBody;
   if (!domain) {
     sendInvalidInput(res);
     return;
@@ -35,29 +35,29 @@ const handlePut: ApiHandler<SitesDetailPutResponse> = async (req, res) => {
   const id = getIdFromReq(req);
   const where = { id, userId: user.id };
 
-  const [, site] = await prisma.$transaction([
-    prisma.site.updateMany({ data: { domain }, where }),
-    prisma.site.findFirst({ where }),
+  const [, origin] = await prisma.$transaction([
+    prisma.origin.updateMany({ data: { domain }, where }),
+    prisma.origin.findFirst({ where }),
   ]);
 
-  if (!site) {
-    sendNotFound(res, 'Site');
+  if (!origin) {
+    sendNotFound(res, 'Origin');
     return;
   }
 
-  sendOk(res, { data: site });
+  sendOk(res, { data: origin });
 };
 
 const handleDelete: ApiHandler = async (req, res) => {
   const user = await getSessionUser(req);
   const id = getIdFromReq(req);
 
-  const { count } = await prisma.site.deleteMany({
+  const { count } = await prisma.origin.deleteMany({
     where: { id, userId: user.id },
   });
 
   if (count === 0) {
-    sendNotFound(res, 'Site');
+    sendNotFound(res, 'Origin');
     return;
   }
 
