@@ -91,7 +91,7 @@ model Metric {
   id         String @id @default(uuid()) @db.Uuid
   path       String
   method     String
-  timeMillis Int
+  timeMillis Int    @map("time_millis")
 
   // Metrics are immutable so no need to store `updatedAt` info.
   createdAt DateTime @default(now()) @map("created_at")
