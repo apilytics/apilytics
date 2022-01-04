@@ -43,7 +43,7 @@ export const withAuth = <T extends Record<string, unknown>>(
     if (!accountComplete) {
       return (
         <MainTemplate>
-          <h2 className="text-2xl text-secondary">Finish up your account to continue</h2>
+          <h2 className="text-2xl">Finish up your account to continue</h2>
           <AccountForm />
         </MainTemplate>
       );

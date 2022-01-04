@@ -34,14 +34,16 @@ interface Props {
   timeFrame: TimeFrame;
   setTimeFrame: Dispatch<SetStateAction<TimeFrame>>;
   origin: Origin;
+  hideSettingsButton?: boolean;
 }
 
 export const DashboardOptions: React.FC<Props> = ({
   origin: { slug },
   timeFrame,
   setTimeFrame,
+  hideSettingsButton,
 }) => (
-  <div className="flex justify-end">
+  <div className="flex justify-end mb-4">
     <Select
       value={timeFrame}
       onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}
@@ -52,6 +54,6 @@ export const DashboardOptions: React.FC<Props> = ({
         </option>
       ))}
     </Select>
-    <OriginSettingsButton slug={slug} />
+    {!hideSettingsButton && <OriginSettingsButton slug={slug} />}
   </div>
 );

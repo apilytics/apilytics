@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
-import { Button } from 'components/shared/Button';
+import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { withAuth } from 'hocs/withAuth';
 import { UNEXPECTED_ERROR } from 'utils/constants';
@@ -49,8 +49,7 @@ const NewOrigin: NextPage = () => {
 
   return (
     <MainTemplate>
-      <h2 className="text-2xl text-secondary">Add new origin</h2>
-      <form onSubmit={handleSubmit} className="mt-4">
+      <Form title="Add new origin" onSubmit={handleSubmit} error={error} loading={loading}>
         <Input
           name="name"
           label="Origin Name"
@@ -59,11 +58,7 @@ const NewOrigin: NextPage = () => {
           onChange={({ target }): void => setName(target.value)}
           required
         />
-        {error && <p className="text-red-500">{error}</p>}
-        <Button loading={loading} fullWidth type="submit" className="mt-8">
-          Submit
-        </Button>
-      </form>
+      </Form>
     </MainTemplate>
   );
 };

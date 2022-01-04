@@ -21,7 +21,12 @@ const Demo: NextPage = () => {
 
   return (
     <MainTemplate maxWidth="5xl">
-      <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
+      <DashboardOptions
+        timeFrame={timeFrame}
+        setTimeFrame={setTimeFrame}
+        origin={origin}
+        hideSettingsButton
+      />
       <RequestsOverview timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 grow">
         <RouteMetrics metrics={metrics} loading={loading} />
@@ -29,17 +34,19 @@ const Demo: NextPage = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 items-center">
         <div>
-          <h2 className="text-3xl text-white">
+          <h2 className="text-3xl">
             Want to see these metrics from your APIs?{' '}
             <span className="text-primary">Start for free now.</span>
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Link href={staticRoutes.login} passHref>
-            <Button>Get started</Button>
+            <Button fullWidth="mobile">Get started</Button>
           </Link>
           <Link href={staticRoutes.root} passHref>
-            <Button variant="secondary">Learn more</Button>
+            <Button color="secondary" variant="outlined" fullWidth="mobile">
+              Learn more
+            </Button>
           </Link>
         </div>
       </div>

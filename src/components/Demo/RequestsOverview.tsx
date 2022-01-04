@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import dayjs from 'dayjs';
 import React from 'react';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
@@ -92,7 +93,7 @@ export const RequestsOverview: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-zinc-900 rounded-lg flex flex-col p-2 text-secondary grow">
+    <div className="bg-base-100 card card-bordered rounded-lg flex flex-col p-2 grow">
       {loading ? (
         <div className="grow flex justify-center items-center">
           <LoadingIndicator />
@@ -101,18 +102,14 @@ export const RequestsOverview: React.FC<Props> = ({
         <>
           <div className="flex">
             <div className="p-4">
-              <h2 className="text-secondary text-xl">API</h2>
+              <h2 className="text-secondary text-xl">Origin</h2>
               <p className="text-primary text-lg">{name}</p>
             </div>
             <div className="p-4">
               <h2 className="text-xl">Total requests</h2>
               <div className="flex items-center">
-                <p className="text-secondary text-lg">{(totalRequests / 100).toFixed(1)}k</p>
-                <p
-                  className={`text-secondary text-lg ${
-                    positiveGrowth ? 'text-green-400' : 'text-red-400'
-                  } ml-2`}
-                >
+                <p className="text-lg">{(totalRequests / 100).toFixed(1)}k</p>
+                <p className={clsx('text-lg ml-2', positiveGrowth ? 'text-success' : 'text-error')}>
                   {positiveGrowth ? '+' : ''}
                   {(Number(totalRequestsGrowth) * 100).toFixed()}%
                 </p>
@@ -127,8 +124,8 @@ export const RequestsOverview: React.FC<Props> = ({
               <AreaChart data={timeFrameData}>
                 <defs>
                   <linearGradient id="fill-color" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0} />
+                    <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis
@@ -137,14 +134,14 @@ export const RequestsOverview: React.FC<Props> = ({
                   dataKey="time"
                   tickFormatter={tickFormatter}
                   interval="preserveStart"
-                  stroke="var(--color-secondary)"
+                  stroke="var(--base-content)"
                   padding={{ left: 20, right: 20 }}
                 />
                 <YAxis
                   width={40}
                   tickLine={false}
                   axisLine={false}
-                  stroke="var(--color-secondary)"
+                  stroke="var(--base-content)"
                   padding={{ top: 20, bottom: 20 }}
                 />
                 <Area type="monotone" dataKey="requests" fill="url(#fill-color)" />

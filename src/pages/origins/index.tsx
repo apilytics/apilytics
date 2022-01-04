@@ -16,12 +16,12 @@ const Origins: NextPage = () => {
     <MainTemplate>
       <div className="divide-y divide-zinc-800">
         <div className="flex justify-between items-center py-4">
-          <h2 className="text-2xl text-secondary">Origins</h2>
+          <h2 className="text-2xl">Origins</h2>
           <Link href={staticRoutes.newOrigin} passHref>
             <Button>Add origin</Button>
           </Link>
         </div>
-        <div className="text-secondary py-4 grid grid-cols-1 gap-2">
+        <div className="py-4 grid grid-cols-1 gap-2">
           {origins.length ? (
             origins.map(({ name, slug, last24hRequests }) => (
               <Link href={dynamicRoutes.origin({ slug })} passHref key={name}>

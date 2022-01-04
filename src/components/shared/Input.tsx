@@ -5,16 +5,18 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   helperText?: string;
 }
 
-export const Input: React.FC<Props> = ({ label, helperText, className, ...props }) => (
-  <div className="py-2">
-    <label className="block text-white text-lg" htmlFor={props.name}>
-      {label} {props.required && <span className="text-red-500">*</span>}
+export const Input: React.FC<Props> = ({ label, helperText, ...props }) => (
+  <div className="form-control">
+    <label className="label">
+      <span className="label-text">
+        {label} {props.required && <span className="text-error">*</span>}
+      </span>
     </label>
-    <input
-      id={props.name}
-      className={`block border-secondary rounded-lg text-xl text-white py-2 px-3 w-full my-2 bg-zinc-800 ${className}`}
-      {...props}
-    />
-    {helperText && <p className="text-secondary text-lg">{helperText}</p>}
+    <input className={'input'} {...props} />
+    {helperText && (
+      <label className="label">
+        <span className="label-text-alt">{helperText}</span>
+      </label>
+    )}
   </div>
 );

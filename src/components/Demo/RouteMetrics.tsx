@@ -14,7 +14,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
   const data = routeData.sort((a, b) => (a.requests < b.requests ? 1 : -1)).map((c) => c);
 
   return (
-    <div className="bg-zinc-900 rounded-lg flex flex-col p-2 text-secondary">
+    <div className="bg-base-100 card card-bordered rounded-lg flex flex-col p-2">
       {useMemo(
         () =>
           loading ? (
@@ -29,7 +29,11 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
               <div className="mt-4">
                 <ResponsiveContainer height={400}>
                   <BarChart data={data} layout="vertical">
-                    <Bar dataKey="requests" fill="#27272a" minPointSize={150}>
+                    <Bar
+                      dataKey="requests"
+                      fill="rgba(82, 157, 255, 0.25)" // `primary` with 25% opacity.
+                      minPointSize={150}
+                    >
                       <LabelList
                         content={
                           <RouteValue
@@ -54,7 +58,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
                     >
                       <Label
                         value="Requests"
-                        fill="var(--color-secondary)"
+                        fill="var(--base-content)"
                         position="insideTopRight"
                       />
                     </XAxis>
@@ -64,14 +68,10 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
                       tickLine={false}
                       axisLine={false}
                       mirror
-                      stroke="var(--color-secondary)"
+                      stroke="var(--base-content)"
                       padding={{ top: 30, bottom: 20 }}
                     >
-                      <Label
-                        value="Routes"
-                        fill="var(--color-secondary)"
-                        position="insideTopLeft"
-                      />
+                      <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />
                     </YAxis>
                   </BarChart>
                 </ResponsiveContainer>

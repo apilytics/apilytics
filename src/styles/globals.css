@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #529dff;
+  --base-content: #8a8a8a;
+
+  /* DaisyUI overrides */
+  --rounded-box: 0.5rem;
+}
+
+.bg-filter {
+  background-color: rgba(0, 0, 0, 0.75);
+}

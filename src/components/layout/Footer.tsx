@@ -4,22 +4,23 @@ import React from 'react';
 import { staticRoutes } from 'utils/router';
 
 export const Footer: React.FC = () => (
-  <footer className="text-center">
-    <div className="container py-16 text-secondary mx-auto">
-      <p>© 2021 Apilytics</p>
-      <p>
-        <a href="mailto:hello@apilytics.io">hello@apilytics.io</a>
-      </p>
-      <p>
-        <a href="https://twitter.com/apilytics" target="_blank" rel="noreferrer">
-          Twitter
-        </a>
-      </p>
-      <p>
-        <Link href={staticRoutes.privacy}>
-          <a>Privacy</a>
-        </Link>
-      </p>
+  <footer className="footer footer-center bg-base-300">
+    <div className="container py-16">
+      <p className="footer-title">© 2021 Apilytics</p>
+      <a className="link link-primary" href="mailto:hello@apilytics.io">
+        hello@apilytics.io
+      </a>
+      <a
+        className="link link-primary"
+        href="https://twitter.com/apilytics"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Twitter
+      </a>
+      <Link href={staticRoutes.privacy}>
+        <a className="link link-primary">Privacy</a>
+      </Link>
     </div>
   </footer>
 );

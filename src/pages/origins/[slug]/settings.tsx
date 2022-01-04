@@ -6,6 +6,7 @@ import type { NextPage } from 'next';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
 import { ConfirmationModal } from 'components/shared/ConfirmationModal';
+import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
@@ -21,7 +22,7 @@ const OriginSettings: NextPage = () => {
   const [name, setName] = useState(_name);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedText, setSubmittedText] = useState('');
   const plausible = usePlausible<PlausibleEvents>();
 
   const {
@@ -33,7 +34,7 @@ const OriginSettings: NextPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setSubmitted(false);
+    setSubmittedText('');
     setError('');
 
     try {
@@ -49,7 +50,7 @@ const OriginSettings: NextPage = () => {
 
       if (res.status === 200) {
         setError('');
-        setSubmitted(true);
+        setSubmittedText('Origin settings saved.');
         plausible('update-origin');
       } else {
         setError(message || UNEXPECTED_ERROR);
@@ -64,7 +65,7 @@ const OriginSettings: NextPage = () => {
   const handleConfirmDelete = async (): Promise<void> => {
     handleCloseConfirmDeleteModal();
     setLoading(true);
-    setSubmitted(false);
+    setSubmittedText('');
     setError('');
 
     try {
@@ -88,8 +89,13 @@ const OriginSettings: NextPage = () => {
 
   return (
     <MainTemplate>
-      <h2 className="text-2xl text-secondary">Origin settings</h2>
-      <form onSubmit={handleSubmit} className="mt-4">
+      <Form
+        title="Origin settings"
+        onSubmit={handleSubmit}
+        error={error}
+        loading={loading}
+        submittedText={submittedText}
+      >
         <Input
           name="name"
           label="Origin Name"
@@ -105,13 +111,14 @@ const OriginSettings: NextPage = () => {
           disabled
           helperText="Use this API key in your Apilytics client library to connect with your dashboard."
         />
-        {error && <p className="text-red-500">{error}</p>}
-        <Button loading={loading} fullWidth type="submit" className="mt-8">
-          Submit
-        </Button>
-        {submitted && <p className="text-white mt-8">Origin settings saved.</p>}
-      </form>
-      <Button onClick={handleOpenConfirmDeleteModal} variant="secondary" fullWidth className="mt-8">
+      </Form>
+      <Button
+        onClick={handleOpenConfirmDeleteModal}
+        color="error"
+        variant="outlined"
+        fullWidth
+        className="mt-8"
+      >
         Delete origin
       </Button>
       <ConfirmationModal

@@ -28,13 +28,15 @@ const Logout: NextPage = () => {
 
   return (
     <MainTemplate>
-      <h1 className="text-white text-3xl mt-4 text-center">You have been logged out.</h1>
+      <h1 className="text-3xl mt-4 text-center">You have been logged out.</h1>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8 mx-auto">
         <Link href={staticRoutes.root} passHref>
           <Button>Continue</Button>
         </Link>
         <Link href={staticRoutes.login} passHref>
-          <Button variant="secondary">Log in again</Button>
+          <Button color="secondary" variant="outlined">
+            Log in again
+          </Button>
         </Link>
       </div>
     </MainTemplate>

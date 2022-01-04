@@ -1,4 +1,4 @@
-import 'styles/index.css';
+import 'styles/globals.css';
 import '@fontsource/ubuntu';
 
 import { SessionProvider } from 'next-auth/react';

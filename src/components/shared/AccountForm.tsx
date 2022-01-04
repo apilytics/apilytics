@@ -1,7 +1,7 @@
 import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 
-import { Button } from 'components/shared/Button';
+import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { useAccount } from 'hooks/useAccount';
 import { UNEXPECTED_ERROR } from 'utils/constants';
@@ -18,7 +18,7 @@ export const AccountForm: React.FC = () => {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedText, setSubmittedText] = useState('');
   const plausible = usePlausible<PlausibleEvents>();
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>): void =>
@@ -27,7 +27,7 @@ export const AccountForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setSubmitted(false);
+    setSubmittedText('');
     setError('');
     const payload = { ...formValues };
 
@@ -44,7 +44,7 @@ export const AccountForm: React.FC = () => {
 
       if (res.status === 200) {
         setError('');
-        setSubmitted(true);
+        setSubmittedText('Account settings saved.');
         plausible('update-account');
       } else {
         setError(message || UNEXPECTED_ERROR);
@@ -57,10 +57,9 @@ export const AccountForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4">
+    <Form onSubmit={handleSubmit} error={error} loading={loading} submittedText={submittedText}>
       <Input
         name="name"
-        // TODO: Brand this for individual users instead of orgs once we have support for teams.
         label="Account name"
         helperText="This can be either your organization name or your personal one."
         value={formValues.name}
@@ -74,11 +73,6 @@ export const AccountForm: React.FC = () => {
         onChange={handleChange}
         required
       />
-      {error && <p className="text-red-500">{error}</p>}
-      <Button loading={loading} fullWidth type="submit" className="mt-8">
-        Submit
-      </Button>
-      {submitted && <p className="text-white mt-8">Account settings saved.</p>}
-    </form>
+    </Form>
   );
 };

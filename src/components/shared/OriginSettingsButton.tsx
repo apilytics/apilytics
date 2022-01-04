@@ -11,8 +11,8 @@ interface Props {
 
 export const OriginSettingsButton: React.FC<Props> = ({ slug, size = 8 }) => (
   <Link href={dynamicRoutes.originSettings({ slug })} passHref>
-    <button>
-      <CogIcon className={`h-${size} w-${size} text-secondary ml-4`} />
+    <button className="btn btn-circle ml-4 border-none">
+      <CogIcon className={`h-${size} w-${size}`} />
     </button>
   </Link>
 );

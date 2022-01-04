@@ -35,15 +35,15 @@ const loading = !origin || !metrics;
 export const TopSection: React.FC = () => (
   <div className="bg-background bg-no-repeat bg-cover">
     <div className="bg-filter">
-      <div className="container py-16 animate-fade-in-top animation-delay-400 grid gap-8 grid-cols-1 lg:grid-cols-2">
+      <div className="container py-16 grid gap-8 grid-cols-1 lg:grid-cols-2">
         <div className="text-left">
           <h1 className="text-7xl text-white">
             <span className="text-primary">API analytics</span>
             <br />
             made easy
           </h1>
-          <h2 className="text-2xl text-secondary mt-12">{DESCRIPTION}</h2>
-          <p className="text-secondary text-left mt-12">Integrates with:</p>
+          <h2 className="text-2xl mt-12">{DESCRIPTION}</h2>
+          <p className="text-left mt-12">Integrates with:</p>
           <div className="flex flex-row flex-wrap space-x-4 grayscale">
             {FRAMEWORKS_DATA.map(({ name, image }) => (
               <div key={name}>
@@ -64,7 +64,9 @@ export const TopSection: React.FC = () => (
               <Button>Get started</Button>
             </Link>
             <Link href={staticRoutes.demo} passHref>
-              <Button variant="secondary">Live demo</Button>
+              <Button color="secondary" variant="outlined">
+                Live demo
+              </Button>
             </Link>
           </div>
         </div>

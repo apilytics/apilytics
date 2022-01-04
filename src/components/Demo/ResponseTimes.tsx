@@ -23,7 +23,7 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
     }));
 
   return (
-    <div className="bg-zinc-900 rounded-lg flex flex-col p-4 text-secondary">
+    <div className="bg-base-100 card card-bordered rounded-lg flex flex-col p-2">
       {useMemo(
         () =>
           loading ? (
@@ -42,7 +42,7 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
                       // dataKey="red"
                       dataKey="response_time"
                       // fill="#fca5a5"
-                      fill="#27272a"
+                      fill="rgba(82, 157, 255, 0.25)" // `primary` with 25% opacity.
                       stackId="dist"
                       // minPointSize={50}
                       minPointSize={150}
@@ -68,7 +68,7 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
                     >
                       <Label
                         value="Response time"
-                        fill="var(--color-secondary)"
+                        fill="var(--base-content)"
                         position="insideTopRight"
                       />
                     </XAxis>
@@ -79,14 +79,10 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
                       axisLine={false}
                       mirror
                       // stroke="black"
-                      stroke="var(--color-secondary)"
+                      stroke="var(--base-content)"
                       padding={{ top: 30, bottom: 20 }}
                     >
-                      <Label
-                        value="Routes"
-                        fill="var(--color-secondary)"
-                        position="insideTopLeft"
-                      />
+                      <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />
                     </YAxis>
                   </BarChart>
                 </ResponsiveContainer>
