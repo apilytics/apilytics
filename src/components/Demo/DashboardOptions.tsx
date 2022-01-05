@@ -54,6 +54,6 @@ export const DashboardOptions: React.FC<Props> = ({
         </option>
       ))}
     </Select>
-    {!hideSettingsButton && <OriginSettingsButton slug={slug} />}
+    {!hideSettingsButton && <OriginSettingsButton slug={slug} className="ml-4" />}
   </div>
 );
