@@ -31,7 +31,7 @@ const Origins: NextPage = () => {
                 >
                   <div className="flex justify-between">
                     <h2 className="text-2xl">{name}</h2>
-                    <OriginSettingsButton slug={slug} size={6} />
+                    <OriginSettingsButton slug={slug} small />
                   </div>
                   <p className="text-lg mt-2">{last24hRequests} requests in last 24h</p>
                 </div>

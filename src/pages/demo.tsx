@@ -2,10 +2,10 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
-import { DashboardOptions } from 'components/Demo/DashboardOptions';
-import { RequestsOverview } from 'components/Demo/RequestsOverview';
-import { ResponseTimes } from 'components/Demo/ResponseTimes';
-import { RouteMetrics } from 'components/Demo/RouteMetrics';
+import { DashboardOptions } from 'components/dashboard/DashboardOptions';
+import { RequestsOverview } from 'components/dashboard/RequestsOverview';
+import { ResponseTimes } from 'components/dashboard/ResponseTimes';
+import { RouteMetrics } from 'components/dashboard/RouteMetrics';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
 import { MOCK_METRICS, MOCK_ORIGIN } from 'mocks';
@@ -20,7 +20,7 @@ const Demo: NextPage = () => {
   const loading = !origin || !metrics;
 
   return (
-    <MainTemplate maxWidth="5xl">
+    <MainTemplate wide>
       <DashboardOptions
         timeFrame={timeFrame}
         setTimeFrame={setTimeFrame}
@@ -44,7 +44,7 @@ const Demo: NextPage = () => {
             <Button fullWidth="mobile">Get started</Button>
           </Link>
           <Link href={staticRoutes.root} passHref>
-            <Button color="secondary" variant="outlined" fullWidth="mobile">
+            <Button colorClass="btn-secondary" variantClass="btn-outline" fullWidth="mobile">
               Learn more
             </Button>
           </Link>

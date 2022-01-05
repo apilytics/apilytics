@@ -6,7 +6,7 @@ import { LoadingIndicator } from 'components/shared/LoadingIndicator';
 export const LoadingTemplate: React.FC = () => (
   <MainTemplate>
     <div className="grow flex items-center justify-center">
-      <LoadingIndicator size={8} />
+      <LoadingIndicator />
     </div>
   </MainTemplate>
 );

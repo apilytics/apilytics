@@ -30,4 +30,13 @@ export const LAST_3_MONTHS_VALUE = 90;
 export const LAST_6_MONTHS_VALUE = 180;
 export const LAST_12_MONTHS_VALUE = 365;
 
+export const TIME_FRAME_OPTIONS = {
+  [LAST_24_HOURS_VALUE]: 'Last 24 hours',
+  [LAST_7_DAYS_VALUE]: 'Last 7 days',
+  [LAST_30_DAYS_VALUE]: 'Last 30 days',
+  [LAST_3_MONTHS_VALUE]: 'Last 3 months',
+  [LAST_6_MONTHS_VALUE]: 'Last 6 months',
+  [LAST_12_MONTHS_VALUE]: 'Last 12 months',
+};
+
 export const UNEXPECTED_ERROR = 'Unexpected error.';

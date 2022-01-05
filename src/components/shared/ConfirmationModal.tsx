@@ -35,7 +35,7 @@ export const ConfirmationModal: React.FC<Props> = ({ open, onConfirm, onCancel, 
             <h1 className="text-2xl">{text}</h1>
           </div>
           <div className="p-2 grid grid-cols-2 gap-2">
-            <Button color="error" variant="outlined" onClick={onCancel}>
+            <Button colorClass="btn-error" variantClass="btn-outline" onClick={onCancel}>
               Cancel
             </Button>
             <Button onClick={onConfirm} autoFocus>

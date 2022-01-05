@@ -5,12 +5,7 @@ import { Head } from 'components/layout/Head';
 import { Header } from 'components/layout/Header';
 import type { LayoutProps } from 'types';
 
-export const Layout: React.FC<LayoutProps> = ({
-  noIndex,
-  maxWidth = 'full',
-  hideLogin,
-  children,
-}) => (
+export const Layout: React.FC<LayoutProps> = ({ noIndex, maxWidth, hideLogin, children }) => (
   <>
     <Head noIndex={noIndex} />
     <div className="min-h-screen flex flex-col bg-black">

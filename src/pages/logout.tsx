@@ -34,7 +34,7 @@ const Logout: NextPage = () => {
           <Button>Continue</Button>
         </Link>
         <Link href={staticRoutes.login} passHref>
-          <Button color="secondary" variant="outlined">
+          <Button colorClass="btn-secondary" variantClass="btn-outline">
             Log in again
           </Button>
         </Link>

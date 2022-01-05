@@ -42,7 +42,7 @@ export const withAuth = <T extends Record<string, unknown>>(
 
     if (!accountComplete) {
       return (
-        <MainTemplate>
+        <MainTemplate hideLogin>
           <h2 className="text-2xl">Finish up your account to continue</h2>
           <AccountForm />
         </MainTemplate>

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-import { RequestsOverview } from 'components/Demo/RequestsOverview';
+import { RequestsOverview } from 'components/dashboard/RequestsOverview';
 import { Button } from 'components/shared/Button';
 import { MOCK_METRICS, MOCK_ORIGIN } from 'mocks';
 import { DESCRIPTION, LAST_7_DAYS_VALUE } from 'utils/constants';
@@ -64,7 +64,7 @@ export const TopSection: React.FC = () => (
               <Button>Get started</Button>
             </Link>
             <Link href={staticRoutes.demo} passHref>
-              <Button color="secondary" variant="outlined">
+              <Button colorClass="btn-secondary" variantClass="btn-outline">
                 Live demo
               </Button>
             </Link>

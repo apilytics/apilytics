@@ -45,7 +45,7 @@ const Origin: NextPage = () => {
   }
 
   return (
-    <MainTemplate maxWidth="5xl">
+    <MainTemplate wide>
       <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
       <RequestsOverview timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 grow">

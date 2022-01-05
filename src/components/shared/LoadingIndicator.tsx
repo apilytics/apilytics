@@ -1,16 +1,15 @@
 import clsx from 'clsx';
 import React from 'react';
-import type { HTMLAttributes } from 'react';
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
-  size?: number;
+interface Props {
+  small?: boolean;
 }
 
-export const LoadingIndicator: React.FC<Props> = ({ size = 8 }) => (
+export const LoadingIndicator: React.FC<Props> = ({ small }) => (
   <div
     className={clsx(
       'animate-spinner ease-linear rounded-full border-t-2 border-primary',
-      `h-${size} w-${size}`,
+      small ? 'h-12 w-12' : 'h-20 w-20',
     )}
   />
 );

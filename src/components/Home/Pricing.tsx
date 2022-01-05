@@ -99,7 +99,7 @@ export const Pricing: React.FC = () => {
               <Button fullWidth="mobile">Get started</Button>
             </Link>
             <Link href={staticRoutes.demo} passHref>
-              <Button color="secondary" variant="outlined" fullWidth="mobile">
+              <Button colorClass="btn-secondary" variantClass="btn-outline" fullWidth="mobile">
                 See demo
               </Button>
             </Link>

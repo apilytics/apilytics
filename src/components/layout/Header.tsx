@@ -31,7 +31,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
       <div
         className={clsx(
           'container flex justify-between items-center animate-fade-in-top relative z-10',
-          `max-w-${maxWidth}`,
+          maxWidth,
         )}
       >
         <Link href={staticRoutes.root}>
@@ -49,26 +49,29 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
         {!user ? (
           !hideLogin && (
             <Link href={staticRoutes.login} passHref>
-              <Button variant="outlined">Log in</Button>
+              <Button variantClass="btn-outline">Log in</Button>
             </Link>
           )
         ) : (
-          <div className="dropdown">
-            <div tabIndex={0} className="btn btn-primary btn-outline">
-              {user.name}
+          <div className="flex items-center">
+            <h2 className="text-xl mr-4">Beta</h2>
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} className="btn btn-primary btn-outline">
+                {user.name}
+              </div>
+              <ul
+                tabIndex={0}
+                className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
+              >
+                {MENU_ITEMS.map(({ name, href }) => (
+                  <li key={name}>
+                    <Link href={href} passHref>
+                      {name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul
-              tabIndex={0}
-              className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
-            >
-              {MENU_ITEMS.map(({ name, href }) => (
-                <li key={name}>
-                  <Link href={href} passHref>
-                    {name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
         )}
       </div>
