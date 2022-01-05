@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
-import { Button } from 'components/shared/Button';
 import { ConfirmationModal } from 'components/shared/ConfirmationModal';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
@@ -108,24 +107,20 @@ const OriginSettings: NextPage = () => {
           name="apiKey"
           label="API Key"
           value={apiKey}
-          disabled
+          readOnly
           helperText="Use this API key in your Apilytics client library to connect with your dashboard."
         />
       </Form>
-      <Button
-        onClick={handleOpenConfirmDeleteModal}
-        color="error"
-        variant="outlined"
-        fullWidth
-        className="mt-8"
-      >
-        Delete origin
-      </Button>
+      <div className="flex justify-center mt-8">
+        <p onClick={handleOpenConfirmDeleteModal} className="link text-error">
+          Delete origin
+        </p>
+      </div>
       <ConfirmationModal
         open={confirmDeleteModalOpen}
         onConfirm={handleConfirmDelete}
         onCancel={handleCloseConfirmDeleteModal}
-        text="Are you sure you want to delete this origin?"
+        text="Are you sure you want to delete this origin? All data associated with it will be lost forever."
       />
     </MainTemplate>
   );
