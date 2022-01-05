@@ -97,7 +97,7 @@ export interface RouteData {
 
 export interface OriginMetrics {
   totalRequests: number;
-  totalRequestsGrowth: string;
+  totalRequestsGrowth: number;
   timeFrameData: TimeFrameData[];
   routeData: RouteData[];
 }

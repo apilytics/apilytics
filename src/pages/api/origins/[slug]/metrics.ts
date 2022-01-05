@@ -74,7 +74,7 @@ GROUP BY time;`;
     },
   });
 
-  const totalRequestsGrowth = (totalRequests / lastTotalRequests).toFixed(2);
+  const totalRequestsGrowth = Number((totalRequests / lastTotalRequests).toFixed(2));
 
   const routeData: RouteData[] = await prisma.$queryRaw`
 SELECT

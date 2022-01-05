@@ -17,7 +17,7 @@ import {
 } from 'utils/constants';
 import type { OriginMetrics } from 'types';
 
-export const MOCK_METRICS: Record<string, OriginMetrics> = {
+export const MOCK_METRICS: Record<number, OriginMetrics> = {
   [LAST_24_HOURS_VALUE]: day,
   [LAST_7_DAYS_VALUE]: week,
   [LAST_30_DAYS_VALUE]: month,
