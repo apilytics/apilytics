@@ -1,22 +1,51 @@
+import clsx from 'clsx';
 import React from 'react';
 
+const COLORS = {
+  primary: 'btn-primary',
+  secondary: 'btn-secondary',
+  error: 'btn-error',
+};
+
+const VARIANTS = {
+  contained: '',
+  outlined: 'btn-outline',
+};
+
+const FULL_WIDTHS = {
+  true: 'w-full',
+  mobile: 'w-full lg:w-auto',
+};
+
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary';
-  fullWidth?: boolean;
+  color?: 'primary' | 'secondary' | 'error';
+  variant?: 'outlined';
+  fullWidth?: boolean | 'mobile';
+  loading?: boolean;
 }
 
 export const Button: React.FC<Props> = ({
-  variant = 'primary',
+  color = 'primary',
+  variant = 'contained',
   fullWidth = false,
+  loading,
+  disabled,
   className,
+  children,
   ...props
 }) => (
   <button
-    className={`${
-      variant === 'primary' ? 'bg-primary text-white' : 'bg-white text-primary border-primary'
-    } ${
-      fullWidth ? 'lg:w-full' : 'lg:w-auto'
-    } rounded-lg p-4 text-2xl w-full flex justify-center items-center disabled:opacity-50 ${className}`}
+    className={clsx(
+      'btn',
+      COLORS[color],
+      VARIANTS[variant as keyof typeof VARIANTS],
+      FULL_WIDTHS[String(fullWidth) as keyof typeof FULL_WIDTHS],
+      loading && 'loading',
+      className,
+    )}
+    disabled={disabled}
     {...props}
-  />
+  >
+    {children}
+  </button>
 );

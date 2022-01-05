@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import slugify from 'slugify';
 
 import { getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
@@ -14,29 +15,50 @@ import type {
 const handleGet: ApiHandler<OriginsListGetResponse> = async (req, res) => {
   const user = await getSessionUser(req);
 
-  const origins = await prisma.origin.findMany({ where: { userId: user.id } });
+  // Get all origins for the user and the related metrics within 24 hours.
+  const _origins = await prisma.origin.findMany({
+    where: { userId: user.id },
+    include: {
+      metrics: {
+        where: {
+          createdAt: {
+            gt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          },
+        },
+      },
+    },
+  });
+
+  const origins = _origins.map((origin) => ({
+    ...origin,
+    last24hRequests: origin.metrics.length,
+  }));
+
   sendOk(res, { data: origins });
 };
 
 const handlePost: ApiHandler<OriginsPostResponse> = async (req, res) => {
   const user = await getSessionUser(req);
+  const { name }: OriginsPostBody = req.body;
 
-  const { domain }: OriginsPostBody = req.body;
-  if (!domain) {
+  if (!name) {
     sendInvalidInput(res);
     return;
   }
 
   let origin;
+  const slug = slugify(name);
+
   try {
     origin = await prisma.origin.create({
-      data: { userId: user.id, domain },
+      data: { userId: user.id, name, slug },
     });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-      sendConflict(res, 'Current user already has a origin with the given domain.');
+      sendConflict(res, 'An origin with this name already exists.');
       return;
     }
+
     throw e;
   }
 

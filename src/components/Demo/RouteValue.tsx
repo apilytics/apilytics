@@ -14,7 +14,7 @@ export const RouteValue: React.FC<
       x="100%"
       y={y}
       dy={16}
-      fill="var(--color-secondary)"
+      fill="var(--base-content)"
       textAnchor="end"
       dominantBaseline="middle"
     >

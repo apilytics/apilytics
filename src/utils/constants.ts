@@ -1,4 +1,4 @@
-export const TITLE = 'API analytics made easy';
+export const TITLE = 'Apilytics - API analytics made easy';
 
 export const DESCRIPTION =
   'Analyze operational, performance and security metrics from your APIs without infrastructure-level logging.';
@@ -9,16 +9,25 @@ export const FRONTEND_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${proces
 
 export const FRONTEND_DOMAIN = new URL(FRONTEND_URL).host;
 
-export enum Method {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-  PATCH = 'PATCH',
-}
+export const METHODS = [
+  'GET',
+  'HEAD',
+  'POST',
+  'PUT',
+  'PATCH',
+  'DELETE',
+  'OPTIONS',
+  'CONNECT',
+  'TRACE',
+] as const;
 
+export type Method = typeof METHODS[number];
+
+export const LAST_24_HOURS_VALUE = 1;
 export const LAST_7_DAYS_VALUE = 7;
 export const LAST_30_DAYS_VALUE = 30;
 export const LAST_3_MONTHS_VALUE = 90;
 export const LAST_6_MONTHS_VALUE = 180;
 export const LAST_12_MONTHS_VALUE = 365;
+
+export const UNEXPECTED_ERROR = 'Unexpected error.';

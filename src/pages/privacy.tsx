@@ -5,22 +5,16 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { GetStaticProps, NextPage } from 'next';
 
-import { Layout } from 'components/layout/Layout';
+import { MainTemplate } from 'components/layout/MainTemplate';
 
 interface Props {
   content: string;
 }
 
 const Privacy: NextPage<Props> = ({ content }) => (
-  <Layout noIndex headerMaxWidth="3xl">
-    <div className="bg-background bg-no-repeat bg-cover">
-      <div className="bg-filter">
-        <div className="container max-w-3xl mx-auto py-16">
-          <ReactMarkdown className="text-left text-white">{content}</ReactMarkdown>
-        </div>
-      </div>
-    </div>
-  </Layout>
+  <MainTemplate>
+    <ReactMarkdown className="text-left">{content}</ReactMarkdown>
+  </MainTemplate>
 );
 
 export const getStaticProps: GetStaticProps = async () => {

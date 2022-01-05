@@ -3,6 +3,7 @@ import NextAuth from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 
 import prisma from 'prismaClient';
+import { staticRoutes } from 'utils/router';
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -12,12 +13,15 @@ export default NextAuth({
     session: async ({ session, token }) => {
       if (session?.user) {
         session.user.id = token.uid;
+        session.user.name = token.name ?? '';
       }
+
       return session;
     },
     jwt: async ({ user, token }) => {
       if (user) {
         token.uid = user.id;
+        token.name = user.name;
       }
       return token;
     },
@@ -31,5 +35,11 @@ export default NextAuth({
   secret: process.env.SECRET_KEY,
   session: {
     strategy: 'jwt',
+  },
+  pages: {
+    signIn: staticRoutes.login,
+    signOut: staticRoutes.logout,
+    error: staticRoutes.login,
+    verifyRequest: staticRoutes.login,
   },
 });

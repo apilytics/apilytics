@@ -1,0 +1,94 @@
+{
+  "totalRequests": 1776,
+  "totalRequestsGrowth": "1.01",
+  "timeFrameData": [
+    {
+      "requests": 295,
+      "time": "2022-01-01T00:00:00+00:00"
+    },
+    {
+      "requests": 229,
+      "time": "2021-12-30T00:00:00+00:00"
+    },
+    {
+      "requests": 313,
+      "time": "2021-12-31T00:00:00+00:00"
+    },
+    {
+      "requests": 256,
+      "time": "2022-01-02T00:00:00+00:00"
+    },
+    {
+      "requests": 226,
+      "time": "2022-01-04T00:00:00+00:00"
+    },
+    {
+      "requests": 183,
+      "time": "2022-01-05T00:00:00+00:00"
+    },
+    {
+      "requests": 70,
+      "time": "2021-12-29T00:00:00+00:00"
+    },
+    {
+      "requests": 204,
+      "time": "2022-01-03T00:00:00+00:00"
+    }
+  ],
+  "routeData": [
+    {
+      "requests": 285,
+      "name": "/login",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 70,
+      "count_green": 96,
+      "count_yellow": 100,
+      "count_red": 89
+    },
+    {
+      "requests": 297,
+      "name": "/posts",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 69,
+      "count_green": 106,
+      "count_yellow": 85,
+      "count_red": 106
+    },
+    {
+      "requests": 313,
+      "name": "/posts/123",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 68,
+      "count_green": 110,
+      "count_yellow": 103,
+      "count_red": 100
+    },
+    {
+      "requests": 280,
+      "name": "/profile",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 71,
+      "count_green": 84,
+      "count_yellow": 101,
+      "count_red": 95
+    },
+    {
+      "requests": 289,
+      "name": "/users",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 69,
+      "count_green": 97,
+      "count_yellow": 106,
+      "count_red": 86
+    },
+    {
+      "requests": 312,
+      "name": "/users/johndoe",
+      "methods": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+      "response_time": 71,
+      "count_green": 99,
+      "count_yellow": 97,
+      "count_red": 116
+    }
+  ]
+}
