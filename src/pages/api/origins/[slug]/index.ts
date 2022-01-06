@@ -35,13 +35,20 @@ const handlePut: ApiHandler<OriginsDetailPutResponse> = async (req, res) => {
   }
 
   const slug = getSlugFromReq(req);
-  const where = { slug, userId };
-  const origin = prisma.origin.update({ data: { name }, where });
 
-  if (!origin) {
+  const { count } = await prisma.origin.updateMany({
+    where: { slug, userId },
+    data: { name, slug },
+  });
+
+  if (count === 0) {
     sendNotFound(res, 'Origin');
     return;
   }
+
+  const origin = await prisma.origin.findFirst({
+    where: { slug, userId },
+  });
 
   // @ts-ignore: `prisma.origin.update` returns a type that's not assignable to `Origin`.
   sendOk(res, { data: origin });

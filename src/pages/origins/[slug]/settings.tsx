@@ -16,7 +16,7 @@ import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 const OriginSettings: NextPage = () => {
-  const { origin } = useOrigin();
+  const { origin, setOrigin } = useOrigin();
   const { name: _name, apiKey, slug = '' } = origin ?? {};
   const [name, setName] = useState(_name);
   const [error, setError] = useState('');
@@ -45,9 +45,10 @@ const OriginSettings: NextPage = () => {
         },
       });
 
-      const { message } = await res.json();
+      const { message, data } = await res.json();
 
       if (res.status === 200) {
+        setOrigin(data);
         setError('');
         setSubmittedText('Origin settings saved.');
         plausible('update-origin');
