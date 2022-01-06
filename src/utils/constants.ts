@@ -40,3 +40,5 @@ export const TIME_FRAME_OPTIONS = {
 };
 
 export const UNEXPECTED_ERROR = 'Unexpected error.';
+
+export const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
