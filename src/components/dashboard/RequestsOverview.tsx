@@ -106,12 +106,13 @@ export const RequestsOverview: React.FC<Props> = ({
         </div>
         {isFinite(totalRequestsGrowth) && (
           <div className="p-4">
-            <h2 className="text-xl">
-              From previous {TIME_FRAME_OPTIONS[timeFrame].split('Last ')[1]}
-            </h2>
+            <h2 className="text-xl">Growth</h2>
             <p className={clsx('text-lg', positiveGrowth ? 'text-success' : 'text-error')}>
               {positiveGrowth ? '+' : ''}
-              {(totalRequestsGrowth * 100).toFixed()}%
+              {(totalRequestsGrowth * 100).toFixed()}%{' '}
+              <span className="text-base-content">
+                from previous {TIME_FRAME_OPTIONS[timeFrame].split('Last ')[1]}
+              </span>
             </p>
           </div>
         )}
@@ -121,8 +122,8 @@ export const RequestsOverview: React.FC<Props> = ({
           <AreaChart data={timeFrameData}>
             <defs>
               <linearGradient id="fill-color" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="btn-var(--primary)" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="btn-var(--primary)" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis

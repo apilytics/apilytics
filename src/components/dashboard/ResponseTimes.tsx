@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
@@ -12,15 +12,18 @@ interface Props {
 
 // TODO: All of the commented parts are needed when we enable the color coding of the response times.
 export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading }) => {
-  const data = routeData
-    .sort((a, b) => (a.response_time < b.response_time ? 1 : -1))
-    .map(({ response_time, ...routeData }) => ({
-      ...routeData,
-      response_time,
-      // green: responseTime * routeData.responseGreen,
-      // yellow: responseTime * routeData.responseYellow,
-      // red: responseTime * routeData.responseRed,
-    }));
+  // The data must be kept in state for the labels to work: https://github.com/recharts/recharts/issues/829#issuecomment-458815276
+  const [data] = useState(() =>
+    routeData
+      .sort((a, b) => (a.response_time < b.response_time ? 1 : -1))
+      .map(({ response_time, ...routeData }) => ({
+        ...routeData,
+        response_time,
+        // green: responseTime * routeData.responseGreen,
+        // yellow: responseTime * routeData.responseYellow,
+        // red: responseTime * routeData.responseRed,
+      })),
+  );
 
   const renderResponseTimeLabels = (
     <RouteValue formatter={(value?: string | number): string => `${value}ms`} />
