@@ -67,7 +67,7 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
   };
 
   return (
-    <MainTemplate hideLogin>
+    <MainTemplate>
       {!submitted ? (
         <Form
           title="Type your email to log in or register a new user"
