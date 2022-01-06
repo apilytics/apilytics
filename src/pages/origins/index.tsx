@@ -38,7 +38,9 @@ const Origins: NextPage = () => {
               </Link>
             ))
           ) : (
-            <p className="text-xl">No origins available.</p>
+            <p className="text-xl">
+              No origins available. Add your first origin to start analyzing your APIs.
+            </p>
           )}
         </div>
       </div>

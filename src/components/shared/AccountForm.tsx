@@ -9,11 +9,11 @@ import { staticApiRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 export const AccountForm: React.FC = () => {
-  const { name = '', email = '' } = useAccount().user || {};
+  const { user, setUser } = useAccount();
 
   const [formValues, setFormValues] = useState({
-    name,
-    email,
+    name: user?.name || '',
+    email: user?.email || '',
   });
 
   const [error, setError] = useState('');
@@ -40,12 +40,13 @@ export const AccountForm: React.FC = () => {
         },
       });
 
-      const { message } = await res.json();
+      const { data, message } = await res.json();
 
       if (res.status === 200) {
         setError('');
         setSubmittedText('Account settings saved.');
         plausible('update-account');
+        setUser(data);
       } else {
         setError(message || UNEXPECTED_ERROR);
       }

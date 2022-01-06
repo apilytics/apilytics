@@ -23,8 +23,49 @@ const MENU_ITEMS = [
   },
 ];
 
-export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
+export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
   const { user } = useAccount();
+
+  const renderDynamicContent = (): JSX.Element => {
+    if (!user) {
+      return (
+        <Link href={staticRoutes.login} passHref>
+          <Button variantClass="btn-outline">Log in</Button>
+        </Link>
+      );
+    }
+
+    if (!user?.name) {
+      return (
+        <Link href={staticRoutes.logout} passHref>
+          <Button variantClass="btn-outline">Log out</Button>
+        </Link>
+      );
+    }
+
+    return (
+      <div className="flex items-center">
+        <h2 className="text-xl mr-4">Beta</h2>
+        <div className="dropdown dropdown-end">
+          <div tabIndex={0} className="btn btn-primary btn-outline">
+            {user?.name}
+          </div>
+          <ul
+            tabIndex={0}
+            className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
+          >
+            {MENU_ITEMS.map(({ name, href }) => (
+              <li key={name}>
+                <Link href={href} passHref>
+                  {name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <header className="h-20 flex items-center bg-base-300">
@@ -46,34 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
             />
           </a>
         </Link>
-        {!user ? (
-          !hideLogin && (
-            <Link href={staticRoutes.login} passHref>
-              <Button variantClass="btn-outline">Log in</Button>
-            </Link>
-          )
-        ) : (
-          <div className="flex items-center">
-            <h2 className="text-xl mr-4">Beta</h2>
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} className="btn btn-primary btn-outline">
-                {user.name}
-              </div>
-              <ul
-                tabIndex={0}
-                className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
-              >
-                {MENU_ITEMS.map(({ name, href }) => (
-                  <li key={name}>
-                    <Link href={href} passHref>
-                      {name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
+        {renderDynamicContent()}
       </div>
     </header>
   );

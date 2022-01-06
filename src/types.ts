@@ -35,13 +35,13 @@ export interface HeadProps {
 
 export interface HeaderProps {
   maxWidth?: string;
-  hideLogin?: boolean;
 }
 
 export type LayoutProps = HeadProps & HeaderProps;
 
 export interface AccountContextType {
-  user?: SessionUser;
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
   status: 'authenticated' | 'unauthenticated' | 'loading';
   accountComplete: boolean;
   origins: AggregatedOrigin[];
@@ -60,13 +60,6 @@ export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,
 ) => Promise<void>;
-
-// Our custom user that next-auth holds in its sessions.
-export interface SessionUser {
-  id: string;
-  email: string;
-  name: string;
-}
 
 export interface AggregatedOrigin extends Origin {
   last24hRequests: number;
@@ -110,7 +103,7 @@ export interface OriginsDetailGetResponse {
   data: Origin;
 }
 
-export interface AccountDetailGetResponse {
+export interface AccountGetResponse {
   data: User;
 }
 
@@ -118,5 +111,5 @@ export type MiddlewarePostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
 export type OriginsPostBody = Pick<Origin, 'name'>;
 export type OriginsDetailPutBody = Pick<Origin, 'name'>;
 export type OriginsDetailPutResponse = OriginsDetailGetResponse;
-export type AccountDetailPutResponse = AccountDetailGetResponse;
+export type AccountDetailPutResponse = AccountGetResponse;
 export type AccountDetailPutBody = Pick<User, 'name' | 'email'>;

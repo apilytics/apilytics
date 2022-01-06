@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import slugify from 'slugify';
 
-import { getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
+import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
@@ -13,11 +13,11 @@ import type {
 } from 'types';
 
 const handleGet: ApiHandler<OriginsListGetResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
 
   // Get all origins for the user and the related metrics within 24 hours.
   const _origins = await prisma.origin.findMany({
-    where: { userId: user.id },
+    where: { userId },
     include: {
       metrics: {
         where: {
@@ -38,7 +38,7 @@ const handleGet: ApiHandler<OriginsListGetResponse> = async (req, res) => {
 };
 
 const handlePost: ApiHandler<OriginsPostResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
   const { name }: OriginsPostBody = req.body;
 
   if (!name) {
@@ -51,7 +51,7 @@ const handlePost: ApiHandler<OriginsPostResponse> = async (req, res) => {
 
   try {
     origin = await prisma.origin.create({
-      data: { userId: user.id, name, slug },
+      data: { userId, name, slug },
     });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {

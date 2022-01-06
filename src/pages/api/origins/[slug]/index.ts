@@ -1,4 +1,4 @@
-import { getSessionUser, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
+import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
@@ -10,11 +10,11 @@ import type {
 } from 'types';
 
 const handleGet: ApiHandler<OriginsDetailGetResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
   const origin = await prisma.origin.findFirst({
-    where: { slug, userId: user.id },
+    where: { slug, userId },
   });
 
   if (!origin) {
@@ -26,7 +26,7 @@ const handleGet: ApiHandler<OriginsDetailGetResponse> = async (req, res) => {
 };
 
 const handlePut: ApiHandler<OriginsDetailPutResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
   const { name } = req.body as OriginsDetailPutBody;
 
   if (!name) {
@@ -35,7 +35,7 @@ const handlePut: ApiHandler<OriginsDetailPutResponse> = async (req, res) => {
   }
 
   const slug = getSlugFromReq(req);
-  const where = { slug, userId: user.id };
+  const where = { slug, userId };
   const origin = prisma.origin.update({ data: { name }, where });
 
   if (!origin) {
@@ -48,11 +48,11 @@ const handlePut: ApiHandler<OriginsDetailPutResponse> = async (req, res) => {
 };
 
 const handleDelete: ApiHandler = async (req, res) => {
-  const user = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
   const { count } = await prisma.origin.deleteMany({
-    where: { slug, userId: user.id },
+    where: { slug, userId },
   });
 
   if (count === 0) {

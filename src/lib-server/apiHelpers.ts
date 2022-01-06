@@ -1,9 +1,10 @@
 import { getSession } from 'next-auth/react';
 import type { NextApiRequest } from 'next';
+import type { Session } from 'next-auth';
 
 import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
 import { METHODS } from 'utils/constants';
-import type { ApiHandler, SessionUser } from 'types';
+import type { ApiHandler } from 'types';
 import type { Method } from 'utils/constants';
 
 class UnauthorizedApiError extends Error {}
@@ -56,16 +57,16 @@ export const getSlugFromReq = (req: NextApiRequest): string => {
   throw new Error(`Invalid slug param in route: ${slug}`);
 };
 
-export const safeGetSessionUser = async (req: NextApiRequest): Promise<SessionUser | null> => {
-  return (await getSession({ req }))?.user ?? null;
-};
+export const safeGetSessionUserId = async (
+  req: NextApiRequest,
+): Promise<Session['userId'] | null> => (await getSession({ req }))?.userId ?? null;
 
-export const getSessionUser = async (req: NextApiRequest): Promise<SessionUser> => {
-  const user = await safeGetSessionUser(req);
+export const getSessionUserId = async (req: NextApiRequest): Promise<string> => {
+  const userId = await safeGetSessionUserId(req);
 
-  if (!user) {
+  if (!userId) {
     throw new UnauthorizedApiError();
   }
 
-  return user;
+  return userId;
 };
