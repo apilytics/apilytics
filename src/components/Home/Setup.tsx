@@ -1,14 +1,12 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-const FRAMEWORKS = ['Node.js', 'Next.js', 'Django', 'FastAPI'];
+const INTEGRATIONS = ['Node.js', 'Next.js', 'Django', 'FastAPI', 'BYOM'];
 
-const getCodeSnippet = (framework: string): JSX.Element | null => {
+const getCodeSnippet = (framework: string): string => {
   switch (framework) {
     case 'Node.js': {
-      return (
-        <pre className="overflow-hidden">
-          {`
+      return `
 $ npm install apilytics
 
 // In your code:
@@ -18,30 +16,22 @@ const Apilytics = require('apilytics');
 const apilytics = Apilytics('<your_api_key>');
 const app = express();
 
-app.use(apilytics);`}
-        </pre>
-      );
+app.use(apilytics);`;
     }
 
     case 'Django': {
-      return (
-        <pre className="overflow-hidden">
-          {`
+      return `
 $ pip install apilytics
 
 # In your code:
 MIDDLEWARE = [
 ...
 'apilytics',
-]`}
-        </pre>
-      );
+]`;
     }
 
     case 'Next.js': {
-      return (
-        <pre className="overflow-hidden">
-          {`
+      return `
 $ npm install apilytics
 
 // In your code:
@@ -55,15 +45,11 @@ async function handler(req, res) {
   ...
 };
 
-export default handler;`}
-        </pre>
-      );
+export default handler;`;
     }
 
     case 'FastAPI': {
-      return (
-        <pre className="overflow-hidden">
-          {`
+      return `
 $ pip install apilytics
 
 # In your code:
@@ -72,19 +58,43 @@ from apilytics import Apilytics
 
 app = FastAPI()
 
-app.add_middleware(Apilytics, api_key='<your_api_key>')`}
-        </pre>
-      );
+app.add_middleware(Apilytics, api_key='<your_api_key>')`;
+    }
+
+    case 'BYOM': {
+      return `
+If your backend supports none of our open source middlewares,
+you can still use Apilytics by implementing your own middleware.
+
+Simply perform an HTTP request to
+https://apilytics.io/api/v1/middleware
+for all of the requests that you want to track with Apilytics.
+
+The HTTP requests must have the following specs:
+
+Method: POST
+
+Headers:
+- "Content-Type": "application/json"
+- "X-API-Key": "<your_api_key>"
+
+Body:
+- "path": The path of the endpoint, e.g. "/api/v1/users".
+- "method": The HTTP method of the request that you want to track.
+- "timeMillis": The time in milliseconds that the request took to complete.
+
+Note that your request should take place as a background job
+in your API and thus not bottlenecking your API in any way.`;
     }
 
     default: {
-      return null;
+      return '';
     }
   }
 };
 
 export const Setup: React.FC = () => {
-  const [selectedFramework, setSelectedFramework] = useState(FRAMEWORKS[0]);
+  const [selectedFramework, setSelectedFramework] = useState(INTEGRATIONS[0]);
 
   return (
     <div className="bg-background bg-no-repeat bg-cover">
@@ -110,7 +120,7 @@ export const Setup: React.FC = () => {
           </div>
           <div className="mt-14 bg-base-100 w-full rounded-lg mockup-code">
             <div className="p-2 tabs tabs-boxed bg-inherit">
-              {FRAMEWORKS.map((name) => (
+              {INTEGRATIONS.map((name) => (
                 <p
                   key={name}
                   className={clsx('tab tab-lg', selectedFramework === name && 'tab-active')}
@@ -120,7 +130,9 @@ export const Setup: React.FC = () => {
                 </p>
               ))}
             </div>
-            <div className="p-4">{getCodeSnippet(selectedFramework)}</div>
+            <div className="p-4">
+              <pre className="overflow-hidden break-words">{getCodeSnippet(selectedFramework)}</pre>
+            </div>
           </div>
         </div>
       </div>
