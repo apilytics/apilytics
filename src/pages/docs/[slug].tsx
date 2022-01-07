@@ -22,9 +22,7 @@ const components: Record<string, ReactNode> = {
   ),
   SignupButton: () => (
     <Link href={staticRoutes.login} passHref>
-      <Button colorClass="btn-primary" variantClass="btn-outline">
-        Sign up here
-      </Button>
+      <Button className="btn-primary btn-outline">Sign up here</Button>
     </Link>
   ),
   BYOMLink: ({ text }: { text: string }) => <Link href={staticRoutes.byom}>{text}</Link>,

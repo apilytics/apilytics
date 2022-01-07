@@ -30,7 +30,7 @@ export const DocsTemplate: React.FC<Props> = ({ order, docsInfo, children }) => 
           {children}
           {nextRoute && (
             <Link href={staticRoutes[nextRoute.routeName]} passHref>
-              <Button colorClass="btn-primary" variantClass="btn-outline" className="mt-4">
+              <Button className="btn-primary btn-outline mt-4">
                 {nextRoute.name} <ArrowSmRightIcon className="w-5 h-5" />
               </Button>
             </Link>

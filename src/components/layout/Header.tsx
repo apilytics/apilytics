@@ -30,9 +30,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
     if (!user) {
       return (
         <Link href={staticRoutes.login} passHref>
-          <Button variantClass="btn-outline" colorClass="btn-primary">
-            Log in
-          </Button>
+          <Button className="btn-primary btn-outline">Log in</Button>
         </Link>
       );
     }
@@ -40,9 +38,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
     if (!user?.name) {
       return (
         <Link href={staticRoutes.logout} passHref>
-          <Button variantClass="btn-outline" colorClass="btn-primary">
-            Log out
-          </Button>
+          <Button className="btn-primary btn-outline">Log out</Button>
         </Link>
       );
     }
@@ -93,9 +89,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
         <div className="flex items-center">
           <h2 className="text-xl mr-4">Beta</h2>
           <Link href={staticRoutes.docs} passHref>
-            <Button variantClass="btn-outline" colorClass="btn-secondary" className="mr-4">
-              Docs
-            </Button>
+            <Button className="btn-secondary btn-outline mr-4">Docs</Button>
           </Link>
           {renderDynamicContent()}
         </div>

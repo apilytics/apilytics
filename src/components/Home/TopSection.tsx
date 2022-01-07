@@ -64,7 +64,7 @@ export const TopSection: React.FC = () => (
                   layout="fixed"
                   width={60}
                   height={60}
-                  quality={5}
+                  quality={1}
                   objectFit="contain"
                   alt={name}
                   priority
@@ -74,12 +74,10 @@ export const TopSection: React.FC = () => (
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8">
             <Link href={staticRoutes.login} passHref>
-              <Button colorClass="btn-primary">Get started</Button>
+              <Button className="btn-primary">Get started</Button>
             </Link>
             <Link href={staticRoutes.demo} passHref>
-              <Button colorClass="btn-secondary" variantClass="btn-outline">
-                Live demo
-              </Button>
+              <Button className="btn-secondary btn-outline">Live demo</Button>
             </Link>
           </div>
         </div>

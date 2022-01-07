@@ -96,12 +96,12 @@ export const Pricing: React.FC = () => {
           <h1 className="text-3xl">Ready to boost your API monitoring?</h1>
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4 w-full lg:w-auto">
             <Link href={staticRoutes.login} passHref>
-              <Button colorClass="btn-primary" fullWidth="mobile">
+              <Button className="btn-primary" fullWidth="mobile">
                 Get started
               </Button>
             </Link>
             <Link href={staticRoutes.demo} passHref>
-              <Button colorClass="btn-secondary" variantClass="btn-outline" fullWidth="mobile">
+              <Button className="btn-secondary btn-outline" fullWidth="mobile">
                 See demo
               </Button>
             </Link>

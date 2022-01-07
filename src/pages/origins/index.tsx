@@ -19,7 +19,7 @@ const Origins: NextPage = () => {
         <div className="flex justify-between items-center py-4">
           <h2 className="text-2xl">Origins</h2>
           <Link href={staticRoutes.newOrigin} passHref>
-            <Button colorClass="btn-primary">
+            <Button className="btn-primary">
               Add origin <PlusIcon className="w-5 h-5 ml-2" />
             </Button>
           </Link>
