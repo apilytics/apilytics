@@ -74,7 +74,7 @@ export const TopSection: React.FC = () => (
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8">
             <Link href={staticRoutes.login} passHref>
-              <Button>Get started</Button>
+              <Button colorClass="btn-primary">Get started</Button>
             </Link>
             <Link href={staticRoutes.demo} passHref>
               <Button colorClass="btn-secondary" variantClass="btn-outline">

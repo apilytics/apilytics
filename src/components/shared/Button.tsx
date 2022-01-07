@@ -2,14 +2,14 @@ import clsx from 'clsx';
 import React from 'react';
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  colorClass?: 'btn-primary' | 'btn-secondary' | 'btn-error';
-  variantClass?: 'btn-outline';
+  colorClass?: string;
+  variantClass?: string;
   fullWidth?: boolean | 'mobile';
   loading?: boolean;
 }
 
 export const Button: React.FC<Props> = ({
-  colorClass = 'btn-primary',
+  colorClass,
   variantClass,
   fullWidth = false,
   loading,

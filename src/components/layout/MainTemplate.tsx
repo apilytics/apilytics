@@ -13,12 +13,10 @@ export const MainTemplate: React.FC<Props> = ({ wide, noIndex = true, children }
 
   return (
     <Layout noIndex={noIndex} maxWidth={maxWidth}>
-      <div className="bg-background bg-no-repeat bg-cover flex flex-col grow">
-        <div className="bg-filter grow flex flex-col">
-          <div className={clsx('container py-16 animate-fade-in-top grow flex flex-col', maxWidth)}>
-            {children}
-          </div>
-        </div>
+      <div
+        className={clsx('container py-4 lg:pt-16 animate-fade-in-top grow flex flex-col', maxWidth)}
+      >
+        {children}
       </div>
     </Layout>
   );

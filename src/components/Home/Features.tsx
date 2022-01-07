@@ -43,7 +43,7 @@ const FEATURES = [
 ];
 
 export const Features: React.FC = () => (
-  <div className="bg-base-100">
+  <div className="bg-base-200">
     <div className="container py-16 max-w-3xl">
       <h1 className="text-5xl">Comprehensive metrics across all of your APIs</h1>
       <h2 className="text-3xl text-primary mt-8">
@@ -52,10 +52,7 @@ export const Features: React.FC = () => (
       </h2>
       <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
         {FEATURES.map(({ icon: Icon, title, content }) => (
-          <div
-            className="card card-bordered shadow-xl rounded-lg divide-y divide-base-content"
-            key={title}
-          >
+          <div className="card shadow-2xl rounded-lg divide-y divide-base-content" key={title}>
             <div className="flex items-center p-4">
               <Icon className="h-8 w-8 text-primary mr-2" />
               <h2 className="text-xl">{title}</h2>

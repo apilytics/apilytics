@@ -7,6 +7,9 @@ export const staticRoutes = {
   origins: '/origins',
   newOrigin: '/new-origin',
   account: '/account',
+  docs: '/docs',
+  getStarted: '/docs/get-started',
+  byom: '/docs/byom',
 };
 
 type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;

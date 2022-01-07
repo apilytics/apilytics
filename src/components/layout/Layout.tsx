@@ -8,7 +8,7 @@ import type { LayoutProps } from 'types';
 export const Layout: React.FC<LayoutProps> = ({ noIndex, maxWidth, children }) => (
   <>
     <Head noIndex={noIndex} />
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-screen flex flex-col bg-base-200">
       <div className="grow flex flex-col">
         <Header maxWidth={maxWidth} />
         <div className="grow flex flex-col relative">{children}</div>

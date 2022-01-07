@@ -25,7 +25,7 @@ export const Form: React.FC<Props> = ({
       {children}
       {error && <p className="mt-4 label-text text-error">{error}</p>}
       {submittedText && <p className="mt-4 label-text">{submittedText}</p>}
-      <Button loading={loading} fullWidth type="submit" className="mt-4">
+      <Button colorClass="btn-primary" loading={loading} fullWidth type="submit" className="mt-4">
         Submit
       </Button>
     </form>

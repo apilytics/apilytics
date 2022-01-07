@@ -110,7 +110,7 @@ export const Setup: React.FC = () => {
               </li>
               <li className="step step-primary">
                 <h2 className="text-2xl text-left">
-                  Embed our open-source middleware to your code.
+                  Embed our open-source middleware to your backend.
                 </h2>
               </li>
               <li className="step step-primary">

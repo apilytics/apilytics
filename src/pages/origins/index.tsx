@@ -1,3 +1,4 @@
+import { PlusIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import React from 'react';
 import type { NextPage } from 'next';
@@ -14,11 +15,13 @@ const Origins: NextPage = () => {
 
   return (
     <MainTemplate>
-      <div className="divide-y divide-zinc-800">
+      <div className="divide-y">
         <div className="flex justify-between items-center py-4">
           <h2 className="text-2xl">Origins</h2>
           <Link href={staticRoutes.newOrigin} passHref>
-            <Button>Add origin</Button>
+            <Button colorClass="btn-primary">
+              Add origin <PlusIcon className="w-5 h-5 ml-2" />
+            </Button>
           </Link>
         </div>
         <div className="py-4 grid grid-cols-1 gap-2">
@@ -26,7 +29,7 @@ const Origins: NextPage = () => {
             origins.map(({ name, slug, last24hRequests }) => (
               <Link href={dynamicRoutes.origin({ slug })} passHref key={name}>
                 <div
-                  className="p-2 bg-zinc-900 hover:bg-zinc-800 rounded-lg cursor-pointer"
+                  className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2 cursor-pointer"
                   key={name}
                 >
                   <div className="flex justify-between">

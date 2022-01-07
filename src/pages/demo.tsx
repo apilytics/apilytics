@@ -41,7 +41,9 @@ const Demo: NextPage = () => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Link href={staticRoutes.login} passHref>
-            <Button fullWidth="mobile">Get started</Button>
+            <Button colorClass="btn-primary" fullWidth="mobile">
+              Get started
+            </Button>
           </Link>
           <Link href={staticRoutes.root} passHref>
             <Button colorClass="btn-secondary" variantClass="btn-outline" fullWidth="mobile">

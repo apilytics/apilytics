@@ -30,7 +30,9 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
     if (!user) {
       return (
         <Link href={staticRoutes.login} passHref>
-          <Button variantClass="btn-outline">Log in</Button>
+          <Button variantClass="btn-outline" colorClass="btn-primary">
+            Log in
+          </Button>
         </Link>
       );
     }
@@ -38,14 +40,15 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
     if (!user?.name) {
       return (
         <Link href={staticRoutes.logout} passHref>
-          <Button variantClass="btn-outline">Log out</Button>
+          <Button variantClass="btn-outline" colorClass="btn-primary">
+            Log out
+          </Button>
         </Link>
       );
     }
 
     return (
       <div className="flex items-center">
-        <h2 className="text-xl mr-4">Beta</h2>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} className="btn btn-primary btn-outline">
             {user?.name}
@@ -68,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
   };
 
   return (
-    <header className="h-20 flex items-center bg-base-300">
+    <header className="h-20 flex items-center bg-base-100">
       <div
         className={clsx(
           'container flex justify-between items-center animate-fade-in-top relative z-10',
@@ -87,7 +90,15 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
             />
           </a>
         </Link>
-        {renderDynamicContent()}
+        <div className="flex items-center">
+          <h2 className="text-xl mr-4">Beta</h2>
+          <Link href={staticRoutes.docs} passHref>
+            <Button variantClass="btn-outline" colorClass="btn-secondary" className="mr-4">
+              Docs
+            </Button>
+          </Link>
+          {renderDynamicContent()}
+        </div>
       </div>
     </header>
   );

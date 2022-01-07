@@ -1,5 +1,6 @@
 import type { Metric, Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 import type { Dispatch, SetStateAction } from 'react';
 
 import type {
@@ -10,6 +11,7 @@ import type {
   LAST_24_HOURS_VALUE,
   LAST_30_DAYS_VALUE,
 } from 'utils/constants';
+import type { staticRoutes } from 'utils/router';
 
 export type TimeFrame =
   | typeof LAST_24_HOURS_VALUE
@@ -38,6 +40,18 @@ export interface HeaderProps {
 }
 
 export type LayoutProps = HeadProps & HeaderProps;
+
+export interface FrontMatter {
+  name: string;
+  routeName: keyof typeof staticRoutes;
+  order: number;
+}
+
+export interface MDXPageProps {
+  source: MDXRemoteSerializeResult;
+  frontMatter?: FrontMatter;
+  docsInfo?: FrontMatter[];
+}
 
 export interface AccountContextType {
   user: User | null;
