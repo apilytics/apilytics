@@ -14,14 +14,17 @@
 }
 
 @layer base {
-  p,
+  p {
+    @apply my-1;
+  }
+
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply my-1;
+    @apply my-2;
   }
 
   h1 {
