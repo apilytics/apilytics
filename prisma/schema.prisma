@@ -102,3 +102,9 @@ model Metric {
 
   @@map("metrics")
 }
+
+model EmailListEntry {
+  email String @unique
+
+  @@map("email_list_entries")
+}
