@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  Label,
+  LabelList,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
 import { NoRequests } from 'components/dashboard/NoRequests';
+import { RouteTooltip } from 'components/dashboard/RouteTooltip';
 import { RouteValue } from 'components/dashboard/RouteValue';
 import type { OriginMetrics } from 'types';
 
@@ -20,9 +30,9 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
       .map(({ response_time, ...routeData }) => ({
         ...routeData,
         response_time,
-        // green: responseTime * routeData.responseGreen,
-        // yellow: responseTime * routeData.responseYellow,
-        // red: responseTime * routeData.responseRed,
+        greenRequests: (response_time * (routeData.count_green / routeData.requests)).toFixed(),
+        yellowRequests: (response_time * (routeData.count_yellow / routeData.requests)).toFixed(),
+        redRequests: (response_time * (routeData.count_red / routeData.requests)).toFixed(),
       })),
   );
 
@@ -38,22 +48,21 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
     return (
       <ResponsiveContainer height={400}>
         <BarChart data={data} layout="vertical">
-          <Bar
-            // dataKey="red"
-            dataKey="response_time"
-            // fill="#fca5a5"
-            fill="rgba(82, 157, 255, 0.25)" // `primary` with 25% opacity.
-            stackId="dist"
-            // minPointSize={50}
-            minPointSize={150}
-          >
-            <LabelList
-              // dataKey="response_time"
-              content={renderResponseTimeLabels}
-            />
+          <Bar dataKey="redRequests" fill="var(--requests-red)" stackId="dist" minPointSize={50}>
+            <LabelList dataKey="response_time" content={renderResponseTimeLabels} />
           </Bar>
-          {/* <Bar dataKey="yellow" fill="#fde047" stackId="dist" minPointSize={50} />
-      <Bar dataKey="green" fill="#bef264" stackId="dist" minPointSize={50} /> */}
+          <Bar
+            dataKey="yellowRequests"
+            fill="var(--requests-yellow)"
+            stackId="dist"
+            minPointSize={50}
+          />
+          <Bar
+            dataKey="greenRequests"
+            fill="var(--requests-green)"
+            stackId="dist"
+            minPointSize={50}
+          />
           <XAxis
             dataKey="response_time"
             type="number"
@@ -70,12 +79,12 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
             tickLine={false}
             axisLine={false}
             mirror
-            // stroke="black"
-            stroke="var(--base-content)"
+            stroke="black"
             padding={{ top: 30, bottom: 20 }}
           >
             <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />
           </YAxis>
+          <Tooltip content={RouteTooltip} cursor={false} />
         </BarChart>
       </ResponsiveContainer>
     );

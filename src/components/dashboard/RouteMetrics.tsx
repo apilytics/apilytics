@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  Label,
+  LabelList,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
 import { NoRequests } from 'components/dashboard/NoRequests';
+import { RouteTooltip } from 'components/dashboard/RouteTooltip';
 import { RouteValue } from 'components/dashboard/RouteValue';
 import type { OriginMetrics } from 'types';
 
@@ -65,6 +75,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
           >
             <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />
           </YAxis>
+          <Tooltip content={RouteTooltip} cursor={false} />
         </BarChart>
       </ResponsiveContainer>
     );
