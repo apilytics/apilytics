@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Router from 'next/router';
 import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
@@ -109,7 +110,12 @@ const OriginSettings: NextPage = () => {
           label="API Key"
           value={apiKey}
           readOnly
-          helperText="Use this API key in your Apilytics client library to connect with your dashboard."
+          helperText={
+            <>
+              Use this API key in your Apilytics client library to connect with your dashboard. See
+              our <Link href={staticRoutes.docs}>documentation</Link> for more information.
+            </>
+          }
         />
       </Form>
       <div className="flex justify-center mt-8">

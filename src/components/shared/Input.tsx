@@ -3,7 +3,7 @@ import React from 'react';
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  helperText?: string;
+  helperText?: JSX.Element | string;
 }
 
 export const Input: React.FC<Props> = ({ label, helperText, className, ...props }) => (
