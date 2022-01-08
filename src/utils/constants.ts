@@ -41,4 +41,39 @@ export const TIME_FRAME_OPTIONS = {
 
 export const UNEXPECTED_ERROR = 'Unexpected error.';
 
-export const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
+export const MOCK_ENDPOINTS = [
+  {
+    name: '/profile',
+    methods: ['GET', 'PUT', 'DELETE'],
+  },
+  {
+    name: '/users',
+    methods: ['GET'],
+  },
+  {
+    name: '/posts',
+    methods: ['GET'],
+  },
+  {
+    name: '/posts/123',
+    methods: ['GET'],
+  },
+  {
+    name: '/users/johndoe',
+    methods: ['GET'],
+  },
+  {
+    name: '/login',
+    methods: ['POST'],
+  },
+];
+
+export const MOCK_ORIGIN = {
+  id: 'ff074522-e63c-42f8-b99a-e1619ab8e793',
+  name: 'api.example.com',
+  slug: 'api-example-com',
+  apiKey: 'c78e9721-e3cd-4c9e-8ad3-21dc15c62098',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  userId: 'a58025e5-cd8a-4586-94b9-d38f51aa9e72',
+};

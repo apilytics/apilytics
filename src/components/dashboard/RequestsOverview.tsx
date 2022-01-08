@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import type { Origin } from '@prisma/client';
-import type { OpUnitType } from 'dayjs';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
 import {
@@ -13,9 +12,9 @@ import {
   LAST_12_MONTHS_VALUE,
   LAST_24_HOURS_VALUE,
   LAST_30_DAYS_VALUE,
-  REQUEST_TIME_FORMAT,
   TIME_FRAME_OPTIONS,
 } from 'utils/constants';
+import { getDatesBetweenTimeFrame, getTimeFrameScope } from 'utils/metrics';
 import type { OriginMetrics, TimeFrame, TimeFrameData } from 'types';
 
 const HOUR_FORMAT = 'h A';
@@ -35,31 +34,11 @@ export const RequestsOverview: React.FC<Props> = ({
   metrics: { totalRequests, totalRequestsGrowth, timeFrameData },
   loading,
 }) => {
-  let scope: OpUnitType = 'day';
-
-  if (timeFrame === LAST_24_HOURS_VALUE) {
-    scope = 'hour';
-  }
-
-  // Generate data for each point in time within the specified time frame.
-  const getDatesBetweenTimeFrame = (): string[] => {
-    const dates = [];
-    let currentDateTime = dayjs().subtract(timeFrame, scope);
-    const endDateTime = dayjs();
-
-    while (currentDateTime <= endDateTime) {
-      dates.push(dayjs(currentDateTime).startOf(scope).format(REQUEST_TIME_FORMAT));
-      currentDateTime = dayjs(currentDateTime).add(1, scope);
-    }
-
-    return dates;
-  };
+  const scope = getTimeFrameScope(timeFrame);
 
   // Make sure the data contains points in time for the whole specified time frame.
-  const data: TimeFrameData[] = getDatesBetweenTimeFrame().map((time) => {
-    const data = timeFrameData.find(
-      (data) => dayjs(data.time).startOf(scope).format(REQUEST_TIME_FORMAT) === time,
-    );
+  const data: TimeFrameData[] = getDatesBetweenTimeFrame(timeFrame).map((time) => {
+    const data = timeFrameData.find((data) => dayjs(data.time).startOf(scope).format() === time);
 
     return {
       requests: data?.requests || 0,
@@ -73,7 +52,7 @@ export const RequestsOverview: React.FC<Props> = ({
     switch (timeFrame) {
       // Display label for every fourth hour.
       case LAST_24_HOURS_VALUE: {
-        if (index % 5 === 0) {
+        if (index % 4 === 0) {
           return dayjs(date).format(HOUR_FORMAT);
         } else {
           return '';

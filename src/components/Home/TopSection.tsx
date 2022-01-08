@@ -4,8 +4,8 @@ import React from 'react';
 
 import { RequestsOverview } from 'components/dashboard/RequestsOverview';
 import { Button } from 'components/shared/Button';
-import { MOCK_METRICS, MOCK_ORIGIN } from 'mocks';
-import { DESCRIPTION, LAST_7_DAYS_VALUE } from 'utils/constants';
+import { DESCRIPTION, LAST_7_DAYS_VALUE, MOCK_ORIGIN } from 'utils/constants';
+import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
 
 const INTEGRATIONS = [
@@ -41,7 +41,7 @@ const INTEGRATIONS = [
 
 const timeFrame = LAST_7_DAYS_VALUE;
 const origin = MOCK_ORIGIN;
-const metrics = MOCK_METRICS[timeFrame];
+const metrics = getMockMetrics(timeFrame);
 const loading = !origin || !metrics;
 
 export const TopSection: React.FC = () => (

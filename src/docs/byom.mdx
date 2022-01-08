@@ -1,5 +1,5 @@
 ---
-name: Bring Your Own Middleware (BYOM)
+name: Custom Middleware
 routeName: byom
 order: 3
 ---
@@ -29,12 +29,7 @@ Body:
 - "path": The path of the endpoint, e.g. "/api/v1/users".
 - "method": The HTTP method of the request that you want to track.
 - "timeMillis": The time in milliseconds that the request took to complete.
-
 ```
 
 Note that your request should take place as a background job
-in your API and thus not bottlenecking your API in any way.`
-
-```
-
-```
+in your API and thus not bottlenecking your API in any way.

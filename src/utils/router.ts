@@ -24,6 +24,7 @@ export const staticApiRoutes = {
   csrfToken: '/api/auth/csrf',
   account: '/api/account',
   origins: '/api/origins',
+  emailList: '/api/email-list',
 };
 
 export const dynamicApiRoutes: DynamicRoutes = {

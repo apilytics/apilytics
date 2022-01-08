@@ -1,15 +1,16 @@
+import type { Origin } from '@prisma/client';
+
 import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import type {
-  ApiHandler,
-  OriginsDetailGetResponse,
-  OriginsDetailPutBody,
-  OriginsDetailPutResponse,
-} from 'types';
+import type { ApiHandler } from 'types';
 
-const handleGet: ApiHandler<OriginsDetailGetResponse> = async (req, res) => {
+interface OriginResponse {
+  data: Origin;
+}
+
+const handleGet: ApiHandler<OriginResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
@@ -25,9 +26,9 @@ const handleGet: ApiHandler<OriginsDetailGetResponse> = async (req, res) => {
   sendOk(res, { data: origin });
 };
 
-const handlePut: ApiHandler<OriginsDetailPutResponse> = async (req, res) => {
+const handlePut: ApiHandler<OriginResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
-  const { name } = req.body as OriginsDetailPutBody;
+  const { name } = req.body;
 
   if (!name) {
     sendInvalidInput(res);

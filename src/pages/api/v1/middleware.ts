@@ -6,7 +6,7 @@ import {
   sendOk,
 } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import type { ApiHandler, MiddlewarePostBody } from 'types';
+import type { ApiHandler } from 'types';
 
 const handlePost: ApiHandler = async (req, res) => {
   const apiKey = req.headers['x-api-key'];
@@ -21,7 +21,8 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const { path, method, timeMillis } = req.body as MiddlewarePostBody;
+  const { path, method, timeMillis } = req.body;
+
   if (!path || !method || !timeMillis) {
     sendInvalidInput(res);
     return;
