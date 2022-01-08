@@ -20,6 +20,10 @@ export const sendInvalidInput = (res: NextApiResponse): void => {
   res.status(400).json({ message: 'Invalid input.' });
 };
 
+export const sendMissingInput = (res: NextApiResponse, fields: string[]): void => {
+  res.status(400).json({ message: `Invalid input. Missing values for: ${fields.join(', ')}` });
+};
+
 export const sendApiKeyMissing = (res: NextApiResponse): void => {
   res.status(401).json({ message: 'Missing X-API-Key header.' });
 };

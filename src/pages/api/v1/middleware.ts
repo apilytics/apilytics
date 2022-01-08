@@ -4,7 +4,7 @@ import { makeMethodsHandler } from 'lib-server/apiHelpers';
 import {
   sendApiKeyMissing,
   sendInvalidApiKey,
-  sendInvalidInput,
+  sendMissingInput,
   sendOk,
 } from 'lib-server/responses';
 import prisma from 'prismaClient';
@@ -25,11 +25,14 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const { path, method, statusCode, timeMillis } = req.body as PostBody;
-  if ([path, method, statusCode, timeMillis].some((field) => field === undefined)) {
-    sendInvalidInput(res);
+  const requiredFields: (keyof PostBody)[] = ['path', 'method', 'statusCode', 'timeMillis'];
+  const missing = requiredFields.filter((field) => req.body[field] === undefined);
+  if (missing.length) {
+    sendMissingInput(res, missing);
     return;
   }
+
+  const { path, method, statusCode, timeMillis } = req.body as PostBody;
 
   await prisma.metric.create({
     data: { originId: origin.id, path, method, statusCode, timeMillis },
