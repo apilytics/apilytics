@@ -14,8 +14,6 @@ interface Props extends Partial<FrontMatter> {
 export const DocsTemplate: React.FC<Props> = ({ order, docsInfo, children }) => {
   const nextRoute = order && docsInfo?.find((doc) => doc.order === order + 1);
 
-  console.log(docsInfo, order);
-
   return (
     <Layout maxWidth="max-w-full">
       <ul className="menu p-4 w-80 h-full absolute border-r border-1 border-base-content invisible lg:visible text-primary">
