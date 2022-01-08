@@ -81,9 +81,9 @@ export const Footer: React.FC = () => {
                   value={email}
                   onChange={({ target }): void => setEmail(target.value)}
                   placeholder="Your email"
-                  className="input input-primary rounded-r-none"
+                  className="input input-bordered rounded-r-none"
                 />
-                <Button className="rounded-l-none btn-primary" loading={loading}>
+                <Button className="rounded-l-none btn-primary btn-outline" loading={loading}>
                   go
                 </Button>
               </div>
@@ -92,7 +92,7 @@ export const Footer: React.FC = () => {
             </div>
           </form>
         </div>
-        <h3 className="footer-title mt-8">© 2021 Apilytics</h3>
+        <h3 className="footer-title mt-8">© {new Date().getFullYear()} Apilytics</h3>
       </div>
     </footer>
   );
