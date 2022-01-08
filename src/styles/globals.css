@@ -5,11 +5,59 @@
 :root {
   --primary: #529dff;
   --base-content: #8a8a8a;
+  --requests-red: #fca5a5;
+  --requests-yellow: #fde047;
+  --requests-green: #bef264;
 
   /* DaisyUI overrides */
   --rounded-box: 0.5rem;
 }
 
+@layer base {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply my-2;
+  }
+
+  h1 {
+    @apply text-3xl;
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+
+  h3 {
+    @apply text-xl;
+  }
+
+  p {
+    @apply leading-6;
+  }
+
+  a {
+    @apply link;
+    @apply link-primary;
+  }
+}
+
 .bg-filter {
   background-color: rgba(0, 0, 0, 0.75);
+}
+
+.text-requests-green {
+  color: var(--requests-green);
+}
+
+.text-requests-yellow {
+  color: var(--requests-yellow);
+}
+
+.text-requests-red {
+  color: var(--requests-red);
 }

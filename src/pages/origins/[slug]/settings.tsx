@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
-import { Button } from 'components/shared/Button';
 import { ConfirmationModal } from 'components/shared/ConfirmationModal';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
@@ -17,7 +16,7 @@ import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 const OriginSettings: NextPage = () => {
-  const { origin } = useOrigin();
+  const { origin, setOrigin } = useOrigin();
   const { name: _name, apiKey, slug = '' } = origin ?? {};
   const [name, setName] = useState(_name);
   const [error, setError] = useState('');
@@ -46,9 +45,10 @@ const OriginSettings: NextPage = () => {
         },
       });
 
-      const { message } = await res.json();
+      const { message, data } = await res.json();
 
       if (res.status === 200) {
+        setOrigin(data);
         setError('');
         setSubmittedText('Origin settings saved.');
         plausible('update-origin');
@@ -108,24 +108,20 @@ const OriginSettings: NextPage = () => {
           name="apiKey"
           label="API Key"
           value={apiKey}
-          disabled
+          readOnly
           helperText="Use this API key in your Apilytics client library to connect with your dashboard."
         />
       </Form>
-      <Button
-        onClick={handleOpenConfirmDeleteModal}
-        color="error"
-        variant="outlined"
-        fullWidth
-        className="mt-8"
-      >
-        Delete origin
-      </Button>
+      <div className="flex justify-center mt-8">
+        <p onClick={handleOpenConfirmDeleteModal} className="link text-error">
+          Delete origin
+        </p>
+      </div>
       <ConfirmationModal
         open={confirmDeleteModalOpen}
         onConfirm={handleConfirmDelete}
         onCancel={handleCloseConfirmDeleteModal}
-        text="Are you sure you want to delete this origin?"
+        text="Are you sure you want to delete this origin? All data associated with it will be lost forever."
       />
     </MainTemplate>
   );

@@ -1,11 +1,11 @@
-import { getSessionUser, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
+import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
 import type { ApiHandler, MetricsListGetResponse, RouteData, TimeFrameData } from 'types';
 
 const handleGet: ApiHandler<MetricsListGetResponse> = async (req, res) => {
-  const { id: userId } = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
   const { from, to } = req.query;
 
@@ -74,7 +74,7 @@ GROUP BY time;`;
     },
   });
 
-  const totalRequestsGrowth = (totalRequests / lastTotalRequests).toFixed(2);
+  const totalRequestsGrowth = Number((totalRequests / lastTotalRequests).toFixed(2));
 
   const routeData: RouteData[] = await prisma.$queryRaw`
 SELECT

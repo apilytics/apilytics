@@ -13,7 +13,7 @@ export const withAuth = <T extends Record<string, unknown>>(
 ): NextPage<T> => {
   const WithAuth: NextPage<T> = (pageProps: T) => {
     const [loading, setLoading] = useState(false);
-    const { status, accountComplete, setOrigins } = useAccount();
+    const { status, setUser, accountComplete, setOrigins } = useAccount();
     const redirect = status === 'unauthenticated';
 
     // Redirect unauthenticated users to login.
@@ -28,13 +28,20 @@ export const withAuth = <T extends Record<string, unknown>>(
       if (!redirect) {
         (async (): Promise<void> => {
           setLoading(true);
-          const res = await fetch(staticApiRoutes.origins);
-          const { data } = await res.json();
-          setOrigins(data);
+
+          const [accountRes, originsRes] = await Promise.all([
+            fetch(staticApiRoutes.account),
+            fetch(staticApiRoutes.origins),
+          ]);
+
+          const { data: accountData } = await accountRes.json();
+          const { data: originsData } = await originsRes.json();
+          setUser(accountData);
+          setOrigins(originsData);
           setLoading(false);
         })();
       }
-    }, [redirect, setOrigins]);
+    }, [redirect, setOrigins, setUser]);
 
     if (redirect || loading) {
       return <LoadingTemplate />;

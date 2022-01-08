@@ -66,30 +66,34 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
     }
   };
 
-  return (
-    <MainTemplate hideLogin>
-      {!submitted ? (
-        <Form
-          title="Type your email to log in or register a new user"
-          onSubmit={handleSubmit}
-          error={error}
-          loading={loading}
-        >
-          <Input
-            type="email"
-            name="email"
-            value={email}
-            onChange={({ target }): void => setEmail(target.value)}
-            label="Email"
-            required
-          />
-        </Form>
-      ) : (
+  if (submitted) {
+    return (
+      <MainTemplate>
         <h1 className="text-3xl mt-4">
           Thanks! We sent you a <span className="text-primary">magic</span> link to your email that
           you can log in with.
         </h1>
-      )}
+      </MainTemplate>
+    );
+  }
+
+  return (
+    <MainTemplate>
+      <Form
+        title="Type your email to log in or register a new user"
+        onSubmit={handleSubmit}
+        error={error}
+        loading={loading}
+      >
+        <Input
+          type="email"
+          name="email"
+          value={email}
+          onChange={({ target }): void => setEmail(target.value)}
+          label="Email"
+          required
+        />
+      </Form>
     </MainTemplate>
   );
 };

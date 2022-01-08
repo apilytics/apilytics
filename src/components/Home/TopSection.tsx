@@ -2,28 +2,40 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-import { RequestsOverview } from 'components/Demo/RequestsOverview';
+import { RequestsOverview } from 'components/dashboard/RequestsOverview';
 import { Button } from 'components/shared/Button';
 import { MOCK_METRICS, MOCK_ORIGIN } from 'mocks';
 import { DESCRIPTION, LAST_7_DAYS_VALUE } from 'utils/constants';
 import { staticRoutes } from 'utils/router';
 
-const FRAMEWORKS_DATA = [
+const INTEGRATIONS = [
   {
-    name: 'Node.js',
-    image: '/framework-logos/nodejs-logo.svg',
+    name: 'JavaScript',
+    image: '/integration-logos/javascript-logo.png',
   },
   {
-    name: 'Next.js',
-    image: '/framework-logos/nextjs-logo.png',
+    name: 'Python',
+    image: '/integration-logos/python-logo.png',
   },
   {
-    name: 'Django',
-    image: '/framework-logos/django-logo.svg',
+    name: 'Ruby',
+    image: '/integration-logos/ruby-logo.png',
   },
   {
-    name: 'FastAPI',
-    image: '/framework-logos/fastapi-logo.png',
+    name: 'Go',
+    image: '/integration-logos/go-logo.png',
+  },
+  {
+    name: 'C#',
+    image: '/integration-logos/c-sharp-logo.png',
+  },
+  {
+    name: 'Java',
+    image: '/integration-logos/java-logo.svg',
+  },
+  {
+    name: 'PHP',
+    image: '/integration-logos/php-logo.png',
   },
 ];
 
@@ -43,15 +55,16 @@ export const TopSection: React.FC = () => (
             made easy
           </h1>
           <h2 className="text-2xl mt-12">{DESCRIPTION}</h2>
-          <p className="text-left mt-12">Integrates with:</p>
-          <div className="flex flex-row flex-wrap space-x-4 grayscale">
-            {FRAMEWORKS_DATA.map(({ name, image }) => (
+          <p className="text-xl mt-12">Simple integration with any backend</p>
+          <div className="flex flex-wrap gap-4 mt-8 grayscale">
+            {INTEGRATIONS.map(({ name, image }) => (
               <div key={name}>
                 <Image
                   src={image}
                   layout="fixed"
-                  width={120}
-                  height={120}
+                  width={60}
+                  height={60}
+                  quality={1}
                   objectFit="contain"
                   alt={name}
                   priority
@@ -59,14 +72,12 @@ export const TopSection: React.FC = () => (
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8">
             <Link href={staticRoutes.login} passHref>
-              <Button>Get started</Button>
+              <Button className="btn-primary">Get started</Button>
             </Link>
             <Link href={staticRoutes.demo} passHref>
-              <Button color="secondary" variant="outlined">
-                Live demo
-              </Button>
+              <Button className="btn-secondary btn-outline">Live demo</Button>
             </Link>
           </div>
         </div>

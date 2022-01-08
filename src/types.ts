@@ -1,5 +1,6 @@
 import type { Metric, Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 import type { Dispatch, SetStateAction } from 'react';
 
 import type {
@@ -10,6 +11,7 @@ import type {
   LAST_24_HOURS_VALUE,
   LAST_30_DAYS_VALUE,
 } from 'utils/constants';
+import type { staticRoutes } from 'utils/router';
 
 export type TimeFrame =
   | typeof LAST_24_HOURS_VALUE
@@ -35,13 +37,25 @@ export interface HeadProps {
 
 export interface HeaderProps {
   maxWidth?: string;
-  hideLogin?: boolean;
 }
 
 export type LayoutProps = HeadProps & HeaderProps;
 
+export interface FrontMatter {
+  name: string;
+  routeName: keyof typeof staticRoutes;
+  order: number;
+}
+
+export interface MDXPageProps {
+  source: MDXRemoteSerializeResult;
+  frontMatter?: FrontMatter;
+  docsInfo?: FrontMatter[];
+}
+
 export interface AccountContextType {
-  user?: SessionUser;
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
   status: 'authenticated' | 'unauthenticated' | 'loading';
   accountComplete: boolean;
   origins: AggregatedOrigin[];
@@ -60,13 +74,6 @@ export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,
 ) => Promise<void>;
-
-// Our custom user that next-auth holds in its sessions.
-export interface SessionUser {
-  id: string;
-  email: string;
-  name: string;
-}
 
 export interface AggregatedOrigin extends Origin {
   last24hRequests: number;
@@ -97,7 +104,7 @@ export interface RouteData {
 
 export interface OriginMetrics {
   totalRequests: number;
-  totalRequestsGrowth: string;
+  totalRequestsGrowth: number;
   timeFrameData: TimeFrameData[];
   routeData: RouteData[];
 }
@@ -110,7 +117,7 @@ export interface OriginsDetailGetResponse {
   data: Origin;
 }
 
-export interface AccountDetailGetResponse {
+export interface AccountGetResponse {
   data: User;
 }
 
@@ -118,5 +125,5 @@ export type MiddlewarePostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
 export type OriginsPostBody = Pick<Origin, 'name'>;
 export type OriginsDetailPutBody = Pick<Origin, 'name'>;
 export type OriginsDetailPutResponse = OriginsDetailGetResponse;
-export type AccountDetailPutResponse = AccountDetailGetResponse;
+export type AccountDetailPutResponse = AccountGetResponse;
 export type AccountDetailPutBody = Pick<User, 'name' | 'email'>;

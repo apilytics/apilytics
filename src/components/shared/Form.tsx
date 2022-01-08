@@ -23,9 +23,9 @@ export const Form: React.FC<Props> = ({
     {title && <h2 className="text-2xl">{title}</h2>}
     <form onSubmit={onSubmit} className="mt-4">
       {children}
-      {error && <p className="text-error">{error}</p>}
+      {error && <p className="mt-4 label-text text-error">{error}</p>}
       {submittedText && <p className="mt-4 label-text">{submittedText}</p>}
-      <Button loading={loading} fullWidth type="submit" className="mt-4">
+      <Button className="btn-primary mt-4" loading={loading} type="submit" fullWidth>
         Submit
       </Button>
     </form>

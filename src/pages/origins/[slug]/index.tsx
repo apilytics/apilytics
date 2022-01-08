@@ -2,21 +2,19 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
-import { DashboardOptions } from 'components/Demo/DashboardOptions';
-import { RequestsOverview } from 'components/Demo/RequestsOverview';
-import { ResponseTimes } from 'components/Demo/ResponseTimes';
-import { RouteMetrics } from 'components/Demo/RouteMetrics';
+import { DashboardOptions } from 'components/dashboard/DashboardOptions';
+import { RequestsOverview } from 'components/dashboard/RequestsOverview';
+import { ResponseTimes } from 'components/dashboard/ResponseTimes';
+import { RouteMetrics } from 'components/dashboard/RouteMetrics';
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { NotFoundTemplate } from 'components/layout/NotFoundTemplate';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
 import { useOrigin } from 'hooks/useOrigin';
-import { LAST_7_DAYS_VALUE } from 'utils/constants';
+import { LAST_7_DAYS_VALUE, REQUEST_TIME_FORMAT } from 'utils/constants';
 import { dynamicApiRoutes } from 'utils/router';
 import type { TimeFrame } from 'types';
-
-const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
 
 const Origin: NextPage = () => {
   const { origin, metrics, setMetrics } = useOrigin();
@@ -45,10 +43,10 @@ const Origin: NextPage = () => {
   }
 
   return (
-    <MainTemplate maxWidth="5xl">
+    <MainTemplate wide>
       <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
       <RequestsOverview timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 grow">
+      <div className="grow flex flex-col lg:flex-row gap-4 mt-4">
         <RouteMetrics metrics={metrics} loading={loading} />
         <ResponseTimes metrics={metrics} loading={loading} />
       </div>

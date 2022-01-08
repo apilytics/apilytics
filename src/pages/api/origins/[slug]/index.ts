@@ -1,4 +1,4 @@
-import { getSessionUser, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
+import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
@@ -10,11 +10,11 @@ import type {
 } from 'types';
 
 const handleGet: ApiHandler<OriginsDetailGetResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
   const origin = await prisma.origin.findFirst({
-    where: { slug, userId: user.id },
+    where: { slug, userId },
   });
 
   if (!origin) {
@@ -26,7 +26,7 @@ const handleGet: ApiHandler<OriginsDetailGetResponse> = async (req, res) => {
 };
 
 const handlePut: ApiHandler<OriginsDetailPutResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
   const { name } = req.body as OriginsDetailPutBody;
 
   if (!name) {
@@ -35,24 +35,31 @@ const handlePut: ApiHandler<OriginsDetailPutResponse> = async (req, res) => {
   }
 
   const slug = getSlugFromReq(req);
-  const where = { slug, userId: user.id };
-  const origin = prisma.origin.update({ data: { name }, where });
 
-  if (!origin) {
+  const { count } = await prisma.origin.updateMany({
+    where: { slug, userId },
+    data: { name, slug },
+  });
+
+  if (count === 0) {
     sendNotFound(res, 'Origin');
     return;
   }
+
+  const origin = await prisma.origin.findFirst({
+    where: { slug, userId },
+  });
 
   // @ts-ignore: `prisma.origin.update` returns a type that's not assignable to `Origin`.
   sendOk(res, { data: origin });
 };
 
 const handleDelete: ApiHandler = async (req, res) => {
-  const user = await getSessionUser(req);
+  const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
   const { count } = await prisma.origin.deleteMany({
-    where: { slug, userId: user.id },
+    where: { slug, userId },
   });
 
   if (count === 0) {
