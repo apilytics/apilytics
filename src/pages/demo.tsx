@@ -8,15 +8,15 @@ import { ResponseTimes } from 'components/dashboard/ResponseTimes';
 import { RouteMetrics } from 'components/dashboard/RouteMetrics';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
-import { MOCK_METRICS, MOCK_ORIGIN } from 'mocks';
-import { LAST_7_DAYS_VALUE } from 'utils/constants';
+import { LAST_7_DAYS_VALUE, MOCK_ORIGIN } from 'utils/constants';
+import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
   const [timeFrame, setTimeFrame] = useState<TimeFrame>(LAST_7_DAYS_VALUE);
   const origin = MOCK_ORIGIN;
-  const metrics = MOCK_METRICS[timeFrame];
+  const metrics = getMockMetrics(timeFrame);
   const loading = !origin || !metrics;
 
   return (
