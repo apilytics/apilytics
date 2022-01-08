@@ -26,8 +26,7 @@ const handlePost: ApiHandler = async (req, res) => {
   }
 
   const { path, method, timeMillis } = req.body as PostBody;
-
-  if (!path || !method || !timeMillis) {
+  if ([path, method, timeMillis].some((field) => field === undefined)) {
     sendInvalidInput(res);
     return;
   }
