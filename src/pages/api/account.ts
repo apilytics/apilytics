@@ -1,15 +1,16 @@
+import type { User } from '@prisma/client';
+
 import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import type {
-  AccountDetailPutBody,
-  AccountDetailPutResponse,
-  AccountGetResponse,
-  ApiHandler,
-} from 'types';
+import type { ApiHandler } from 'types';
 
-const handleGet: ApiHandler<AccountGetResponse> = async (req, res) => {
+interface AccountResponse {
+  data: User;
+}
+
+const handleGet: ApiHandler<AccountResponse> = async (req, res) => {
   const id = await getSessionUserId(req);
   const account = await prisma.user.findUnique({ where: { id } });
 
@@ -21,9 +22,9 @@ const handleGet: ApiHandler<AccountGetResponse> = async (req, res) => {
   sendOk(res, { data: account });
 };
 
-const handlePut: ApiHandler<AccountDetailPutResponse> = async (req, res) => {
+const handlePut: ApiHandler<AccountResponse> = async (req, res) => {
   const id = await getSessionUserId(req);
-  const { name, email } = req.body as AccountDetailPutBody;
+  const { name, email } = req.body;
 
   if (!name || !email) {
     sendInvalidInput(res);

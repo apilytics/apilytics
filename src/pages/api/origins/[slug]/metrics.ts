@@ -2,9 +2,13 @@ import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import type { ApiHandler, MetricsListGetResponse, RouteData, TimeFrameData } from 'types';
+import type { ApiHandler, OriginMetrics, RouteData, TimeFrameData } from 'types';
 
-const handleGet: ApiHandler<MetricsListGetResponse> = async (req, res) => {
+interface GetResponse {
+  data: OriginMetrics;
+}
+
+const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
   const { from, to } = req.query;

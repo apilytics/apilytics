@@ -1,18 +1,18 @@
 import { Prisma } from '@prisma/client';
 import slugify from 'slugify';
+import type { Origin } from '@prisma/client';
 
 import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import type {
-  ApiHandler,
-  OriginsListGetResponse,
-  OriginsPostBody,
-  OriginsPostResponse,
-} from 'types';
+import type { AggregatedOrigin, ApiHandler } from 'types';
 
-const handleGet: ApiHandler<OriginsListGetResponse> = async (req, res) => {
+interface GetResponse {
+  data: AggregatedOrigin[];
+}
+
+const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
 
   // Get all origins for the user and the related metrics within 24 hours.
@@ -37,9 +37,13 @@ const handleGet: ApiHandler<OriginsListGetResponse> = async (req, res) => {
   sendOk(res, { data: origins });
 };
 
-const handlePost: ApiHandler<OriginsPostResponse> = async (req, res) => {
+interface PostResponse {
+  data: Origin;
+}
+
+const handlePost: ApiHandler<PostResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
-  const { name }: OriginsPostBody = req.body;
+  const { name } = req.body;
 
   if (!name) {
     sendInvalidInput(res);

@@ -1,4 +1,4 @@
-import type { Metric, Origin, User } from '@prisma/client';
+import type { Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 import type { Dispatch, SetStateAction } from 'react';
@@ -69,8 +69,6 @@ export interface OriginContextType {
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
 }
 
-// API types.
-
 export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,
@@ -78,14 +76,6 @@ export type ApiHandler<T = unknown> = (
 
 export interface AggregatedOrigin extends Origin {
   last24hRequests: number;
-}
-
-export interface OriginsListGetResponse {
-  data: AggregatedOrigin[];
-}
-
-export interface OriginsPostResponse {
-  data: Origin;
 }
 
 export interface TimeFrameData {
@@ -109,22 +99,3 @@ export interface OriginMetrics {
   timeFrameData: TimeFrameData[];
   routeData: RouteData[];
 }
-
-export interface MetricsListGetResponse {
-  data: OriginMetrics;
-}
-
-export interface OriginsDetailGetResponse {
-  data: Origin;
-}
-
-export interface AccountGetResponse {
-  data: User;
-}
-
-export type MiddlewarePostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
-export type OriginsPostBody = Pick<Origin, 'name'>;
-export type OriginsDetailPutBody = Pick<Origin, 'name'>;
-export type OriginsDetailPutResponse = OriginsDetailGetResponse;
-export type AccountDetailPutResponse = AccountGetResponse;
-export type AccountDetailPutBody = Pick<User, 'name' | 'email'>;
