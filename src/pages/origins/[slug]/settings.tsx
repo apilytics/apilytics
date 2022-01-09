@@ -1,3 +1,4 @@
+import { ClipboardCopyIcon, XIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import Router from 'next/router';
 import { usePlausible } from 'next-plausible';
@@ -7,6 +8,7 @@ import type { NextPage } from 'next';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { ConfirmationModal } from 'components/shared/ConfirmationModal';
 import { Form } from 'components/shared/Form';
+import { IconButton } from 'components/shared/IconButton';
 import { Input } from 'components/shared/Input';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
@@ -15,8 +17,6 @@ import { useOrigin } from 'hooks/useOrigin';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
-import { ClipboardCopyIcon, XIcon } from '@heroicons/react/solid';
-import { Button } from 'components/shared/Button';
 
 const OriginSettings: NextPage = () => {
   const { origin, setOrigin } = useOrigin();
@@ -102,9 +102,7 @@ const OriginSettings: NextPage = () => {
         <label>API key copied to the clipboard!</label>
       </div>
       <div className="flex-none">
-        <Button onClick={(): void => setApiKeyCopied(false)} className="btn-ghost btn-square">
-          <XIcon className="w-5 h-5" />
-        </Button>
+        <IconButton onClick={(): void => setApiKeyCopied(false)} icon={XIcon} />
       </div>
     </div>
   );
@@ -147,7 +145,7 @@ const OriginSettings: NextPage = () => {
           value={apiKey}
           readOnly
           endIcon={ClipboardCopyIcon}
-          onButtonClick={handleCopyApiKey}
+          buttonProps={{ onClick: handleCopyApiKey }}
           buttonTooltip="Copy your API key to the clipboard."
           helperText={renderApiKeyHelperText}
         />

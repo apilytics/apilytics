@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 
-import { Button } from 'components/shared/Button';
 import { ExternalLink } from 'components/shared/ExternalLink';
+import { Input } from 'components/shared/Input';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes, staticRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
@@ -71,33 +71,19 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
           <form onSubmit={handleSubmit} className="text-left">
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Keep me updated</span>
-              </label>
-              <div className="flex">
-                <input
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={({ target }): void => setEmail(target.value)}
-                  placeholder="Your email"
-                  className="input input-bordered rounded-r-none w-full"
-                />
-                <Button
-                  type="submit"
-                  className="rounded-l-none btn-primary btn-outline"
-                  loading={loading}
-                >
-                  <ArrowSmRightIcon className="w-5 h-5" />
-                </Button>
-              </div>
-              <label className="label">
-                <span className="label-text">No spam. Unsubscribe at any time.</span>
-              </label>
-              {error && <p className="mt-4 label-text text-error">{error}</p>}
-              {submittedText && <p className="mt-4 label-text">{submittedText}</p>}
-            </div>
+            <Input
+              name="email"
+              label="Keep me updated"
+              type="email"
+              value={email}
+              onChange={({ target }): void => setEmail(target.value)}
+              placeholder="Your email"
+              endIcon={ArrowSmRightIcon}
+              helperText="No spam. Unsubscribe at any time."
+              loading={loading}
+            />
+            {error && <p className="mt-4 label-text text-error">{error}</p>}
+            {submittedText && <p className="mt-4 label-text">{submittedText}</p>}
           </form>
         </div>
         <h3 className="footer-title mt-8">© {new Date().getFullYear()} Apilytics</h3>

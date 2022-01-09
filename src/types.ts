@@ -1,7 +1,7 @@
 import type { Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
-import type { Dispatch, SetStateAction } from 'react';
+import type { ComponentProps, Dispatch, SetStateAction } from 'react';
 
 import type {
   LAST_3_MONTHS_VALUE,
@@ -42,6 +42,13 @@ export interface HeaderProps {
 }
 
 export type LayoutProps = HeadProps & HeaderProps;
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  fullWidth?: boolean | 'mobile';
+  loading?: boolean;
+  tooltip?: string;
+  endIcon?: React.FC<ComponentProps<'svg'>>;
+}
 
 export interface FrontMatter {
   name: string;

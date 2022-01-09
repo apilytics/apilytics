@@ -1,15 +1,18 @@
-import { ArrowSmRightIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
-import React, { ReactNode } from 'react';
-import { Button } from 'components/shared/Button';
+import React from 'react';
+import type { ComponentProps } from 'react';
+
+import { IconButton } from 'components/shared/IconButton';
+import type { ButtonProps } from 'types';
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   helperText?: JSX.Element | string;
-  endIcon?: ReactNode;
+  endIcon?: React.FC<ComponentProps<'svg'>>;
   onButtonClick?: () => void;
   buttonTooltip?: string;
   loading?: boolean;
+  buttonProps?: ButtonProps;
 }
 
 export const Input: React.FC<Props> = ({
@@ -17,33 +20,27 @@ export const Input: React.FC<Props> = ({
   helperText,
   className,
   endIcon: EndIcon,
-  onButtonClick,
-  loading,
-  buttonTooltip,
-  ...props
+  buttonProps,
+  ...inputProps
 }) => (
   <div className="form-control">
     <label className="label">
       <span className="label-text">
-        {label} {props.required && <span className="text-error">*</span>}
+        {label} {inputProps.required && <span className="text-error">*</span>}
       </span>
     </label>
     <div className="flex">
       <input
         className={clsx('input input-bordered w-full', EndIcon && 'rounded-r-none', className)}
-        {...props}
+        {...inputProps}
       />
-      {EndIcon && (
-        <div data-tip={buttonTooltip} className={clsx(buttonTooltip && 'tooltip')}>
-          <Button
-            type="button"
-            className="rounded-l-none btn-outline"
-            loading={loading}
-            onClick={onButtonClick}
-          >
-            <EndIcon className="w-5 h-5" />
-          </Button>
-        </div>
+      {!!EndIcon && (
+        <IconButton
+          icon={EndIcon}
+          type="button"
+          className={clsx('rounded-l-none btn-outline', buttonProps?.className)}
+          {...buttonProps}
+        />
       )}
     </div>
     {helperText && (

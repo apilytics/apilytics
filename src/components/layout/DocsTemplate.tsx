@@ -69,8 +69,8 @@ export const DocsTemplate: React.FC<Props> = ({
             <div className="flex flex-col mt-4">
               <span className="text-xl">Next: </span>
               <Link href={staticRoutes[nextRoute.routeName]} passHref>
-                <Button className="btn-primary btn-outline mt-4">
-                  {nextRoute.name} <ArrowSmRightIcon className="w-5 h-5" />
+                <Button className="btn-primary btn-outline mt-4" endIcon={ArrowSmRightIcon}>
+                  {nextRoute.name}
                 </Button>
               </Link>
             </div>

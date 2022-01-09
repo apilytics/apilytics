@@ -1,10 +1,13 @@
+import { CogIcon } from '@heroicons/react/solid';
+import Link from 'next/link';
 import React from 'react';
 import type { Origin } from '@prisma/client';
 import type { Dispatch, SetStateAction } from 'react';
 
-import { OriginSettingsButton } from 'components/shared/OriginSettingsButton';
+import { IconButton } from 'components/shared/IconButton';
 import { Select } from 'components/shared/Select';
 import { TIME_FRAME_OPTIONS } from 'utils/constants';
+import { dynamicRoutes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
 interface Props {
@@ -31,6 +34,10 @@ export const DashboardOptions: React.FC<Props> = ({
         </option>
       ))}
     </Select>
-    {!hideSettingsButton && <OriginSettingsButton slug={slug} className="ml-4" />}
+    {!hideSettingsButton && (
+      <Link href={dynamicRoutes.originSettings({ slug })} passHref>
+        <IconButton icon={CogIcon} className="ml-4" />
+      </Link>
+    )}
   </div>
 );

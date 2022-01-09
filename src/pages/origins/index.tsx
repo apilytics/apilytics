@@ -1,11 +1,11 @@
-import { PlusIcon } from '@heroicons/react/solid';
+import { CogIcon, PlusIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import React from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
-import { OriginSettingsButton } from 'components/shared/OriginSettingsButton';
+import { IconButton } from 'components/shared/IconButton';
 import { withAuth } from 'hocs/withAuth';
 import { useAccount } from 'hooks/useAccount';
 import { dynamicRoutes, staticRoutes } from 'utils/router';
@@ -19,8 +19,8 @@ const Origins: NextPage = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4">
           <h2 className="text-2xl">Origins</h2>
           <Link href={staticRoutes.newOrigin} passHref>
-            <Button className="btn-primary">
-              Add origin <PlusIcon className="w-5 h-5 ml-2" />
+            <Button className="btn-primary" endIcon={PlusIcon}>
+              Add origin
             </Button>
           </Link>
         </div>
@@ -34,7 +34,9 @@ const Origins: NextPage = () => {
                 >
                   <div className="flex justify-between">
                     <h2 className="text-2xl">{name}</h2>
-                    <OriginSettingsButton slug={slug} small />
+                    <Link href={dynamicRoutes.originSettings({ slug })} passHref>
+                      <IconButton icon={CogIcon} />
+                    </Link>
                   </div>
                   <p className="text-lg mt-2">{last24hRequests} requests in last 24h</p>
                 </div>
