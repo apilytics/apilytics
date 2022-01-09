@@ -1,3 +1,5 @@
+import type { Metric } from '@prisma/client';
+
 import { makeMethodsHandler } from 'lib-server/apiHelpers';
 import {
   sendApiKeyMissing,
@@ -7,6 +9,8 @@ import {
 } from 'lib-server/responses';
 import prisma from 'prismaClient';
 import type { ApiHandler } from 'types';
+
+type PostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
 
 const handlePost: ApiHandler = async (req, res) => {
   const apiKey = req.headers['x-api-key'];
@@ -21,7 +25,7 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const { path, method, timeMillis } = req.body;
+  const { path, method, timeMillis } = req.body as PostBody;
 
   if (!path || !method || !timeMillis) {
     sendInvalidInput(res);
