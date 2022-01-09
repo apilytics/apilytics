@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
@@ -13,7 +14,7 @@ import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
 import { useOrigin } from 'hooks/useOrigin';
 import { LAST_7_DAYS_VALUE } from 'utils/constants';
-import { dynamicApiRoutes } from 'utils/router';
+import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
 export const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
@@ -52,6 +53,9 @@ const Origin: NextPage = () => {
         <RouteMetrics metrics={metrics} loading={loading} />
         <ResponseTimes metrics={metrics} loading={loading} />
       </div>
+      <p className="mt-4 text-center">
+        Help us improve the service by <Link href={staticRoutes.contact}>giving us feedback</Link>.
+      </p>
     </MainTemplate>
   );
 };

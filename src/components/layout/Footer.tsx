@@ -57,7 +57,7 @@ export const Footer: React.FC = () => {
                 <Link href={staticRoutes.docs}>Docs</Link>
               </p>
               <p>
-                <Link href="mailto:hello@apilytics.io">Contact</Link>
+                <Link href={staticRoutes.contact}>Contact</Link>
               </p>
               <p>
                 <ExternalLink href="https://twitter.com/apilytics">Twitter</ExternalLink>
@@ -88,6 +88,9 @@ export const Footer: React.FC = () => {
                   <ArrowSmRightIcon className="w-5 h-5" />
                 </Button>
               </div>
+              <label className="label">
+                <span className="label-text">No spam. Unsubscribe at any time.</span>
+              </label>
               {error && <p className="mt-4 label-text text-error">{error}</p>}
               {submittedText && <p className="mt-4 label-text">{submittedText}</p>}
             </div>

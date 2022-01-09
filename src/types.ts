@@ -29,6 +29,7 @@ export type PlausibleEvents = {
   'update-origin': never;
   'delete-origin': never;
   'email-list-subscribe': never;
+  'contact-message': never;
 };
 
 export interface HeadProps {
