@@ -67,7 +67,7 @@ If your backend supports none of our open source middlewares,
 you can still use Apilytics by implementing your own middleware.
 
 Simply perform an HTTP request to
-https://apilytics.io/api/v1/middleware
+https://www.apilytics.io/api/v1/middleware
 for all of the requests that you want to track with Apilytics.
 
 The HTTP requests must have the following specs:
@@ -82,6 +82,7 @@ Body:
 - "path": The path of the endpoint, e.g. "/api/v1/users".
 - "method": The HTTP method of the request that you want to track.
 - "timeMillis": The time in milliseconds that the request took to complete.
+- "statusCode": The status code of the response.
 
 Note that your request should take place as a background job
 in your API and thus not bottlenecking your API in any way.`;
@@ -99,11 +100,11 @@ export const Setup: React.FC = () => {
   return (
     <div className="bg-background bg-no-repeat bg-cover">
       <div className="bg-filter">
-        <div className="container max-w-3xl py-16 flex flex-col">
+        <div className="container max-w-3xl py-4 lg:py-16 flex flex-col">
           <h1 className="text-5xl text-white">
             Set up in <span className="text-primary">10 minutes</span>
           </h1>
-          <div className="mt-12">
+          <div className="mt-4">
             <ul className="steps steps-vertical">
               <li className="step step-primary">
                 <h2 className="text-2xl text-left">Sign up & grab your API key.</h2>
@@ -118,7 +119,7 @@ export const Setup: React.FC = () => {
               </li>
             </ul>
           </div>
-          <div className="mt-14 bg-base-100 w-full rounded-lg mockup-code">
+          <div className="mt-4 bg-base-100 w-full rounded-lg mockup-code">
             <div className="p-2 tabs tabs-boxed bg-inherit">
               {INTEGRATIONS.map((name) => (
                 <p

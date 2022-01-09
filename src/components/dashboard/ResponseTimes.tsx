@@ -70,6 +70,7 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
             axisLine={false}
             tick={false}
             mirror
+            domain={[0, (dataMax: number): number => dataMax * 1.2]} // Prevent bars from overlapping response time labels.
           >
             <Label value="Response time" fill="var(--base-content)" position="insideTopRight" />
           </XAxis>

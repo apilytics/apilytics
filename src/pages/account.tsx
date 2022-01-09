@@ -7,8 +7,7 @@ import { withAuth } from 'hocs/withAuth';
 
 const Account: NextPage = () => (
   <MainTemplate>
-    <h2 className="text-2xl">Account settings</h2>
-    <AccountForm />
+    <AccountForm title="Account settings" />
   </MainTemplate>
 );
 

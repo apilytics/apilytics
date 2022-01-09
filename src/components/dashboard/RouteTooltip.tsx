@@ -14,7 +14,7 @@ export const RouteTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
     const red = ((count_red / requests) * 100).toFixed();
 
     return (
-      <div className="bg-base-100 card shadow-2xl rounded-lg p-4">
+      <div className="bg-base-100 card shadow rounded-lg p-4">
         <ul>
           <li>
             Path: <span className="text-primary">{label}</span>

@@ -61,6 +61,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
             axisLine={false}
             tick={false}
             mirror
+            domain={[0, (dataMax: number): number => dataMax * 1.2]} // Prevent bars from overlapping request labels.
           >
             <Label value="Requests" fill="var(--base-content)" position="insideTopRight" />
           </XAxis>

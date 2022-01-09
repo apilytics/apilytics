@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
           </div>
           <ul
             tabIndex={0}
-            className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
+            className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52 text-primary"
           >
             {MENU_ITEMS.map(({ name, href }) => (
               <li key={name}>
@@ -87,9 +87,9 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
           </a>
         </Link>
         <div className="flex items-center">
-          <h2 className="text-xl mr-4">Beta</h2>
+          <h2 className="text-xl mr-4 hidden sm:block">Beta</h2>
           <Link href={staticRoutes.docs} passHref>
-            <Button className="btn-secondary btn-outline mr-4">Docs</Button>
+            <Button className="btn-secondary btn-outline mr-4 hidden sm:block">Docs</Button>
           </Link>
           {renderDynamicContent()}
         </div>

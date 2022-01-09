@@ -8,7 +8,11 @@ import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
-export const AccountForm: React.FC = () => {
+interface Props {
+  title?: string;
+}
+
+export const AccountForm: React.FC<Props> = ({ title }) => {
   const { user, setUser } = useAccount();
 
   const [formValues, setFormValues] = useState({
@@ -58,7 +62,13 @@ export const AccountForm: React.FC = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} error={error} loading={loading} submittedText={submittedText}>
+    <Form
+      title={title}
+      onSubmit={handleSubmit}
+      error={error}
+      loading={loading}
+      submittedText={submittedText}
+    >
       <Input
         name="name"
         label="Account name"

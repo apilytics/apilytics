@@ -57,14 +57,14 @@ export const Pricing: React.FC = () => {
 
   return (
     <div className="bg-base-200">
-      <div className="container max-w-3xl py-16">
+      <div className="container max-w-3xl py-4 lg:py-16">
         <h1 className="text-5xl">Flexible pricing with a free trial</h1>
         <h2 className="text-3xl text-primary mt-8">
           All features available from the start.
           <br />
           No credit card required.
         </h2>
-        <div className="mt-16 card rounded-lg p-4 shadow-2xl">
+        <div className="mt-8 card bg-base-100 rounded-lg p-4">
           <div className="flex justify-between">
             <div className="text-left">
               <p className="text-xl">Monthly requests</p>
@@ -92,8 +92,8 @@ export const Pricing: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="mt-16 flex flex-col items-center">
-          <h1 className="text-3xl">Ready to boost your API monitoring?</h1>
+        <div className="mt-8 flex flex-col items-center">
+          <h1 className="text-3xl">Ready to boost your API analytics?</h1>
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4 w-full lg:w-auto">
             <Link href={staticRoutes.login} passHref>
               <Button className="btn-primary" fullWidth="mobile">

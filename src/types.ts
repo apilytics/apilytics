@@ -46,6 +46,7 @@ export interface FrontMatter {
   name: string;
   routeName: keyof typeof staticRoutes;
   order: number;
+  subOrder: number;
 }
 
 export interface MDXPageProps {
