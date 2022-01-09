@@ -1,3 +1,4 @@
+import { ArrowSmRightIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
@@ -49,7 +50,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="footer footer-center bg-base-100">
       <div className="container py-8">
-        <div className="flex justify-center gap-16">
+        <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16">
           <div className="flex flex-col text-left">
             <ul>
               <p>
@@ -81,10 +82,10 @@ export const Footer: React.FC = () => {
                   value={email}
                   onChange={({ target }): void => setEmail(target.value)}
                   placeholder="Your email"
-                  className="input input-bordered rounded-r-none"
+                  className="input input-bordered rounded-r-none w-full"
                 />
                 <Button className="rounded-l-none btn-primary btn-outline" loading={loading}>
-                  go
+                  <ArrowSmRightIcon className="w-5 h-5" />
                 </Button>
               </div>
               {error && <p className="mt-4 label-text text-error">{error}</p>}

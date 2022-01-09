@@ -100,11 +100,11 @@ export const Setup: React.FC = () => {
   return (
     <div className="bg-background bg-no-repeat bg-cover">
       <div className="bg-filter">
-        <div className="container max-w-3xl py-16 flex flex-col">
+        <div className="container max-w-3xl py-4 lg:py-16 flex flex-col">
           <h1 className="text-5xl text-white">
             Set up in <span className="text-primary">10 minutes</span>
           </h1>
-          <div className="mt-12">
+          <div className="mt-4">
             <ul className="steps steps-vertical">
               <li className="step step-primary">
                 <h2 className="text-2xl text-left">Sign up & grab your API key.</h2>
@@ -119,7 +119,7 @@ export const Setup: React.FC = () => {
               </li>
             </ul>
           </div>
-          <div className="mt-14 bg-base-100 w-full rounded-lg mockup-code">
+          <div className="mt-4 bg-base-100 w-full rounded-lg mockup-code">
             <div className="p-2 tabs tabs-boxed bg-inherit">
               {INTEGRATIONS.map((name) => (
                 <p

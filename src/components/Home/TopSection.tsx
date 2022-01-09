@@ -47,7 +47,7 @@ const loading = !origin || !metrics;
 export const TopSection: React.FC = () => (
   <div className="bg-background bg-no-repeat bg-cover">
     <div className="bg-filter">
-      <div className="container py-16 grid gap-8 grid-cols-1 lg:grid-cols-2">
+      <div className="container py-4 lg:py-16 grid gap-4 lg:gap-8 grid-cols-1 lg:grid-cols-2">
         <div className="text-left">
           <h1 className="text-7xl text-white">
             <span className="text-primary">API analytics</span>
