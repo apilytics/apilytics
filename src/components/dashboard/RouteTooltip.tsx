@@ -7,7 +7,8 @@ export const RouteTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
   label,
 }): JSX.Element | null => {
   if (active && payload) {
-    const { requests, response_time, count_green, count_yellow, count_red } = payload[0].payload;
+    const { requests, response_time, methods, status_codes, count_green, count_yellow, count_red } =
+      payload[0].payload;
 
     const green = ((count_green / requests) * 100).toFixed();
     const yellow = ((count_yellow / requests) * 100).toFixed();
@@ -24,6 +25,12 @@ export const RouteTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
           </li>
           <li>
             Avg. response time: <span className="font-bold">{response_time}</span>
+          </li>
+          <li>
+            Methods: <span className="font-bold">{methods.join(', ')}</span>
+          </li>
+          <li>
+            Status codes: <span className="font-bold">{status_codes.join(', ')}</span>
           </li>
           <p>Requests counts by response time percentiles:</p>
           <li>

@@ -39,7 +39,7 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
   const totalRequestsGrowth = Number(Math.random().toFixed(2));
 
-  const routeData = MOCK_ENDPOINTS.map(({ name, methods }) => {
+  const routeData = MOCK_ENDPOINTS.map(({ name, methods, status_codes }) => {
     // 50 - 100 requests for each data point.
     const requests =
       Number((Math.floor(Math.random() * 100) + 75).toFixed()) * timeFrameData.length;
@@ -51,6 +51,7 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
       requests,
       name,
       methods,
+      status_codes,
       response_time,
       count_green: requests * 0.39,
       count_yellow: requests * 0.33,

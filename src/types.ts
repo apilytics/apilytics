@@ -88,6 +88,7 @@ export interface RouteData {
   requests: number;
   name: string;
   methods: string[];
+  status_codes: number[];
   response_time: number;
   count_green: number;
   count_yellow: number;

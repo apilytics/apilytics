@@ -45,26 +45,32 @@ export const MOCK_ENDPOINTS = [
   {
     name: '/profile',
     methods: ['GET', 'PUT', 'DELETE'],
+    status_codes: [200],
   },
   {
     name: '/users',
     methods: ['GET'],
+    status_codes: [200],
   },
   {
     name: '/posts',
     methods: ['GET'],
+    status_codes: [200],
   },
   {
     name: '/posts/123',
     methods: ['GET'],
+    status_codes: [200, 404],
   },
   {
     name: '/users/johndoe',
     methods: ['GET'],
+    status_codes: [200, 201],
   },
   {
     name: '/login',
     methods: ['POST'],
+    status_codes: [200, 500],
   },
 ];
 
