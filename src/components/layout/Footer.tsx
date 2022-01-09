@@ -84,7 +84,11 @@ export const Footer: React.FC = () => {
                   placeholder="Your email"
                   className="input input-bordered rounded-r-none w-full"
                 />
-                <Button className="rounded-l-none btn-primary btn-outline" loading={loading}>
+                <Button
+                  type="submit"
+                  className="rounded-l-none btn-primary btn-outline"
+                  loading={loading}
+                >
                   <ArrowSmRightIcon className="w-5 h-5" />
                 </Button>
               </div>

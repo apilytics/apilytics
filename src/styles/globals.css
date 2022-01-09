@@ -98,3 +98,7 @@
 .text-requests-red {
   color: var(--requests-red);
 }
+
+.card {
+  @apply overflow-visible;
+}
