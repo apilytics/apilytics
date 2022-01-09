@@ -17,11 +17,13 @@ const TEST_METRICS = Array(365 * 24)
     Array(Math.floor(Math.random() * 20) + 1)
       .fill(null)
       .map(() => {
-        const { name, methods } = MOCK_ENDPOINTS[Math.floor(Math.random() * MOCK_ENDPOINTS.length)];
+        const { name, methods, status_codes } =
+          MOCK_ENDPOINTS[Math.floor(Math.random() * MOCK_ENDPOINTS.length)];
 
         return {
           path: name,
           method: methods[Math.floor(Math.random() * methods.length)],
+          statusCode: status_codes[Math.floor(Math.random() * status_codes.length)],
           timeMillis: Math.floor(Math.random() * 100) + 20,
           createdAt: new Date(Date.now() - i * 60 * 60 * 1000),
           originId: ORIGIN_ID,

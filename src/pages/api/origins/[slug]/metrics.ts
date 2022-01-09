@@ -85,12 +85,13 @@ SELECT
   COUNT(*) AS requests,
   filtered_metrics.path AS name,
   ARRAY_AGG(DISTINCT(filtered_metrics.method)) as methods,
+  ARRAY_AGG(DISTINCT(filtered_metrics.status_code)) as status_codes,
   ROUND(AVG(filtered_metrics.time_millis)) as response_time,
   CARDINALITY(ARRAY_POSITIONS(ARRAY_AGG(filtered_metrics.rank), 1)) AS count_green,
   CARDINALITY(ARRAY_POSITIONS(ARRAY_AGG(filtered_metrics.rank), 2)) AS count_yellow,
   CARDINALITY(ARRAY_POSITIONS(ARRAY_AGG(filtered_metrics.rank), 3)) AS count_red
 FROM (
-  SELECT path, method, time_millis, NTILE(3) OVER ( ORDER BY time_millis ) AS rank
+  SELECT path, method, status_code, time_millis, NTILE(3) OVER ( ORDER BY time_millis ) AS rank
   FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
   WHERE origins.id = ${originId}
