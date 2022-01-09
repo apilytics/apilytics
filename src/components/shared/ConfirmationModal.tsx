@@ -1,3 +1,4 @@
+import { XIcon } from '@heroicons/react/solid';
 import React, { useRef } from 'react';
 import type { MouseEvent } from 'react';
 
@@ -25,11 +26,11 @@ export const ConfirmationModal: React.FC<Props> = ({ open, onConfirm, onCancel, 
       onClick={handleClick}
     >
       <div className="mx-auto w-96">
-        <div className="rounded-lg flex flex-col w-full bg-white" ref={modalRef}>
-          <div className="flex items-start justify-between p-2 rounded-t">
-            <button className="p-1 ml-auto" onClick={onCancel}>
-              <span className="text-2xl">×</span>
-            </button>
+        <div className="card rounded-lg p-4 shadow bg-base-100 flex flex-col w-full" ref={modalRef}>
+          <div className="flex items-start justify-between p-2">
+            <Button className="btn-outline btn-circle border-none p-1 ml-auto" onClick={onCancel}>
+              <XIcon className="w-5 h-5" />
+            </Button>
           </div>
           <div className="p-4">
             <h1 className="text-2xl">{text}</h1>
@@ -38,7 +39,7 @@ export const ConfirmationModal: React.FC<Props> = ({ open, onConfirm, onCancel, 
             <Button className="btn-error btn-outline" onClick={onCancel}>
               Cancel
             </Button>
-            <Button onClick={onConfirm} autoFocus>
+            <Button className="btn-primary" onClick={onConfirm} autoFocus>
               Confirm
             </Button>
           </div>

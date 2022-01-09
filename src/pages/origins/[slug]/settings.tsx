@@ -96,6 +96,11 @@ const OriginSettings: NextPage = () => {
         error={error}
         loading={loading}
         submittedText={submittedText}
+        secondaryContent={
+          <p onClick={handleOpenConfirmDeleteModal} className="mt-4 text-center link text-error">
+            Delete origin
+          </p>
+        }
       >
         <Input
           name="name"
@@ -118,11 +123,6 @@ const OriginSettings: NextPage = () => {
           }
         />
       </Form>
-      <div className="flex justify-center mt-8">
-        <p onClick={handleOpenConfirmDeleteModal} className="link text-error">
-          Delete origin
-        </p>
-      </div>
       <ConfirmationModal
         open={confirmDeleteModalOpen}
         onConfirm={handleConfirmDelete}

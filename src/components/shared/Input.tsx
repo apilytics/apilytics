@@ -13,7 +13,7 @@ export const Input: React.FC<Props> = ({ label, helperText, className, ...props 
         {label} {props.required && <span className="text-error">*</span>}
       </span>
     </label>
-    <input className={clsx('input', className)} {...props} />
+    <input className={clsx('input input-bordered', className)} {...props} />
     {helperText && (
       <label className="label">
         <span className="label-text-alt">{helperText}</span>
