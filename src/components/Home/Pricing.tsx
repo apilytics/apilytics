@@ -64,7 +64,7 @@ export const Pricing: React.FC = () => {
           <br />
           No credit card required.
         </h2>
-        <div className="mt-16 card rounded-lg p-4 shadow-2xl">
+        <div className="mt-16 card rounded-lg p-4 shadow">
           <div className="flex justify-between">
             <div className="text-left">
               <p className="text-xl">Monthly requests</p>

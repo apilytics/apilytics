@@ -11,7 +11,7 @@ interface Props {
 export const DashboardCardContainer: React.FC<Props> = ({ loading, grow, children }) => (
   <div
     className={clsx(
-      'bg-base-100 card shadow-2xl rounded-lg flex flex-col p-2',
+      'bg-base-100 card shadow rounded-lg flex flex-col p-2',
       (grow || loading) && 'grow',
     )}
   >
