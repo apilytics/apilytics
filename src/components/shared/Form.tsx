@@ -5,6 +5,7 @@ import { Button } from 'components/shared/Button';
 
 interface Props {
   title?: string;
+  subTitle?: JSX.Element | string;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   error: string;
   loading?: boolean;
@@ -14,6 +15,7 @@ interface Props {
 
 export const Form: React.FC<Props> = ({
   title,
+  subTitle,
   onSubmit,
   error,
   loading,
@@ -22,7 +24,8 @@ export const Form: React.FC<Props> = ({
   children,
 }) => (
   <div className="card rounded-lg p-4 shadow bg-base-100">
-    {title && <h2 className="text-2xl">{title}</h2>}
+    {title && <h2>{title}</h2>}
+    {subTitle && <p className="text-sm">{subTitle}</p>}
     <form onSubmit={onSubmit} className="mt-4 text-left">
       {children}
       {error && (

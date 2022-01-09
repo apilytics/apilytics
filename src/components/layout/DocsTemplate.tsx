@@ -75,6 +75,10 @@ export const DocsTemplate: React.FC<Props> = ({
               </Link>
             </div>
           )}
+          <p className="mt-4">
+            Help us improve these docs by{' '}
+            <Link href={staticRoutes.contact}>giving us feedback</Link>.
+          </p>
         </div>
       </div>
     </Layout>

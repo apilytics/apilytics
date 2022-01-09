@@ -16,8 +16,8 @@ export const sendNoContent = (res: NextApiResponse): void => {
   res.status(204).end();
 };
 
-export const sendInvalidInput = (res: NextApiResponse): void => {
-  res.status(400).json({ message: 'Invalid input.' });
+export const sendInvalidInput = (res: NextApiResponse, message = 'Invalid input.'): void => {
+  res.status(400).json({ message });
 };
 
 export const sendMissingInput = (res: NextApiResponse, fields: string[]): void => {

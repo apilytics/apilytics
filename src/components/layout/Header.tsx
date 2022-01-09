@@ -21,6 +21,10 @@ const MENU_ITEMS = [
     name: 'Log out',
     href: staticRoutes.logout,
   },
+  {
+    name: 'Feedback',
+    href: staticRoutes.contact,
+  },
 ];
 
 export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
@@ -87,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
           </a>
         </Link>
         <div className="flex items-center">
-          <h2 className="text-xl mr-4 hidden sm:block">Beta</h2>
+          <h2 className="text-xl mr-4 hidden sm:block font-bold">Beta</h2>
           <Link href={staticRoutes.docs} passHref>
             <Button className="btn-secondary btn-outline mr-4 hidden sm:block">Docs</Button>
           </Link>

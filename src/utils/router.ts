@@ -16,6 +16,7 @@ export const staticRoutes = {
   origins: '/origins',
   newOrigin: '/new-origin',
   account: '/account',
+  contact: '/contact',
   ...docsRoutes,
 };
 
@@ -32,6 +33,7 @@ export const staticApiRoutes = {
   account: '/api/account',
   origins: '/api/origins',
   emailList: '/api/email-list',
+  contact: '/api/contact',
 };
 
 export const dynamicApiRoutes: DynamicRoutes = {
