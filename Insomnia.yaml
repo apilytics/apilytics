@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2022-01-02T18:45:11.878Z
+__export_date: 2022-01-08T10:14:33.520Z
 __export_source: insomnia.desktop.app:v2021.7.2
 resources:
   - _id: req_adc825807b5a4a38bb00d10c418f174b
@@ -34,7 +34,7 @@ resources:
     _type: workspace
   - _id: req_55ab9d87d3d04dc891fe294c36737223
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641149037197
+    modified: 1641636798695
     created: 1640728892377
     url: "{{ _.url }}/api/signup"
     name: /api/signup
@@ -87,7 +87,7 @@ resources:
     _type: request
   - _id: req_d2de2652fff24380b369538a419bca49
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641149041724
+    modified: 1641636840600
     created: 1640728892359
     url: "{{ _.url }}/api/origins"
     name: /api/origins
@@ -116,19 +116,15 @@ resources:
     _type: request
   - _id: req_6abc52208ecd43e1b80d4e61e5eca587
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641148577996
+    modified: 1641636836110
     created: 1640728892365
-    url: "{{ _.url }}/api/origins/{{ _.siteId }}"
-    name: /api/origins/[id]
+    url: "{{ _.url }}/api/origins/{{ _.originSlug }}"
+    name: /api/origins/[slug]
     description: ""
     method: GET
     body: {}
     parameters: []
-    headers:
-      - id: pair_5fe9540623da4633bfa517f3512baaaf
-        name: X-CSRF-Token
-        value: 364fd8976f9d71f3dc2c9b0308afc74265959704bd6f9b9e3cb2470bccbd2d6c%7C613e9ba1b8f5000cbc4a76e6fe7960c3d9415f541231d003f3001921ea1a6140
-        description: ""
+    headers: []
     authentication: {}
     metaSortKey: -1639683152163.375
     isPrivate: false
@@ -141,10 +137,10 @@ resources:
     _type: request
   - _id: req_27e5ed24e92d44b88021fc066b267d13
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641148580208
+    modified: 1641636842156
     created: 1640728892367
-    url: "{{ _.url }}/api/origins/{{ _.siteId }}"
-    name: /api/origins/[id]
+    url: "{{ _.url }}/api/origins/{{ _.originSlug }}"
+    name: /api/origins/[slug]
     description: ""
     method: PUT
     body:
@@ -155,10 +151,6 @@ resources:
         }
     parameters: []
     headers:
-      - id: pair_5fe9540623da4633bfa517f3512baaaf
-        name: X-CSRF-Token
-        value: 364fd8976f9d71f3dc2c9b0308afc74265959704bd6f9b9e3cb2470bccbd2d6c%7C613e9ba1b8f5000cbc4a76e6fe7960c3d9415f541231d003f3001921ea1a6140
-        description: ""
       - name: Content-Type
         value: application/json
         id: pair_755bf243066c4caea898b874ece37ca1
@@ -174,10 +166,10 @@ resources:
     _type: request
   - _id: req_8ad2e9cff01441b5977bf9ae102cdefa
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641148584021
+    modified: 1641636842691
     created: 1640728892370
-    url: "{{ _.url }}/api/origins/{{ _.siteId }}"
-    name: /api/origins/[id]
+    url: "{{ _.url }}/api/origins/{{ _.originSlug }}"
+    name: /api/origins/[slug]
     description: ""
     method: DELETE
     body:
@@ -188,10 +180,6 @@ resources:
         }
     parameters: []
     headers:
-      - id: pair_5fe9540623da4633bfa517f3512baaaf
-        name: X-CSRF-Token
-        value: 364fd8976f9d71f3dc2c9b0308afc74265959704bd6f9b9e3cb2470bccbd2d6c%7C613e9ba1b8f5000cbc4a76e6fe7960c3d9415f541231d003f3001921ea1a6140
-        description: ""
       - name: Content-Type
         value: application/json
         id: pair_755bf243066c4caea898b874ece37ca1
@@ -207,19 +195,23 @@ resources:
     _type: request
   - _id: req_2ffeceb6c0384b9481e2c7495de45dbf
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641148586122
+    modified: 1641636828282
     created: 1640728892372
-    url: "{{ _.url }}/api/origins/{{ _.siteId }}/metrics"
-    name: /api/origins/[id]/metrics
+    url: "{{ _.url }}/api/origins/{{ _.originSlug }}/metrics"
+    name: /api/origins/[slug]/metrics
     description: ""
     method: GET
     body: {}
-    parameters: []
-    headers:
-      - id: pair_5fe9540623da4633bfa517f3512baaaf
-        name: X-CSRF-Token
-        value: 364fd8976f9d71f3dc2c9b0308afc74265959704bd6f9b9e3cb2470bccbd2d6c%7C613e9ba1b8f5000cbc4a76e6fe7960c3d9415f541231d003f3001921ea1a6140
+    parameters:
+      - id: pair_04c4d392871f4afda31a5ff9d623454b
+        name: from
+        value: 2021-01-29:19:11:44
         description: ""
+      - id: pair_55b461a77d2847ee8c9886e14d644cc8
+        name: to
+        value: 2022-01-05:19:11:44
+        description: ""
+    headers: []
     authentication: {}
     metaSortKey: -1639683122217.9219
     isPrivate: false
@@ -232,7 +224,7 @@ resources:
     _type: request
   - _id: req_0e743e6d79f44a8f94781b4b22c8333f
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641149082635
+    modified: 1641636863659
     created: 1640728892375
     url: "{{ _.url }}/api/v1/middleware"
     name: /api/v1/middleware
@@ -244,7 +236,8 @@ resources:
         {
           "path": "/",
           "method": "GET",
-          "timeMillis": 20
+          "timeMillis": 20,
+          "statusCode": 200
         }
     parameters: []
     headers:
@@ -301,17 +294,17 @@ resources:
     _type: api_spec
   - _id: env_3b986c752a0e4f40a30a9e80c68a8d09
     parentId: env_32ce5cfd6d7243678bb30f5a859267ed
-    modified: 1641148534484
+    modified: 1641636857797
     created: 1640728892342
     name: local
     data:
       url: http://localhost:3000
-      siteId: 570957e8-d591-450d-8b91-dd954534ecc5
-      sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..KqhecZFo0WJsgxAQ.wwyvRJxBqO0gacx6im_xt04smeOpKGg58_s-90G16f0Q2ezYwE9ZfXqji8a2CiF__n6W1T09R9FHlogsm63EX-xHBJPDC40J0EYmTMfAtjAnHX3N0W0PCk8epkjbG1lX8fPf8NHlCMGsGvDibZIlnJ8nESPz0-PojjG8w9nBCpdsXPVAQKjKT9JK0VqNRCwxiqDSQFFTDa-eY5AFeAtrA2KHREW5rZNPisgKXWHmBV46.Bc2uB95xAw1nruJfPDU4qQ
+      originSlug: origin-example-com
+      sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..fqCeUbRY4x1Inip6.r65dky9jpb9QPmIqkJf071kREtFCOf3JKpFiz_I02GzIvbboZf8sMiFbXx2kaH9ReJKPw2OwSt4uGahUuXiF_vUIZt0ewTg8Ct54ZTkyYnT0vCAmloCssJrRTX52nxSIkPrlwYYfkwEkLdYSN8eqiWSQev_YoiO6pLqUyhhc-ehRlL1q0BX1sNQW4xZ-2yxrysJGVrfuHro3RyYzakDyDMnjm1_cAnm8gU-_TdPEYi1qsUjGLt-yUzSrZrDl4qAC4YDEEr-MhBXjR5fD7jTrWjJWkzTm.oy2IvcNszIjy-YHOM0JS0g
     dataPropertyOrder:
       "&":
         - url
-        - siteId
+        - originSlug
         - sessionCookie
     color: null
     isPrivate: false
