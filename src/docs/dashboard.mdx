@@ -1,0 +1,47 @@
+---
+name: Dashboard
+routeName: dashboard
+order: 3
+---
+
+# Getting started with the dashboard 🚀
+
+Now that your API has been integrated with our middleware using an API key,
+the requests from your API will appear in your dashboard. You can track important
+metrics like amount of requests to your different endpoints, response times, HTTP
+methods, status codes etc.
+
+The dashboard is quite self explanatory, but the visualization is divided into three categories:
+
+### Time frame data
+
+![Time frame](/mock-ups/time-frame.png)
+
+The time frame allows you to visualize the API requests to your origin over a specified time frame.
+In addition to the total amount of requests and the historical view, you can also see the growth from the previous time frame that you've selected.
+So if you've for instance selected 24 hours as the time frame, the growth will be calculated from the previous 24 hours that is not shown on the graph.
+
+### Route metrics
+
+![Route metrics](/mock-ups/route-metrics.png)
+
+The route metrics bar chart breaks down your requests to their corresponding endpoints.
+From the right-hand side you can see the amount of requests to each endpoint.
+By hovering over individual bars you can get a set of additional information for the given endpoint.
+
+### Reponse times
+
+![Response times](/mock-ups/response-times.png)
+
+The reponse time visualization gives you a similar overview than the route metrics,
+except that the endpoints have been sorted by the average response times that it took for the endpoints to respond.
+
+The color coding indicates response times compared to the average response time of the endpoint
+by divinding the response times into three categories be percentiles:
+The green color represents the fastest 33:th percentile of response times of the endpoint,
+yellow represents the mid 33:th percentile and red represents the bottom 33:th percentile of the response times.
+
+#### An example of spotting a bottleneck in your endpoint
+
+So if for instance you see that the red color takes a large of the reponse time bar,
+it means that there are a lot of requests that bump up your average response time for that endpoint.

@@ -1,38 +1,36 @@
 ---
-name: Get Started
+name: Get started
 routeName: getStarted
 order: 2
 ---
 
 # Get started in 10 minutes ⚡
 
-## 1. Sign up & grab your API key 🔑
+## Sign up & grab your API key 🔑
 
-You can create your free account at <LoginLink />.
+Create your free account at <ExternalLink href="/login">https://apilytics.io/login</ExternalLink>.
 You can start your free trial without assigning a credit card.
 After you've signed up and finished up your account,
 you can register your APIs using what we call "origins".
 These are plain APIs that correspond to one source that sends their data to our middleware.
+Each origin will have a dedicated API key that will link your origins to your account.
 
-<SignupButton />
+<Link href="/login">
+  <Button className="btn-primary btn-outline mt-4">Sign up here</Button>
+</Link>
 
-## 2. Embed our open-source middleware to your backend 👨‍💻
+<br />
+
+## Embed our open-source middleware to your backend 👨‍💻
 
 Our open-source middlewares offer a plug & play solution for integrating with your backend.
 We currently have support for the following backends:
 
-- <GHLink middleware="apilytics.js" name="Node.js/Express" />
-- <GHLink middleware="apilytics.js" name="Next.js" />
-- <GHLink middleware="python-apilytics" name="Djago" />
-- <GHLink middleware="python-apilytics" name="FastAPI" />
+- [Node.js/Express](/docs/javascript)
+- [Next.js](/docs/javascript)
+- [Django](/docs/python)
+- [FastAPI](/docs/python)
 
 Note that we're still in beta and we're working on integrating with other frameworks constantly.
 However, this doesn't stop you from integrating with your backend even if there's no official middlware for it yet.
-You can still use Apilytics by <BYOMLink text="implementing your own middleware (BYOM)" />.
-
-## 3. Start using your dashboard! 🚀
-
-Now that your API has been integrated with our middleware using your API key,
-the requests from your API will appear in your dashboard. You can track important
-metrics like amount of requests to your different endpoints, response times, HTTP
-methods, status codes etc.
+You can still use Apilytics by <Link href="/docs/byom">implementing your own middleware (BYOM)</Link>.

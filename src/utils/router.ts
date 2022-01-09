@@ -1,3 +1,12 @@
+const docsRoutes = {
+  docs: '/docs',
+  getStarted: '/docs/get-started',
+  python: '/docs/python',
+  javaScript: '/docs/javascript',
+  dashboard: '/docs/dashboard',
+  byom: '/docs/byom',
+};
+
 export const staticRoutes = {
   root: '/',
   login: '/login',
@@ -7,9 +16,7 @@ export const staticRoutes = {
   origins: '/origins',
   newOrigin: '/new-origin',
   account: '/account',
-  docs: '/docs',
-  getStarted: '/docs/get-started',
-  byom: '/docs/byom',
+  ...docsRoutes,
 };
 
 type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;

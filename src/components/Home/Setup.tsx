@@ -67,7 +67,7 @@ If your backend supports none of our open source middlewares,
 you can still use Apilytics by implementing your own middleware.
 
 Simply perform an HTTP request to
-https://apilytics.io/api/v1/middleware
+https://www.apilytics.io/api/v1/middleware
 for all of the requests that you want to track with Apilytics.
 
 The HTTP requests must have the following specs:
@@ -82,6 +82,7 @@ Body:
 - "path": The path of the endpoint, e.g. "/api/v1/users".
 - "method": The HTTP method of the request that you want to track.
 - "timeMillis": The time in milliseconds that the request took to complete.
+- "statusCode": The status code of the response.
 
 Note that your request should take place as a background job
 in your API and thus not bottlenecking your API in any way.`;

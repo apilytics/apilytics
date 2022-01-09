@@ -14,6 +14,10 @@
 }
 
 @layer base {
+  * {
+    @apply break-words;
+  }
+
   p {
     @apply my-1;
   }
@@ -24,7 +28,7 @@
   h4,
   h5,
   h6 {
-    @apply my-2;
+    @apply my-3;
   }
 
   h1 {
@@ -39,6 +43,11 @@
     @apply text-xl;
   }
 
+  h4,
+  h5 {
+    @apply text-xl;
+  }
+
   p {
     @apply leading-6;
   }
@@ -46,6 +55,31 @@
   a {
     @apply link;
     @apply link-primary;
+  }
+
+  ol,
+  ul {
+    @apply list-disc;
+    @apply list-inside;
+  }
+
+  pre {
+    @apply bg-base-200;
+    @apply p-2;
+    @apply rounded-lg;
+    @apply max-w-full;
+    @apply overflow-auto;
+  }
+
+  p > code {
+    @apply bg-base-200;
+    @apply p-1;
+    @apply rounded-lg;
+  }
+
+  code {
+    font-family: monospace;
+    @apply text-primary;
   }
 }
 
