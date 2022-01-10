@@ -1,14 +1,18 @@
 import dayjs from 'dayjs';
 import type { OpUnitType } from 'dayjs';
 
-import { LAST_24_HOURS_VALUE, MOCK_ENDPOINTS } from 'utils/constants';
+import { DAY, MOCK_ENDPOINTS, SIX_MONTHS_DAYS } from 'utils/constants';
 import type { OriginMetrics, TimeFrame } from 'types';
 
 export const getTimeFrameScope = (timeFrame: TimeFrame): OpUnitType => {
   let scope: OpUnitType = 'day';
 
-  if (timeFrame === LAST_24_HOURS_VALUE) {
+  if (timeFrame === DAY) {
     scope = 'hour';
+  }
+
+  if (timeFrame >= SIX_MONTHS_DAYS) {
+    scope = 'week';
   }
 
   return scope;

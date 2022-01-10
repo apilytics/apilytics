@@ -4,7 +4,7 @@ import React from 'react';
 
 import { RequestsOverview } from 'components/dashboard/RequestsOverview';
 import { Button } from 'components/shared/Button';
-import { DESCRIPTION, LAST_7_DAYS_VALUE, MOCK_ORIGIN } from 'utils/constants';
+import { DESCRIPTION, MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
 
@@ -39,7 +39,7 @@ const INTEGRATIONS = [
   },
 ];
 
-const timeFrame = LAST_7_DAYS_VALUE;
+const timeFrame = WEEK_DAYS;
 const origin = MOCK_ORIGIN;
 const metrics = getMockMetrics(timeFrame);
 const loading = !origin || !metrics;

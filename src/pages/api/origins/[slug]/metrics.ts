@@ -4,6 +4,9 @@ import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
 import type { ApiHandler, OriginMetrics, RouteData, TimeFrameData } from 'types';
 
+const DAY_MILLIS = 24 * 60 * 60 * 1000;
+const SIX_MONTHS_MILLIS = 6 * 30 * DAY_MILLIS;
+
 interface GetResponse {
   data: OriginMetrics;
 }
@@ -33,12 +36,13 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const toTime = toDate.getTime();
   const timeFrame = toTime - fromTime;
 
+  // The scope indicates which time unit the metrics are grouped by.
   let scope = 'day';
 
-  // Time frames less or equal than 24 hours will be grouped by hour.
-  // Other time frames will be grouped by date.
-  if (timeFrame <= 24 * 60 * 60 * 1000) {
+  if (timeFrame <= DAY_MILLIS) {
     scope = 'hour';
+  } else if (timeFrame >= SIX_MONTHS_MILLIS) {
+    scope = 'week';
   }
 
   const timeFrameData: TimeFrameData[] = await prisma.$queryRaw`
