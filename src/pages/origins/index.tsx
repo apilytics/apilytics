@@ -17,7 +17,7 @@ const Origins: NextPage = () => {
     <MainTemplate>
       <div className="divide-y divide-base-content">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4">
-          <h2 className="text-2xl">Origins</h2>
+          <h3>Origins</h3>
           <Link href={staticRoutes.newOrigin} passHref>
             <Button className="btn-primary" endIcon={PlusIcon}>
               Add origin
@@ -33,19 +33,17 @@ const Origins: NextPage = () => {
                   key={name}
                 >
                   <div className="flex justify-between">
-                    <h2 className="text-2xl">{name}</h2>
+                    <h5>{name}</h5>
                     <Link href={dynamicRoutes.originSettings({ slug })} passHref>
                       <IconButton icon={CogIcon} />
                     </Link>
                   </div>
-                  <p className="text-lg mt-2">{last24hRequests} requests in last 24h</p>
+                  <p>{last24hRequests} requests in last 24h</p>
                 </div>
               </Link>
             ))
           ) : (
-            <p className="text-xl">
-              No origins available. Add your first origin to start analyzing your APIs.
-            </p>
+            <p>No origins available. Add your first origin to start analyzing your APIs.</p>
           )}
         </div>
       </div>

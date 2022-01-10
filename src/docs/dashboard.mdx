@@ -4,7 +4,7 @@ routeName: dashboard
 order: 3
 ---
 
-# Getting started with the dashboard 🚀
+### Getting started with the dashboard 🚀
 
 Now that your API has been integrated with our middleware using an API key,
 the requests from your API will appear in your dashboard. You can track important
@@ -13,7 +13,7 @@ methods, status codes etc.
 
 The dashboard is quite self explanatory, but the visualization is divided into three categories:
 
-### Time frame data
+#### Time frame data
 
 ![Time frame](/mock-ups/time-frame.png)
 
@@ -21,7 +21,7 @@ The time frame allows you to visualize the API requests to your origin over a sp
 In addition to the total amount of requests and the historical view, you can also see the growth from the previous time frame that you've selected.
 So if you've for instance selected 24 hours as the time frame, the growth will be calculated from the previous 24 hours that is not shown on the graph.
 
-### Route metrics
+#### Route metrics
 
 ![Route metrics](/mock-ups/route-metrics.png)
 
@@ -29,7 +29,7 @@ The route metrics bar chart breaks down your requests to their corresponding end
 From the right-hand side you can see the amount of requests to each endpoint.
 By hovering over individual bars you can get a set of additional information for the given endpoint.
 
-### Reponse times
+#### Reponse times
 
 ![Response times](/mock-ups/response-times.png)
 
@@ -41,7 +41,7 @@ by divinding the response times into three categories be percentiles:
 The green color represents the fastest 33:th percentile of response times of the endpoint,
 yellow represents the mid 33:th percentile and red represents the bottom 33:th percentile of the response times.
 
-#### An example of spotting a bottleneck in your endpoint
+##### An example of spotting a bottleneck in your endpoint
 
 So if for instance you see that the red color takes a large of the reponse time bar,
 it means that there are a lot of requests that bump up your average response time for that endpoint.

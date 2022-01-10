@@ -1,3 +1,5 @@
+import { ArrowSmRightIcon } from '@heroicons/react/solid';
+import Link from 'next/link';
 import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
@@ -5,6 +7,7 @@ import type { NextPage } from 'next';
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { AccountForm } from 'components/shared/AccountForm';
+import { Button } from 'components/shared/Button';
 import { useAccount } from 'hooks/useAccount';
 import { staticApiRoutes, staticRoutes } from 'utils/router';
 
@@ -13,6 +16,7 @@ export const withAuth = <T extends Record<string, unknown>>(
 ): NextPage<T> => {
   const WithAuth: NextPage<T> = (pageProps: T) => {
     const [loading, setLoading] = useState(false);
+    const [welcomePassed, setWelcomePassed] = useState(false);
     const { status, setUser, accountComplete, setOrigins } = useAccount();
     const redirect = status === 'unauthenticated';
 
@@ -48,10 +52,31 @@ export const withAuth = <T extends Record<string, unknown>>(
     }
 
     if (!accountComplete) {
+      if (!welcomePassed) {
+        return (
+          <MainTemplate>
+            <h3>Welcome 👋</h3>
+            <p>
+              Thank you for signing up to Apilytics beta, we&lsquo;re glad to have you here!
+              We&lsquo;re still getting started with our service and developing it tightly with our
+              users. You can help us by giving us feedback as well as presenting your feature
+              requests to us via <a href="mailto:hello@apilytics.io">email</a> or our{' '}
+              <Link href={staticRoutes.contact}>contact form</Link>.
+            </p>
+            <Button
+              className="btn-primary mt-4"
+              endIcon={ArrowSmRightIcon}
+              onClick={(): void => setWelcomePassed(true)}
+            >
+              Continue
+            </Button>
+          </MainTemplate>
+        );
+      }
+
       return (
         <MainTemplate>
-          <h2 className="text-2xl">Finish up your account to continue</h2>
-          <AccountForm />
+          <AccountForm title="Finish up your account to complete sign up" />
         </MainTemplate>
       );
     }

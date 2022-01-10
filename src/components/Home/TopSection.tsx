@@ -49,13 +49,13 @@ export const TopSection: React.FC = () => (
     <div className="bg-filter">
       <div className="container py-4 lg:py-16 grid gap-4 lg:gap-8 grid-cols-1 lg:grid-cols-2">
         <div className="text-left">
-          <h1 className="text-7xl text-white">
+          <h1 className="text-white">
             <span className="text-primary">API analytics</span>
             <br />
-            made easy
+            made <span className="text-secondary">easy</span>
           </h1>
-          <h2 className="text-2xl mt-12">{DESCRIPTION}</h2>
-          <p className="text-xl mt-12">Simple integration with any backend</p>
+          <h5 className="mt-12">{DESCRIPTION}</h5>
+          <h6 className="mt-12">Simple integration with any backend</h6>
           <div className="flex flex-wrap gap-4 mt-8 grayscale">
             {INTEGRATIONS.map(({ name, image }) => (
               <div key={name}>

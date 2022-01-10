@@ -32,7 +32,7 @@ export const ConfirmationModal: React.FC<Props> = ({ open, onConfirm, onCancel, 
             <IconButton className="ml-auto" onClick={onCancel} icon={XIcon} />
           </div>
           <div className="p-4">
-            <h1 className="text-2xl">{text}</h1>
+            <p>{text}</p>
           </div>
           <div className="p-2 grid grid-cols-2 gap-2">
             <Button className="btn-error btn-outline" onClick={onCancel}>

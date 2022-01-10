@@ -1,7 +1,7 @@
 export const TITLE = 'Apilytics - API analytics made easy';
 
 export const DESCRIPTION =
-  'Analyze operational, performance and security metrics from your APIs without infrastructure-level logging.';
+  'Apilytics is a service that lets you analyze operational, performance and security metrics from your APIs without infrastructure-level logging.';
 
 // `NEXT_PUBLIC_APP_URL` is defined everywhere except in preview environments
 // (where the URL changes always), there we'll use `VERCEL_URL`.

@@ -122,18 +122,16 @@ export const RequestsOverview: React.FC<Props> = ({
     <DashboardCardContainer loading={loading}>
       <div className="flex flex-col lg:flex-row">
         <div className="p-4">
-          <h2 className="text-xl">Origin</h2>
+          <h6>Origin</h6>
           <p className="text-primary text-lg">{name}</p>
         </div>
         <div className="p-4">
-          <h2 className="text-xl">Total requests</h2>
+          <h6>Total requests</h6>
           <p className="text-lg">{getTotalRequests()}</p>
         </div>
         {isFinite(totalRequestsGrowth) && (
           <div className="p-4">
-            <h2 className="text-xl">
-              Growth (since {TIME_FRAME_OPTIONS[timeFrame].toLowerCase()})
-            </h2>
+            <h6>Growth (since {TIME_FRAME_OPTIONS[timeFrame].toLowerCase()})</h6>
             <p className={clsx('text-lg', positiveGrowth ? 'text-success' : 'text-error')}>
               {positiveGrowth ? '+' : ''}
               {(totalRequestsGrowth * 100).toFixed()}%

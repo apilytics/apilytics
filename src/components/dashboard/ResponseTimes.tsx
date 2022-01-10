@@ -48,21 +48,11 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
     return (
       <ResponsiveContainer height={400}>
         <BarChart data={data} layout="vertical">
-          <Bar dataKey="redRequests" fill="var(--requests-red)" stackId="dist" minPointSize={50}>
+          <Bar dataKey="redRequests" fill="var(--requests-red)" stackId="dist">
             <LabelList dataKey="response_time" content={renderResponseTimeLabels} />
           </Bar>
-          <Bar
-            dataKey="yellowRequests"
-            fill="var(--requests-yellow)"
-            stackId="dist"
-            minPointSize={50}
-          />
-          <Bar
-            dataKey="greenRequests"
-            fill="var(--requests-green)"
-            stackId="dist"
-            minPointSize={50}
-          />
+          <Bar dataKey="yellowRequests" fill="var(--requests-yellow)" stackId="dist" />
+          <Bar dataKey="greenRequests" fill="var(--requests-green)" stackId="dist" />
           <XAxis
             dataKey="response_time"
             type="number"
@@ -94,7 +84,7 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
   return (
     <DashboardCardContainer loading={loading} grow>
       <div className="p-2">
-        <h2 className="text-xl">Response times ⚡</h2>
+        <h6>Response times ⚡</h6>
       </div>
       <div className="mt-4 grow flex">{renderBarChart()}</div>
     </DashboardCardContainer>

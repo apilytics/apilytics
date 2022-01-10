@@ -86,7 +86,7 @@ export const Footer: React.FC = () => {
             {submittedText && <p className="mt-4 label-text">{submittedText}</p>}
           </form>
         </div>
-        <h3 className="footer-title mt-8">© {new Date().getFullYear()} Apilytics</h3>
+        <h5 className="footer-title mt-8">© {new Date().getFullYear()} Apilytics</h5>
       </div>
     </footer>
   );

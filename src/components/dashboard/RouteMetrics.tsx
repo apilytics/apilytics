@@ -50,7 +50,6 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
           <Bar
             dataKey="requests"
             fill="rgba(82, 157, 255, 0.25)" // `primary` with 25% opacity.
-            minPointSize={150}
           >
             <LabelList content={renderRequestLabels} />
           </Bar>
@@ -85,7 +84,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
   return (
     <DashboardCardContainer loading={loading} grow>
       <div className="p-2">
-        <h2 className="text-xl">Requests per route 📊</h2>
+        <h6>Requests per route 📊</h6>
       </div>
       <div className="mt-4 grow flex">{renderBarChart()}</div>
     </DashboardCardContainer>

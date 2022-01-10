@@ -32,19 +32,24 @@ const Demo: NextPage = () => {
         <RouteMetrics metrics={metrics} loading={loading} />
         <ResponseTimes metrics={metrics} loading={loading} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 items-center">
-        <div>
-          <h2 className="text-3xl">
-            Want to see these metrics from your APIs?{' '}
+      <div className="flex flex-col lg:flex-row lg:items-center mt-4">
+        <div className="grow">
+          <h4 className="text-white">
+            Want to see these metrics from your APIs?
+            <br />
             <span className="text-primary">Start for free now.</span>
-          </h2>
+          </h4>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
           <Link href={staticRoutes.login} passHref>
-            <Button className="btn-primary">Get started</Button>
+            <Button className="btn-primary" fullWidth="mobile">
+              Get started
+            </Button>
           </Link>
           <Link href={staticRoutes.root} passHref>
-            <Button className="btn-secondary btn-outline">Learn more</Button>
+            <Button className="btn-secondary btn-outline" fullWidth="mobile">
+              Learn more
+            </Button>
           </Link>
         </div>
       </div>
