@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import type { MouseEvent } from 'react';
 
 import { Button } from 'components/shared/Button';
+import { IconButton } from 'components/shared/IconButton';
 
 interface Props {
   open: boolean;
@@ -28,12 +29,10 @@ export const ConfirmationModal: React.FC<Props> = ({ open, onConfirm, onCancel, 
       <div className="mx-auto w-96">
         <div className="card rounded-lg p-4 shadow bg-base-100 flex flex-col w-full" ref={modalRef}>
           <div className="flex items-start justify-between p-2">
-            <Button className="btn-outline btn-circle border-none p-1 ml-auto" onClick={onCancel}>
-              <XIcon className="w-5 h-5" />
-            </Button>
+            <IconButton className="ml-auto" onClick={onCancel} icon={XIcon} />
           </div>
           <div className="p-4">
-            <h1 className="text-2xl">{text}</h1>
+            <p>{text}</p>
           </div>
           <div className="p-2 grid grid-cols-2 gap-2">
             <Button className="btn-error btn-outline" onClick={onCancel}>

@@ -71,27 +71,27 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
   };
 
   return (
-    <header className="h-20 flex items-center bg-base-100">
+    <header className="py-2 flex items-center bg-base-100">
       <div
         className={clsx(
           'container flex justify-between items-center animate-fade-in-top relative z-10',
           maxWidth,
         )}
       >
-        <Link href={staticRoutes.root}>
-          <a>
+        <div className="flex items-center">
+          <Link href={staticRoutes.root} passHref>
             <Image
               src="/logo.svg"
               layout="fixed"
-              width={100}
-              height={80}
+              width={80}
+              height={60}
               objectFit="contain"
               alt="Logo"
             />
-          </a>
-        </Link>
+          </Link>
+          <div className="ml-4 badge badge-lg badge-primary">Beta</div>
+        </div>
         <div className="flex items-center">
-          <h2 className="text-xl mr-4 hidden sm:block font-bold">Beta</h2>
           <Link href={staticRoutes.docs} passHref>
             <Button className="btn-secondary btn-outline mr-4 hidden sm:block">Docs</Button>
           </Link>

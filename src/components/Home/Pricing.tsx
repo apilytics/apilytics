@@ -1,4 +1,5 @@
 import { CheckCircleIcon } from '@heroicons/react/solid';
+import clsx from 'clsx';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
@@ -58,21 +59,28 @@ export const Pricing: React.FC = () => {
   return (
     <div className="bg-base-200">
       <div className="container max-w-3xl py-4 lg:py-16">
-        <h1 className="text-5xl">Flexible pricing with a free trial</h1>
-        <h2 className="text-3xl text-primary mt-8">
+        <h1 className="text-white">
+          <span className="text-primary">Flexible pricing</span> with a
+          <br />
+          <span className="text-secondary">free trial</span>
+        </h1>
+        <h5 className="mt-8">
           All features available from the start.
           <br />
           No credit card required.
-        </h2>
+        </h5>
         <div className="mt-8 card bg-base-100 rounded-lg p-4">
-          <div className="flex justify-between">
+          <div className="flex flex-col sm:flex-row justify-between">
             <div className="text-left">
-              <p className="text-xl">Monthly requests</p>
-              <p className="text-2xl font-bold text-primary">{getRequestsDisplay()}</p>
+              <h6>Monthly requests</h6>
+              <h3 className="font-bold text-primary">{getRequestsDisplay()}</h3>
             </div>
-            <div className="text-left">
-              <p className="text-xl">Your price</p>
-              <p className="text-2xl font-bold text-primary">{getPriceDisplay()}</p>
+            <div className="text-left sm:text-right">
+              <h6>Your price</h6>
+              <h3 className={clsx('font-bold text-primary', !customRequests && 'line-through')}>
+                {getPriceDisplay()}
+              </h3>
+              {!customRequests && <p>Free during beta</p>}
             </div>
           </div>
           <input
@@ -93,7 +101,9 @@ export const Pricing: React.FC = () => {
           </div>
         </div>
         <div className="mt-8 flex flex-col items-center">
-          <h1 className="text-3xl">Ready to boost your API analytics?</h1>
+          <h3 className="text-white">
+            Ready to <span className="text-primary">boost</span> your API development?
+          </h3>
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4 w-full lg:w-auto">
             <Link href={staticRoutes.login} passHref>
               <Button className="btn-primary" fullWidth="mobile">

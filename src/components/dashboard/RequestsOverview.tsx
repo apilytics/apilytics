@@ -6,13 +6,13 @@ import type { Origin } from '@prisma/client';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
 import {
-  LAST_3_MONTHS_VALUE,
-  LAST_6_MONTHS_VALUE,
-  LAST_7_DAYS_VALUE,
-  LAST_12_MONTHS_VALUE,
-  LAST_24_HOURS_VALUE,
-  LAST_30_DAYS_VALUE,
+  DAY,
+  MONTH_DAYS,
+  SIX_MONTHS_DAYS,
+  THREE_MONTHS_DAYS,
   TIME_FRAME_OPTIONS,
+  WEEK_DAYS,
+  YEAR_DAYS,
 } from 'utils/constants';
 import { getDatesBetweenTimeFrame, getTimeFrameScope } from 'utils/metrics';
 import type { OriginMetrics, TimeFrame, TimeFrameData } from 'types';
@@ -51,7 +51,7 @@ export const RequestsOverview: React.FC<Props> = ({
   const tickFormatter = (date: string, index: number): string => {
     switch (timeFrame) {
       // Display label for every fourth hour.
-      case LAST_24_HOURS_VALUE: {
+      case DAY: {
         if (index % 4 === 0) {
           return dayjs(date).format(HOUR_FORMAT);
         } else {
@@ -60,12 +60,12 @@ export const RequestsOverview: React.FC<Props> = ({
       }
 
       // Display label for every day.
-      case LAST_7_DAYS_VALUE: {
+      case WEEK_DAYS: {
         return dayjs(date).format(DAY_AND_MONTH_FORMAT);
       }
 
       // Display label for every fifth day.
-      case LAST_30_DAYS_VALUE: {
+      case MONTH_DAYS: {
         if (index % 5 === 0) {
           return dayjs(date).format(DAY_AND_MONTH_FORMAT);
         } else {
@@ -74,7 +74,7 @@ export const RequestsOverview: React.FC<Props> = ({
       }
 
       // Display label for every second week.
-      case LAST_3_MONTHS_VALUE: {
+      case THREE_MONTHS_DAYS: {
         if (index % 14 === 0) {
           return dayjs(date).format(DAY_AND_MONTH_FORMAT);
         } else {
@@ -83,8 +83,8 @@ export const RequestsOverview: React.FC<Props> = ({
       }
 
       // Display label for every month.
-      case LAST_6_MONTHS_VALUE: {
-        if (index % 30 === 0) {
+      case SIX_MONTHS_DAYS: {
+        if (index % 4 === 0) {
           return dayjs(date).format(MONTH_FORMAT);
         } else {
           return '';
@@ -92,8 +92,8 @@ export const RequestsOverview: React.FC<Props> = ({
       }
 
       // Display label for every second month.
-      case LAST_12_MONTHS_VALUE: {
-        if (index % 30 === 0) {
+      case YEAR_DAYS: {
+        if (index % 8 === 0) {
           return dayjs(date).format(MONTH_FORMAT);
         } else {
           return '';
@@ -122,18 +122,16 @@ export const RequestsOverview: React.FC<Props> = ({
     <DashboardCardContainer loading={loading}>
       <div className="flex flex-col lg:flex-row">
         <div className="p-4">
-          <h2 className="text-xl">Origin</h2>
+          <h6>Origin</h6>
           <p className="text-primary text-lg">{name}</p>
         </div>
         <div className="p-4">
-          <h2 className="text-xl">Total requests</h2>
+          <h6>Total requests</h6>
           <p className="text-lg">{getTotalRequests()}</p>
         </div>
         {isFinite(totalRequestsGrowth) && (
           <div className="p-4">
-            <h2 className="text-xl">
-              Growth (since {TIME_FRAME_OPTIONS[timeFrame].toLowerCase()})
-            </h2>
+            <h6>Growth (since {TIME_FRAME_OPTIONS[timeFrame].toLowerCase()})</h6>
             <p className={clsx('text-lg', positiveGrowth ? 'text-success' : 'text-error')}>
               {positiveGrowth ? '+' : ''}
               {(totalRequestsGrowth * 100).toFixed()}%

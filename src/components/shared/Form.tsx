@@ -11,6 +11,7 @@ interface Props {
   loading?: boolean;
   submittedText?: string;
   secondaryContent?: React.ReactNode;
+  renderAlert?: JSX.Element | false;
 }
 
 export const Form: React.FC<Props> = ({
@@ -21,10 +22,12 @@ export const Form: React.FC<Props> = ({
   loading,
   submittedText,
   secondaryContent,
+  renderAlert,
   children,
 }) => (
   <div className="card rounded-lg p-4 shadow bg-base-100">
-    {title && <h2>{title}</h2>}
+    {renderAlert}
+    {title && <h4>{title}</h4>}
     {subTitle && <p className="text-sm">{subTitle}</p>}
     <form onSubmit={onSubmit} className="mt-4 text-left">
       {children}

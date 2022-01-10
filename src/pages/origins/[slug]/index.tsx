@@ -13,7 +13,7 @@ import { NotFoundTemplate } from 'components/layout/NotFoundTemplate';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
 import { useOrigin } from 'hooks/useOrigin';
-import { LAST_7_DAYS_VALUE } from 'utils/constants';
+import { WEEK_DAYS } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
@@ -22,7 +22,7 @@ export const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
 const Origin: NextPage = () => {
   const { origin, metrics, setMetrics } = useOrigin();
   const [loading, setLoading] = useState(false);
-  const [timeFrame, setTimeFrame] = useState<TimeFrame>(LAST_7_DAYS_VALUE);
+  const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const slug = origin?.slug || '';
 
   useEffect(() => {

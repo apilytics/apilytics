@@ -58,16 +58,18 @@ const Contact: NextPage = () => {
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void =>
     setFormValues({ ...formValues, [target.name]: target.value });
 
+  const renderSubTitle = (
+    <>
+      Any feedback is appreciated. You can also reach out to us by email at{' '}
+      <a href="mailto:hello@apilytics.io">hello@apilytics.io</a>.
+    </>
+  );
+
   return (
     <MainTemplate>
       <Form
         title="Send us a message"
-        subTitle={
-          <>
-            Any feedback is appreciated. You can also reach out to us by email at{' '}
-            <a href="mailto:hello@apilytics.io">hello@apilytics.io</a>.
-          </>
-        }
+        subTitle={renderSubTitle}
         onSubmit={handleSubmit}
         error={error}
         loading={loading}

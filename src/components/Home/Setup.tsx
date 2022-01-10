@@ -101,30 +101,28 @@ export const Setup: React.FC = () => {
     <div className="bg-background bg-no-repeat bg-cover">
       <div className="bg-filter">
         <div className="container max-w-3xl py-4 lg:py-16 flex flex-col">
-          <h1 className="text-5xl text-white">
+          <h1 className="text-white">
             Set up in <span className="text-primary">10 minutes</span>
           </h1>
           <div className="mt-4">
             <ul className="steps steps-vertical">
               <li className="step step-primary">
-                <h2 className="text-2xl text-left">Sign up & grab your API key.</h2>
+                <h5 className="text-left">Sign up & grab your API key.</h5>
               </li>
               <li className="step step-primary">
-                <h2 className="text-2xl text-left">
-                  Embed our open-source middleware to your backend.
-                </h2>
+                <h5 className="text-left">Embed our open-source middleware to your backend.</h5>
               </li>
               <li className="step step-primary">
-                <h2 className="text-2xl text-left">Start using your dashboard! 🚀</h2>
+                <h5 className="text-left">Start using your dashboard! 🚀</h5>
               </li>
             </ul>
           </div>
           <div className="mt-4 bg-base-100 w-full rounded-lg mockup-code">
-            <div className="p-2 tabs tabs-boxed bg-inherit">
+            <div className="px-4 tabs">
               {INTEGRATIONS.map((name) => (
                 <p
                   key={name}
-                  className={clsx('tab tab-lg', selectedFramework === name && 'tab-active')}
+                  className={clsx('tab tab-bordered', selectedFramework === name && 'tab-active')}
                   onClick={(): void => setSelectedFramework(name)}
                 >
                   {name}
@@ -132,7 +130,7 @@ export const Setup: React.FC = () => {
               ))}
             </div>
             <div className="p-4">
-              <pre className="overflow-hidden break-words">{getCodeSnippet(selectedFramework)}</pre>
+              <pre className="text-primary">{getCodeSnippet(selectedFramework)}</pre>
             </div>
           </div>
         </div>

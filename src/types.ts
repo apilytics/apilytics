@@ -1,25 +1,25 @@
 import type { Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
-import type { Dispatch, SetStateAction } from 'react';
+import type { ComponentProps, Dispatch, SetStateAction } from 'react';
 
 import type {
-  LAST_3_MONTHS_VALUE,
-  LAST_6_MONTHS_VALUE,
-  LAST_7_DAYS_VALUE,
-  LAST_12_MONTHS_VALUE,
-  LAST_24_HOURS_VALUE,
-  LAST_30_DAYS_VALUE,
+  DAY,
+  MONTH_DAYS,
+  SIX_MONTHS_DAYS,
+  THREE_MONTHS_DAYS,
+  WEEK_DAYS,
+  YEAR_DAYS,
 } from 'utils/constants';
 import type { staticRoutes } from 'utils/router';
 
 export type TimeFrame =
-  | typeof LAST_24_HOURS_VALUE
-  | typeof LAST_7_DAYS_VALUE
-  | typeof LAST_30_DAYS_VALUE
-  | typeof LAST_3_MONTHS_VALUE
-  | typeof LAST_6_MONTHS_VALUE
-  | typeof LAST_12_MONTHS_VALUE;
+  | typeof DAY
+  | typeof WEEK_DAYS
+  | typeof MONTH_DAYS
+  | typeof THREE_MONTHS_DAYS
+  | typeof SIX_MONTHS_DAYS
+  | typeof YEAR_DAYS;
 
 export type PlausibleEvents = {
   login: never;
@@ -42,6 +42,13 @@ export interface HeaderProps {
 }
 
 export type LayoutProps = HeadProps & HeaderProps;
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  fullWidth?: boolean | 'mobile';
+  loading?: boolean;
+  tooltip?: string;
+  endIcon?: React.FC<ComponentProps<'svg'>>;
+}
 
 export interface FrontMatter {
   name: string;

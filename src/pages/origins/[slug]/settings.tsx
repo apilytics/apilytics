@@ -1,3 +1,4 @@
+import { ClipboardCopyIcon, XIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import Router from 'next/router';
 import { usePlausible } from 'next-plausible';
@@ -7,6 +8,7 @@ import type { NextPage } from 'next';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { ConfirmationModal } from 'components/shared/ConfirmationModal';
 import { Form } from 'components/shared/Form';
+import { IconButton } from 'components/shared/IconButton';
 import { Input } from 'components/shared/Input';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
@@ -18,11 +20,12 @@ import type { PlausibleEvents } from 'types';
 
 const OriginSettings: NextPage = () => {
   const { origin, setOrigin } = useOrigin();
-  const { name: _name, apiKey, slug = '' } = origin ?? {};
+  const { name: _name, apiKey = '', slug = '' } = origin ?? {};
   const [name, setName] = useState(_name);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
+  const [apiKeyCopied, setApiKeyCopied] = useState(false);
   const plausible = usePlausible<PlausibleEvents>();
 
   const {
@@ -88,6 +91,35 @@ const OriginSettings: NextPage = () => {
     }
   };
 
+  const handleCopyApiKey = (): void => {
+    navigator.clipboard.writeText(apiKey);
+    setApiKeyCopied(true);
+  };
+
+  const renderAlert = apiKeyCopied && (
+    <div className="alert alert-success">
+      <div className="flex">
+        <label>API key copied to the clipboard!</label>
+      </div>
+      <div className="flex-none">
+        <IconButton onClick={(): void => setApiKeyCopied(false)} icon={XIcon} />
+      </div>
+    </div>
+  );
+
+  const renderDeleteOriginLink = (
+    <p onClick={handleOpenConfirmDeleteModal} className="mt-4 text-center link text-error">
+      Delete origin
+    </p>
+  );
+
+  const renderApiKeyHelperText = (
+    <>
+      Use this API key in your Apilytics client library to connect with your dashboard. See our{' '}
+      <Link href={staticRoutes.docs}>documentation</Link> for more information.
+    </>
+  );
+
   return (
     <MainTemplate>
       <Form
@@ -96,11 +128,8 @@ const OriginSettings: NextPage = () => {
         error={error}
         loading={loading}
         submittedText={submittedText}
-        secondaryContent={
-          <p onClick={handleOpenConfirmDeleteModal} className="mt-4 text-center link text-error">
-            Delete origin
-          </p>
-        }
+        renderAlert={renderAlert}
+        secondaryContent={renderDeleteOriginLink}
       >
         <Input
           name="name"
@@ -115,12 +144,10 @@ const OriginSettings: NextPage = () => {
           label="API Key"
           value={apiKey}
           readOnly
-          helperText={
-            <>
-              Use this API key in your Apilytics client library to connect with your dashboard. See
-              our <Link href={staticRoutes.docs}>documentation</Link> for more information.
-            </>
-          }
+          endIcon={ClipboardCopyIcon}
+          buttonProps={{ onClick: handleCopyApiKey }}
+          buttonTooltip="Copy your API key to the clipboard."
+          helperText={renderApiKeyHelperText}
         />
       </Form>
       <ConfirmationModal

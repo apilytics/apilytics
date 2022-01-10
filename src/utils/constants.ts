@@ -1,7 +1,7 @@
 export const TITLE = 'Apilytics - API analytics made easy';
 
 export const DESCRIPTION =
-  'Analyze operational, performance and security metrics from your APIs without infrastructure-level logging.';
+  'Apilytics is a service that lets you analyze operational, performance and security metrics from your APIs without infrastructure-level logging.';
 
 // `NEXT_PUBLIC_APP_URL` is defined everywhere except in preview environments
 // (where the URL changes always), there we'll use `VERCEL_URL`.
@@ -23,20 +23,20 @@ export const METHODS = [
 
 export type Method = typeof METHODS[number];
 
-export const LAST_24_HOURS_VALUE = 1;
-export const LAST_7_DAYS_VALUE = 7;
-export const LAST_30_DAYS_VALUE = 30;
-export const LAST_3_MONTHS_VALUE = 90;
-export const LAST_6_MONTHS_VALUE = 180;
-export const LAST_12_MONTHS_VALUE = 365;
+export const DAY = 1;
+export const WEEK_DAYS = 7;
+export const MONTH_DAYS = 30;
+export const THREE_MONTHS_DAYS = 90;
+export const SIX_MONTHS_DAYS = 180;
+export const YEAR_DAYS = 365;
 
 export const TIME_FRAME_OPTIONS = {
-  [LAST_24_HOURS_VALUE]: 'Last 24 hours',
-  [LAST_7_DAYS_VALUE]: 'Last 7 days',
-  [LAST_30_DAYS_VALUE]: 'Last 30 days',
-  [LAST_3_MONTHS_VALUE]: 'Last 3 months',
-  [LAST_6_MONTHS_VALUE]: 'Last 6 months',
-  [LAST_12_MONTHS_VALUE]: 'Last 12 months',
+  [DAY]: 'Last 24 hours',
+  [WEEK_DAYS]: 'Last 7 days',
+  [MONTH_DAYS]: 'Last 30 days',
+  [THREE_MONTHS_DAYS]: 'Last 3 months',
+  [SIX_MONTHS_DAYS]: 'Last 6 months',
+  [YEAR_DAYS]: 'Last 12 months',
 };
 
 export const UNEXPECTED_ERROR = 'Unexpected error.';
