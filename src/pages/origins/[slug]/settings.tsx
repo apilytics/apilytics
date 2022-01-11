@@ -1,11 +1,11 @@
-import { ClipboardCopyIcon, XIcon } from '@heroicons/react/solid';
-import Link from 'next/link';
+import { XIcon } from '@heroicons/react/solid';
 import Router from 'next/router';
 import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
+import { ApiKeyField } from 'components/shared/ApiKeyField';
 import { Button } from 'components/shared/Button';
 import { Form } from 'components/shared/Form';
 import { IconButton } from 'components/shared/IconButton';
@@ -87,11 +87,6 @@ const OriginSettings: NextPage = () => {
     }
   };
 
-  const handleCopyApiKey = (): void => {
-    navigator.clipboard.writeText(apiKey);
-    setApiKeyCopied(true);
-  };
-
   const renderAlert = apiKeyCopied && (
     <div className="alert alert-success">
       <div className="flex">
@@ -134,13 +129,6 @@ const OriginSettings: NextPage = () => {
     </p>
   );
 
-  const renderApiKeyHelperText = (
-    <>
-      Use this API key in your Apilytics client library to connect with your dashboard. See our{' '}
-      <Link href={staticRoutes.docs}>documentation</Link> for more information.
-    </>
-  );
-
   return (
     <MainTemplate>
       <Form
@@ -160,16 +148,7 @@ const OriginSettings: NextPage = () => {
           onChange={({ target }): void => setName(target.value)}
           required
         />
-        <Input
-          name="apiKey"
-          label="API Key"
-          value={apiKey}
-          readOnly
-          endIcon={ClipboardCopyIcon}
-          buttonProps={{ onClick: handleCopyApiKey }}
-          buttonTooltip="Copy your API key to the clipboard."
-          helperText={renderApiKeyHelperText}
-        />
+        <ApiKeyField value={apiKey} apiKeyCopiedCallback={(): void => setApiKeyCopied(false)} />
       </Form>
     </MainTemplate>
   );
