@@ -8,7 +8,6 @@ import {
   sendOk,
 } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 
 type PostBody = Pick<Metric, 'path' | 'method' | 'statusCode' | 'timeMillis'>;
@@ -44,4 +43,4 @@ const handlePost: ApiHandler = async (req, res) => {
 
 const handler = makeMethodsHandler({ POST: handlePost });
 
-export default withApilytics(handler);
+export default handler;
