@@ -11,6 +11,7 @@ import {
   sendOk,
 } from 'lib-server/responses';
 import prisma from 'prismaClient';
+import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 
 interface OriginResponse {
@@ -95,4 +96,4 @@ const handler = withAuthRequired(
   makeMethodsHandler({ GET: handleGet, PUT: handlePut, DELETE: handleDelete }),
 );
 
-export default handler;
+export default withApilytics(handler);

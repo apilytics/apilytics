@@ -4,6 +4,7 @@ import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
+import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 
 interface AccountResponse {
@@ -60,4 +61,4 @@ const handler = withAuthRequired(
   makeMethodsHandler({ GET: handleGet, PUT: handlePut, DELETE: handleDelete }),
 );
 
-export default handler;
+export default withApilytics(handler);
