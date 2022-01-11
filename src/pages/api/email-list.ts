@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { makeMethodsHandler } from 'lib-server/apiHelpers';
 import { sendConflict, sendCreated, sendInvalidInput } from 'lib-server/responses';
 import prisma from 'prismaClient';
+import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 
 interface EmailListPostResponse {
@@ -35,4 +36,4 @@ const handlePost: ApiHandler<EmailListPostResponse> = async (req, res) => {
 
 const handler = makeMethodsHandler({ POST: handlePost });
 
-export default handler;
+export default withApilytics(handler);

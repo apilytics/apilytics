@@ -2,6 +2,7 @@ import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
+import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler, OriginMetrics, RouteData, TimeFrameData } from 'types';
 
 const DAY_MILLIS = 24 * 60 * 60 * 1000;
@@ -117,4 +118,4 @@ GROUP BY filtered_metrics.path;`;
 
 const handler = withAuthRequired(makeMethodsHandler({ GET: handleGet }));
 
-export default handler;
+export default withApilytics(handler);

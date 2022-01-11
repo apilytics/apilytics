@@ -9,7 +9,6 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   helperText?: JSX.Element | string;
   endIcon?: React.FC<ComponentProps<'svg'>>;
-  onButtonClick?: () => void;
   buttonTooltip?: string;
   loading?: boolean;
   buttonProps?: ButtonProps;

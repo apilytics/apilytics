@@ -2,6 +2,19 @@
 # yarn lockfile v1
 
 
+"@apilytics/core@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@apilytics/core/-/core-1.0.0.tgz#3f170244eaf57dab6a8ffebdeeedda1e1e83b45d"
+  integrity sha512-BoDWf2mt6duZykSxW9sI5uWmA6a9k4R5KP0vqDttfaCs2pstkOmXhd7mVO9RRgH8C9WZbbEkZnZ33BqImXd9iw==
+
+"@apilytics/next@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@apilytics/next/-/next-1.0.0.tgz#8d05bee72473b1d4bb605cc4e0fea23736073595"
+  integrity sha512-rTlGX2B3N15wPth5Jfjnw4nCulmimneERTKvgjxNg9dtE7iCG0YKkTSpOC9Se9ALDPuqLg64ZXhluQpfj1i4tg==
+  dependencies:
+    "@apilytics/core" "1.0.0"
+    next "*"
+
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -4797,7 +4810,7 @@ next-plausible@3.1.4:
   resolved "https://registry.yarnpkg.com/next-plausible/-/next-plausible-3.1.4.tgz#a386ff4e2327995cb4a1307e53e1b4af70817b52"
   integrity sha512-NMLKJ0AKlKuvYU//RytyqSES5NtLRoH/ym3fCC02w2Ed1SrTgNRUrgpxyJrcguY/DYGPncQ3a0/nQ358vUTAwQ==
 
-next@12.0.7:
+next@*, next@12.0.7:
   version "12.0.7"
   resolved "https://registry.yarnpkg.com/next/-/next-12.0.7.tgz#33ebf229b81b06e583ab5ae7613cffe1ca2103fc"
   integrity sha512-sKO8GJJYfuk9c+q+zHSNumvff+wP7ufmOlwT6BuzwiYfFJ61VTTkfTcDLSJ+95ErQJiC54uS4Yg5JEE8H6jXRA==

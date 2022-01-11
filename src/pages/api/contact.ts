@@ -1,6 +1,7 @@
 import { makeMethodsHandler } from 'lib-server/apiHelpers';
 import { sendInvalidInput, sendOk } from 'lib-server/responses';
 import { AWS_SES } from 'ses';
+import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 
 interface EmailParams {
@@ -71,4 +72,4 @@ const handlePost: ApiHandler<ContactPostResponse> = async (req, res) => {
 
 const handler = makeMethodsHandler({ POST: handlePost });
 
-export default handler;
+export default withApilytics(handler);
