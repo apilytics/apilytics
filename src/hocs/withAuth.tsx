@@ -35,7 +35,7 @@ export const withAuth = <T extends Record<string, unknown>>(
       if (!welcomePassed) {
         return (
           <MainTemplate>
-            <h3>Welcome 👋</h3>
+            <h4>Welcome 👋</h4>
             <p>
               Thank you for signing up to Apilytics beta, we&lsquo;re glad to have you here!
               We&lsquo;re still getting started with our service and developing it tightly with our
