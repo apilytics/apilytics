@@ -1,37 +1,35 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
+import matter from 'gray-matter';
+import { MDXRemote } from 'next-mdx-remote';
+import { serialize } from 'next-mdx-remote/serialize';
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
 import type { GetStaticProps, NextPage } from 'next';
 
-import { Layout } from 'components/layout/Layout';
+import { MainTemplate } from 'components/layout/MainTemplate';
+import { withAccount } from 'hocs/withAccount';
+import type { MDXPageProps } from 'types';
 
-interface Props {
-  content: string;
-}
-
-const Privacy: NextPage<Props> = ({ content }) => (
-  <Layout noIndex headerMaxWidth="3xl">
-    <div className="bg-background bg-no-repeat bg-cover">
-      <div className="bg-filter">
-        <div className="container max-w-3xl mx-auto py-16">
-          <ReactMarkdown className="text-left text-white">{content}</ReactMarkdown>
-        </div>
-      </div>
+const Privacy: NextPage<MDXPageProps> = ({ source }) => (
+  <MainTemplate>
+    <div className="card rounded-lg shadow p-4 bg-base-100">
+      <MDXRemote {...source} />
     </div>
-  </Layout>
+  </MainTemplate>
 );
 
 export const getStaticProps: GetStaticProps = async () => {
-  const fullPath = join(process.cwd(), 'privacy.md');
-  const content = readFileSync(fullPath, 'utf8');
+  const fullPath = join(process.cwd(), 'src/privacy.mdx');
+  const source = readFileSync(fullPath);
+  const { content } = matter(source);
+  const mdxSource = await serialize(content);
 
   return {
     props: {
-      content,
+      source: mdxSource,
     },
   };
 };
 
-export default Privacy;
+export default withAccount(Privacy);

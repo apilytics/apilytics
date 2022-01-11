@@ -1,22 +1,33 @@
+import clsx from 'clsx';
 import React from 'react';
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary';
-  fullWidth?: boolean;
-}
+import type { ButtonProps } from 'types';
 
-export const Button: React.FC<Props> = ({
-  variant = 'primary',
+export const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
+  loading,
+  tooltip,
   className,
+  endIcon: EndIcon,
+  children,
   ...props
-}) => (
-  <button
-    className={`${
-      variant === 'primary' ? 'bg-primary text-white' : 'bg-white text-primary border-primary'
-    } ${
-      fullWidth ? 'lg:w-full' : 'lg:w-auto'
-    } rounded-lg p-4 text-2xl w-full flex justify-center items-center disabled:opacity-50 ${className}`}
-    {...props}
-  />
-);
+}) => {
+  const _width = fullWidth === true ? 'w-full' : fullWidth === 'mobile' && 'w-full lg:w-auto';
+  const _loading = loading && 'loading';
+
+  const renderButton = (
+    <button className={clsx('btn', _width, _loading, className)} {...props}>
+      {children} {!!EndIcon && <EndIcon className="w-5 h-5 ml-2" />}
+    </button>
+  );
+
+  if (tooltip) {
+    return (
+      <div data-tip={tooltip} className={clsx(tooltip && 'tooltip')}>
+        {renderButton}
+      </div>
+    );
+  }
+
+  return renderButton;
+};

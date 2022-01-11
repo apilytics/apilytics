@@ -1,20 +1,52 @@
+import clsx from 'clsx';
 import React from 'react';
+import type { ComponentProps } from 'react';
+
+import { IconButton } from 'components/shared/IconButton';
+import type { ButtonProps } from 'types';
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  helperText?: string;
+  helperText?: JSX.Element | string;
+  endIcon?: React.FC<ComponentProps<'svg'>>;
+  onButtonClick?: () => void;
+  buttonTooltip?: string;
+  loading?: boolean;
+  buttonProps?: ButtonProps;
 }
 
-export const Input: React.FC<Props> = ({ label, helperText, className, ...props }) => (
-  <div className="py-2">
-    <label className="block text-white text-lg" htmlFor={props.name}>
-      {label} {props.required && <span className="text-red-500">*</span>}
+export const Input: React.FC<Props> = ({
+  label,
+  helperText,
+  className,
+  endIcon: EndIcon,
+  buttonProps,
+  ...inputProps
+}) => (
+  <div className="form-control">
+    <label className="label">
+      <span className="label-text">
+        {label} {inputProps.required && <span className="text-error">*</span>}
+      </span>
     </label>
-    <input
-      id={props.name}
-      className={`block border-primary rounded-xl text-xl p-4 w-full my-2 ${className}`}
-      {...props}
-    />
-    {helperText && <p className="text-secondary text-lg">{helperText}</p>}
+    <div className="flex">
+      <input
+        className={clsx('input input-bordered w-full', EndIcon && 'rounded-r-none', className)}
+        {...inputProps}
+      />
+      {!!EndIcon && (
+        <IconButton
+          icon={EndIcon}
+          type="button"
+          className={clsx('rounded-l-none btn-outline', buttonProps?.className)}
+          {...buttonProps}
+        />
+      )}
+    </div>
+    {helperText && (
+      <label className="label">
+        <span className="label-text-alt">{helperText}</span>
+      </label>
+    )}
   </div>
 );

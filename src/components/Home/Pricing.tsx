@@ -1,92 +1,119 @@
 import { CheckCircleIcon } from '@heroicons/react/solid';
+import clsx from 'clsx';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
 import { Button } from 'components/shared/Button';
-import { routes } from 'utils/router';
+import { staticRoutes } from 'utils/router';
 
-const MIN_REQUESTS = 50_000;
-const MAX_REQUESTS = 5_000_000;
-const REQUESTS_STEP = 50_000;
+const PRICES = {
+  50_000: 5,
+  200_000: 10,
+  500_000: 20,
+  1_000_000: 40,
+  2_000_000: 60,
+  3_000_000: 80,
+  5_000_000: 100,
+  10_000_000: 150,
+  20_000_000: 200,
+};
 
 const FEATURES = [
-  '50 APIs',
+  '50 origins',
   'Email support',
   'Automatic alerts',
-  'Slack reports',
+  'Automatic reports',
   'Unlimited users',
   'Full data retention',
   'Full data ownership',
+  '1 month free',
 ];
 
 export const Pricing: React.FC = () => {
-  const [requests, setRequests] = useState(MIN_REQUESTS);
-  const price = (requests * 0.0001).toFixed();
+  const [step, setStep] = useState(1);
+  const requestOptions = Object.keys(PRICES).map(Number);
+  const requests = requestOptions[step - 1];
+  const customRequests = requests === undefined;
+  const price = PRICES[requests as keyof typeof PRICES];
 
   const getRequestsDisplay = (): string => {
-    if (requests < 1_000_000) {
-      return `${requests / 1000}k`;
-    } else {
-      return `${(requests / 1_000_000).toFixed(2)}M`;
+    if (customRequests) {
+      return 'Custom';
     }
+
+    if (requests < 1_000_000) {
+      return `${(requests / 1000).toFixed()}k`;
+    }
+
+    return `${(requests / 1_000_000).toFixed()}M`;
   };
 
   const getPriceDisplay = (): string => {
-    if (requests === MAX_REQUESTS) {
+    if (customRequests) {
       return 'Contact us';
-    } else if (requests === MIN_REQUESTS) {
-      return 'Free';
-    } else {
-      return `$${price}/month`;
     }
+
+    return `$${price}/month`;
   };
 
   return (
-    <div className="bg-white text-secondary text-center">
-      <div className="container max-w-3xl py-16 animate-fade-in-top animation-delay-1600">
-        <h1 className="text-5xl">Flexible pricing with a free tier</h1>
-        <h2 className="text-3xl text-primary mt-8">
+    <div className="bg-base-200">
+      <div className="container max-w-3xl py-4 lg:py-16">
+        <h1 className="text-white">
+          <span className="text-primary">Flexible pricing</span> with a
+          <br />
+          <span className="text-secondary">free trial</span>
+        </h1>
+        <h5 className="mt-8">
           All features available from the start.
           <br />
           No credit card required.
-        </h2>
-        <div className="mt-16 bg-white rounded-lg p-4 shadow-xl">
-          <div className="flex justify-between">
+        </h5>
+        <div className="mt-8 card bg-base-100 rounded-lg p-4">
+          <div className="flex flex-col sm:flex-row justify-between">
             <div className="text-left">
-              <p className="text-xl text-secondary">Monthly requests</p>
-              <p className="text-2xl font-bold text-primary">{getRequestsDisplay()}</p>
+              <h6>Monthly requests</h6>
+              <h3 className="font-bold text-primary">{getRequestsDisplay()}</h3>
             </div>
-            <div className="text-left">
-              <p className="text-xl text-secondary">Your price</p>
-              <p className="text-2xl font-bold text-primary">{getPriceDisplay()}</p>
+            <div className="text-left sm:text-right">
+              <h6>Your price</h6>
+              <h3 className={clsx('font-bold text-primary', !customRequests && 'line-through')}>
+                {getPriceDisplay()}
+              </h3>
+              {!customRequests && <p>Free during beta</p>}
             </div>
           </div>
           <input
             type="range"
-            value={requests}
-            onChange={({ target }): void => setRequests(Number(target.value))}
-            min={MIN_REQUESTS}
-            max={MAX_REQUESTS}
-            step={REQUESTS_STEP}
-            className="w-full mt-8 appearance-none bg-gray-200 rounded-lg"
+            value={step}
+            onChange={({ target }): void => setStep(Number(target.value))}
+            min={1}
+            max={requestOptions.length + 1}
+            step={1}
+            className="range range-primary range-lg w-full mt-8 rounded-lg"
           />
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mt-8 text-secondary text-left leading-normal">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mt-8 text-left leading-normal">
             {FEATURES.map((feature) => (
               <p className="flex items-center" key={feature}>
-                <CheckCircleIcon className="h-7 w-7 mr-4 text-primary" /> {feature}
+                <CheckCircleIcon className="h-7 w-7 mr-4 text-success" /> {feature}
               </p>
             ))}
           </div>
         </div>
-        <div className="mt-16 flex flex-col items-center">
-          <h1 className="text-5xl">Ready to boost your API metrics?</h1>
-          <h2 className="text-3xl text-primary mt-8">Sign up for the beta.</h2>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link href={routes.signUp} passHref>
-              <Button>Request access</Button>
+        <div className="mt-8 flex flex-col items-center">
+          <h3 className="text-white">
+            Ready to <span className="text-primary">boost</span> your API development?
+          </h3>
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4 w-full lg:w-auto">
+            <Link href={staticRoutes.login} passHref>
+              <Button className="btn-primary" fullWidth="mobile">
+                Get started
+              </Button>
             </Link>
-            <Link href={routes.demo} passHref>
-              <Button variant="secondary">See demo</Button>
+            <Link href={staticRoutes.demo} passHref>
+              <Button className="btn-secondary btn-outline" fullWidth="mobile">
+                See demo
+              </Button>
             </Link>
           </div>
         </div>

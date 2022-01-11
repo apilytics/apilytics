@@ -3,20 +3,18 @@ import React from 'react';
 import { Footer } from 'components/layout/Footer';
 import { Head } from 'components/layout/Head';
 import { Header } from 'components/layout/Header';
-import type { HeaderProps, HeadProps } from 'types';
+import { Modal } from 'components/shared/Modal';
+import type { LayoutProps } from 'types';
 
-export const Layout: React.FC<HeadProps & HeaderProps> = ({
-  noIndex,
-  children,
-  headerMaxWidth = 'full',
-}) => (
+export const Layout: React.FC<LayoutProps> = ({ noIndex, maxWidth, children }) => (
   <>
     <Head noIndex={noIndex} />
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-screen flex flex-col bg-base-200">
       <div className="grow flex flex-col">
-        <Header headerMaxWidth={headerMaxWidth} />
-        <div className="grow">{children}</div>
+        <Header maxWidth={maxWidth} />
+        <div className="grow flex flex-col relative">{children}</div>
         <Footer />
+        <Modal />
       </div>
     </div>
   </>

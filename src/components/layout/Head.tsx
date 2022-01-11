@@ -3,14 +3,14 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { DESCRIPTION, FRONTEND_URL, TITLE } from 'utils/constants';
-import { routes } from 'utils/router';
+import { staticRoutes } from 'utils/router';
 import type { HeadProps } from 'types';
 
 const OG_IMAGE = `${FRONTEND_URL}/og-image.png`;
 
 export const Head: React.FC<HeadProps> = ({ noIndex }) => {
   const { asPath } = useRouter();
-  const ogUrl = `${FRONTEND_URL}${asPath === routes.root ? '' : asPath}`;
+  const ogUrl = `${FRONTEND_URL}${asPath === staticRoutes.root ? '' : asPath}`;
 
   return (
     <NextHead>
@@ -25,6 +25,10 @@ export const Head: React.FC<HeadProps> = ({ noIndex }) => {
       <meta name="twitter:description" content={DESCRIPTION} />
       <meta name="twitter:image" content={OG_IMAGE} />
       {noIndex && <meta name="robots" content="noindex,noarchive,nosnippet,follow" />}
+      <meta
+        name="viewport"
+        content="width=device-width, user-scalable=no, maximum-scale=1.0, initial-scale=1.0"
+      />
     </NextHead>
   );
 };

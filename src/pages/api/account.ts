@@ -1,17 +1,18 @@
-import { getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
+import type { User } from '@prisma/client';
+
+import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import type {
-  AccountDetailGetResponse,
-  AccountDetailPutBody,
-  AccountDetailPutResponse,
-  ApiHandler,
-} from 'types';
+import type { ApiHandler } from 'types';
 
-const handleGet: ApiHandler<AccountDetailGetResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
-  const account = await prisma.user.findUnique({ where: { id: user.id } });
+interface AccountResponse {
+  data: User;
+}
+
+const handleGet: ApiHandler<AccountResponse> = async (req, res) => {
+  const id = await getSessionUserId(req);
+  const account = await prisma.user.findUnique({ where: { id } });
 
   if (!account) {
     sendNotFound(res, 'Account');
@@ -21,20 +22,16 @@ const handleGet: ApiHandler<AccountDetailGetResponse> = async (req, res) => {
   sendOk(res, { data: account });
 };
 
-const handlePut: ApiHandler<AccountDetailPutResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
-  const { email } = req.body as AccountDetailPutBody;
+const handlePut: ApiHandler<AccountResponse> = async (req, res) => {
+  const id = await getSessionUserId(req);
+  const { name, email } = req.body;
 
-  if (!email) {
+  if (!name || !email) {
     sendInvalidInput(res);
     return;
   }
 
-  const where = { id: user.id };
-  const [, account] = await prisma.$transaction([
-    prisma.user.update({ where, data: { email } }),
-    prisma.user.findUnique({ where }),
-  ]);
+  const account = await prisma.user.update({ where: { id }, data: { name, email } });
 
   if (!account) {
     sendNotFound(res, 'Account');
@@ -45,11 +42,11 @@ const handlePut: ApiHandler<AccountDetailPutResponse> = async (req, res) => {
 };
 
 const handleDelete: ApiHandler = async (req, res) => {
-  const user = await getSessionUser(req);
+  const id = await getSessionUserId(req);
 
   try {
     await prisma.user.delete({
-      where: { id: user.id },
+      where: { id },
     });
   } catch {
     sendNotFound(res, 'Account');

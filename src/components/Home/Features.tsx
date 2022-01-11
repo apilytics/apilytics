@@ -1,9 +1,9 @@
 import {
   BellIcon,
-  ClockIcon,
   DatabaseIcon,
   DocumentReportIcon,
   LightBulbIcon,
+  LightningBoltIcon,
   ServerIcon,
 } from '@heroicons/react/solid';
 import React from 'react';
@@ -11,24 +11,27 @@ import React from 'react';
 const FEATURES = [
   {
     icon: LightBulbIcon,
-    title: 'Extensive metrics',
+    title: 'Simple setup',
     content:
-      'Compare the usage of your endpoints from all sources and gather time-series data across all of your APIs.',
+      'You can literally get started in 10 minutes. Simple configuration with no domain expertise or maintenance needed.',
   },
   {
-    icon: ClockIcon,
-    title: 'Response times',
-    content: 'Monitor response times from your endpoints and easily spot bottlenecks in your API.',
+    icon: LightningBoltIcon,
+    title: 'Powerful metrics',
+    content:
+      'Our insightful metrics will boost your API development by pointing out bottlenecks, trends and patterns in your APIs.',
   },
   {
     icon: BellIcon,
     title: 'Smart alerts',
-    content: 'Get automatic alerts when your API is slow or gains unexpected traffic.',
+    content: 'Get automatic alerts when your API faces unexpected events, like traffic spikes.',
+    comingSoon: true,
   },
   {
     icon: DocumentReportIcon,
     title: 'Reports',
-    content: 'Get automatic weekly email and Slack reports for your API metrics.',
+    content: 'Get automatic weekly email and Slack reports for your API metrics, trends etc.',
+    comingSoon: true,
   },
   {
     icon: DatabaseIcon,
@@ -38,30 +41,32 @@ const FEATURES = [
   {
     icon: ServerIcon,
     title: 'Open source',
-    content: 'Our open-source libraries allow you to see exactly what data leaves your APIs.',
+    content: 'Our open-source middlewares allow you to see exactly what data leaves your APIs.',
   },
 ];
 
 export const Features: React.FC = () => (
-  <div className="bg-white">
-    <div className="container py-16 max-w-3xl">
-      <div className="text-center animate-fade-in-top animation-delay-800">
-        <h1 className="text-5xl text-secondary">
-          See business-critical metrics across all of your APIs
-        </h1>
-        <h2 className="text-3xl text-primary mt-8">
-          Our intuitive dashboard shows you real-time data from your APIs with a simple to setup
-          middleware.
-        </h2>
-      </div>
-      <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3 animate-fade-in-top animation-delay-800">
-        {FEATURES.map(({ icon: Icon, title, content }) => (
-          <div className="flex flex-col rounded-lg divide-y shadow-xl" key={title}>
-            <div className="flex items-center p-4">
+  <div className="bg-base-200">
+    <div className="container py-4 lg:py-16 max-w-3xl">
+      <h1 className="text-white">
+        It&lsquo;s time to stop being <span className="text-primary">blind</span> about your
+        <br />
+        <span className="text-secondary">API metrics</span>
+      </h1>
+      <h5 className="mt-8">
+        Analyze real-time metrics from your APIs through an intuitive dashboard and make data-driven
+        decisions for your API development. Integrate to your backend with a simple to setup
+        middleware.
+      </h5>
+      <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
+        {FEATURES.map(({ icon: Icon, title, content, comingSoon }) => (
+          <div className="card bg-base-100 rounded-lg p-4" key={title}>
+            <div className="flex items-center">
               <Icon className="h-8 w-8 text-primary mr-2" />
-              <h2 className="text-xl text-gray-500">{title}</h2>
+              <h6>{title}</h6>
             </div>
-            <p className="text-secondary text-xl p-4">{content}</p>
+            <p className="mt-4 grow">{content}</p>
+            {comingSoon && <div className="badge badge-outline mt-4">Coming soon</div>}
           </div>
         ))}
       </div>

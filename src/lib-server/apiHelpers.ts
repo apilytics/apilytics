@@ -1,24 +1,13 @@
 import { getSession } from 'next-auth/react';
 import type { NextApiRequest } from 'next';
+import type { Session } from 'next-auth';
 
 import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
-import type { ApiHandler, SessionUser } from 'types';
+import { METHODS } from 'utils/constants';
+import type { ApiHandler } from 'types';
+import type { Method } from 'utils/constants';
 
 class UnauthorizedApiError extends Error {}
-
-const METHODS = [
-  'GET',
-  'HEAD',
-  'POST',
-  'PUT',
-  'PATCH',
-  'DELETE',
-  'OPTIONS',
-  'CONNECT',
-  'TRACE',
-] as const;
-
-type Method = typeof METHODS[number];
 
 const isMethod = (x: unknown): x is Method => {
   return METHODS.includes(x as Method);
@@ -58,22 +47,26 @@ export const makeMethodsHandler =
     sendMethodNotAllowed(res, Object.keys(handlers));
   };
 
-export const getIdFromReq = (req: NextApiRequest): string => {
-  const { id } = req.query;
-  if (typeof id === 'string') {
-    return id;
+export const getSlugFromReq = (req: NextApiRequest): string => {
+  const { slug } = req.query;
+
+  if (typeof slug === 'string') {
+    return slug;
   }
-  throw new Error(`Invalid id param in route: ${id}`);
+
+  throw new Error(`Invalid slug param in route: ${slug}`);
 };
 
-export const safeGetSessionUser = async (req: NextApiRequest): Promise<SessionUser | null> => {
-  return (await getSession({ req }))?.user ?? null;
-};
+export const safeGetSessionUserId = async (
+  req: NextApiRequest,
+): Promise<Session['userId'] | null> => (await getSession({ req }))?.userId ?? null;
 
-export const getSessionUser = async (req: NextApiRequest): Promise<SessionUser> => {
-  const user = await safeGetSessionUser(req);
-  if (!user) {
+export const getSessionUserId = async (req: NextApiRequest): Promise<string> => {
+  const userId = await safeGetSessionUserId(req);
+
+  if (!userId) {
     throw new UnauthorizedApiError();
   }
-  return user;
+
+  return userId;
 };

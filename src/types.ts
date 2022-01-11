@@ -1,47 +1,35 @@
-import type { Metric, Origin, User } from '@prisma/client';
+import type { Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
+import type { ComponentProps, Dispatch, SetStateAction } from 'react';
 
 import type {
-  LAST_3_MONTHS_VALUE,
-  LAST_6_MONTHS_VALUE,
-  LAST_7_DAYS_VALUE,
-  LAST_12_MONTHS_VALUE,
-  LAST_30_DAYS_VALUE,
-  Method,
+  DAY,
+  MONTH_DAYS,
+  SIX_MONTHS_DAYS,
+  THREE_MONTHS_DAYS,
+  WEEK_DAYS,
+  YEAR_DAYS,
 } from 'utils/constants';
-
-export interface RouteData {
-  name: string;
-  requests: number;
-  methods: Method[];
-  responseTime: number;
-  responseGreen: number;
-  responseYellow: number;
-  responseRed: number;
-}
-
-export interface RequestData {
-  date: string;
-  requests: number;
-}
-
-export interface RequestSource {
-  name: string;
-  totalRequests: number;
-  totalRequestsGrowth: number;
-  requestsData: RequestData[];
-  routesData: RouteData[];
-}
+import type { staticRoutes } from 'utils/router';
 
 export type TimeFrame =
-  | typeof LAST_7_DAYS_VALUE
-  | typeof LAST_30_DAYS_VALUE
-  | typeof LAST_3_MONTHS_VALUE
-  | typeof LAST_6_MONTHS_VALUE
-  | typeof LAST_12_MONTHS_VALUE;
+  | typeof DAY
+  | typeof WEEK_DAYS
+  | typeof MONTH_DAYS
+  | typeof THREE_MONTHS_DAYS
+  | typeof SIX_MONTHS_DAYS
+  | typeof YEAR_DAYS;
 
 export type PlausibleEvents = {
-  signup: never;
+  login: never;
+  logout: never;
+  'update-account': never;
+  'new-origin': never;
+  'update-origin': never;
+  'delete-origin': never;
+  'email-list-subscribe': never;
+  'contact-message': never;
 };
 
 export interface HeadProps {
@@ -50,52 +38,80 @@ export interface HeadProps {
 }
 
 export interface HeaderProps {
-  headerMaxWidth?: string;
+  maxWidth?: string;
 }
 
-// API types.
+export type LayoutProps = HeadProps & HeaderProps;
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  fullWidth?: boolean | 'mobile';
+  loading?: boolean;
+  tooltip?: string;
+  endIcon?: React.FC<ComponentProps<'svg'>>;
+}
+
+export interface FrontMatter {
+  name: string;
+  routeName: keyof typeof staticRoutes;
+  order: number;
+  subOrder: number;
+}
+
+export interface MDXPageProps extends Record<string, unknown> {
+  source: MDXRemoteSerializeResult;
+  frontMatter?: FrontMatter;
+  docsInfo?: FrontMatter[];
+}
+
+export interface AccountContextType {
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
+  status: 'authenticated' | 'unauthenticated' | 'loading';
+  accountComplete: boolean;
+  origins: AggregatedOrigin[];
+  setOrigins: Dispatch<SetStateAction<AggregatedOrigin[]>>;
+}
+export interface OriginContextType {
+  origin: Origin | null;
+  setOrigin: Dispatch<SetStateAction<Origin | null>>;
+  metrics: OriginMetrics | null;
+  setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
+}
+
+export interface ModalContextType {
+  modalContent: JSX.Element | null;
+  setModalContent: Dispatch<SetStateAction<JSX.Element | null>>;
+  handleCloseModal: () => void;
+}
 
 export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,
 ) => Promise<void>;
 
-// Our custom user that next-auth holds in its sessions.
-export interface SessionUser {
-  id: string;
-  email: string;
+export interface AggregatedOrigin extends Origin {
+  last24hRequests: number;
 }
 
-export interface SignUpBody {
-  email: string;
-  role: string;
-  useCases?: string;
-  howThisCouldHelp?: string;
+export interface TimeFrameData {
+  requests: number;
+  time: string;
 }
 
-export interface OriginsListGetResponse {
-  data: Origin[];
+export interface RouteData {
+  requests: number;
+  name: string;
+  methods: string[];
+  status_codes: number[];
+  response_time: number;
+  count_green: number;
+  count_yellow: number;
+  count_red: number;
 }
 
-export interface OriginsPostResponse {
-  data: Origin;
+export interface OriginMetrics {
+  totalRequests: number;
+  totalRequestsGrowth: number;
+  timeFrameData: TimeFrameData[];
+  routeData: RouteData[];
 }
-
-export interface MetricsListGetResponse {
-  data: Metric[];
-}
-
-export interface OriginsDetailGetResponse {
-  data: Origin;
-}
-
-export interface AccountDetailGetResponse {
-  data: User;
-}
-
-export type OriginsPostBody = Pick<Origin, 'domain'>;
-export type MiddlewarePostBody = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
-export type OriginsDetailPutBody = Pick<Origin, 'domain'>;
-export type OriginsDetailPutResponse = OriginsDetailGetResponse;
-export type AccountDetailPutResponse = AccountDetailGetResponse;
-export type AccountDetailPutBody = Pick<User, 'email'>;

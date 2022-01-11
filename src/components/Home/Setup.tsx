@@ -1,31 +1,13 @@
-import Image from 'next/image';
+import clsx from 'clsx';
 import React, { useState } from 'react';
 
-const SNIPPETS = [
-  {
-    name: 'Node.js',
-    image: '/framework-logos/nodejs-logo.svg',
-  },
-  {
-    name: 'Next.js',
-    image: '/framework-logos/nextjs-logo.png',
-  },
-  {
-    name: 'Django',
-    image: '/framework-logos/django-logo.svg',
-  },
-  {
-    name: 'FastAPI',
-    image: '/framework-logos/fastapi-logo.png',
-  },
-];
+const INTEGRATIONS = ['Node.js', 'Next.js', 'Django', 'FastAPI', 'BYOM'];
 
-const getCodeSnippet = (framework: string): JSX.Element | null => {
+const getCodeSnippet = (framework: string): string => {
   switch (framework) {
     case 'Node.js': {
-      return (
-        <pre className="overflow-hidden">
-          {`$ npm install apilytics
+      return `
+$ npm install apilytics
 
 // In your code:
 const express = require('express');
@@ -34,29 +16,23 @@ const Apilytics = require('apilytics');
 const apilytics = Apilytics('<your_api_key>');
 const app = express();
 
-app.use(apilytics);`}
-        </pre>
-      );
+app.use(apilytics);`;
     }
 
     case 'Django': {
-      return (
-        <pre className="overflow-hidden">
-          {`$ pip install apilytics
+      return `
+$ pip install apilytics
 
 # In your code:
 MIDDLEWARE = [
 ...
 'apilytics',
-]`}
-        </pre>
-      );
+]`;
     }
 
     case 'Next.js': {
-      return (
-        <pre className="overflow-hidden">
-          {`$ npm install apilytics
+      return `
+$ npm install apilytics
 
 // In your code:
 import Apilytics from 'apilytics';
@@ -69,15 +45,12 @@ async function handler(req, res) {
   ...
 };
 
-export default handler;`}
-        </pre>
-      );
+export default handler;`;
     }
 
     case 'FastAPI': {
-      return (
-        <pre className="overflow-hidden">
-          {`$ pip install apilytics
+      return `
+$ pip install apilytics
 
 # In your code:
 from fastapi import FastAPI
@@ -85,62 +58,80 @@ from apilytics import Apilytics
 
 app = FastAPI()
 
-app.add_middleware(Apilytics, api_key='<your_api_key>')`}
-        </pre>
-      );
+app.add_middleware(Apilytics, api_key='<your_api_key>')`;
+    }
+
+    case 'BYOM': {
+      return `
+If your backend supports none of our open source middlewares,
+you can still use Apilytics by implementing your own middleware.
+
+Simply perform an HTTP request to
+https://www.apilytics.io/api/v1/middleware
+for all of the requests that you want to track with Apilytics.
+
+The HTTP requests must have the following specs:
+
+Method: POST
+
+Headers:
+- "Content-Type": "application/json"
+- "X-API-Key": "<your_api_key>"
+
+Body:
+- "path": The path of the endpoint, e.g. "/api/v1/users".
+- "method": The HTTP method of the request that you want to track.
+- "timeMillis": The time in milliseconds that the request took to complete.
+- "statusCode": The status code of the response.
+
+Note that your request should take place as a background job
+in your API and thus not bottlenecking your API in any way.`;
     }
 
     default: {
-      return null;
+      return '';
     }
   }
 };
 
 export const Setup: React.FC = () => {
-  const [selectedFramework, setSelectedFramework] = useState(SNIPPETS[0].name);
+  const [selectedFramework, setSelectedFramework] = useState(INTEGRATIONS[0]);
 
   return (
     <div className="bg-background bg-no-repeat bg-cover">
       <div className="bg-filter">
-        <div className="container max-w-3xl py-16 animate-fade-in-top animation-delay-1200 text-secondary flex flex-col items-center">
-          <h1 className="text-5xl text-white">
+        <div className="container max-w-3xl py-4 lg:py-16 flex flex-col">
+          <h1 className="text-white">
             Set up in <span className="text-primary">10 minutes</span>
           </h1>
-          <div className="mt-12 text-left mx-auto max-w-3xl">
-            <h2 className="text-3xl text-secondary">
-              <span className="text-primary">1.</span> Sign up and get your API key.
-            </h2>
-            <h2 className="text-3xl text-secondary">
-              <span className="text-primary">2.</span> Embed our open-source middleware.
-            </h2>
-            <h2 className="text-3xl text-secondary">
-              <span className="text-primary">3.</span> Navigate to your dashboard & see your
-              metrics.
-            </h2>
+          <div className="mt-4">
+            <ul className="steps steps-vertical">
+              <li className="step step-primary">
+                <h5 className="text-left">Sign up & grab your API key.</h5>
+              </li>
+              <li className="step step-primary">
+                <h5 className="text-left">Embed our open-source middleware to your backend.</h5>
+              </li>
+              <li className="step step-primary">
+                <h5 className="text-left">Start using your dashboard! 🚀</h5>
+              </li>
+            </ul>
           </div>
-          <div className="mt-14 bg-gray-800 w-full max-w-3xl rounded-lg">
-            <div className="p-4 flex flex-wrap space-x-4">
-              {SNIPPETS.map(({ name, image }) => (
-                <button
+          <div className="mt-4 bg-base-100 w-full rounded-lg mockup-code">
+            <div className="px-4 tabs">
+              {INTEGRATIONS.map((name) => (
+                <p
                   key={name}
-                  className={`m-2 ${
-                    selectedFramework === name ? 'border-b-2 border-b-primary' : ''
-                  }`}
+                  className={clsx('tab tab-bordered', selectedFramework === name && 'tab-active')}
                   onClick={(): void => setSelectedFramework(name)}
                 >
-                  <Image
-                    src={image}
-                    layout="fixed"
-                    width={60}
-                    height={60}
-                    objectFit="contain"
-                    alt={name}
-                    priority
-                  />
-                </button>
+                  {name}
+                </p>
               ))}
             </div>
-            <div className="p-4">{getCodeSnippet(selectedFramework)}</div>
+            <div className="p-4">
+              <pre className="text-primary">{getCodeSnippet(selectedFramework)}</pre>
+            </div>
           </div>
         </div>
       </div>

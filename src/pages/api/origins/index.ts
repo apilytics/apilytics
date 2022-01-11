@@ -1,42 +1,68 @@
 import { Prisma } from '@prisma/client';
+import slugify from 'slugify';
+import type { Origin } from '@prisma/client';
 
-import { getSessionUser, makeMethodsHandler } from 'lib-server/apiHelpers';
+import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
-import type {
-  ApiHandler,
-  OriginsListGetResponse,
-  OriginsPostBody,
-  OriginsPostResponse,
-} from 'types';
+import type { AggregatedOrigin, ApiHandler } from 'types';
 
-const handleGet: ApiHandler<OriginsListGetResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
+interface GetResponse {
+  data: AggregatedOrigin[];
+}
 
-  const origins = await prisma.origin.findMany({ where: { userId: user.id } });
+const handleGet: ApiHandler<GetResponse> = async (req, res) => {
+  const userId = await getSessionUserId(req);
+
+  // Get all origins for the user and the related metrics within 24 hours.
+  const _origins = await prisma.origin.findMany({
+    where: { userId },
+    include: {
+      metrics: {
+        where: {
+          createdAt: {
+            gt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          },
+        },
+      },
+    },
+  });
+
+  const origins = _origins.map((origin) => ({
+    ...origin,
+    last24hRequests: origin.metrics.length,
+  }));
+
   sendOk(res, { data: origins });
 };
 
-const handlePost: ApiHandler<OriginsPostResponse> = async (req, res) => {
-  const user = await getSessionUser(req);
+interface PostResponse {
+  data: Origin;
+}
 
-  const { domain }: OriginsPostBody = req.body;
-  if (!domain) {
+const handlePost: ApiHandler<PostResponse> = async (req, res) => {
+  const userId = await getSessionUserId(req);
+  const { name } = req.body;
+
+  if (!name) {
     sendInvalidInput(res);
     return;
   }
 
   let origin;
+  const slug = slugify(name);
+
   try {
     origin = await prisma.origin.create({
-      data: { userId: user.id, domain },
+      data: { userId, name, slug },
     });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-      sendConflict(res, 'Current user already has a origin with the given domain.');
+      sendConflict(res, 'An origin with this name already exists.');
       return;
     }
+
     throw e;
   }
 

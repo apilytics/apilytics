@@ -2,72 +2,60 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
-import { DashboardOptions } from 'components/Demo/DashboardOptions';
-import { RequestsOverview } from 'components/Demo/RequestsOverview';
-import { ResponseTimes } from 'components/Demo/ResponseTimes';
-import { RouteMetrics } from 'components/Demo/RouteMetrics';
-import { Layout } from 'components/layout/Layout';
+import { DashboardOptions } from 'components/dashboard/DashboardOptions';
+import { RequestsOverview } from 'components/dashboard/RequestsOverview';
+import { ResponseTimes } from 'components/dashboard/ResponseTimes';
+import { RouteMetrics } from 'components/dashboard/RouteMetrics';
+import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
-import { LAST_7_DAYS_VALUE } from 'utils/constants';
-import { mockApi } from 'utils/mockApi';
-import { routes } from 'utils/router';
+import { withAccount } from 'hocs/withAccount';
+import { MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
+import { getMockMetrics } from 'utils/metrics';
+import { staticRoutes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
-  const [timeFrame, setTimeFrame] = useState<TimeFrame>(LAST_7_DAYS_VALUE);
-  const { sources = [] } = mockApi(timeFrame);
-  const [sourceName, setSourceName] = useState(sources[0].name);
-
-  const {
-    totalRequests = 0,
-    totalRequestsGrowth = 0,
-    requestsData = [],
-    routesData = [],
-  } = sources.find((source) => source.name === sourceName) || {};
+  const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
+  const origin = MOCK_ORIGIN;
+  const metrics = getMockMetrics(timeFrame);
+  const loading = !origin || !metrics;
 
   return (
-    <Layout noIndex headerMaxWidth="5xl">
-      <div className="bg-background bg-no-repeat bg-cover">
-        <div className="bg-filter">
-          <div className="container max-w-5xl py-16 animate-fade-in-top animation-delay-400">
-            <DashboardOptions
-              sourceName={sourceName}
-              setSourceName={setSourceName}
-              sources={sources}
-              timeFrame={timeFrame}
-              setTimeFrame={setTimeFrame}
-            />
-            <RequestsOverview
-              timeFrame={timeFrame}
-              totalRequests={totalRequests}
-              totalRequestsGrowth={totalRequestsGrowth}
-              requestsData={requestsData}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <RouteMetrics routesData={routesData} />
-              <ResponseTimes routesData={routesData} />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-              <div>
-                <h2 className="text-3xl text-white">
-                  Want to see these metrics from your APIs?{' '}
-                  <span className="text-primary">Start for free now.</span>
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Link href={routes.signUp} passHref>
-                  <Button>Get started</Button>
-                </Link>
-                <Link href={routes.root} passHref>
-                  <Button variant="secondary">Learn more</Button>
-                </Link>
-              </div>
-            </div>
-          </div>
+    <MainTemplate wide>
+      <DashboardOptions
+        timeFrame={timeFrame}
+        setTimeFrame={setTimeFrame}
+        origin={origin}
+        hideSettingsButton
+      />
+      <RequestsOverview timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 grow">
+        <RouteMetrics metrics={metrics} loading={loading} />
+        <ResponseTimes metrics={metrics} loading={loading} />
+      </div>
+      <div className="flex flex-col lg:flex-row lg:items-center mt-4">
+        <div className="grow">
+          <h4 className="text-white">
+            Want to see these metrics from your APIs?
+            <br />
+            <span className="text-primary">Start for free now.</span>
+          </h4>
+        </div>
+        <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
+          <Link href={staticRoutes.login} passHref>
+            <Button className="btn-primary" fullWidth="mobile">
+              Get started
+            </Button>
+          </Link>
+          <Link href={staticRoutes.root} passHref>
+            <Button className="btn-secondary btn-outline" fullWidth="mobile">
+              Learn more
+            </Button>
+          </Link>
         </div>
       </div>
-    </Layout>
+    </MainTemplate>
   );
 };
 
-export default Demo;
+export default withAccount(Demo);

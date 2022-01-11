@@ -32,6 +32,7 @@ model Account {
 
 model User {
   id            String    @id @default(cuid()) // next-auth doesn't support UUIDs for its models.
+  name          String    @default("")
   email         String    @unique
   emailVerified DateTime? @map("email_verified")
 
@@ -72,7 +73,8 @@ model WaitlistUser {
 
 model Origin {
   id     String @id @default(uuid()) @db.Uuid
-  domain String
+  name   String @unique
+  slug   String @unique
   apiKey String @unique @default(uuid()) @map("api_key") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -83,7 +85,6 @@ model Origin {
 
   metrics Metric[]
 
-  @@unique([domain, userId])
   @@map("origins")
 }
 
@@ -91,6 +92,9 @@ model Metric {
   id         String @id @default(uuid()) @db.Uuid
   path       String
   method     String
+  // Nullable since our middleware might not always be able to send this, e.g. when
+  // an inner request handler function that it wraps throws an error.
+  statusCode Int?   @map("status_code")
   timeMillis Int    @map("time_millis")
 
   // Metrics are immutable so no need to store `updatedAt` info.
@@ -100,4 +104,10 @@ model Metric {
   origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
 
   @@map("metrics")
+}
+
+model EmailListEntry {
+  email String @unique
+
+  @@map("email_list_entries")
 }
