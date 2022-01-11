@@ -53,12 +53,32 @@ export const MOCK_ENDPOINTS = [
     status_codes: [200],
   },
   {
+    name: '/users/johndoe',
+    methods: ['GET', 'POST', 'PUT'],
+    status_codes: [200],
+  },
+  {
+    name: '/users/janedoe',
+    methods: ['GET', 'POST', 'PUT'],
+    status_codes: [200],
+  },
+  {
     name: '/posts',
     methods: ['GET'],
     status_codes: [200],
   },
   {
     name: '/posts/123',
+    methods: ['GET'],
+    status_codes: [200, 404],
+  },
+  {
+    name: '/posts/345',
+    methods: ['GET'],
+    status_codes: [200, 404],
+  },
+  {
+    name: '/posts/345',
     methods: ['GET'],
     status_codes: [200, 404],
   },
@@ -71,6 +91,16 @@ export const MOCK_ENDPOINTS = [
     name: '/login',
     methods: ['POST'],
     status_codes: [200, 500],
+  },
+  {
+    name: '/logout',
+    methods: ['POST'],
+    status_codes: [200],
+  },
+  {
+    name: '/contact',
+    methods: ['POST'],
+    status_codes: [201],
   },
 ];
 

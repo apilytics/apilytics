@@ -5,9 +5,9 @@
 :root {
   --primary: #529dff;
   --base-content: #8a8a8a;
-  --requests-red: #fca5a5;
-  --requests-yellow: #fde047;
-  --requests-green: #bef264;
+  --requests-red: #ffc2c2;
+  --requests-yellow: #ffeb8a;
+  --requests-green: #c0f2a7;
 
   /* DaisyUI overrides */
   --rounded-box: 0.5rem;

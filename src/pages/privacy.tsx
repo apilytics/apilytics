@@ -8,6 +8,7 @@ import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
+import { withAccount } from 'hocs/withAccount';
 import type { MDXPageProps } from 'types';
 
 const Privacy: NextPage<MDXPageProps> = ({ source }) => (
@@ -31,4 +32,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default Privacy;
+export default withAccount(Privacy);

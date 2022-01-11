@@ -9,7 +9,7 @@ interface Props extends Omit<LayoutProps, 'maxWidth'> {
 }
 
 export const MainTemplate: React.FC<Props> = ({ wide, noIndex = true, children }) => {
-  const maxWidth = wide ? 'max-w-5xl' : 'max-w-3xl';
+  const maxWidth = wide ? 'max-w-6xl' : 'max-w-3xl';
 
   return (
     <Layout noIndex={noIndex} maxWidth={maxWidth}>

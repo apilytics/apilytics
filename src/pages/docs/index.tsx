@@ -8,6 +8,7 @@ import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 
 import { DocsTemplate } from 'components/layout/DocsTemplate';
+import { withAccount } from 'hocs/withAccount';
 import { DOCS_INFO, DOCS_PATH } from 'utils/mdx';
 import type { MDXPageProps } from 'types';
 
@@ -32,4 +33,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default Docs;
+export default withAccount(Docs);

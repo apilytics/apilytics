@@ -8,16 +8,16 @@ import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { AccountForm } from 'components/shared/AccountForm';
 import { Button } from 'components/shared/Button';
+import { withAccount } from 'hocs/withAccount';
 import { useAccount } from 'hooks/useAccount';
-import { staticApiRoutes, staticRoutes } from 'utils/router';
+import { staticRoutes } from 'utils/router';
 
 export const withAuth = <T extends Record<string, unknown>>(
   PageComponent: NextPage<T>,
 ): NextPage<T> => {
   const WithAuth: NextPage<T> = (pageProps: T) => {
-    const [loading, setLoading] = useState(false);
     const [welcomePassed, setWelcomePassed] = useState(false);
-    const { status, setUser, accountComplete, setOrigins } = useAccount();
+    const { status, accountComplete } = useAccount();
     const redirect = status === 'unauthenticated';
 
     // Redirect unauthenticated users to login.
@@ -27,27 +27,7 @@ export const withAuth = <T extends Record<string, unknown>>(
       }
     }, [redirect]);
 
-    // Fetch all account related data and populate the context.
-    useEffect(() => {
-      if (!redirect) {
-        (async (): Promise<void> => {
-          setLoading(true);
-
-          const [accountRes, originsRes] = await Promise.all([
-            fetch(staticApiRoutes.account),
-            fetch(staticApiRoutes.origins),
-          ]);
-
-          const { data: accountData } = await accountRes.json();
-          const { data: originsData } = await originsRes.json();
-          setUser(accountData);
-          setOrigins(originsData);
-          setLoading(false);
-        })();
-      }
-    }, [redirect, setOrigins, setUser]);
-
-    if (redirect || loading) {
+    if (redirect) {
       return <LoadingTemplate />;
     }
 
@@ -84,5 +64,5 @@ export const withAuth = <T extends Record<string, unknown>>(
     return <PageComponent {...pageProps} />;
   };
 
-  return WithAuth;
+  return withAccount(WithAuth);
 };

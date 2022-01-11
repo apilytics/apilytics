@@ -57,7 +57,7 @@ export interface FrontMatter {
   subOrder: number;
 }
 
-export interface MDXPageProps {
+export interface MDXPageProps extends Record<string, unknown> {
   source: MDXRemoteSerializeResult;
   frontMatter?: FrontMatter;
   docsInfo?: FrontMatter[];
@@ -76,6 +76,12 @@ export interface OriginContextType {
   setOrigin: Dispatch<SetStateAction<Origin | null>>;
   metrics: OriginMetrics | null;
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
+}
+
+export interface ModalContextType {
+  modalContent: JSX.Element | null;
+  setModalContent: Dispatch<SetStateAction<JSX.Element | null>>;
+  handleCloseModal: () => void;
 }
 
 export type ApiHandler<T = unknown> = (
