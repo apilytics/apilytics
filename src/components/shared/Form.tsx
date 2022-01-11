@@ -41,7 +41,7 @@ export const Form: React.FC<Props> = ({
       {submittedText && (
         <div className="form-control mt-2">
           <label className="label">
-            <span className="label-text">{submittedText}</span>
+            <span className="label-text-alt text-white">{submittedText}</span>
           </label>
         </div>
       )}
