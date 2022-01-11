@@ -1,91 +1,107 @@
 import clsx from 'clsx';
+import Link from 'next/link';
 import React, { useState } from 'react';
+
+import { staticRoutes } from 'utils/router';
 
 const INTEGRATIONS = ['Node.js', 'Next.js', 'Django', 'FastAPI', 'BYOM'];
 
-const getCodeSnippet = (framework: string): string => {
+const getCodeSnippet = (framework: string): JSX.Element | string => {
   switch (framework) {
     case 'Node.js': {
-      return `
-$ npm install apilytics
+      return (
+        <>
+          <pre>$ yarn add @apilytics/next</pre>
+          <pre className="mt-2">
+            <code>
+              {`// server.js
 
-// In your code:
+const { apilyticsMiddleware } = require('@apilytics/express');
 const express = require('express');
-const Apilytics = require('apilytics');
 
-const apilytics = Apilytics('<your_api_key>');
 const app = express();
 
-app.use(apilytics);`;
-    }
-
-    case 'Django': {
-      return `
-$ pip install apilytics
-
-# In your code:
-MIDDLEWARE = [
-...
-'apilytics',
-]`;
+app.use(apilyticsMiddleware(process.env.APILYTICS_API_KEY));`}
+            </code>
+          </pre>
+        </>
+      );
     }
 
     case 'Next.js': {
-      return `
-$ npm install apilytics
+      return (
+        <>
+          <pre>$ yarn add @apilytics/next</pre>
+          <pre className="mt-2">
+            <code>
+              {`// pages/api/my-route.js
 
-// In your code:
-import Apilytics from 'apilytics';
+import { withApilytics } from '@apilytics/next';
 
-const apilytics = Apilytics('<your_api_key>');
-
-async function handler(req, res) {
-  ...
-  apilytics(req, res);
-  ...
+const handler = async (req, res) => {
+  // ...
 };
 
-export default handler;`;
+export default withApilytics(handler, process.env.APILYTICS_API_KEY);`}
+            </code>
+          </pre>
+        </>
+      );
+    }
+
+    case 'Django': {
+      return (
+        <>
+          <pre>$ pip install apilytics</pre>
+          <pre className="mt-2">
+            <code>
+              {`# settings.py
+
+import os
+
+APILYTICS_API_KEY = os.getenv("APILYTICS_API_KEY")
+
+MIDDLEWARE = [
+    "apilytics.django.ApilyticsMiddleware",
+]`}
+            </code>
+          </pre>
+        </>
+      );
     }
 
     case 'FastAPI': {
-      return `
-$ pip install apilytics
+      return (
+        <>
+          <pre>$ pip install apilytics</pre>
+          <pre className="mt-2">
+            <code>
+              {`# main.py
 
-# In your code:
+import os
+
+from apilytics.fastapi import ApilyticsMiddleware
 from fastapi import FastAPI
-from apilytics import Apilytics
 
 app = FastAPI()
 
-app.add_middleware(Apilytics, api_key='<your_api_key>')`;
+app.add_middleware(ApilyticsMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))`}
+            </code>
+          </pre>
+        </>
+      );
     }
 
     case 'BYOM': {
-      return `
-If your backend supports none of our open source middlewares,
-you can still use Apilytics by implementing your own middleware.
-
-Simply perform an HTTP request to
-https://www.apilytics.io/api/v1/middleware
-for all of the requests that you want to track with Apilytics.
-
-The HTTP requests must have the following specs:
-
-Method: POST
-
-Headers:
-- "Content-Type": "application/json"
-- "X-API-Key": "<your_api_key>"
-
-Body:
-- "path": The path of the endpoint, e.g. "/api/v1/users".
-- "method": The HTTP method of the request that you want to track.
-- "timeMillis": The time in milliseconds that the request took to complete.
-- "statusCode": The status code of the response.
-
-Note that your request should take place as a background job
-in your API and thus not bottlenecking your API in any way.`;
+      return (
+        <pre>
+          If your backend supports none of our open source middlewares,
+          <br />
+          we have tools to help you with creating your own middleware.
+          <br />
+          See our <Link href={staticRoutes.docs}>docs</Link> for more information.
+        </pre>
+      );
     }
 
     default: {
@@ -129,9 +145,7 @@ export const Setup: React.FC = () => {
                 </p>
               ))}
             </div>
-            <div className="p-4">
-              <pre className="text-primary">{getCodeSnippet(selectedFramework)}</pre>
-            </div>
+            <div className="p-4 text-primary">{getCodeSnippet(selectedFramework)}</div>
           </div>
         </div>
       </div>
