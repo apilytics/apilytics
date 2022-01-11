@@ -52,7 +52,7 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
   }
 
   let origin;
-  const slug = slugify(name);
+  const slug = slugify(name, { lower: true });
 
   try {
     origin = await prisma.origin.create({

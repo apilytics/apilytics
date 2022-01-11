@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
 import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
@@ -43,12 +44,13 @@ const handlePut: ApiHandler<OriginResponse> = async (req, res) => {
     return;
   }
 
-  const slug = getSlugFromReq(req);
+  const oldSlug = getSlugFromReq(req);
+  const newSlug = slugify(name, { lower: true });
 
   try {
     const { count } = await prisma.origin.updateMany({
-      where: { slug, userId },
-      data: { name, slug },
+      where: { slug: oldSlug, userId },
+      data: { name, slug: newSlug },
     });
 
     if (count === 0) {
@@ -65,7 +67,7 @@ const handlePut: ApiHandler<OriginResponse> = async (req, res) => {
   }
 
   const origin = await prisma.origin.findFirst({
-    where: { slug, userId },
+    where: { slug: newSlug, userId },
   });
 
   if (!origin) {
