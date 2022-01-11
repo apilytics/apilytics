@@ -8,6 +8,7 @@ import { ResponseTimes } from 'components/dashboard/ResponseTimes';
 import { RouteMetrics } from 'components/dashboard/RouteMetrics';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
+import { withAccount } from 'hocs/withAccount';
 import { MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
@@ -57,4 +58,4 @@ const Demo: NextPage = () => {
   );
 };
 
-export default Demo;
+export default withAccount(Demo);

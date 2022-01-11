@@ -11,6 +11,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { DocsTemplate } from 'components/layout/DocsTemplate';
 import { Button } from 'components/shared/Button';
 import { ExternalLink } from 'components/shared/ExternalLink';
+import { withAccount } from 'hocs/withAccount';
 import { DOCS_INFO, DOCS_PATH, getDocsFilePaths } from 'utils/mdx';
 import type { MDXPageProps } from 'types';
 
@@ -54,4 +55,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default Docs;
+export default withAccount(Docs);
