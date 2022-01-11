@@ -71,7 +71,7 @@
     @apply p-2;
     @apply rounded-lg;
     @apply max-w-full;
-    @apply overflow-auto;
+    @apply overflow-hidden;
   }
 
   p > code {

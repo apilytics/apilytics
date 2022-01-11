@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 
 import { staticRoutes } from 'utils/router';
 
-const INTEGRATIONS = ['Node.js', 'Next.js', 'Django', 'FastAPI', 'BYOM'];
+const INTEGRATIONS = ['Express.js', 'Next.js', 'Django', 'FastAPI', 'BYOM'];
 
 const getCodeSnippet = (framework: string): JSX.Element | string => {
   switch (framework) {
-    case 'Node.js': {
+    case 'Express.js': {
       return (
         <>
-          <pre>$ yarn add @apilytics/next</pre>
+          <pre>$ yarn add @apilytics/express</pre>
           <pre className="mt-2">
             <code>
               {`// server.js
@@ -62,7 +62,7 @@ import os
 APILYTICS_API_KEY = os.getenv("APILYTICS_API_KEY")
 
 MIDDLEWARE = [
-    "apilytics.django.ApilyticsMiddleware",
+  "apilytics.django.ApilyticsMiddleware",
 ]`}
             </code>
           </pre>
@@ -95,11 +95,9 @@ app.add_middleware(ApilyticsMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))`
     case 'BYOM': {
       return (
         <pre>
-          If your backend supports none of our open source middlewares,
-          <br />
-          we have tools to help you with creating your own middleware.
-          <br />
-          See our <Link href={staticRoutes.docs}>docs</Link> for more information.
+          If your backend supports none of our open source middlewares, we have tools to help you
+          with creating your own middleware. See our <Link href={staticRoutes.docs}>docs</Link> for
+          more information.
         </pre>
       );
     }
