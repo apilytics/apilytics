@@ -74,12 +74,6 @@
     @apply overflow-hidden;
   }
 
-  p > code {
-    @apply bg-base-200;
-    @apply p-1;
-    @apply rounded-lg;
-  }
-
   code {
     font-family: monospace;
     @apply text-primary;
