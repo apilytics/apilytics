@@ -6,13 +6,14 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
-import { ConfirmationModal } from 'components/shared/ConfirmationModal';
+import { Button } from 'components/shared/Button';
 import { Form } from 'components/shared/Form';
 import { IconButton } from 'components/shared/IconButton';
 import { Input } from 'components/shared/Input';
+import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
-import { useOpen } from 'hooks/useOpen';
+import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
@@ -26,13 +27,8 @@ const OriginSettings: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
   const [apiKeyCopied, setApiKeyCopied] = useState(false);
+  const { handleCloseModal, setModalContent } = useModal();
   const plausible = usePlausible<PlausibleEvents>();
-
-  const {
-    open: confirmDeleteModalOpen,
-    handleOpen: handleOpenConfirmDeleteModal,
-    handleClose: handleCloseConfirmDeleteModal,
-  } = useOpen();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -67,7 +63,7 @@ const OriginSettings: NextPage = () => {
   };
 
   const handleConfirmDelete = async (): Promise<void> => {
-    handleCloseConfirmDeleteModal();
+    handleCloseModal();
     setLoading(true);
     setSubmittedText('');
     setError('');
@@ -107,8 +103,33 @@ const OriginSettings: NextPage = () => {
     </div>
   );
 
+  const modalContent = (
+    <>
+      <div className="flex justify-end p-2">
+        <ModalCloseButton />
+      </div>
+      <div className="p-4">
+        <p>
+          Are you sure you want to delete this origin? All data associated with it will be lost
+          forever.
+        </p>
+      </div>
+      <div className="p-2 grid grid-cols-2 gap-2">
+        <Button className="btn-error btn-outline" onClick={handleCloseModal}>
+          Cancel
+        </Button>
+        <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
+          Confirm
+        </Button>
+      </div>
+    </>
+  );
+
   const renderDeleteOriginLink = (
-    <p onClick={handleOpenConfirmDeleteModal} className="mt-4 text-center link text-error">
+    <p
+      onClick={(): void => setModalContent(modalContent)}
+      className="mt-4 text-center link text-error"
+    >
       Delete origin
     </p>
   );
@@ -150,12 +171,6 @@ const OriginSettings: NextPage = () => {
           helperText={renderApiKeyHelperText}
         />
       </Form>
-      <ConfirmationModal
-        open={confirmDeleteModalOpen}
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCloseConfirmDeleteModal}
-        text="Are you sure you want to delete this origin? All data associated with it will be lost forever."
-      />
     </MainTemplate>
   );
 };

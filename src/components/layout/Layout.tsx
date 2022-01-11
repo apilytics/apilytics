@@ -3,6 +3,7 @@ import React from 'react';
 import { Footer } from 'components/layout/Footer';
 import { Head } from 'components/layout/Head';
 import { Header } from 'components/layout/Header';
+import { Modal } from 'components/shared/Modal';
 import type { LayoutProps } from 'types';
 
 export const Layout: React.FC<LayoutProps> = ({ noIndex, maxWidth, children }) => (
@@ -13,6 +14,7 @@ export const Layout: React.FC<LayoutProps> = ({ noIndex, maxWidth, children }) =
         <Header maxWidth={maxWidth} />
         <div className="grow flex flex-col relative">{children}</div>
         <Footer />
+        <Modal />
       </div>
     </div>
   </>

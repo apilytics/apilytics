@@ -10,8 +10,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
-import { NoRequests } from 'components/dashboard/NoRequests';
+import { RouteMetricsContainer } from 'components/dashboard/RouteMetricsContainer';
 import { RouteTooltip } from 'components/dashboard/RouteTooltip';
 import { RouteValue } from 'components/dashboard/RouteValue';
 import type { OriginMetrics } from 'types';
@@ -39,14 +38,13 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
     />
   );
 
-  const renderBarChart = (): JSX.Element => {
-    if (!data.length) {
-      return <NoRequests />;
-    }
+  const renderBarChart = (expanded: boolean): JSX.Element => {
+    const _data = data.slice(0, expanded ? data.length : 10);
+    const height = Math.max(300, _data.length * 45);
 
     return (
-      <ResponsiveContainer height={400}>
-        <BarChart data={data} layout="vertical">
+      <ResponsiveContainer height={height}>
+        <BarChart data={_data} layout="vertical" barSize={30}>
           <Bar
             dataKey="requests"
             fill="rgba(82, 157, 255, 0.25)" // `primary` with 25% opacity.
@@ -82,11 +80,11 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
   };
 
   return (
-    <DashboardCardContainer loading={loading} grow>
-      <div className="p-2">
-        <h6>Requests per route 📊</h6>
-      </div>
-      <div className="mt-4 grow flex">{renderBarChart()}</div>
-    </DashboardCardContainer>
+    <RouteMetricsContainer
+      loading={loading}
+      title="Requests per route 📊"
+      noRequests={!data.length}
+      renderBarChart={renderBarChart}
+    />
   );
 };

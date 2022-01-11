@@ -10,8 +10,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
-import { NoRequests } from 'components/dashboard/NoRequests';
+import { RouteMetricsContainer } from 'components/dashboard/RouteMetricsContainer';
 import { RouteTooltip } from 'components/dashboard/RouteTooltip';
 import { RouteValue } from 'components/dashboard/RouteValue';
 import type { OriginMetrics } from 'types';
@@ -40,14 +39,13 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
     <RouteValue formatter={(value?: string | number): string => `${value}ms`} />
   );
 
-  const renderBarChart = (): JSX.Element => {
-    if (!data.length) {
-      return <NoRequests />;
-    }
+  const renderBarChart = (expanded: boolean): JSX.Element => {
+    const _data = data.slice(0, expanded ? data.length : 10);
+    const height = Math.max(300, _data.length * 45);
 
     return (
-      <ResponsiveContainer height={400}>
-        <BarChart data={data} layout="vertical">
+      <ResponsiveContainer height={height}>
+        <BarChart data={_data} layout="vertical" reverseStackOrder>
           <Bar dataKey="redRequests" fill="var(--requests-red)" stackId="dist">
             <LabelList dataKey="response_time" content={renderResponseTimeLabels} />
           </Bar>
@@ -70,7 +68,6 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
             tickLine={false}
             axisLine={false}
             mirror
-            stroke="black"
             padding={{ top: 30, bottom: 20 }}
           >
             <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />
@@ -82,11 +79,11 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
   };
 
   return (
-    <DashboardCardContainer loading={loading} grow>
-      <div className="p-2">
-        <h6>Response times ⚡</h6>
-      </div>
-      <div className="mt-4 grow flex">{renderBarChart()}</div>
-    </DashboardCardContainer>
+    <RouteMetricsContainer
+      loading={loading}
+      title="Response times ⚡"
+      noRequests={!data.length}
+      renderBarChart={renderBarChart}
+    />
   );
 };

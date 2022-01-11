@@ -6,6 +6,7 @@ import PlausibleProvider from 'next-plausible';
 import type { AppProps } from 'next/app';
 
 import { AccountProvider } from 'context/account';
+import { ModalProvider } from 'context/modal';
 import { OriginProvider } from 'context/origin';
 import { FRONTEND_DOMAIN } from 'utils/constants';
 
@@ -14,7 +15,9 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
     <SessionProvider session={session}>
       <AccountProvider>
         <OriginProvider>
-          <Component {...pageProps} />
+          <ModalProvider>
+            <Component {...pageProps} />
+          </ModalProvider>
         </OriginProvider>
       </AccountProvider>
     </SessionProvider>
