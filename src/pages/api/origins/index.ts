@@ -6,6 +6,7 @@ import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
 import prisma from 'prismaClient';
+import { withApilytics } from 'utils/apilytics';
 import type { AggregatedOrigin, ApiHandler } from 'types';
 
 interface GetResponse {
@@ -51,7 +52,7 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
   }
 
   let origin;
-  const slug = slugify(name);
+  const slug = slugify(name, { lower: true });
 
   try {
     origin = await prisma.origin.create({
@@ -71,4 +72,4 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
 
 const handler = withAuthRequired(makeMethodsHandler({ GET: handleGet, POST: handlePost }));
 
-export default handler;
+export default withApilytics(handler);

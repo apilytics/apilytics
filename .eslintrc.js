@@ -40,6 +40,7 @@ module.exports = {
         patterns: [
           { group: ['.*'], message: "Don't use relative imports!" },
           { group: ['src/*'], message: "Don't prefix src/ to imports!" },
+          { group: ['@apilytics/next'], message: 'Import @apilytics/next from utils/apilytics!' },
         ],
       },
     ],
