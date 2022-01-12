@@ -36,7 +36,11 @@ const NewOrigin: NextPage = () => {
       if (res.status === 201) {
         setError('');
         plausible('new-origin');
-        Router.push(dynamicRoutes.origin({ slug: data.slug }));
+
+        Router.push({
+          pathname: dynamicRoutes.origin({ slug: data.slug }),
+          query: { showApiKey: true },
+        });
       } else {
         setError(message || UNEXPECTED_ERROR);
       }

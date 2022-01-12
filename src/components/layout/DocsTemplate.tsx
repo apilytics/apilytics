@@ -40,7 +40,7 @@ export const DocsTemplate: React.FC<Props> = ({
 
   return (
     <Layout maxWidth="max-w-full">
-      <ul className="menu p-4 w-80 h-full absolute border-r border-1 border-base-content invisible lg:visible text-primary">
+      <ul className="menu p-4 w-50 h-full absolute border-r border-1 border-base-content invisible xl:visible text-primary">
         {docsInfo
           ?.filter(({ subOrder }) => !subOrder)
           .map(({ name, routeName, order: parentOrder }) => (
@@ -66,20 +66,20 @@ export const DocsTemplate: React.FC<Props> = ({
         <div className="card rounded-lg shadow p-4 bg-base-100 break-words items-start">
           {children}
           {nextRoute && (
-            <div className="flex flex-col mt-4">
-              <h6>Next: </h6>
-              <Link href={staticRoutes[nextRoute.routeName]} passHref>
-                <Button className="btn-primary" endIcon={ArrowSmRightIcon}>
-                  {nextRoute.name}
-                </Button>
-              </Link>
-            </div>
+            <Link href={staticRoutes[nextRoute.routeName]} passHref>
+              <Button
+                className="btn-secondary btn-outline mt-8 mx-auto"
+                endIcon={ArrowSmRightIcon}
+                fullWidth="mobile"
+              >
+                {nextRoute.name}
+              </Button>
+            </Link>
           )}
-          <p className="mt-4">
-            Help us improve these docs by{' '}
-            <Link href={staticRoutes.contact}>giving us feedback</Link>.
-          </p>
         </div>
+        <p className="mt-4 text-center">
+          Help us improve these docs by <Link href={staticRoutes.contact}>giving us feedback</Link>.
+        </p>
       </div>
     </Layout>
   );

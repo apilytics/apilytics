@@ -1,10 +1,6 @@
 import { CheckCircleIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
-import Link from 'next/link';
 import React, { useState } from 'react';
-
-import { Button } from 'components/shared/Button';
-import { staticRoutes } from 'utils/router';
 
 const PRICES = {
   50_000: 5,
@@ -98,23 +94,6 @@ export const Pricing: React.FC = () => {
                 <CheckCircleIcon className="h-7 w-7 mr-4 text-success" /> {feature}
               </p>
             ))}
-          </div>
-        </div>
-        <div className="mt-8 flex flex-col items-center">
-          <h3 className="text-white">
-            Ready to <span className="text-primary">boost</span> your API development?
-          </h3>
-          <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4 w-full lg:w-auto">
-            <Link href={staticRoutes.login} passHref>
-              <Button className="btn-primary" fullWidth="mobile">
-                Get started
-              </Button>
-            </Link>
-            <Link href={staticRoutes.demo} passHref>
-              <Button className="btn-secondary btn-outline" fullWidth="mobile">
-                See demo
-              </Button>
-            </Link>
           </div>
         </div>
       </div>

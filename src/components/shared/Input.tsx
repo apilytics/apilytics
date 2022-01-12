@@ -9,7 +9,6 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   helperText?: JSX.Element | string;
   endIcon?: React.FC<ComponentProps<'svg'>>;
-  buttonTooltip?: string;
   loading?: boolean;
   buttonProps?: ButtonProps;
 }
@@ -20,6 +19,7 @@ export const Input: React.FC<Props> = ({
   className,
   endIcon: EndIcon,
   buttonProps,
+  children,
   ...inputProps
 }) => (
   <div className="form-control">
@@ -47,5 +47,6 @@ export const Input: React.FC<Props> = ({
         <span className="label-text-alt">{helperText}</span>
       </label>
     )}
+    {children}
   </div>
 );

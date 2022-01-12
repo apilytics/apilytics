@@ -28,7 +28,7 @@ const Logout: NextPage = () => {
 
   return (
     <MainTemplate>
-      <h3 className="text-center">You have been logged out.</h3>
+      <h4 className="text-center">You have been logged out.</h4>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-8 mx-auto">
         <Link href={staticRoutes.root} passHref>
           <Button className="btn-primary">Continue</Button>
