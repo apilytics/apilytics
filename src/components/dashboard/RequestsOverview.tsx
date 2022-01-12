@@ -14,7 +14,7 @@ import {
   WEEK_DAYS,
   YEAR_DAYS,
 } from 'utils/constants';
-import { getDatesBetweenTimeFrame, getTimeFrameScope } from 'utils/metrics';
+import { getDataPointsBetweenTimeFrame, getTimeFrameScope } from 'utils/metrics';
 import type { OriginMetrics, TimeFrame, TimeFrameData } from 'types';
 
 const HOUR_FORMAT = 'h A';
@@ -37,7 +37,7 @@ export const RequestsOverview: React.FC<Props> = ({
   const scope = getTimeFrameScope(timeFrame);
 
   // Make sure the data contains points in time for the whole specified time frame.
-  const data: TimeFrameData[] = getDatesBetweenTimeFrame(timeFrame).map((time) => {
+  const data: TimeFrameData[] = getDataPointsBetweenTimeFrame(timeFrame).map((time) => {
     const data = timeFrameData.find((data) => dayjs(data.time).startOf(scope).format() === time);
 
     return {
@@ -108,11 +108,11 @@ export const RequestsOverview: React.FC<Props> = ({
 
   const getTotalRequests = (): string => {
     if (totalRequests > 1_000_000) {
-      return `${(totalRequests / 100).toFixed(1)}k`;
+      return `${(totalRequests / 1_000_000).toFixed(1)}m`;
     }
 
     if (totalRequests > 1_000) {
-      return `${(totalRequests / 100).toFixed(1)}k`;
+      return `${(totalRequests / 1_000).toFixed(1)}k`;
     }
 
     return `${totalRequests}`;

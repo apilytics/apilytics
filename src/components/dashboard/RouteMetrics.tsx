@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Bar,
   BarChart,
@@ -21,10 +21,7 @@ interface Props {
 }
 
 export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading }) => {
-  // The data must be kept in state for the labels to work: https://github.com/recharts/recharts/issues/829#issuecomment-458815276
-  const [data] = useState(() =>
-    routeData.sort((a, b) => (a.requests < b.requests ? 1 : -1)).map((c) => c),
-  );
+  const data = routeData.sort((a, b) => (a.requests < b.requests ? 1 : -1));
 
   const renderRequestLabels = (
     <RouteValue

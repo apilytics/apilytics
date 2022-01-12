@@ -1,24 +1,24 @@
 import dayjs from 'dayjs';
 import type { OpUnitType } from 'dayjs';
 
-import { DAY, MOCK_ENDPOINTS, SIX_MONTHS_DAYS } from 'utils/constants';
+import { DAY, MOCK_ENDPOINTS, THREE_MONTHS_DAYS } from 'utils/constants';
 import type { OriginMetrics, TimeFrame } from 'types';
 
 export const getTimeFrameScope = (timeFrame: TimeFrame): OpUnitType => {
   let scope: OpUnitType = 'day';
 
-  if (timeFrame === DAY) {
+  if (timeFrame <= DAY) {
     scope = 'hour';
   }
 
-  if (timeFrame >= SIX_MONTHS_DAYS) {
+  if (timeFrame >= THREE_MONTHS_DAYS) {
     scope = 'week';
   }
 
   return scope;
 };
 
-export const getDatesBetweenTimeFrame = (timeFrame: TimeFrame): string[] => {
+export const getDataPointsBetweenTimeFrame = (timeFrame: TimeFrame): string[] => {
   const scope = getTimeFrameScope(timeFrame);
   const dates = [];
 
@@ -35,21 +35,46 @@ export const getDatesBetweenTimeFrame = (timeFrame: TimeFrame): string[] => {
 
 // Load mock data from JSON files and monkey patch dynamic time frame data on it.
 export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
-  const timeFrameData = getDatesBetweenTimeFrame(timeFrame).map((time) => ({
-    requests: Math.floor(Math.random() * 20) + 1,
-    time,
-  }));
+  let requestsMultiplier = 24;
 
+  if (timeFrame <= DAY) {
+    requestsMultiplier = 1;
+  }
+
+  if (timeFrame >= THREE_MONTHS_DAYS) {
+    requestsMultiplier = 24 * 7;
+  }
+
+  const dataPoints = getDataPointsBetweenTimeFrame(timeFrame);
+
+  const _timeFramePoints = dataPoints.flatMap((time) =>
+    MOCK_ENDPOINTS.map(({ name }) => {
+      // 1 - 5 requests for each endpoint per each data point.
+      const requests = Number(
+        ((Math.floor(Math.random() * 5) + 1) * requestsMultiplier * dataPoints.length).toFixed(),
+      );
+
+      return {
+        requests,
+        name,
+        time,
+      };
+    }),
+  );
+
+  const timeFrameData = _timeFramePoints.map(({ requests, time }) => ({ requests, time }));
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
   const totalRequestsGrowth = Number(Math.random().toFixed(2));
 
   const routeData = MOCK_ENDPOINTS.map(({ name, methods, status_codes }) => {
-    // 50 - 100 requests for each data point.
-    const requests =
-      Number((Math.floor(Math.random() * 100) + 75).toFixed()) * timeFrameData.length;
+    const requests = _timeFramePoints
+      .filter((data) => data.name === name)
+      .reduce((prev, curr) => prev + curr.requests, 0);
 
-    // 20 - 200 ms.
     const response_time = Number((Math.floor(Math.random() * 200) + 20).toFixed());
+    const green_multiplier = Number((Math.random() * (0.4 - 0.2) + 0.2).toFixed(2));
+    const yellow_multiplier = Number((Math.random() * (0.4 - 0.2) + 0.2).toFixed(2));
+    const red_multiplier = Number((1 - green_multiplier - yellow_multiplier).toFixed(2));
 
     return {
       requests,
@@ -57,9 +82,9 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
       methods,
       status_codes,
       response_time,
-      count_green: requests * 0.39,
-      count_yellow: requests * 0.33,
-      count_red: requests * 0.27,
+      count_green: green_multiplier * requests,
+      count_yellow: yellow_multiplier * requests,
+      count_red: red_multiplier * requests,
     };
   });
 
