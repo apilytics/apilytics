@@ -17,7 +17,7 @@ interface Route {
 const dynamicDocsRoutes = getDocsFilePaths()
   .map((path) => path.replace(/\.mdx?$/, ''))
   .map((name) => ({
-    path: `/${name}`,
+    path: `/docs/${name}`,
     changeFreq: 'weekly' as const,
     priority: '0.75',
   }));
