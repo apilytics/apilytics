@@ -6,7 +6,7 @@ import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler, OriginMetrics, RouteData, TimeFrameData } from 'types';
 
 const DAY_MILLIS = 24 * 60 * 60 * 1000;
-const SIX_MONTHS_MILLIS = 6 * 30 * DAY_MILLIS;
+const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
 
 interface GetResponse {
   data: OriginMetrics;
@@ -42,7 +42,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 
   if (timeFrame <= DAY_MILLIS) {
     scope = 'hour';
-  } else if (timeFrame >= SIX_MONTHS_MILLIS) {
+  } else if (timeFrame >= THREE_MONTHS_MILLIS) {
     scope = 'week';
   }
 
