@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@apilytics/core@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@apilytics/core/-/core-1.0.0.tgz#3f170244eaf57dab6a8ffebdeeedda1e1e83b45d"
-  integrity sha512-BoDWf2mt6duZykSxW9sI5uWmA6a9k4R5KP0vqDttfaCs2pstkOmXhd7mVO9RRgH8C9WZbbEkZnZ33BqImXd9iw==
+"@apilytics/core@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@apilytics/core/-/core-1.0.1.tgz#787298c44c032d1c946f255e4bc088b2c033d6e5"
+  integrity sha512-qAU1yJxk+Q622emqOsuXn06GP3cRtiVbyJGENuycOZ3siyBYn3EproW7AA2+naWuTHN3o1G7Pc4zSM2q55UzDQ==
 
-"@apilytics/next@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@apilytics/next/-/next-1.0.0.tgz#8d05bee72473b1d4bb605cc4e0fea23736073595"
-  integrity sha512-rTlGX2B3N15wPth5Jfjnw4nCulmimneERTKvgjxNg9dtE7iCG0YKkTSpOC9Se9ALDPuqLg64ZXhluQpfj1i4tg==
+"@apilytics/next@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@apilytics/next/-/next-1.0.1.tgz#cd3693f6f00f3347c7f0de52b7371aeaf0ad019c"
+  integrity sha512-OcUpRn4gnHUywVGNTEncsYGVz9o2L2cnSMysP2E3f6h4FxF9XWjR2MoL2cNluCUznz0+TszvvBdrlMKcwvwoOQ==
   dependencies:
-    "@apilytics/core" "1.0.0"
+    "@apilytics/core" "1.0.1"
     next "*"
 
 "@babel/code-frame@7.12.11":
