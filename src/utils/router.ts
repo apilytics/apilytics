@@ -2,7 +2,7 @@ const docsRoutes = {
   docs: '/docs',
   getStarted: '/docs/get-started',
   python: '/docs/python',
-  javaScript: '/docs/javascript',
+  node: '/docs/node',
   dashboard: '/docs/dashboard',
   byom: '/docs/byom',
 };

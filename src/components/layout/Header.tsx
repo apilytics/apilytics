@@ -79,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
         )}
       >
         <div className="flex items-center">
-          <Link href={staticRoutes.root}>
+          <Link href={staticRoutes.root} passHref>
             <a>
               <Image
                 src="/logo.svg"

@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 
 import { staticRoutes } from 'utils/router';
 
-const INTEGRATIONS = ['Node.js', 'Next.js', 'Django', 'FastAPI', 'BYOM'];
+const INTEGRATIONS = ['Express.js', 'Next.js', 'Django', 'FastAPI', 'BYOM'];
 
 const getCodeSnippet = (framework: string): JSX.Element | string => {
   switch (framework) {
-    case 'Node.js': {
+    case 'Express.js': {
       return (
         <>
-          <pre>$ yarn add @apilytics/next</pre>
+          <pre>$ yarn add @apilytics/express</pre>
           <pre className="mt-2">
             <code>
               {`// server.js
@@ -62,7 +62,7 @@ import os
 APILYTICS_API_KEY = os.getenv("APILYTICS_API_KEY")
 
 MIDDLEWARE = [
-    "apilytics.django.ApilyticsMiddleware",
+  "apilytics.django.ApilyticsMiddleware",
 ]`}
             </code>
           </pre>
@@ -126,7 +126,7 @@ export const Setup: React.FC = () => {
                 <h5 className="text-left">Sign up & grab your API key.</h5>
               </li>
               <li className="step step-primary">
-                <h5 className="text-left">Embed our open-source middleware to your backend.</h5>
+                <h5 className="text-left">Install our open-source middleware.</h5>
               </li>
               <li className="step step-primary">
                 <h5 className="text-left">Start using your dashboard! 🚀</h5>
