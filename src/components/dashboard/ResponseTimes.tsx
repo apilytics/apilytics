@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Bar,
   BarChart,
@@ -22,18 +22,15 @@ interface Props {
 
 // TODO: All of the commented parts are needed when we enable the color coding of the response times.
 export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading }) => {
-  // The data must be kept in state for the labels to work: https://github.com/recharts/recharts/issues/829#issuecomment-458815276
-  const [data] = useState(() =>
-    routeData
-      .sort((a, b) => (a.response_time < b.response_time ? 1 : -1))
-      .map(({ response_time, ...routeData }) => ({
-        ...routeData,
-        response_time,
-        greenRequests: (response_time * (routeData.count_green / routeData.requests)).toFixed(),
-        yellowRequests: (response_time * (routeData.count_yellow / routeData.requests)).toFixed(),
-        redRequests: (response_time * (routeData.count_red / routeData.requests)).toFixed(),
-      })),
-  );
+  const data = routeData
+    .sort((a, b) => (a.response_time < b.response_time ? 1 : -1))
+    .map(({ response_time, ...routeData }) => ({
+      ...routeData,
+      response_time,
+      greenRequests: (response_time * (routeData.count_green / routeData.requests)).toFixed(),
+      yellowRequests: (response_time * (routeData.count_yellow / routeData.requests)).toFixed(),
+      redRequests: (response_time * (routeData.count_red / routeData.requests)).toFixed(),
+    }));
 
   const renderResponseTimeLabels = (
     <RouteValue formatter={(value?: string | number): string => `${value}ms`} />
