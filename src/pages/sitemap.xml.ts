@@ -1,17 +1,34 @@
 import type { GetServerSideProps } from 'next';
 
 import { FRONTEND_URL } from 'utils/constants';
+import { getDocsFilePaths } from 'utils/mdx';
+import { staticRoutes } from 'utils/router';
+
+type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
 // https://www.sitemaps.org/protocol.html#xmlTagDefinitions
 interface Route {
   path: string;
-  changeFreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+  changeFreq: ChangeFreq;
   priority: string; // Value from '0.0' to '1.0'
   modified?: string; // ISO date
 }
 
+const dynamicDocsRoutes = getDocsFilePaths()
+  .map((path) => path.replace(/\.mdx?$/, ''))
+  .map((name) => ({
+    path: `/${name}`,
+    changeFreq: 'weekly' as const,
+    priority: '0.75',
+  }));
+
 // We only want to index the landing page for now.
-const INDEXABLE_ROUTES: Route[] = [{ path: '', changeFreq: 'weekly', priority: '1.0' }];
+const INDEXABLE_ROUTES: Route[] = [
+  { path: '', changeFreq: 'weekly', priority: '1.0' },
+  { path: staticRoutes.docs, changeFreq: 'weekly', priority: '0.75' },
+  ...dynamicDocsRoutes,
+  { path: staticRoutes.contact, changeFreq: 'weekly', priority: '0.5' },
+];
 
 const toUrl = ({ path, modified, changeFreq, priority }: Route): string => {
   return `
