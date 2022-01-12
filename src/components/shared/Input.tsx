@@ -19,6 +19,7 @@ export const Input: React.FC<Props> = ({
   className,
   endIcon: EndIcon,
   buttonProps,
+  children,
   ...inputProps
 }) => (
   <div className="form-control">
@@ -46,5 +47,6 @@ export const Input: React.FC<Props> = ({
         <span className="label-text-alt">{helperText}</span>
       </label>
     )}
+    {children}
   </div>
 );
