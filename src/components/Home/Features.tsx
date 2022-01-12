@@ -30,13 +30,14 @@ const FEATURES = [
   {
     icon: DocumentReportIcon,
     title: 'Reports',
-    content: 'Get automatic weekly email and Slack reports for your API metrics, trends etc.',
+    content: 'Get automatic weekly email and Slack reports for your API metrics.',
     comingSoon: true,
   },
   {
     icon: DatabaseIcon,
     title: 'Your data',
-    content: 'We value your privacy and will never expose your data to anyone else except you.',
+    content:
+      'Your data will never be accessible to anyone but you. Export and delete your data whenever you want.',
   },
   {
     icon: ServerIcon,
@@ -54,9 +55,8 @@ export const Features: React.FC = () => (
         <span className="text-secondary">API metrics</span>
       </h1>
       <h5 className="mt-8">
-        Analyze real-time metrics from your APIs through an intuitive dashboard and make data-driven
-        decisions for your API development. Integrate to your backend with a simple to setup
-        middleware.
+        Analyze real-time metrics from your APIs through an intuitive dashboard. Integrate to your
+        backend with a simple to setup middleware.
       </h5>
       <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
         {FEATURES.map(({ icon: Icon, title, content, comingSoon }) => (
@@ -65,7 +65,7 @@ export const Features: React.FC = () => (
               <Icon className="h-8 w-8 text-primary mr-2" />
               <h6>{title}</h6>
             </div>
-            <p className="mt-4 grow">{content}</p>
+            <p className="mt-2 grow">{content}</p>
             {comingSoon && <div className="badge badge-outline mt-4">Coming soon</div>}
           </div>
         ))}

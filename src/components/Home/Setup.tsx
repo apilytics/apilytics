@@ -95,9 +95,11 @@ app.add_middleware(ApilyticsMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))`
     case 'BYOM': {
       return (
         <pre>
-          If your backend supports none of our open source middlewares, we have tools to help you
-          with creating your own middleware. See our <Link href={staticRoutes.docs}>docs</Link> for
-          more information.
+          If your backend supports none of our open source middlewares,
+          <br />
+          we have tools to help you with creating your own middleware.
+          <br />
+          See our <Link href={staticRoutes.docs}>docs</Link> for more information.
         </pre>
       );
     }
@@ -124,7 +126,7 @@ export const Setup: React.FC = () => {
                 <h5 className="text-left">Sign up & grab your API key.</h5>
               </li>
               <li className="step step-primary">
-                <h5 className="text-left">Embed our open-source middleware to your backend.</h5>
+                <h5 className="text-left">Install our open-source middleware.</h5>
               </li>
               <li className="step step-primary">
                 <h5 className="text-left">Start using your dashboard! 🚀</h5>
