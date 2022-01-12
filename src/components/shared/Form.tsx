@@ -32,18 +32,14 @@ export const Form: React.FC<Props> = ({
     <form onSubmit={onSubmit} className="mt-4 text-left">
       {children}
       {error && (
-        <div className="form-control mt-2">
-          <label className="label">
-            <span className="label-text text-error">{error}</span>
-          </label>
-        </div>
+        <label className="label">
+          <span className="label-text-alt text-error">{error}</span>
+        </label>
       )}
       {submittedText && (
-        <div className="form-control mt-2">
-          <label className="label">
-            <span className="label-text-alt text-white">{submittedText}</span>
-          </label>
-        </div>
+        <label className="label">
+          <span className="label-text-alt text-white">{submittedText}</span>
+        </label>
       )}
       <Button className="btn-primary mt-4" loading={loading} type="submit" fullWidth>
         Submit

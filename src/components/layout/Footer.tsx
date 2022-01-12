@@ -81,9 +81,19 @@ export const Footer: React.FC = () => {
               endIcon={ArrowSmRightIcon}
               helperText="No spam. Unsubscribe at any time."
               loading={loading}
-            />
-            {error && <p className="mt-4 label-text text-error">{error}</p>}
-            {submittedText && <p className="mt-4 label-text">{submittedText}</p>}
+              buttonProps={{ type: 'submit' }}
+            >
+              {error && (
+                <label className="label">
+                  <span className="label-text-alt text-error">{error}</span>
+                </label>
+              )}
+              {submittedText && (
+                <label className="label">
+                  <span className="label-text-alt text-white">{submittedText}</span>
+                </label>
+              )}
+            </Input>
           </form>
         </div>
         <h5 className="footer-title mt-8">© {new Date().getFullYear()} Apilytics</h5>
