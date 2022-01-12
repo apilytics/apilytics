@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2022-01-08T10:14:33.520Z
+__export_date: 2022-01-11T19:33:38.552Z
 __export_source: insomnia.desktop.app:v2021.7.2
 resources:
   - _id: req_adc825807b5a4a38bb00d10c418f174b
@@ -137,7 +137,7 @@ resources:
     _type: request
   - _id: req_27e5ed24e92d44b88021fc066b267d13
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641636842156
+    modified: 1641929010139
     created: 1640728892367
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}"
     name: /api/origins/[slug]
@@ -166,7 +166,7 @@ resources:
     _type: request
   - _id: req_8ad2e9cff01441b5977bf9ae102cdefa
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641636842691
+    modified: 1641929009484
     created: 1640728892370
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}"
     name: /api/origins/[slug]
@@ -224,7 +224,7 @@ resources:
     _type: request
   - _id: req_0e743e6d79f44a8f94781b4b22c8333f
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641636863659
+    modified: 1641845540207
     created: 1640728892375
     url: "{{ _.url }}/api/v1/middleware"
     name: /api/v1/middleware
@@ -239,14 +239,18 @@ resources:
           "timeMillis": 20,
           "statusCode": 200
         }
-    parameters: []
+    parameters:
+      - id: pair_4be7f0a6ab6c4841a414532007ccda44
+        name: foo
+        value: bar
+        description: ""
     headers:
       - name: Content-Type
         value: application/json
         id: pair_755bf243066c4caea898b874ece37ca1
       - id: pair_eac5d9b2e4dd40b3aa090566b2c842d4
         name: X-API-Key
-        value: 6dad1146-987d-4f81-8661-385e7649ebdf
+        value: 1f4d63bf-681c-475f-84a9-9fafdaa9892e
         description: ""
     authentication: {}
     metaSortKey: -1639683120078.961
@@ -258,9 +262,34 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_175b1d01095e409d8ccbaa1dda863c7a
+    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
+    modified: 1641843298650
+    created: 1641843281926
+    url: "{{ _.url }}/api/healthz"
+    name: /api/healthz
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_4be7f0a6ab6c4841a414532007ccda44
+        name: foo
+        value: bar
+        description: ""
+    headers: []
+    authentication: {}
+    metaSortKey: -1639683119009.4805
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: env_32ce5cfd6d7243678bb30f5a859267ed
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728892340
+    modified: 1641929594884
     created: 1640728892340
     name: Base Environment
     data: {}
@@ -271,7 +300,7 @@ resources:
     _type: environment
   - _id: jar_de000d18f5904aff9a14bda8d33ad992
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1640728892348
+    modified: 1641665180526
     created: 1640728892348
     name: Default Jar
     cookies:
@@ -294,7 +323,7 @@ resources:
     _type: api_spec
   - _id: env_3b986c752a0e4f40a30a9e80c68a8d09
     parentId: env_32ce5cfd6d7243678bb30f5a859267ed
-    modified: 1641636857797
+    modified: 1641929596028
     created: 1640728892342
     name: local
     data:
@@ -308,5 +337,5 @@ resources:
         - sessionCookie
     color: null
     isPrivate: false
-    metaSortKey: 1639683432853
+    metaSortKey: 0
     _type: environment
