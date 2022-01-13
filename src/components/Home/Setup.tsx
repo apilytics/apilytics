@@ -99,7 +99,7 @@ app.add_middleware(ApilyticsMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))`
           <br />
           we have tools to help you with creating your own middleware.
           <br />
-          See our <Link href={staticRoutes.docs}>docs</Link> for more information.
+          See our <Link href={staticRoutes.byom}>docs</Link> for more information.
         </pre>
       );
     }
