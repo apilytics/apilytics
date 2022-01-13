@@ -1,0 +1,20 @@
+---
+name: Django
+order: 3
+---
+
+```sh
+pip install apilytics
+```
+
+```python
+# settings.py
+
+import os
+
+APILYTICS_API_KEY = os.getenv("APILYTICS_API_KEY")
+
+MIDDLEWARE = [
+  "apilytics.django.ApilyticsMiddleware",
+]
+```

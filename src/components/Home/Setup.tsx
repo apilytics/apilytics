@@ -1,117 +1,22 @@
 import clsx from 'clsx';
-import Link from 'next/link';
+import { MDXRemote } from 'next-mdx-remote';
 import React, { useState } from 'react';
 
-import { staticRoutes } from 'utils/router';
+import type { Snippet } from 'types';
 
-const INTEGRATIONS = ['Express.js', 'Next.js', 'Django', 'FastAPI', 'BYOM'];
+interface Props {
+  snippets: Snippet[];
+}
 
-const getCodeSnippet = (framework: string): JSX.Element | string => {
-  switch (framework) {
-    case 'Express.js': {
-      return (
-        <>
-          <pre>$ yarn add @apilytics/express</pre>
-          <pre className="mt-2">
-            <code>
-              {`// server.js
+export const Setup: React.FC<Props> = ({ snippets }) => {
+  const [selectedIntegration, setSelectedIntegration] = useState(snippets[0].name);
+  const snippet = snippets.find(({ name }) => selectedIntegration === name);
 
-const { apilyticsMiddleware } = require('@apilytics/express');
-const express = require('express');
-
-const app = express();
-
-app.use(apilyticsMiddleware(process.env.APILYTICS_API_KEY));`}
-            </code>
-          </pre>
-        </>
-      );
-    }
-
-    case 'Next.js': {
-      return (
-        <>
-          <pre>$ yarn add @apilytics/next</pre>
-          <pre className="mt-2">
-            <code>
-              {`// pages/api/my-route.js
-
-import { withApilytics } from '@apilytics/next';
-
-const handler = async (req, res) => {
-  // ...
-};
-
-export default withApilytics(handler, process.env.APILYTICS_API_KEY);`}
-            </code>
-          </pre>
-        </>
-      );
-    }
-
-    case 'Django': {
-      return (
-        <>
-          <pre>$ pip install apilytics</pre>
-          <pre className="mt-2">
-            <code>
-              {`# settings.py
-
-import os
-
-APILYTICS_API_KEY = os.getenv("APILYTICS_API_KEY")
-
-MIDDLEWARE = [
-  "apilytics.django.ApilyticsMiddleware",
-]`}
-            </code>
-          </pre>
-        </>
-      );
-    }
-
-    case 'FastAPI': {
-      return (
-        <>
-          <pre>$ pip install apilytics</pre>
-          <pre className="mt-2">
-            <code>
-              {`# main.py
-
-import os
-
-from apilytics.fastapi import ApilyticsMiddleware
-from fastapi import FastAPI
-
-app = FastAPI()
-
-app.add_middleware(ApilyticsMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))`}
-            </code>
-          </pre>
-        </>
-      );
-    }
-
-    case 'BYOM': {
-      return (
-        <pre>
-          If your backend supports none of our open source middlewares,
-          <br />
-          we have tools to help you with creating your own middleware.
-          <br />
-          See our <Link href={staticRoutes.byom}>docs</Link> for more information.
-        </pre>
-      );
-    }
-
-    default: {
-      return '';
-    }
+  if (!snippet) {
+    throw Error('Snippet not found!');
   }
-};
 
-export const Setup: React.FC = () => {
-  const [selectedFramework, setSelectedFramework] = useState(INTEGRATIONS[0]);
+  const { source } = snippet;
 
   return (
     <div className="bg-background bg-no-repeat bg-cover">
@@ -133,19 +38,21 @@ export const Setup: React.FC = () => {
               </li>
             </ul>
           </div>
-          <div className="mt-4 bg-base-100 w-full rounded-lg mockup-code">
+          <div className="mt-4 bg-base-100 w-full rounded-lg mockup-code pb-0">
             <div className="px-4 tabs">
-              {INTEGRATIONS.map((name) => (
+              {snippets.map(({ name }) => (
                 <p
                   key={name}
-                  className={clsx('tab tab-bordered', selectedFramework === name && 'tab-active')}
-                  onClick={(): void => setSelectedFramework(name)}
+                  className={clsx('tab tab-bordered', selectedIntegration === name && 'tab-active')}
+                  onClick={(): void => setSelectedIntegration(name)}
                 >
                   {name}
                 </p>
               ))}
             </div>
-            <div className="p-4 text-primary">{getCodeSnippet(selectedFramework)}</div>
+            <div className="p-4 text-base-content">
+              <MDXRemote {...source} />
+            </div>
           </div>
         </div>
       </div>

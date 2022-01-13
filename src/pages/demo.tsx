@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
@@ -42,16 +41,16 @@ const Demo: NextPage = () => {
           </h4>
         </div>
         <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
-          <Link href={staticRoutes.login} passHref>
-            <Button className="btn-primary" fullWidth="mobile">
-              Get started
-            </Button>
-          </Link>
-          <Link href={staticRoutes.root} passHref>
-            <Button className="btn-secondary btn-outline" fullWidth="mobile">
-              Learn more
-            </Button>
-          </Link>
+          <Button linkTo={staticRoutes.login} className="btn-primary" fullWidth="mobile">
+            Get started
+          </Button>
+          <Button
+            linkTo={staticRoutes.root}
+            className="btn-secondary btn-outline"
+            fullWidth="mobile"
+          >
+            Learn more
+          </Button>
         </div>
       </div>
     </MainTemplate>

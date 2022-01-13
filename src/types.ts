@@ -1,3 +1,5 @@
+import type { UrlObject } from 'url';
+
 import type { Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
@@ -48,6 +50,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   loading?: boolean;
   tooltip?: string;
   endIcon?: React.FC<ComponentProps<'svg'>>;
+  linkTo?: string | UrlObject;
 }
 
 export interface FrontMatter {
@@ -63,6 +66,12 @@ export interface MDXPageProps extends Record<string, unknown> {
   docsInfo?: FrontMatter[];
 }
 
+export interface Snippet {
+  name: string;
+  order: number;
+  source: MDXRemoteSerializeResult;
+}
+
 export interface AccountContextType {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
@@ -76,12 +85,6 @@ export interface OriginContextType {
   setOrigin: Dispatch<SetStateAction<Origin | null>>;
   metrics: OriginMetrics | null;
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
-}
-
-export interface ModalContextType {
-  modalContent: JSX.Element | null;
-  setModalContent: Dispatch<SetStateAction<JSX.Element | null>>;
-  handleCloseModal: () => void;
 }
 
 export type ApiHandler<T = unknown> = (

@@ -55,7 +55,7 @@
     @apply text-xl;
   }
 
-  a {
+  a:not(.unstyled) {
     @apply link;
     @apply link-primary;
   }
@@ -67,8 +67,6 @@
   }
 
   pre {
-    @apply bg-base-200;
-    @apply p-2;
     @apply rounded-lg;
     @apply max-w-full;
     @apply overflow-hidden;
@@ -77,10 +75,7 @@
   code {
     font-family: monospace;
     @apply text-primary;
-  }
-
-  .mockup-code pre:before {
-    margin-right: 0 !important;
+    @apply rounded-lg;
   }
 }
 

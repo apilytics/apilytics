@@ -33,17 +33,17 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
   const renderDynamicContent = (): JSX.Element => {
     if (!user) {
       return (
-        <Link href={staticRoutes.login} passHref>
-          <Button className="btn-primary btn-outline">Log in</Button>
-        </Link>
+        <Button linkTo={staticRoutes.login} className="btn-primary btn-outline">
+          Log in
+        </Button>
       );
     }
 
     if (!user?.name) {
       return (
-        <Link href={staticRoutes.logout} passHref>
-          <Button className="btn-primary btn-outline">Log out</Button>
-        </Link>
+        <Button linkTo={staticRoutes.logout} className="btn-primary btn-outline">
+          Log out
+        </Button>
       );
     }
 
@@ -59,8 +59,8 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
           >
             {MENU_ITEMS.map(({ name, href }) => (
               <li key={name}>
-                <Link href={href} passHref>
-                  {name}
+                <Link href={href}>
+                  <a>{name}</a>
                 </Link>
               </li>
             ))}
@@ -79,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
         )}
       >
         <div className="flex items-center">
-          <Link href={staticRoutes.root} passHref>
+          <Link href={staticRoutes.root}>
             <a>
               <Image
                 src="/logo.svg"
@@ -94,9 +94,12 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
           <div className="ml-4 badge badge-lg badge-primary">Beta</div>
         </div>
         <div className="flex items-center">
-          <Link href={staticRoutes.docs} passHref>
-            <Button className="btn-secondary btn-outline mr-4 hidden sm:block">Docs</Button>
-          </Link>
+          <Button
+            linkTo={staticRoutes.docs}
+            className="btn-secondary btn-outline mr-4 hidden sm:block"
+          >
+            Docs
+          </Button>
           {renderDynamicContent()}
         </div>
       </div>

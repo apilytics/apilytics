@@ -1,5 +1,6 @@
 import { CogIcon, PlusIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
+import Router from 'next/router';
 import React from 'react';
 import type { NextPage } from 'next';
 
@@ -18,28 +19,29 @@ const Origins: NextPage = () => {
       <div className="divide-y divide-base-content">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4">
           <h4>Origins</h4>
-          <Link href={staticRoutes.newOrigin} passHref>
-            <Button className="btn-primary" endIcon={PlusIcon}>
-              Add origin
-            </Button>
-          </Link>
+          <Button linkTo={staticRoutes.newOrigin} endIcon={PlusIcon} className="btn-primary">
+            Add origin
+          </Button>
         </div>
         <div className="py-4 grid grid-cols-1 gap-2">
           {origins.length ? (
             origins.map(({ name, slug, last24hRequests }) => (
-              <Link href={dynamicRoutes.origin({ slug })} passHref key={name}>
-                <div
-                  className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2 cursor-pointer"
-                  key={name}
-                >
-                  <div className="flex justify-between">
-                    <h5>{name}</h5>
-                    <Link href={dynamicRoutes.originSettings({ slug })} passHref>
-                      <IconButton icon={CogIcon} />
-                    </Link>
+              <Link href={dynamicRoutes.origin({ slug })} key={name}>
+                <a className="unstyled">
+                  <div className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2" key={name}>
+                    <div className="flex justify-between">
+                      <h5>{name}</h5>
+                      <IconButton
+                        icon={CogIcon}
+                        tooltip="Go to origin settings."
+                        onClick={(): Promise<boolean> =>
+                          Router.push(dynamicRoutes.originSettings({ slug }))
+                        }
+                      />
+                    </div>
+                    <p>{last24hRequests} requests in last 24h</p>
                   </div>
-                  <p>{last24hRequests} requests in last 24h</p>
-                </div>
+                </a>
               </Link>
             ))
           ) : (

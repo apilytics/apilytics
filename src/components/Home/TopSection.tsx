@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
 
 import { RequestsOverview } from 'components/dashboard/RequestsOverview';
@@ -73,12 +72,12 @@ export const TopSection: React.FC = () => (
             ))}
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8">
-            <Link href={staticRoutes.login} passHref>
-              <Button className="btn-primary">Get started</Button>
-            </Link>
-            <Link href={staticRoutes.demo} passHref>
-              <Button className="btn-secondary btn-outline">Live demo</Button>
-            </Link>
+            <Button linkTo={staticRoutes.login} className="btn-primary">
+              Get started
+            </Button>
+            <Button linkTo={staticRoutes.demo} className="btn-secondary btn-outline">
+              Live demo
+            </Button>
           </div>
         </div>
         <div className="mt-8 lg:mt-0 select-none">

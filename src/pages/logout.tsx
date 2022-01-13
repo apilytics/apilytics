@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { usePlausible } from 'next-plausible';
 import React, { useEffect } from 'react';
@@ -30,12 +29,16 @@ const Logout: NextPage = () => {
     <MainTemplate>
       <h4 className="text-center">You have been logged out.</h4>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-8 mx-auto">
-        <Link href={staticRoutes.root} passHref>
-          <Button className="btn-primary">Continue</Button>
-        </Link>
-        <Link href={staticRoutes.login} passHref>
-          <Button className="btn-secondary btn-outline">Log in again</Button>
-        </Link>
+        <Button linkTo={staticRoutes.root} className="btn-primary" fullWidth="mobile">
+          Continue
+        </Button>
+        <Button
+          linkTo={staticRoutes.login}
+          className="btn-secondary btn-outline"
+          fullWidth="mobile"
+        >
+          Log in again
+        </Button>
       </div>
     </MainTemplate>
   );

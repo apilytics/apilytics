@@ -22,25 +22,23 @@ for all of the requests that you want to track with Apilytics.
 
 The HTTP requests must have the following specs:
 
-```
-Method: POST
+Method: `POST`
 
 Headers:
-- "Content-Type": "application/json"
-- "X-API-Key": "<your_api_key>"
+
+- `Content-Type`: application/json
+- `X-API-Key`: your API key
 
 Body:
-- "path": The path of the endpoint, e.g. "/api/v1/users".
-- "method": The HTTP method of the request that you want to track.
-- "timeMillis": The time in milliseconds that the request took to complete.
-- "statusCode": The status code of the response.
-```
 
-<br />
+- `path`: The path of the endpoint, e.g. `/api/v1/users`.
+- `method`: The HTTP method of the request that you want to track.
+- `timeMillis`: The time in milliseconds that the request took to complete.
+- `statusCode`: The status code of the response.
 
 Note that your request should be done as a background job
 in your API and this way not bottleneck your API in any way.
 
-<Link href="/">
-  <Button className="btn-secondary btn-outline mt-8 mx-auto">Take me to Apilytics</Button>
-</Link>
+<Button linkTo="/" className="btn-secondary btn-outline mt-8 mx-auto">
+  Take me to Apilytics
+</Button>

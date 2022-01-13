@@ -3,12 +3,12 @@ import { join } from 'path';
 
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
-import { serialize } from 'next-mdx-remote/serialize';
 import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { withAccount } from 'hocs/withAccount';
+import { getSerializedSource } from 'utils/mdx';
 import type { MDXPageProps } from 'types';
 
 const Privacy: NextPage<MDXPageProps> = ({ source }) => (
@@ -23,7 +23,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const fullPath = join(process.cwd(), 'src/privacy.mdx');
   const source = readFileSync(fullPath);
   const { content } = matter(source);
-  const mdxSource = await serialize(content);
+  const mdxSource = await getSerializedSource(content);
 
   return {
     props: {

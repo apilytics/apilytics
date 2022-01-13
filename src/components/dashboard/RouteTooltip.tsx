@@ -34,13 +34,13 @@ export const RouteTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
           </li>
           <p>Requests counts by response time percentiles:</p>
           <li>
-            <span className="text-requests-green">Top 33th:</span> {green} %
+            <span className="text-requests-green">Top 33rd:</span> {green} %
           </li>
           <li>
-            <span className="text-requests-yellow">Mid 33th:</span> {yellow} %
+            <span className="text-requests-yellow">Mid 33rd:</span> {yellow} %
           </li>
           <li>
-            <span className="text-requests-red">Bottom 33th:</span> {red} %
+            <span className="text-requests-red">Bottom 33rd:</span> {red} %
           </li>
         </ul>
       </div>

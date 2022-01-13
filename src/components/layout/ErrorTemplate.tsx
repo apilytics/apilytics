@@ -2,10 +2,10 @@ import React from 'react';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 
-export const NotFoundTemplate: React.FC = () => (
+export const ErrorTemplate: React.FC = () => (
   <MainTemplate>
     <div className="grow flex items-center justify-center">
-      <h4>Not found...</h4>
+      <h4>Something went wrong...</h4>
     </div>
   </MainTemplate>
 );

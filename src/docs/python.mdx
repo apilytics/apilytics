@@ -11,8 +11,8 @@ The respository for our open source Python middleware can be found <ExternalLink
 
 #### Installation
 
-```
-$ pip install apilytics
+```sh
+pip install apilytics
 ```
 
 Enable the middleware and set your API key:  
@@ -22,7 +22,7 @@ the middleware will be automatically disabled if the key is `None`._
 
 #### Django:
 
-```
+```python
 # settings.py
 
 import os
@@ -36,7 +36,7 @@ MIDDLEWARE = [
 
 #### FastAPI:
 
-```
+```python
 # main.py
 
 import os
@@ -49,7 +49,7 @@ app.add_middleware(ApilyticsFastAPIMiddleware, api_key=os.getenv("APILYTICS_API_
 
 #### Other Python frameworks:
 
-```
+```python
 # my_apilytics_middleware.py
 
 import os
