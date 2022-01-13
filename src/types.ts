@@ -78,12 +78,6 @@ export interface OriginContextType {
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
 }
 
-export interface ModalContextType {
-  modalContent: JSX.Element | null;
-  setModalContent: Dispatch<SetStateAction<JSX.Element | null>>;
-  handleCloseModal: () => void;
-}
-
 export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,

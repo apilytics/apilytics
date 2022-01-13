@@ -10,6 +10,7 @@ import { Button } from 'components/shared/Button';
 import { Form } from 'components/shared/Form';
 import { IconButton } from 'components/shared/IconButton';
 import { Input } from 'components/shared/Input';
+import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
@@ -27,7 +28,7 @@ const OriginSettings: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
   const [apiKeyCopied, setApiKeyCopied] = useState(false);
-  const { handleCloseModal, setModalContent } = useModal();
+  const { modalOpen, handleOpenModal, handleCloseModal } = useModal();
   const plausible = usePlausible<PlausibleEvents>();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -98,33 +99,8 @@ const OriginSettings: NextPage = () => {
     </div>
   );
 
-  const modalContent = (
-    <>
-      <div className="flex justify-end p-2">
-        <ModalCloseButton />
-      </div>
-      <div className="p-4">
-        <p>
-          Are you sure you want to delete this origin? All data associated with it will be lost
-          forever.
-        </p>
-      </div>
-      <div className="p-2 grid grid-cols-2 gap-2">
-        <Button className="btn-error btn-outline" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
-          Confirm
-        </Button>
-      </div>
-    </>
-  );
-
   const renderDeleteOriginLink = (
-    <p
-      onClick={(): void => setModalContent(modalContent)}
-      className="mt-4 text-center link text-error"
-    >
+    <p onClick={handleOpenModal} className="mt-4 text-center link text-error">
       Delete origin
     </p>
   );
@@ -150,6 +126,25 @@ const OriginSettings: NextPage = () => {
         />
         <ApiKeyField value={apiKey} apiKeyCopiedCallback={(): void => setApiKeyCopied(false)} />
       </Form>
+      <Modal open={modalOpen} onClose={handleCloseModal}>
+        <div className="flex justify-end p-2">
+          <ModalCloseButton onClick={handleCloseModal} />
+        </div>
+        <div className="p-4">
+          <p>
+            Are you sure you want to delete this origin? All data associated with it will be lost
+            forever.
+          </p>
+        </div>
+        <div className="p-2 grid grid-cols-2 gap-2">
+          <Button className="btn-error btn-outline" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
+            Confirm
+          </Button>
+        </div>
+      </Modal>
     </MainTemplate>
   );
 };
