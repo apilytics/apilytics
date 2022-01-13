@@ -66,6 +66,12 @@ export interface MDXPageProps extends Record<string, unknown> {
   docsInfo?: FrontMatter[];
 }
 
+export interface Snippet {
+  name: string;
+  order: number;
+  source: MDXRemoteSerializeResult;
+}
+
 export interface AccountContextType {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;

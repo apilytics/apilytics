@@ -1,0 +1,20 @@
+---
+name: Next.js
+order: 2
+---
+
+```sh
+yarn add @apilytics/next
+```
+
+```javascript
+// pages/api/my-route.js
+
+import { withApilytics } from '@apilytics/next';
+
+const handler = async (req, res) => {
+  // ...
+};
+
+export default withApilytics(handler, process.env.APILYTICS_API_KEY);
+```

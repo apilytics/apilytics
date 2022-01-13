@@ -1,0 +1,19 @@
+---
+name: Express.js
+order: 1
+---
+
+```sh
+yarn add @apilytics/express
+```
+
+```javascript
+// server.js
+
+const { apilyticsMiddleware } = require('@apilytics/express');
+const express = require('express');
+
+const app = express();
+
+app.use(apilyticsMiddleware(process.env.APILYTICS_API_KEY));
+```

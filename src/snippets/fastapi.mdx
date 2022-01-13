@@ -1,0 +1,21 @@
+---
+name: FastAPI
+order: 4
+---
+
+```sh
+pip install apilytics
+```
+
+```python
+# main.py
+
+import os
+
+from apilytics.fastapi import ApilyticsMiddleware
+from fastapi import FastAPI
+
+app = FastAPI()
+
+app.add_middleware(ApilyticsMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))
+```

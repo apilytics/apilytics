@@ -11,9 +11,9 @@ The respository for our open source Node.js middleware can be found <ExternalLin
 
 #### Installation
 
-```
+```sh
 yarn add @apilytics/express
-// OR
+# OR
 npm install @apilytics/express
 ```
 
@@ -24,7 +24,7 @@ the middleware will be automatically disabled if the key is `undefined`._
 
 #### Express.js
 
-```
+```javascript
 // server.js
 
 const { apilyticsMiddleware } = require('@apilytics/express');
@@ -37,7 +37,7 @@ app.use(apilyticsMiddleware(process.env.APILYTICS_API_KEY));
 
 #### Next.js
 
-```
+```javascript
 // pages/api/my-route.js
 
 import { withApilytics } from '@apilytics/next';
@@ -51,29 +51,29 @@ export default withApilytics(handler, process.env.APILYTICS_API_KEY);
 
 #### Other Node.js frameworks
 
-```
+```javascript
 // my-apilytics-middleware.js
 
 import { milliSecondTimer, sendApilyticsMetrics } from '@apilytics/core';
 
 const myApilyticsMiddleware = async (req, handler) => {
-    const apiKey = process.env.APILYTICS_API_KEY;
+  const apiKey = process.env.APILYTICS_API_KEY;
 
-    if (!apiKey) {
-      return await handler(req);
-    }
+  if (!apiKey) {
+    return await handler(req);
+  }
 
-    const timer = milliSecondTimer();
-    const res = await handler(req);
+  const timer = milliSecondTimer();
+  const res = await handler(req);
 
-    sendApilyticsMetrics({
-      apiKey,
-      path: req.path,
-      method: req.method,
-      statusCode: res.statusCode,
-      timeMillis: timer(),
-    });
+  sendApilyticsMetrics({
+    apiKey,
+    path: req.path,
+    method: req.method,
+    statusCode: res.statusCode,
+    timeMillis: timer(),
+  });
 
-    return res;
+  return res;
 };
 ```

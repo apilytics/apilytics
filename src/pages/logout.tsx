@@ -29,10 +29,14 @@ const Logout: NextPage = () => {
     <MainTemplate>
       <h4 className="text-center">You have been logged out.</h4>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-8 mx-auto">
-        <Button linkTo={staticRoutes.root} className="btn-primary">
+        <Button linkTo={staticRoutes.root} className="btn-primary" fullWidth="mobile">
           Continue
         </Button>
-        <Button linkTo={staticRoutes.login} className="btn-secondary btn-outline">
+        <Button
+          linkTo={staticRoutes.login}
+          className="btn-secondary btn-outline"
+          fullWidth="mobile"
+        >
           Log in again
         </Button>
       </div>
