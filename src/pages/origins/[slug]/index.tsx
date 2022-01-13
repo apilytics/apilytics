@@ -49,7 +49,6 @@ const Origin: NextPage = () => {
 
   useEffect(() => {
     if (showApiKey) {
-      console.log('open modal');
       handleOpenModal();
       router.replace(dynamicRoutes.origin({ slug }));
     }
@@ -72,7 +71,11 @@ const Origin: NextPage = () => {
         <ResponseTimes metrics={metrics} loading={loading} />
       </div>
       <p className="mt-4 text-center">
-        Help us improve the service by <Link href={staticRoutes.contact}>giving us feedback</Link>.
+        Help us improve the service by{' '}
+        <Link href={staticRoutes.contact}>
+          <a>giving us feedback</a>
+        </Link>
+        .
       </p>
       <Modal open={modalOpen} onClose={handleCloseModal}>
         <div className="flex justify-between items-center p-2">

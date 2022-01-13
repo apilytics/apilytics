@@ -1,3 +1,5 @@
+import type { UrlObject } from 'url';
+
 import type { Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
@@ -48,6 +50,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   loading?: boolean;
   tooltip?: string;
   endIcon?: React.FC<ComponentProps<'svg'>>;
+  linkTo?: string | UrlObject;
 }
 
 export interface FrontMatter {

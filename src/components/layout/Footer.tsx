@@ -54,10 +54,14 @@ export const Footer: React.FC = () => {
           <div className="flex flex-col text-left">
             <ul>
               <p>
-                <Link href={staticRoutes.docs}>Docs</Link>
+                <Link href={staticRoutes.docs}>
+                  <a>Docs</a>
+                </Link>
               </p>
               <p>
-                <Link href={staticRoutes.contact}>Contact</Link>
+                <Link href={staticRoutes.contact}>
+                  <a>Contact</a>
+                </Link>
               </p>
               <p>
                 <ExternalLink href="https://twitter.com/apilytics">Twitter</ExternalLink>
@@ -66,7 +70,9 @@ export const Footer: React.FC = () => {
                 <ExternalLink href="https://github.com/apilytics">Github</ExternalLink>
               </p>
               <p>
-                <Link href={staticRoutes.privacy}>Privacy</Link>
+                <Link href={staticRoutes.privacy}>
+                  <a>Privacy</a>
+                </Link>
               </p>
             </ul>
           </div>

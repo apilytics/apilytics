@@ -19,7 +19,10 @@ export const ApiKeyField: React.FC<Props> = ({ value, apiKeyCopiedCallback }) =>
   const renderHelperText = (
     <>
       Use this API key with Apilytics middleware. See our{' '}
-      <Link href={staticRoutes.docs}>documentation</Link> for more information.
+      <Link href={staticRoutes.docs}>
+        <a>documentation</a>
+      </Link>{' '}
+      for more information.
     </>
   );
 

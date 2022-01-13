@@ -1,5 +1,4 @@
 import { CogIcon } from '@heroicons/react/solid';
-import Link from 'next/link';
 import React from 'react';
 import type { Origin } from '@prisma/client';
 import type { Dispatch, SetStateAction } from 'react';
@@ -35,9 +34,12 @@ export const DashboardOptions: React.FC<Props> = ({
       ))}
     </Select>
     {!hideSettingsButton && (
-      <Link href={dynamicRoutes.originSettings({ slug })} passHref>
-        <IconButton icon={CogIcon} className="ml-4" />
-      </Link>
+      <IconButton
+        linkTo={dynamicRoutes.originSettings({ slug })}
+        icon={CogIcon}
+        tooltip="Go to origin settings."
+        className="ml-4"
+      />
     )}
   </div>
 );

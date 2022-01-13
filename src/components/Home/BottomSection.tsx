@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import React from 'react';
 
 import { Button } from 'components/shared/Button';
@@ -11,16 +10,12 @@ export const BottomSection: React.FC = () => (
         Ready to <span className="text-primary">boost</span> your API development?
       </h3>
       <div className="mt-8 flex flex-col lg:flex-row gap-4 justify-center">
-        <Link href={staticRoutes.login} passHref>
-          <Button className="btn-primary" fullWidth="mobile">
-            Get started
-          </Button>
-        </Link>
-        <Link href={staticRoutes.demo} passHref>
-          <Button className="btn-secondary btn-outline" fullWidth="mobile">
-            Live demo
-          </Button>
-        </Link>
+        <Button linkTo={staticRoutes.login} className="btn-primary" fullWidth="mobile">
+          Get started
+        </Button>
+        <Button linkTo={staticRoutes.demo} className="btn-secondary btn-outline" fullWidth="mobile">
+          Live demo
+        </Button>
       </div>
     </div>
   </div>

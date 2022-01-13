@@ -46,7 +46,9 @@ export const DocsTemplate: React.FC<Props> = ({
           .map(({ name, routeName, order: parentOrder }) => (
             <Fragment key={routeName}>
               <li>
-                <Link href={staticRoutes[routeName as keyof typeof staticRoutes]}>{name}</Link>
+                <Link href={staticRoutes[routeName as keyof typeof staticRoutes]}>
+                  <a>{name}</a>
+                </Link>
               </li>
               <ul className="menu">
                 {docsInfo
@@ -54,7 +56,7 @@ export const DocsTemplate: React.FC<Props> = ({
                   .map(({ name, routeName }) => (
                     <li key={routeName}>
                       <Link href={staticRoutes[routeName as keyof typeof staticRoutes]}>
-                        {name}
+                        <a>{name}</a>
                       </Link>
                     </li>
                   ))}
@@ -66,19 +68,22 @@ export const DocsTemplate: React.FC<Props> = ({
         <div className="card rounded-lg shadow p-4 bg-base-100 break-words items-start">
           {children}
           {nextRoute && (
-            <Link href={staticRoutes[nextRoute.routeName]} passHref>
-              <Button
-                className="btn-secondary btn-outline mt-8 mx-auto"
-                endIcon={ArrowSmRightIcon}
-                fullWidth="mobile"
-              >
-                {nextRoute.name}
-              </Button>
-            </Link>
+            <Button
+              linkTo={staticRoutes[nextRoute.routeName]}
+              endIcon={ArrowSmRightIcon}
+              fullWidth="mobile"
+              className="btn-secondary btn-outline mt-8 mx-auto"
+            >
+              {nextRoute.name}
+            </Button>
           )}
         </div>
         <p className="mt-4 text-center">
-          Help us improve these docs by <Link href={staticRoutes.contact}>giving us feedback</Link>.
+          Help us improve these docs by{' '}
+          <Link href={staticRoutes.contact}>
+            <a>giving us feedback</a>
+          </Link>
+          .
         </p>
       </div>
     </Layout>

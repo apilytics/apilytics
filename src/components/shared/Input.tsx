@@ -18,6 +18,7 @@ export const Input: React.FC<Props> = ({
   helperText,
   className,
   endIcon: EndIcon,
+  loading,
   buttonProps,
   children,
   ...inputProps
@@ -37,7 +38,11 @@ export const Input: React.FC<Props> = ({
         <IconButton
           icon={EndIcon}
           type="button"
-          className={clsx('rounded-l-none btn-outline', buttonProps?.className)}
+          className={clsx(
+            'rounded-l-none btn-outline',
+            loading && 'loading',
+            buttonProps?.className,
+          )}
           {...buttonProps}
         />
       )}

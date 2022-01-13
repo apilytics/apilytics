@@ -55,7 +55,7 @@
     @apply text-xl;
   }
 
-  a {
+  a:not(.unstyled) {
     @apply link;
     @apply link-primary;
   }
