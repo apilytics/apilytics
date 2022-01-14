@@ -3,21 +3,26 @@ import React, { useState } from 'react';
 
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
+import { Select } from 'components/shared/Select';
+import { TextArea } from 'components/shared/TextArea';
 import { useAccount } from 'hooks/useAccount';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 interface Props {
-  title?: string;
+  title: string;
+  isSignUp?: boolean;
 }
 
-export const AccountForm: React.FC<Props> = ({ title }) => {
+export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
   const { user, setUser } = useAccount();
 
   const [formValues, setFormValues] = useState({
     name: user?.name || '',
     email: user?.email || '',
+    usedTechnologies: user?.usedTechnologies || '',
+    intendedUse: user?.intendedUse || '',
   });
 
   const [error, setError] = useState('');
@@ -25,7 +30,9 @@ export const AccountForm: React.FC<Props> = ({ title }) => {
   const [submittedText, setSubmittedText] = useState('');
   const plausible = usePlausible<PlausibleEvents>();
 
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>): void =>
+  const handleChange = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void =>
     setFormValues({ ...formValues, [target.name]: target.value });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -33,12 +40,11 @@ export const AccountForm: React.FC<Props> = ({ title }) => {
     setLoading(true);
     setSubmittedText('');
     setError('');
-    const payload = { ...formValues };
 
     try {
       const res = await fetch(staticApiRoutes.account, {
         method: 'PUT',
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formValues),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -84,6 +90,35 @@ export const AccountForm: React.FC<Props> = ({ title }) => {
         onChange={handleChange}
         required
       />
+      {isSignUp && (
+        <TextArea
+          name="usedTechnologies"
+          label="What languages and frameworks do you plan to use with Apilytics?"
+          value={formValues.usedTechnologies}
+          onChange={handleChange}
+          required
+        />
+      )}
+      {isSignUp && (
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">
+              What purpose are you planning to use Apilytics for?{' '}
+              <span className="text-error">*</span>
+            </span>
+          </label>
+          <Select
+            name="intendedUse"
+            value={formValues.intendedUse}
+            onChange={handleChange}
+            required
+          >
+            <option value="">---</option>
+            <option value="professional">Professional</option>
+            <option value="hobby">Hobby</option>
+          </Select>
+        </div>
+      )}
     </Form>
   );
 };

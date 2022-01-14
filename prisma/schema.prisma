@@ -31,10 +31,12 @@ model Account {
 }
 
 model User {
-  id            String    @id @default(cuid()) // next-auth doesn't support UUIDs for its models.
-  name          String    @default("")
-  email         String    @unique
-  emailVerified DateTime? @map("email_verified")
+  id               String    @id @default(cuid()) // next-auth doesn't support UUIDs for its models.
+  name             String    @default("")
+  email            String    @unique
+  emailVerified    DateTime? @map("email_verified")
+  usedTechnologies String    @default("") @map("used_technologies")
+  intendedUse      String    @default("") @map("intended_use")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

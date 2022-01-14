@@ -59,7 +59,7 @@ export const withAuth = <T extends Record<string, unknown>>(
 
       return (
         <MainTemplate>
-          <AccountForm title="Finish up your account to complete sign up" />
+          <AccountForm title="Finish up your account to complete sign up" isSignUp />
         </MainTemplate>
       );
     }
