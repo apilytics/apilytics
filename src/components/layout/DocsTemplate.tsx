@@ -65,7 +65,7 @@ export const DocsTemplate: React.FC<Props> = ({
           ))}
       </ul>
       <div className="container py-4 lg:pt-16 animate-fade-in-top grow flex flex-col height-full max-w-3xl">
-        <div className="card rounded-lg shadow p-4 bg-base-100 break-words items-start">
+        <div className="card rounded-lg shadow p-4 bg-base-100 break-words items-start text-white">
           {children}
           {nextRoute && (
             <Button

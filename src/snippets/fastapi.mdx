@@ -3,15 +3,24 @@ name: FastAPI
 order: 4
 ---
 
+Install with pip:
+
 ```sh
 pip install apilytics
 ```
+
+Install with poetry:
+
+```sh
+poetry add apilytics
+```
+
+Usage:
 
 ```python
 # main.py
 
 import os
-
 from apilytics.fastapi import ApilyticsMiddleware
 from fastapi import FastAPI
 

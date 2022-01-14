@@ -50,7 +50,7 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
                 </p>
               ))}
             </div>
-            <div className="p-4 text-base-content">
+            <div className="p-4">
               <MDXRemote {...source} />
             </div>
           </div>
