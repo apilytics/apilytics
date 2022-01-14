@@ -16,13 +16,19 @@ the middleware will be automatically disabled if the key is `undefined`._
 
 #### Express.js
 
+Install with yarn:
+
 ```sh
 yarn add @apilytics/express
-# OR
+```
+
+Install with npm:
+
+```sh
 npm install @apilytics/express
 ```
 
-<br />
+Usage:
 
 ```javascript
 // server.js
@@ -37,13 +43,19 @@ app.use(apilyticsMiddleware(process.env.APILYTICS_API_KEY));
 
 #### Next.js
 
+Install with yarn
+
 ```sh
 yarn add @apilytics/next
-# OR
+```
+
+Install with npm:
+
+```sh
 npm install @apilytics/next
 ```
 
-<br />
+Usage:
 
 ```javascript
 // pages/api/my-route.js
@@ -59,13 +71,19 @@ export default withApilytics(handler, process.env.APILYTICS_API_KEY);
 
 #### Other Node.js frameworks
 
+Install with yarn:
+
 ```sh
 yarn add @apilytics/core
-# OR
+```
+
+Install with npm:
+
+```sh
 npm install @apilytics/core
 ```
 
-<br />
+Usage:
 
 ```javascript
 // my-apilytics-middleware.js

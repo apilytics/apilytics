@@ -42,7 +42,7 @@ export const Why: React.FC = () => (
             <div className="card bg-base-100 rounded-lg p-4" key={title}>
               <div className="flex items-center">
                 <BadgeCheckIcon className="h-8 w-8 mr-2 text-secondary" />
-                <h6>{title}</h6>
+                <h6 className="text-white">{title}</h6>
               </div>
               <p className="mt-2 grow">{content}</p>
             </div>

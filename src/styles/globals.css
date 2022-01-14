@@ -68,14 +68,18 @@
 
   pre {
     @apply rounded-lg;
-    @apply max-w-full;
+    @apply w-full;
     @apply overflow-hidden;
   }
 
   code {
     font-family: monospace;
-    @apply text-primary;
+    @apply text-secondary;
     @apply rounded-lg;
+  }
+
+  .mockup-code pre:before {
+    margin-right: 0 !important;
   }
 }
 

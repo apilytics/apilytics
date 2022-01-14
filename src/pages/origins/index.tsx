@@ -18,7 +18,7 @@ const Origins: NextPage = () => {
     <MainTemplate>
       <div className="divide-y divide-base-content">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4">
-          <h4>Origins</h4>
+          <h4 className="text-white">Origins</h4>
           <Button linkTo={staticRoutes.newOrigin} endIcon={PlusIcon} className="btn-primary">
             Add origin
           </Button>

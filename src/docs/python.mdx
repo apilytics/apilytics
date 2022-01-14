@@ -11,8 +11,16 @@ The respository for our open source Python middleware can be found <ExternalLink
 
 #### Installation
 
+Install with pip:
+
 ```sh
 pip install apilytics
+```
+
+Install with poetry:
+
+```sh
+poetry add apilytics
 ```
 
 Enable the middleware and set your API key:  
@@ -63,5 +71,6 @@ def my_apilytics_middleware(request, get_response):
   ) as sender:
       response = get_response(request)
       sender.set_response_info(status_code=response.status_code)
+
   return response
 ```

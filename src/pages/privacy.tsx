@@ -13,7 +13,7 @@ import type { MDXPageProps } from 'types';
 
 const Privacy: NextPage<MDXPageProps> = ({ source }) => (
   <MainTemplate>
-    <div className="card rounded-lg shadow p-4 bg-base-100">
+    <div className="card rounded-lg shadow p-4 bg-base-100 text-white">
       <MDXRemote {...source} />
     </div>
   </MainTemplate>

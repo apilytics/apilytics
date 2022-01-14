@@ -35,16 +35,16 @@ export const withAuth = <T extends Record<string, unknown>>(
       if (!welcomePassed) {
         return (
           <MainTemplate>
-            <h4>Welcome 👋</h4>
+            <h4 className="text-white">Welcome 👋</h4>
             <p>
               Thank you for signing up to Apilytics beta, we&lsquo;re glad to have you here!
               We&lsquo;re still getting started with our service and developing it tightly with our
               users. You can help us by giving us feedback as well as presenting your feature
-              requests to us via <a href="mailto:hello@apilytics.io">email</a> or our{' '}
+              requests to us via our{' '}
               <Link href={staticRoutes.contact}>
                 <a>contact form</a>
-              </Link>
-              .
+              </Link>{' '}
+              or <a href="mailto:hello@apilytics.io">email</a>.
             </p>
             <Button
               className="btn-primary mt-4"
@@ -59,7 +59,7 @@ export const withAuth = <T extends Record<string, unknown>>(
 
       return (
         <MainTemplate>
-          <AccountForm title="Finish up your account to complete sign up" />
+          <AccountForm title="Finish up your account to complete sign up" isSignUp />
         </MainTemplate>
       );
     }

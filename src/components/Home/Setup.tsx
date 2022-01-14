@@ -28,13 +28,13 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
           <div className="mt-4">
             <ul className="steps steps-vertical">
               <li className="step step-primary">
-                <h5 className="text-left">Sign up & grab your API key.</h5>
+                <h5 className="text-left text-white">Sign up & grab your API key.</h5>
               </li>
               <li className="step step-primary">
-                <h5 className="text-left">Install our open-source middleware.</h5>
+                <h5 className="text-left text-white">Install our open-source middleware.</h5>
               </li>
               <li className="step step-primary">
-                <h5 className="text-left">Start using your dashboard! 🚀</h5>
+                <h5 className="text-left text-white">Start using your dashboard! 🚀</h5>
               </li>
             </ul>
           </div>
@@ -50,7 +50,7 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
                 </p>
               ))}
             </div>
-            <div className="p-4 text-base-content">
+            <div className="p-4">
               <MDXRemote {...source} />
             </div>
           </div>
