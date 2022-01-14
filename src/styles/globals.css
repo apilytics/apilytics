@@ -74,7 +74,7 @@
 
   code {
     font-family: monospace;
-    @apply text-primary;
+    @apply text-secondary;
     @apply rounded-lg;
   }
 
