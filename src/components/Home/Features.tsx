@@ -63,7 +63,7 @@ export const Features: React.FC = () => (
           <div className="card bg-base-100 rounded-lg p-4" key={title}>
             <div className="flex items-center">
               <Icon className="h-8 w-8 text-primary mr-2" />
-              <h6>{title}</h6>
+              <h6 className="text-white">{title}</h6>
             </div>
             <p className="mt-2 grow">{content}</p>
             {comingSoon && <div className="badge badge-outline mt-4">Coming soon</div>}

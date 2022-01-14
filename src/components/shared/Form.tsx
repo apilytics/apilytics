@@ -27,7 +27,7 @@ export const Form: React.FC<Props> = ({
 }) => (
   <div className="card rounded-lg p-4 shadow bg-base-100">
     {renderAlert}
-    {title && <h5>{title}</h5>}
+    {title && <h5 className="text-white">{title}</h5>}
     {subTitle && <p className="text-sm">{subTitle}</p>}
     <form onSubmit={onSubmit} className="mt-4 text-left">
       {children}

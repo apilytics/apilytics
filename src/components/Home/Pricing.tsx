@@ -60,7 +60,7 @@ export const Pricing: React.FC = () => {
           <br />
           <span className="text-secondary">free trial</span>
         </h1>
-        <h5 className="mt-8">
+        <h5 className="mt-8 text-white">
           All features available from the start.
           <br />
           No credit card required.
