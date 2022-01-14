@@ -1,11 +1,11 @@
-import { Prisma } from '@prisma/client';
 import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
 import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
-import prisma from 'prismaClient';
+import prisma from 'prisma/client';
+import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
 import type { AggregatedOrigin, ApiHandler } from 'types';
 
@@ -59,11 +59,10 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
       data: { userId, name, slug },
     });
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+    if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'An origin with this name already exists.');
       return;
     }
-
     throw e;
   }
 

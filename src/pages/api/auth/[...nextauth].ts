@@ -2,7 +2,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import NextAuth from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 
-import prisma from 'prismaClient';
+import prisma from 'prisma/client';
 import { staticRoutes } from 'utils/router';
 
 export default NextAuth({

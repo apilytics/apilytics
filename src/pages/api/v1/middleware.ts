@@ -7,7 +7,8 @@ import {
   sendMissingInput,
   sendOk,
 } from 'lib-server/responses';
-import prisma from 'prismaClient';
+import prisma from 'prisma/client';
+import { isInconsistentColumnData } from 'prisma/errors';
 import type { ApiHandler } from 'types';
 
 type PostBody = Pick<Metric, 'path' | 'method' | 'statusCode' | 'timeMillis'>;
@@ -19,7 +20,17 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const origin = await prisma.origin.findUnique({ where: { apiKey } });
+  let origin;
+
+  try {
+    origin = await prisma.origin.findUnique({ where: { apiKey } });
+  } catch (e) {
+    if (!isInconsistentColumnData(e)) {
+      throw e;
+    }
+    // Was not a valid UUID.
+  }
+
   if (!origin) {
     sendInvalidApiKey(res);
     return;

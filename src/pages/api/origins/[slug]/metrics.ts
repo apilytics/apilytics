@@ -1,7 +1,7 @@
 import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
-import prisma from 'prismaClient';
+import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler, OriginMetrics, RouteData, TimeFrameData } from 'types';
 
