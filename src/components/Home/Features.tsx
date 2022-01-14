@@ -13,7 +13,7 @@ const FEATURES = [
     icon: LightBulbIcon,
     title: 'Simple setup',
     content:
-      'You can literally get started in 10 minutes. Simple configuration with no domain expertise or maintenance needed.',
+      'You can literally get started in 5 minutes. Simple configuration with no domain expertise or maintenance needed.',
   },
   {
     icon: LightningBoltIcon,

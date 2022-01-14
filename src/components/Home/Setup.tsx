@@ -23,7 +23,7 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
       <div className="bg-filter">
         <div className="container max-w-3xl py-4 lg:py-16 flex flex-col">
           <h1 className="text-white">
-            Set up in <span className="text-primary">10 minutes</span>
+            Set up in <span className="text-primary">5 minutes</span>
           </h1>
           <div className="mt-4">
             <ul className="steps steps-vertical">
