@@ -7,7 +7,7 @@ import {
   sendMissingInput,
   sendOk,
 } from 'lib-server/responses';
-import prisma from 'prismaClient';
+import prisma from 'prisma/client';
 import type { ApiHandler } from 'types';
 
 type PostBody = Pick<Metric, 'path' | 'method' | 'statusCode' | 'timeMillis'>;

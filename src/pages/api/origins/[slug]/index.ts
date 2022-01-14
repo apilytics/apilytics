@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client';
 import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
@@ -11,7 +10,8 @@ import {
   sendNotFound,
   sendOk,
 } from 'lib-server/responses';
-import prisma from 'prismaClient';
+import prisma from 'prisma/client';
+import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 
@@ -58,11 +58,10 @@ const handlePut: ApiHandler<OriginResponse> = async (req, res) => {
       return;
     }
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+    if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'This origin name has been taken.');
       return;
     }
-
     throw e;
   }
 

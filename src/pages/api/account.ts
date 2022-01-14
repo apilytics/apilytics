@@ -3,7 +3,7 @@ import type { User } from '@prisma/client';
 import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendInvalidInput, sendNoContent, sendNotFound, sendOk } from 'lib-server/responses';
-import prisma from 'prismaClient';
+import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 

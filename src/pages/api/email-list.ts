@@ -1,8 +1,7 @@
-import { Prisma } from '@prisma/client';
-
 import { makeMethodsHandler } from 'lib-server/apiHelpers';
 import { sendConflict, sendCreated, sendInvalidInput } from 'lib-server/responses';
-import prisma from 'prismaClient';
+import prisma from 'prisma/client';
+import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 
@@ -23,11 +22,10 @@ const handlePost: ApiHandler<EmailListPostResponse> = async (req, res) => {
       data: { email },
     });
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+    if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'This email has already been added.');
       return;
     }
-
     throw e;
   }
 
