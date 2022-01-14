@@ -43,10 +43,10 @@ const NewOrigin: NextPage = () => {
         });
       } else {
         setError(message || UNEXPECTED_ERROR);
+        setLoading(false);
       }
     } catch {
       setError(UNEXPECTED_ERROR);
-    } finally {
       setLoading(false);
     }
   };
