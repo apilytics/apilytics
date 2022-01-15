@@ -1,0 +1,192 @@
+---
+title: The Problem With API Monitoring
+slug: problem-with-api-monitoring
+readingTime: 5 minute read
+author: Markus Blomqvist
+authorImage: /author-images/markus.jpeg
+excerpt: Often times developers are proud of their newly created, shiny and beautiful APIs. But what if they don't have the time to analyze the real-life usage of their software?
+date: '2022-01-16'
+---
+
+Often times developers are proud of their newly created, shiny and _beautiful_ APIs.
+But what if they don't have the resources to analyze the real-life usage of their software?
+How will they ever be aware of bottlenecks and other problems in their API
+if they don's set up proper monitoring?
+
+The issue with monitoring is however, that it is often not trivial to set up,
+as it might require you to build completely new infrastructure or modify your existing one or even implement your monitoring from scratch.
+The other important aspect is pricing. The big players on the monitoring field are not cheap.
+You might be fine starting with some of the most common solutions out there, like [DataDog](https://www.datadoghq.com/)
+or [New Relic](https://newrelic.com).
+
+As your API usage grows however, you will notice that your monitoring costs will increase significantly with the traditional solutions.
+This is where you might consider either changing your vendor or building your own solution. This blog post
+shows you how to add monitoring using [Apilytics](/) to an example application built with [Express](https://expressjs.com/).
+
+<br />
+
+#### Solution
+
+To demonstrate our API analytics solution we create an example REST API application with Express.
+
+<br />
+
+Let's start off by creating an express application:
+
+```sh
+mkdir express-sample-application
+cd express-sample-application
+npm init -y
+npm install express --save
+```
+
+<br />
+
+Then define our routes:
+
+```javascript
+// index.js
+
+const express = require('express');
+const app = express();
+
+app.get('/', (_req, res) => {
+  setTimeout(() => {
+    res.send('Hello World!');
+  }, [100]);
+});
+
+app.get('/foo', (_req, res) => {
+  setTimeout(() => {
+    res.send('Foo!');
+  }, [200]);
+});
+
+app.get('/bar', (_req, res) => {
+  setTimeout(() => {
+    res.send('Bar!');
+  }, [300]);
+});
+
+app.get('/baz', (_req, res) => {
+  setTimeout(() => {
+    res.send('Baz!');
+  }, [400]);
+});
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
+```
+
+<br />
+
+As you can see, now we have four different endpoints that each take a different amount of time to respond.
+That's all of the code we need for our app. The next step is to set up our analytics.
+
+<br />
+
+#### Adding Analytics in 5 Minutes
+
+Let's start off by creating a free account at <ExternalLink href="/login">https://apilytics.io/login</ExternalLink>.
+
+<br />
+
+![Signup](/mock-ups/signup.png)
+
+<br />
+
+After signup, we will create a new origin to track our API usage.
+
+<br />
+
+![Origins](/mock-ups/origins.png)
+
+<br />
+
+From the menu, we will click on the "New Origin" button to add our API.
+
+<br />
+
+![New origin](/mock-ups/new-origin.png)
+
+<br />
+
+Next, let's copy our API key and finish up the integration in our example application.
+
+<br />
+
+![API key](/mock-ups/api-key.png)
+
+<br />
+
+Let's install our client middleware.
+
+```sh
+npm install @apilytics/express
+```
+
+<br />
+
+Now let's modify our example application a bit to use the Apilytics middleware:
+
+```javascript
+// index.js
+
+const { apilyticsMiddleware } = require("@apilytics/express");
+const express = require("express");
+const app = express();
+app.use(apilyticsMiddleware("<your-api-key>"));
+...
+```
+
+<br />
+
+Thats it! Now we have properly set up analytics for our API.
+Now we just have to run our application and spam it with some requests to populate our analytics dashboard with some metrics.
+
+<br />
+
+Let's run the app:
+
+```sh
+node index.js
+```
+
+<br />
+
+The application should now be running on your localhost port 3000.
+Let's do a few requests to different endpoints of our API. You can use your browser or another REST API client,
+like <ExternalLink href="https://insomnia.rest">Insomnia</ExternalLink> to perform your HTTP requests.
+
+<br />
+
+#### Analyzing Results
+
+After spamming our endpoints with some requests, we can analyze the results in our Apilytics dashboard.
+
+<br />
+
+![Route mtrics](/blog-images/problem-with-api-monitoring/full-dashboard.png)
+
+<br />
+
+We can see history of our request metrics visualized, but for this case it won't do us much since we just got started.
+The interesting metrics here are the response times that we can see in the bottom right corner.
+We can also see that our API has logged in total of 6 requests that we can see metrics from.
+
+<br />
+
+![Response times](/blog-images/problem-with-api-monitoring/response-times.png)
+
+The color coding shows us the percentage of time that our endpoints took to respond.
+As we can see here, the largest red part is on our `/baz` endpoint.
+In a real-life scenario of our API running in production, this might be a problem and the dashboard would point that out for us.
+
+Now this is just one example of how you can use Apilytics to monitor your API.
+The Apilytics dashboard also allows us to detect anomalies during a longer period of time as well as spot trends in the usage of our API,
+get a grasp of the amount of error responses and much more!
+
+There you have it! Now we have a way of analyzing our APIs and we no longer have to be blind about how they perform in production 💪

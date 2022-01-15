@@ -51,19 +51,38 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   tooltip?: string;
   endIcon?: React.FC<ComponentProps<'svg'>>;
   linkTo?: string | UrlObject;
+  tooltipProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export interface FrontMatter {
+interface DocsFrontMatter {
   name: string;
   routeName: keyof typeof staticRoutes;
   order: number;
   subOrder: number;
 }
 
+interface BlogsFrontMatter {
+  title: string;
+  slug: string;
+  readingTime: string;
+  author: string;
+  authorImage: string;
+  excerpt: string;
+  date: string;
+}
+
 export interface MDXPageProps extends Record<string, unknown> {
   source: MDXRemoteSerializeResult;
-  frontMatter?: FrontMatter;
-  docsInfo?: FrontMatter[];
+}
+
+export interface DocsPageProps extends MDXPageProps {
+  docsData: DocsFrontMatter[];
+  data: DocsFrontMatter;
+}
+
+export interface BlogPageProps extends MDXPageProps {
+  blogsData: BlogsFrontMatter[];
+  data: BlogsFrontMatter;
 }
 
 export interface Snippet {

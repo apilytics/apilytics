@@ -64,6 +64,11 @@ export const Footer: React.FC = () => {
                 </Link>
               </p>
               <p>
+                <Link href={staticRoutes.blogs}>
+                  <a>Blog</a>
+                </Link>
+              </p>
+              <p>
                 <ExternalLink href="https://twitter.com/apilytics">Twitter</ExternalLink>
               </p>
               <p>

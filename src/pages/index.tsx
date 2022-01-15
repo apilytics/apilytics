@@ -1,7 +1,6 @@
-import { readdirSync, readFileSync } from 'fs';
+import { readdirSync } from 'fs';
 import { join } from 'path';
 
-import matter from 'gray-matter';
 import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 
@@ -13,7 +12,7 @@ import { TopSection } from 'components/Home/TopSection';
 import { Why } from 'components/Home/Why';
 import { Layout } from 'components/layout/Layout';
 import { withNoAuth } from 'hocs/withNoAuth';
-import { getSerializedSource } from 'utils/mdx';
+import { getMDXContent } from 'utils/mdx';
 import type { Snippet } from 'types';
 
 interface Props extends Record<string, unknown> {
@@ -32,32 +31,31 @@ const Home: NextPage<Props> = ({ snippets }) => (
 );
 
 export const getStaticProps: GetStaticProps = async () => {
-  const snippetsPath = join(process.cwd(), 'src/snippets');
-  const files = readdirSync(snippetsPath).filter((path) => /\.mdx?$/.test(path));
+  const path = 'snippets';
+  const fullPath = join(process.cwd(), path);
+  const files = readdirSync(fullPath).filter((path) => /\.mdx?$/.test(path));
 
-  const snippets = await Promise.all(
+  // @ts-ignore: The front matter types are inferred as `any`;
+  const _snippets: Snippet[] = await Promise.all(
     files.map(async (file) => {
-      const fullPath = join(snippetsPath, file);
-      const source = readFileSync(fullPath);
-
       const {
-        content,
+        source,
         data: { name, order },
-      } = matter(source);
-
-      const mdxSource = await getSerializedSource(content);
+      } = await getMDXContent(`${path}/${file}`);
 
       return {
         name,
         order,
-        source: mdxSource,
+        source,
       };
     }),
   );
 
+  const snippets = _snippets.sort((a, b) => a.order - b.order);
+
   return {
     props: {
-      snippets: snippets.sort((a, b) => a.order - b.order),
+      snippets,
     },
   };
 };
