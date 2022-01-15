@@ -4,6 +4,7 @@ import { join } from 'path';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
 import rehypeHighlight from 'rehype-highlight';
+import remarkHeadingId from 'remark-heading-id';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 import { staticRoutes } from 'utils/router';
@@ -22,8 +23,8 @@ export const getMDXContent = async (path: string): Promise<MDXContent> => {
 
   const source = await serialize(content, {
     mdxOptions: {
-      // @ts-ignore Ignore: The plugin simply doesn't have suitable types for here.
       rehypePlugins: [rehypeHighlight],
+      remarkPlugins: [remarkHeadingId],
     },
   });
 

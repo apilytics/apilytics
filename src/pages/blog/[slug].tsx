@@ -1,10 +1,10 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
+import { BlogTemplate } from 'components/layout/BlogTemplate';
 import { withAccount } from 'hocs/withAccount';
 import { getBlogFilePaths, getDocsData, getMDXContent } from 'utils/mdx';
 import type { BlogPageProps } from 'types';
-import { BlogTemplate } from 'components/layout/BlogTemplate';
 
 const Blog: NextPage<BlogPageProps> = (props) => <BlogTemplate {...props} />;
 

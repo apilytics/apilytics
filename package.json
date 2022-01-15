@@ -38,6 +38,7 @@
     "react-dom": "17.0.2",
     "recharts": "2.1.8",
     "rehype-highlight": "5.0.2",
+    "remark-heading-id": "1.0.0",
     "simple-encryptor": "4.0.0",
     "slugify": "1.6.4"
   },

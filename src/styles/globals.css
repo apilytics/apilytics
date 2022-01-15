@@ -81,6 +81,19 @@
   .mockup-code pre:before {
     margin-right: 0 !important;
   }
+
+  .card {
+    @apply overflow-visible;
+  }
+
+  h1 > a,
+  h2 > a,
+  h3 > a,
+  h4 > a,
+  h5 > a,
+  h6 > a {
+    @apply text-white !important;
+  }
 }
 
 .bg-filter {
@@ -97,8 +110,4 @@
 
 .text-requests-red {
   color: var(--requests-red);
-}
-
-.card {
-  @apply overflow-visible;
 }
