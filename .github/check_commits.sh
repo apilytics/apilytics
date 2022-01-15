@@ -5,7 +5,7 @@
 # on top of the latest default branch.
 # More details: https://stackoverflow.com/q/64435110/9835872
 
-head="$(git remote show origin | awk '/HEAD branch/ {print $NF}')"
+head="$GITHUB_BASE_REF"
 current="$(git rev-parse HEAD)"
 
 if ! git merge-base --is-ancestor "origin/${head}" "$current"; then
