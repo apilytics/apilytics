@@ -20,21 +20,33 @@ interface Props {
   loading: boolean;
 }
 
-// TODO: All of the commented parts are needed when we enable the color coding of the response times.
 export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading }) => {
   const data = routeData
-    .sort((a, b) => (a.response_time < b.response_time ? 1 : -1))
-    .map(({ response_time, ...routeData }) => ({
-      ...routeData,
-      response_time,
-      greenRequests: (response_time * (routeData.count_green / routeData.requests)).toFixed(),
-      yellowRequests: (response_time * (routeData.count_yellow / routeData.requests)).toFixed(),
-      redRequests: (response_time * (routeData.count_red / routeData.requests)).toFixed(),
-    }));
+    .map(({ response_time, requests, count_green, count_yellow, count_red, ...routeData }) => {
+      const greenRequests = (response_time * (count_green / requests)).toFixed();
+      const yellowRequests = (response_time * (count_yellow / requests)).toFixed();
+      const redRequests = (response_time * (count_red / requests)).toFixed();
+
+      return {
+        ...routeData,
+        requests,
+        response_time,
+        count_green,
+        count_yellow,
+        count_red,
+        greenRequests,
+        yellowRequests,
+        redRequests,
+      };
+    })
+    .sort((a, b) => b.response_time - a.response_time);
 
   const renderResponseTimeLabels = (
     <RouteValue formatter={(value?: string | number): string => `${value}ms`} />
   );
+
+  const routeNameFormatter = (val: string): string =>
+    val.length > 15 ? `${val.slice(0, 12)}...` : val;
 
   const renderBarChart = (expanded: boolean): JSX.Element => {
     const _data = data.slice(0, expanded ? data.length : 10);
@@ -42,7 +54,7 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
 
     return (
       <ResponsiveContainer height={height}>
-        <BarChart data={_data} layout="vertical" reverseStackOrder>
+        <BarChart data={_data} layout="vertical" barSize={30} reverseStackOrder>
           <Bar dataKey="redRequests" fill="var(--requests-red)" stackId="dist">
             <LabelList dataKey="response_time" content={renderResponseTimeLabels} />
           </Bar>
@@ -65,7 +77,9 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
             tickLine={false}
             axisLine={false}
             mirror
+            stroke="white"
             padding={{ top: 30, bottom: 20 }}
+            tickFormatter={routeNameFormatter}
           >
             <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />
           </YAxis>

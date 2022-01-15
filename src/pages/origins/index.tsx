@@ -17,13 +17,13 @@ const Origins: NextPage = () => {
   return (
     <MainTemplate>
       <div className="divide-y divide-base-content">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4">
-          <h4 className="text-white">Origins</h4>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-4">
+          <h5 className="text-white">Origins</h5>
           <Button linkTo={staticRoutes.newOrigin} endIcon={PlusIcon} className="btn-primary">
             Add origin
           </Button>
         </div>
-        <div className="py-4 grid grid-cols-1 gap-2">
+        <div className="py-4 flex flex-col gap-2">
           {origins.length ? (
             origins.map(({ name, slug, last24hRequests }) => (
               <Link href={dynamicRoutes.origin({ slug })} key={name}>
@@ -34,6 +34,7 @@ const Origins: NextPage = () => {
                       <IconButton
                         icon={CogIcon}
                         tooltip="Go to origin settings."
+                        tooltipProps={{ className: 'tooltip-left' }}
                         onClick={(): Promise<boolean> =>
                           Router.push(dynamicRoutes.originSettings({ slug }))
                         }

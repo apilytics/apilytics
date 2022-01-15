@@ -21,7 +21,7 @@ interface Props {
 }
 
 export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading }) => {
-  const data = routeData.sort((a, b) => (a.requests < b.requests ? 1 : -1));
+  const data = routeData.sort((a, b) => b.requests - a.requests).map((c) => c);
 
   const renderRequestLabels = (
     <RouteValue
@@ -65,7 +65,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
             tickLine={false}
             axisLine={false}
             mirror
-            stroke="var(--base-content)"
+            stroke="white"
             padding={{ top: 30, bottom: 20 }}
           >
             <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />

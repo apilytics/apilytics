@@ -33,7 +33,11 @@ export const ApiKeyField: React.FC<Props> = ({ value, apiKeyCopiedCallback }) =>
       value={value}
       readOnly
       endIcon={ClipboardCopyIcon}
-      buttonProps={{ onClick, tooltip: 'Copy your API key to the clipboard.' }}
+      buttonProps={{
+        onClick,
+        tooltip: 'Copy your API key to the clipboard.',
+        tooltipProps: { className: 'tooltip-left' },
+      }}
       helperText={renderHelperText}
     />
   );

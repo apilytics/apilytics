@@ -72,9 +72,14 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
       .reduce((prev, curr) => prev + curr.requests, 0);
 
     const response_time = Number((Math.floor(Math.random() * 200) + 20).toFixed());
+
     const green_multiplier = Number((Math.random() * (0.4 - 0.2) + 0.2).toFixed(2));
     const yellow_multiplier = Number((Math.random() * (0.4 - 0.2) + 0.2).toFixed(2));
     const red_multiplier = Number((1 - green_multiplier - yellow_multiplier).toFixed(2));
+
+    const count_green = Number((green_multiplier * requests).toFixed());
+    const count_yellow = Number((yellow_multiplier * requests).toFixed());
+    const count_red = Number((red_multiplier * requests).toFixed());
 
     return {
       requests,
@@ -82,9 +87,9 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
       methods,
       status_codes,
       response_time,
-      count_green: green_multiplier * requests,
-      count_yellow: yellow_multiplier * requests,
-      count_red: red_multiplier * requests,
+      count_green,
+      count_yellow,
+      count_red,
     };
   });
 

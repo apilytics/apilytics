@@ -71,7 +71,7 @@ const Origin: NextPage = () => {
         <ResponseTimes metrics={metrics} loading={loading} />
       </div>
       <p className="mt-4 text-center">
-        Help us improve the service by{' '}
+        Help us improve this dashboard by{' '}
         <Link href={staticRoutes.contact}>
           <a>giving us feedback</a>
         </Link>
