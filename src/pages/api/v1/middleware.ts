@@ -45,8 +45,13 @@ const handlePost: ApiHandler = async (req, res) => {
 
   const { path, method, statusCode, timeMillis } = req.body as PostBody;
 
+  const apilyticsVersion =
+    typeof req.headers['apilytics-version'] === 'string'
+      ? req.headers['apilytics-version']
+      : undefined;
+
   await prisma.metric.create({
-    data: { originId: origin.id, path, method, statusCode, timeMillis },
+    data: { originId: origin.id, path, method, statusCode, timeMillis, apilyticsVersion },
   });
 
   sendOk(res);
