@@ -6,6 +6,8 @@ order: 4
 
 ### Bring Your Own Middleware (BYOM) 👨‍💻
 
+<br />
+
 Currently we have the following core modules that you can use to implement your own middleware:
 
 - Node.js: <ExternalLink href="https://www.npmjs.com/package/@apilytics/core">
@@ -13,12 +15,16 @@ Currently we have the following core modules that you can use to implement your 
   </ExternalLink>
 - Python: <ExternalLink href="https://pypi.org/project/apilytics/">apilytics</ExternalLink>
 
+<br />
+
 If your backend supports none of our open source middlewares
 and you cannot use our core modules to build your own middleware,
 you can still use Apilytics by implementing your own middleware from scratch with the following steps:
 
 Perform an HTTP request to `https://www.apilytics.io/api/v1/middleware`
 for all of the requests that you want to track with Apilytics.
+
+<br />
 
 The HTTP requests must have the following specs:
 
@@ -35,6 +41,8 @@ Body:
 - `method`: The HTTP method of the request that you want to track.
 - `timeMillis`: The time in milliseconds that the request took to complete.
 - `statusCode`: The status code of the response.
+
+<br />
 
 Note that your request should be done as a background job
 in your API and this way not bottleneck your API in any way.

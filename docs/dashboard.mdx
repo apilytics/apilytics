@@ -6,6 +6,8 @@ order: 3
 
 ### [Dashboard guide 📊](#dasboard) {#dashboard}
 
+<br />
+
 Now that your API has been integrated with our middleware,
 the requests from your API will start appearing in your dashboard.
 
@@ -14,25 +16,43 @@ response times, HTTP methods, status codes etc.
 
 The dashboard is quite self explanatory, but the visualization is divided into three categories:
 
+<br />
+
 #### [Time frame data ⌛](#time-frame-data) {#time-frame-data}
 
+<br />
+
 ![Time frame](/mock-ups/time-frame.png)
+
+<br />
 
 The time frame allows you to visualize the API requests to your origin over a specified time frame.
 In addition to the total amount of requests and the historical view, you can also see the growth from the previous time frame that you've selected.
 So if you've for instance selected 24 hours as the time frame, the growth will be calculated from the previous 24 hours that is not shown on the graph.
 
+<br />
+
 #### [Route metrics 🧐](#route-metrics) {#route-metrics}
 
+<br />
+
 ![Route metrics](/mock-ups/route-metrics.png)
+
+<br />
 
 The route metrics bar chart breaks down your requests to their corresponding endpoints.
 From the right-hand side you can see the amount of requests to each endpoint.
 By hovering over individual bars you can get a set of additional information for the given endpoint.
 
+<br />
+
 #### [Reponse times ⚡](#response-times) {#response-times}
 
+<br />
+
 ![Response times](/mock-ups/response-times.png)
+
+<br />
 
 The reponse time visualization gives you a similar overview than the route metrics,
 except that the endpoints have been sorted by the average response times that it took for the endpoints to respond.
@@ -42,7 +62,11 @@ by divinding the response times into three categories be percentiles:
 The green color represents the fastest 33rd percentile of response times,
 yellow represents the mid 33rd percentile and red represents the bottom 33rd percentile of the response times.
 
+<br />
+
 #### [How to spot bottlenecks? 🍼](#bottlenecks) {#bottlenecks}
+
+<br />
 
 If you see that the red bar takes a large space of the reponse time bar of any give endpoint,
 it means that that endpoint is probably a bottleneck for your API and you might want to do something about it.
