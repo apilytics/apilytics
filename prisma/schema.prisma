@@ -99,6 +99,8 @@ model Metric {
   statusCode Int?   @map("status_code")
   timeMillis Int    @map("time_millis")
 
+  apilyticsVersion String? @map("apilytics_version")
+
   // Metrics are immutable so no need to store `updatedAt` info.
   createdAt DateTime @default(now()) @map("created_at")
 
