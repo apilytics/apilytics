@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 const USER_ID = 'a58025e5-cd8a-4586-94b9-d38f51aa9e72';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
+const API_KEY = '0648c69d-4b42-4642-b125-0959619837cf';
 
 // Generate random data for each hour of the past year.
 // Each hour of the year will have 1-20 random data points with random endpoints, methods and response times.
@@ -51,6 +52,7 @@ const main = async (): Promise<void> => {
             id: ORIGIN_ID,
             name: 'api.example.com',
             slug: 'api-example-com',
+            apiKey: API_KEY,
           },
         ],
       },

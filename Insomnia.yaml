@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2022-01-11T19:33:38.552Z
+__export_date: 2022-01-16T14:14:16.613Z
 __export_source: insomnia.desktop.app:v2021.7.2
 resources:
   - _id: req_adc825807b5a4a38bb00d10c418f174b
@@ -137,7 +137,7 @@ resources:
     _type: request
   - _id: req_27e5ed24e92d44b88021fc066b267d13
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641929010139
+    modified: 1642341659742
     created: 1640728892367
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}"
     name: /api/origins/[slug]
@@ -224,7 +224,7 @@ resources:
     _type: request
   - _id: req_0e743e6d79f44a8f94781b4b22c8333f
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641845540207
+    modified: 1642342365477
     created: 1640728892375
     url: "{{ _.url }}/api/v1/middleware"
     name: /api/v1/middleware
@@ -234,7 +234,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-          "path": "/",
+          "path": "/foo/bar?bar=12",
           "method": "GET",
           "timeMillis": 20,
           "statusCode": 200
@@ -250,7 +250,7 @@ resources:
         id: pair_755bf243066c4caea898b874ece37ca1
       - id: pair_eac5d9b2e4dd40b3aa090566b2c842d4
         name: X-API-Key
-        value: 1f4d63bf-681c-475f-84a9-9fafdaa9892e
+        value: "{{ _.apiKey }}"
         description: ""
     authentication: {}
     metaSortKey: -1639683120078.961
@@ -323,18 +323,20 @@ resources:
     _type: api_spec
   - _id: env_3b986c752a0e4f40a30a9e80c68a8d09
     parentId: env_32ce5cfd6d7243678bb30f5a859267ed
-    modified: 1641929596028
+    modified: 1642341804233
     created: 1640728892342
     name: local
     data:
       url: http://localhost:3000
       originSlug: origin-example-com
       sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..fqCeUbRY4x1Inip6.r65dky9jpb9QPmIqkJf071kREtFCOf3JKpFiz_I02GzIvbboZf8sMiFbXx2kaH9ReJKPw2OwSt4uGahUuXiF_vUIZt0ewTg8Ct54ZTkyYnT0vCAmloCssJrRTX52nxSIkPrlwYYfkwEkLdYSN8eqiWSQev_YoiO6pLqUyhhc-ehRlL1q0BX1sNQW4xZ-2yxrysJGVrfuHro3RyYzakDyDMnjm1_cAnm8gU-_TdPEYi1qsUjGLt-yUzSrZrDl4qAC4YDEEr-MhBXjR5fD7jTrWjJWkzTm.oy2IvcNszIjy-YHOM0JS0g
+      apiKey: 0648c69d-4b42-4642-b125-0959619837cf
     dataPropertyOrder:
       "&":
         - url
         - originSlug
         - sessionCookie
+        - apiKey
     color: null
     isPrivate: false
     metaSortKey: 0
