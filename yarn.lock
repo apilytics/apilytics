@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@apilytics/core@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/@apilytics/core/-/core-1.0.2.tgz#a5cdf68ea5d22e096802f9685bfbd103cbf3b67c"
-  integrity sha512-eSBzA5+ub+MKeyeQsV4dcXNs4chzlA5hlkEghCKMb9Hb5J0IsxQgHBSGStV5RPkrJ/Q2+luZV8+Ch2buzRD7rg==
+"@apilytics/core@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/@apilytics/core/-/core-1.1.0.tgz#b249d184d1f1ffe054e52dbec519eb6732770d84"
+  integrity sha512-liiEH5j8JdPUPxlKtaOdZ5s6lPKCeuUdM1+7bLUtWku//0SpOCc7hecgAJW2Nb+UpbxrD/TuchrEK+UVf0X2AQ==
 
-"@apilytics/next@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/@apilytics/next/-/next-1.0.2.tgz#fd7ed4fce16769a9911e40cbada7c6659687ab11"
-  integrity sha512-HbrL65WtFd/zSkrGeD52MWr+Vh9A7QCUF/oQTxm1ayDUamlNzlTjc1OdGzZf46SzPKf7yHgl+VVKpQCYuWz1Fw==
+"@apilytics/next@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/@apilytics/next/-/next-1.1.0.tgz#4863a93684cfddb10c92c4d1076d7c8e52937817"
+  integrity sha512-ur3JZ3XF6uXAkR7nobetlzeZS+b9xNByTDrLrzYP+6CXYVnReZ87R/H06ujovEMLiOvBNXBs5xjquogGJJwtHQ==
   dependencies:
-    "@apilytics/core" "1.0.2"
+    "@apilytics/core" "1.1.0"
     next "*"
 
 "@babel/code-frame@7.12.11":
