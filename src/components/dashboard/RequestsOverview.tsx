@@ -1,8 +1,10 @@
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import React from 'react';
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { Origin } from '@prisma/client';
+import type { TooltipProps } from 'recharts';
+import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
 import {
@@ -118,6 +120,48 @@ export const RequestsOverview: React.FC<Props> = ({
     return `${totalRequests}`;
   };
 
+  const renderTooltipContent = ({
+    payload,
+  }: TooltipProps<ValueType, NameType>): JSX.Element | null => {
+    if (payload?.length) {
+      const { requests, time } = payload[0].payload;
+      let format;
+
+      switch (timeFrame) {
+        case DAY: {
+          format = HOUR_FORMAT;
+          break;
+        }
+
+        case WEEK_DAYS:
+        case MONTH_DAYS:
+        case THREE_MONTHS_DAYS: {
+          format = DAY_AND_MONTH_FORMAT;
+          break;
+        }
+
+        case SIX_MONTHS_DAYS:
+        case YEAR_DAYS: {
+          format = MONTH_FORMAT;
+          break;
+        }
+      }
+
+      return (
+        <div className="bg-base-100 card shadow rounded-lg p-4">
+          <ul className="list-none">
+            <li className="text-primary">{dayjs(time).format(format)}</li>
+            <li>
+              Requests: <span className="font-bold">{requests}</span>
+            </li>
+          </ul>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <DashboardCardContainer loading={loading}>
       <div className="flex flex-col lg:flex-row">
@@ -167,6 +211,7 @@ export const RequestsOverview: React.FC<Props> = ({
               padding={{ top: 20, bottom: 20 }}
             />
             <Area type="monotone" dataKey="requests" fill="url(#fill-color)" />
+            <Tooltip content={renderTooltipContent} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
