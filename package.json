@@ -2,7 +2,7 @@
   "name": "apilytics",
   "private": true,
   "scripts": {
-    "migrate:dev": "prisma migrate dev",
+    "migrate:dev": "prisma migrate dev && prisma generate",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:reset": "prisma migrate reset --force",
     "db:seed": "prisma db seed",
