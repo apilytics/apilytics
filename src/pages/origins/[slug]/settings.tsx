@@ -1,4 +1,3 @@
-import { XIcon } from '@heroicons/react/solid';
 import Router from 'next/router';
 import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
@@ -8,7 +7,6 @@ import { MainTemplate } from 'components/layout/MainTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
 import { Button } from 'components/shared/Button';
 import { Form } from 'components/shared/Form';
-import { IconButton } from 'components/shared/IconButton';
 import { Input } from 'components/shared/Input';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -16,7 +14,7 @@ import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
 import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
-import { UNEXPECTED_ERROR } from 'utils/constants';
+import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
@@ -27,8 +25,7 @@ const OriginSettings: NextPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
-  const [apiKeyCopied, setApiKeyCopied] = useState(false);
-  const { modalOpen, handleOpenModal, handleCloseModal } = useModal();
+  const { handleOpenModal, handleCloseModal } = useModal();
   const plausible = usePlausible<PlausibleEvents>();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -80,27 +77,19 @@ const OriginSettings: NextPage = () => {
         Router.push(staticRoutes.origins);
       } else {
         setError(UNEXPECTED_ERROR);
+        setLoading(false);
       }
     } catch {
       setError(UNEXPECTED_ERROR);
-    } finally {
       setLoading(false);
     }
   };
 
-  const renderAlert = apiKeyCopied && (
-    <div className="alert alert-success">
-      <div className="flex">
-        <label>API key copied to the clipboard!</label>
-      </div>
-      <div className="flex-none">
-        <IconButton onClick={(): void => setApiKeyCopied(false)} icon={XIcon} />
-      </div>
-    </div>
-  );
-
   const renderDeleteOriginLink = (
-    <p onClick={handleOpenModal} className="mt-4 text-center link text-error">
+    <p
+      onClick={(): void => handleOpenModal(MODAL_NAMES.deleteOrigin)}
+      className="mt-4 text-center link text-error"
+    >
       Delete origin
     </p>
   );
@@ -113,7 +102,6 @@ const OriginSettings: NextPage = () => {
         error={error}
         loading={loading}
         submittedText={submittedText}
-        renderAlert={renderAlert}
         secondaryContent={renderDeleteOriginLink}
       >
         <Input
@@ -124,9 +112,9 @@ const OriginSettings: NextPage = () => {
           onChange={({ target }): void => setName(target.value)}
           required
         />
-        <ApiKeyField value={apiKey} apiKeyCopiedCallback={(): void => setApiKeyCopied(false)} />
+        <ApiKeyField value={apiKey} />
       </Form>
-      <Modal open={modalOpen} onClose={handleCloseModal}>
+      <Modal name={MODAL_NAMES.deleteOrigin}>
         <div className="flex justify-end p-2">
           <ModalCloseButton onClick={handleCloseModal} />
         </div>

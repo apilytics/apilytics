@@ -128,3 +128,10 @@ export const MOCK_ORIGIN = {
   updatedAt: new Date(),
   userId: 'a58025e5-cd8a-4586-94b9-d38f51aa9e72',
 };
+
+export const MODAL_NAMES = {
+  deleteOrigin: 'delete-origin',
+  apiKey: 'api-key',
+  routeMetrics: 'route-metrics',
+  responseTimes: 'response-times',
+};

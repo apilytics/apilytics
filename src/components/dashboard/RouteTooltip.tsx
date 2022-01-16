@@ -16,7 +16,7 @@ export const RouteTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
 
     return (
       <div className="bg-base-100 card shadow rounded-lg p-4">
-        <ul>
+        <ul className="list-none">
           <li>
             Path: <span className="text-primary">{label}</span>
           </li>
@@ -34,13 +34,13 @@ export const RouteTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
           </li>
           <p>Requests counts by response time percentiles:</p>
           <li>
-            <span className="text-requests-green">Top 33rd:</span> {green} %
+            <span className="text-success">Top 33rd:</span> {green} %
           </li>
           <li>
-            <span className="text-requests-yellow">Mid 33rd:</span> {yellow} %
+            <span className="text-warning">Mid 33rd:</span> {yellow} %
           </li>
           <li>
-            <span className="text-requests-red">Bottom 33rd:</span> {red} %
+            <span className="text-error">Bottom 33rd:</span> {red} %
           </li>
         </ul>
       </div>

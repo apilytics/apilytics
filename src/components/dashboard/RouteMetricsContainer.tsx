@@ -12,6 +12,7 @@ interface Props {
   loading: boolean;
   noRequests?: boolean;
   renderBarChart: (expanded: boolean) => JSX.Element;
+  modalName: string;
 }
 
 export const RouteMetricsContainer: React.FC<Props> = ({
@@ -19,11 +20,12 @@ export const RouteMetricsContainer: React.FC<Props> = ({
   loading,
   noRequests,
   renderBarChart,
+  modalName,
 }) => {
-  const { modalOpen, handleOpenModal, handleCloseModal } = useModal();
+  const { handleOpenModal, handleCloseModal } = useModal();
 
   const renderNoRequests = noRequests && (
-    <div className="grow flex justify-center items-center">
+    <div className="flex justify-center items-center py-20">
       <p>No requests 🤷</p>
     </div>
   );
@@ -31,7 +33,7 @@ export const RouteMetricsContainer: React.FC<Props> = ({
   const renderTitle = <p className="text-white font-bold px-2">{title}</p>;
 
   const renderModal = (
-    <Modal open={modalOpen} onClose={handleCloseModal}>
+    <Modal name={modalName}>
       <div className="flex justify-between items-center p-2">
         {renderTitle}
         <ModalCloseButton onClick={handleCloseModal} />
@@ -47,8 +49,8 @@ export const RouteMetricsContainer: React.FC<Props> = ({
     <>
       <div className="grow flex">{renderBarChart(false)}</div>
       <Button
-        onClick={handleOpenModal}
-        className="btn-sm btn-outline self-start"
+        onClick={(): void => handleOpenModal(modalName)}
+        className="btn-sm btn-ghost self-start"
         endIcon={ArrowsExpandIcon}
       >
         Details

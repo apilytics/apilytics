@@ -7,7 +7,7 @@ import { ResponseTimes } from 'components/dashboard/ResponseTimes';
 import { RouteMetrics } from 'components/dashboard/RouteMetrics';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
-import { withAccount } from 'hocs/withAccount';
+import { withNoAuth } from 'hocs/withNoAuth';
 import { MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
@@ -20,7 +20,7 @@ const Demo: NextPage = () => {
   const loading = !origin || !metrics;
 
   return (
-    <MainTemplate wide>
+    <MainTemplate maxWidth="max-w-6xl" dense>
       <DashboardOptions
         timeFrame={timeFrame}
         setTimeFrame={setTimeFrame}
@@ -57,4 +57,4 @@ const Demo: NextPage = () => {
   );
 };
 
-export default withAccount(Demo);
+export default withNoAuth(Demo);

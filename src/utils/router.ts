@@ -17,7 +17,7 @@ export const staticRoutes = {
   newOrigin: '/new-origin',
   account: '/account',
   contact: '/contact',
-  blogs: '/blogs',
+  blog: '/blog',
   ...docsRoutes,
 };
 

@@ -1,114 +1,72 @@
-import { ArrowSmRightIcon } from '@heroicons/react/solid';
+import Image from 'next/image';
 import Link from 'next/link';
-import { usePlausible } from 'next-plausible';
-import React, { useState } from 'react';
+import React from 'react';
 
+import { EmailListForm } from 'components/shared/EmailListForm';
 import { ExternalLink } from 'components/shared/ExternalLink';
-import { Input } from 'components/shared/Input';
-import { UNEXPECTED_ERROR } from 'utils/constants';
-import { staticApiRoutes, staticRoutes } from 'utils/router';
-import type { PlausibleEvents } from 'types';
+import { staticRoutes } from 'utils/router';
+import type { FooterProps } from 'types';
 
-export const Footer: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [submittedText, setSubmittedText] = useState('');
-  const plausible = usePlausible<PlausibleEvents>();
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSubmittedText('');
-
-    try {
-      const res = await fetch(staticApiRoutes.emailList, {
-        method: 'POST',
-        body: JSON.stringify({ email }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const { message } = await res.json();
-
-      if (res.status === 201) {
-        setError('');
-        setSubmittedText(message);
-        plausible('email-list-subscribe');
-      } else {
-        setError(message || UNEXPECTED_ERROR);
-      }
-    } catch {
-      setError(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <footer className="footer footer-center bg-base-100">
-      <div className="container py-8">
-        <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16">
-          <div className="flex flex-col text-left">
-            <ul>
-              <p>
-                <Link href={staticRoutes.docs}>
-                  <a>Docs</a>
-                </Link>
-              </p>
-              <p>
-                <Link href={staticRoutes.contact}>
-                  <a>Contact</a>
-                </Link>
-              </p>
-              <p>
-                <Link href={staticRoutes.blogs}>
-                  <a>Blog</a>
-                </Link>
-              </p>
-              <p>
-                <ExternalLink href="https://twitter.com/apilytics">Twitter</ExternalLink>
-              </p>
-              <p>
-                <ExternalLink href="https://github.com/apilytics">Github</ExternalLink>
-              </p>
-              <p>
-                <Link href={staticRoutes.privacy}>
-                  <a>Privacy</a>
-                </Link>
-              </p>
-            </ul>
-          </div>
-          <form onSubmit={handleSubmit} className="text-left">
-            <Input
-              name="email"
-              label="Keep me updated"
-              type="email"
-              value={email}
-              onChange={({ target }): void => setEmail(target.value)}
-              placeholder="Your email"
-              endIcon={ArrowSmRightIcon}
-              helperText="No spam. Unsubscribe at any time."
-              loading={loading}
-              buttonProps={{ type: 'submit' }}
-            >
-              {error && (
-                <label className="label">
-                  <span className="label-text-alt text-error">{error}</span>
-                </label>
-              )}
-              {submittedText && (
-                <label className="label">
-                  <span className="label-text-alt text-white">{submittedText}</span>
-                </label>
-              )}
-            </Input>
-          </form>
+export const Footer: React.FC<FooterProps> = ({ hideEmailList }) => (
+  <footer className="footer footer-center bg-base-100">
+    <div className="container">
+      <div className="flex flex-col-reverse sm:flex-row">
+        <div className="flex flex-col text-left py-4 sm:p-4">
+          <Image
+            src="/logo.svg"
+            layout="fixed"
+            width={150}
+            height={100}
+            objectFit="contain"
+            alt="Logo"
+          />
+          <p className="py-2">
+            Built by <ExternalLink href="https://github.com/blomqma">@blomqma</ExternalLink> and{' '}
+            <ExternalLink href="https://github.com/ruohola">@ruohola</ExternalLink>
+          </p>
+          {!hideEmailList && <EmailListForm label="Keep me updated" />}
+          <h6 className="footer-title mt-4">© {new Date().getFullYear()} Apilytics</h6>
         </div>
-        <h5 className="footer-title mt-8">© {new Date().getFullYear()} Apilytics</h5>
+        <div className="flex flex-col text-left py-4 sm:p-4">
+          <h6 className="footer-title">Product</h6>
+          <ul>
+            <p>
+              <Link href={staticRoutes.docs}>
+                <a>Docs</a>
+              </Link>
+            </p>
+            <p>
+              <Link href={staticRoutes.blog}>
+                <a>Blog</a>
+              </Link>
+            </p>
+            <p>
+              <Link href={staticRoutes.contact}>
+                <a>Contact</a>
+              </Link>
+            </p>
+            <p>
+              <Link href={staticRoutes.privacy}>
+                <a>Privacy</a>
+              </Link>
+            </p>
+          </ul>
+        </div>
+        <div className="flex flex-col text-left py-4 sm:p-4">
+          <h6 className="footer-title">Community</h6>
+          <ul>
+            <p>
+              <ExternalLink href="https://github.com/apilytics">Github</ExternalLink>
+            </p>
+            <p>
+              <ExternalLink href="https://twitter.com/apilytics">Twitter</ExternalLink>
+            </p>
+            <p>
+              <ExternalLink href="https://reddit.com/r/apilytics">Reddit</ExternalLink>
+            </p>
+          </ul>
+        </div>
       </div>
-    </footer>
-  );
-};
+    </div>
+  </footer>
+);

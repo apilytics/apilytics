@@ -41,9 +41,14 @@ export interface HeadProps {
 
 export interface HeaderProps {
   maxWidth?: string;
+  hideLogin?: boolean;
 }
 
-export type LayoutProps = HeadProps & HeaderProps;
+export interface FooterProps {
+  hideEmailList?: boolean;
+}
+
+export type LayoutProps = HeadProps & HeaderProps & FooterProps;
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean | 'mobile';
@@ -104,6 +109,12 @@ export interface OriginContextType {
   setOrigin: Dispatch<SetStateAction<Origin | null>>;
   metrics: OriginMetrics | null;
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
+}
+
+export interface ModalContextType {
+  modal: string | null;
+  handleOpenModal: (name: string) => void;
+  handleCloseModal: () => void;
 }
 
 export type ApiHandler<T = unknown> = (

@@ -1,3 +1,4 @@
+import { DotsVerticalIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -5,6 +6,7 @@ import React from 'react';
 
 import { Button } from 'components/shared/Button';
 import { useAccount } from 'hooks/useAccount';
+import { truncateString } from 'utils/helpers';
 import { staticRoutes } from 'utils/router';
 import type { HeaderProps } from 'types';
 
@@ -12,6 +14,10 @@ const MENU_ITEMS = [
   {
     name: 'Origins',
     href: staticRoutes.origins,
+  },
+  {
+    name: 'New origin',
+    href: staticRoutes.newOrigin,
   },
   {
     name: 'Account',
@@ -27,11 +33,11 @@ const MENU_ITEMS = [
   },
 ];
 
-export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
-  const { user } = useAccount();
+export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
+  const { user, accountComplete } = useAccount();
 
-  const renderDynamicContent = (): JSX.Element => {
-    if (!user) {
+  const renderDynamicContent = (): JSX.Element | void => {
+    if (!user && !hideLogin) {
       return (
         <Button linkTo={staticRoutes.login} className="btn-primary btn-outline">
           Log in
@@ -39,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
       );
     }
 
-    if (!user?.name) {
+    if (!!user && !accountComplete) {
       return (
         <Button linkTo={staticRoutes.logout} className="btn-primary btn-outline">
           Log out
@@ -47,27 +53,30 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
       );
     }
 
-    return (
-      <div className="flex items-center">
-        <div className="dropdown dropdown-end">
-          <div tabIndex={0} className="btn btn-primary btn-outline">
-            {user?.name}
+    if (user) {
+      return (
+        <div className="flex items-center">
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} className="btn btn-ghost flex">
+              <span className="hidden sm:block">{truncateString(user?.name, 10)}</span>
+              <DotsVerticalIcon className="sm:ml-2 w-5 h-5" />
+            </div>
+            <ul
+              tabIndex={0}
+              className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52 text-primary"
+            >
+              {MENU_ITEMS.map(({ name, href }) => (
+                <li key={name}>
+                  <Link href={href}>
+                    <a>{name}</a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul
-            tabIndex={0}
-            className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52 text-primary"
-          >
-            {MENU_ITEMS.map(({ name, href }) => (
-              <li key={name}>
-                <Link href={href}>
-                  <a>{name}</a>
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
-      </div>
-    );
+      );
+    }
   };
 
   return (
@@ -78,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
           maxWidth,
         )}
       >
-        <div className="flex items-center">
+        <div className="flex flex-row items-center">
           <Link href={staticRoutes.root}>
             <a>
               <Image
@@ -91,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth }) => {
               />
             </a>
           </Link>
-          <div className="ml-4 badge badge-lg badge-primary">Beta</div>
+          <div className="ml-2 badge badge badge-primary badge-sm badge-outline">Beta</div>
         </div>
         <div className="flex items-center">
           <Button

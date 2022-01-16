@@ -40,11 +40,11 @@ export const withAuth = <T extends Record<string, unknown>>(
               Thank you for signing up to Apilytics beta, we&lsquo;re glad to have you here!
               We&lsquo;re still getting started with our service and developing it tightly with our
               users. You can help us by giving us feedback as well as presenting your feature
-              requests to us via our{' '}
+              requests to us by{' '}
               <Link href={staticRoutes.contact}>
-                <a>contact form</a>
-              </Link>{' '}
-              or <a href="mailto:hello@apilytics.io">email</a>.
+                <a>contacting us</a>
+              </Link>
+              .
             </p>
             <Button
               className="btn-primary mt-4"

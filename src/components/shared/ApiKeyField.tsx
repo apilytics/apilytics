@@ -1,44 +1,56 @@
 import { ClipboardCopyIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Input } from 'components/shared/Input';
+import { IconButton } from 'components/shared/IconButton';
 import { staticRoutes } from 'utils/router';
 
 interface Props {
   value: string;
-  apiKeyCopiedCallback: () => void;
 }
 
-export const ApiKeyField: React.FC<Props> = ({ value, apiKeyCopiedCallback }) => {
+export const ApiKeyField: React.FC<Props> = ({ value }) => {
+  const [isCopied, setIsCopied] = useState(false);
+
   const onClick = (): void => {
     navigator.clipboard.writeText(value);
-    apiKeyCopiedCallback();
+    setIsCopied(true);
   };
 
-  const renderHelperText = (
-    <>
-      Use this API key with Apilytics middleware. See our{' '}
-      <Link href={staticRoutes.docs}>
-        <a>documentation</a>
-      </Link>{' '}
-      for more information.
-    </>
-  );
-
   return (
-    <Input
-      name="apiKey"
-      label="Your API Key"
-      value={value}
-      readOnly
-      endIcon={ClipboardCopyIcon}
-      buttonProps={{
-        onClick,
-        tooltip: 'Copy your API key to the clipboard.',
-        tooltipProps: { className: 'tooltip-left' },
-      }}
-      helperText={renderHelperText}
-    />
+    <div className="form-control">
+      <label className="label">
+        <span className="label-text">Your API Key</span>
+      </label>
+      <div className="flex">
+        <input
+          name="apiKey"
+          value={value}
+          className="input input-primary rounded-r-none grow"
+          readOnly
+        />
+        <IconButton
+          onClick={onClick}
+          icon={ClipboardCopyIcon}
+          tooltip="Copy your API key to the clipboard."
+          tooltipProps={{ className: 'tooltip-left' }}
+          className="rounded-l-none btn-outline btn-primary border-l-0"
+        />
+      </div>
+      <label className="label">
+        <span className="label-text-alt">
+          Use this API key with Apilytics middleware. See our{' '}
+          <Link href={staticRoutes.docs}>
+            <a>documentation</a>
+          </Link>{' '}
+          for more information.
+        </span>
+      </label>
+      {isCopied && (
+        <label className="label">
+          <span className="label-text-alt text-white">API key copied to the clipboard.</span>
+        </label>
+      )}
+    </div>
   );
 };

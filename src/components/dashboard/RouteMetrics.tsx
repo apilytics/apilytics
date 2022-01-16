@@ -13,6 +13,8 @@ import {
 import { RouteMetricsContainer } from 'components/dashboard/RouteMetricsContainer';
 import { RouteTooltip } from 'components/dashboard/RouteTooltip';
 import { RouteValue } from 'components/dashboard/RouteValue';
+import { MODAL_NAMES } from 'utils/constants';
+import { truncateString } from 'utils/helpers';
 import type { OriginMetrics } from 'types';
 
 interface Props {
@@ -37,7 +39,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
 
   const renderBarChart = (expanded: boolean): JSX.Element => {
     const _data = data.slice(0, expanded ? data.length : 10);
-    const height = Math.max(300, _data.length * 45);
+    const height = 100 + _data.length * 35;
 
     return (
       <ResponsiveContainer height={height}>
@@ -67,6 +69,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
             mirror
             stroke="white"
             padding={{ top: 30, bottom: 20 }}
+            tickFormatter={(val: string): string => truncateString(val, 15)}
           >
             <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />
           </YAxis>
@@ -82,6 +85,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
       title="Requests per route 📊"
       noRequests={!data.length}
       renderBarChart={renderBarChart}
+      modalName={MODAL_NAMES.routeMetrics}
     />
   );
 };
