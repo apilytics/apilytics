@@ -11,7 +11,10 @@ import prisma from 'prisma/client';
 import { isInconsistentColumnData } from 'prisma/errors';
 import type { ApiHandler } from 'types';
 
-type PostBody = Pick<Metric, 'path' | 'method' | 'statusCode' | 'timeMillis'>;
+type RequiredFields = Pick<Metric, 'path' | 'method' | 'statusCode' | 'timeMillis'>;
+// All fields added after v1.0.0 middleware packages need to be optional to ensure backwards compatibility.
+type OptionalFields = { query?: 'string' };
+type PostBody = RequiredFields & OptionalFields;
 
 const handlePost: ApiHandler = async (req, res) => {
   const apiKey = req.headers['x-api-key'];
@@ -36,14 +39,16 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const requiredFields: (keyof PostBody)[] = ['path', 'method', 'statusCode', 'timeMillis'];
+  const requiredFields: (keyof RequiredFields)[] = ['path', 'method', 'statusCode', 'timeMillis'];
   const missing = requiredFields.filter((field) => req.body[field] === undefined);
   if (missing.length) {
     sendMissingInput(res, missing);
     return;
   }
 
-  const { path, method, statusCode, timeMillis } = req.body as PostBody;
+  const { path, query, method, statusCode, timeMillis } = req.body as PostBody;
+
+  const queryParams = query ? Object.fromEntries(new URLSearchParams(query)) : undefined;
 
   const apilyticsVersion =
     typeof req.headers['apilytics-version'] === 'string'
@@ -51,7 +56,15 @@ const handlePost: ApiHandler = async (req, res) => {
       : undefined;
 
   await prisma.metric.create({
-    data: { originId: origin.id, path, method, statusCode, timeMillis, apilyticsVersion },
+    data: {
+      originId: origin.id,
+      path,
+      queryParams,
+      method,
+      statusCode,
+      timeMillis,
+      apilyticsVersion,
+    },
   });
 
   sendOk(res);

@@ -91,13 +91,14 @@ model Origin {
 }
 
 model Metric {
-  id         String @id @default(uuid()) @db.Uuid
-  path       String
-  method     String
+  id          String @id @default(uuid()) @db.Uuid
+  path        String
+  queryParams Json?  @map("query_params")
+  method      String
   // Nullable since our middleware might not always be able to send this, e.g. when
   // an inner request handler function that it wraps throws an error.
-  statusCode Int?   @map("status_code")
-  timeMillis Int    @map("time_millis")
+  statusCode  Int?   @map("status_code")
+  timeMillis  Int    @map("time_millis")
 
   apilyticsVersion String? @map("apilytics_version")
 
