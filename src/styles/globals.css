@@ -5,9 +5,9 @@
 :root {
   --primary: #529dff;
   --base-content: #8a8a8a;
-  --requests-red: #ffc2c2;
-  --requests-yellow: #ffeb8a;
-  --requests-green: #c0f2a7;
+  --requests-red: rgba(231, 111, 111, 0.2);
+  --requests-yellow: rgba(255, 255, 0, 0.2);
+  --requests-green: rgba(0, 255, 0, 0.2);
 
   /* DaisyUI overrides */
   --rounded-box: 0.5rem;
@@ -28,7 +28,7 @@
   h4,
   h5,
   h6 {
-    @apply my-3;
+    @apply my-2;
   }
 
   h1 {
@@ -81,6 +81,19 @@
   .mockup-code pre:before {
     margin-right: 0 !important;
   }
+
+  .card {
+    @apply overflow-visible;
+  }
+
+  h1 > a,
+  h2 > a,
+  h3 > a,
+  h4 > a,
+  h5 > a,
+  h6 > a {
+    @apply text-white !important;
+  }
 }
 
 .bg-filter {
@@ -97,8 +110,4 @@
 
 .text-requests-red {
   color: var(--requests-red);
-}
-
-.card {
-  @apply overflow-visible;
 }

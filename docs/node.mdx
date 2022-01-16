@@ -14,7 +14,9 @@ _A good practice is to securely store the API key as an environment variable.
 You can leave the env variable unset in e.g. development and test environments,
 the middleware will be automatically disabled if the key is `undefined`._
 
-#### Express.js
+<br />
+
+#### [Express](#express) {#express}
 
 Install with yarn:
 
@@ -41,7 +43,9 @@ const app = express();
 app.use(apilyticsMiddleware(process.env.APILYTICS_API_KEY));
 ```
 
-#### Next.js
+<br />
+
+#### [Next.js](#next) {#next}
 
 Install with yarn:
 
@@ -69,7 +73,9 @@ const handler = async (req, res) => {
 export default withApilytics(handler, process.env.APILYTICS_API_KEY);
 ```
 
-#### Other Node.js frameworks
+<br />
+
+#### [Other Node.js frameworks](#other) {#other}
 
 Install with yarn:
 

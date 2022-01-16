@@ -73,19 +73,14 @@ export const MOCK_ENDPOINTS = [
     status_codes: [200, 404],
   },
   {
-    name: '/posts/345',
+    name: '/posts/456',
     methods: ['GET'],
     status_codes: [200, 404],
   },
   {
-    name: '/posts/345',
+    name: '/posts/789',
     methods: ['GET'],
     status_codes: [200, 404],
-  },
-  {
-    name: '/users/johndoe',
-    methods: ['GET'],
-    status_codes: [200, 201],
   },
   {
     name: '/login',
@@ -102,6 +97,26 @@ export const MOCK_ENDPOINTS = [
     methods: ['POST'],
     status_codes: [201],
   },
+  {
+    name: '/blogs',
+    methods: ['GET'],
+    status_codes: [200],
+  },
+  {
+    name: '/blogs/123',
+    methods: ['GET'],
+    status_codes: [200],
+  },
+  {
+    name: '/blogs/456',
+    methods: ['GET'],
+    status_codes: [200],
+  },
+  {
+    name: '/blogs/789',
+    methods: ['GET'],
+    status_codes: [200],
+  },
 ];
 
 export const MOCK_ORIGIN = {
@@ -112,4 +127,11 @@ export const MOCK_ORIGIN = {
   createdAt: new Date(),
   updatedAt: new Date(),
   userId: 'a58025e5-cd8a-4586-94b9-d38f51aa9e72',
+};
+
+export const MODAL_NAMES = {
+  deleteOrigin: 'delete-origin',
+  apiKey: 'api-key',
+  routeMetrics: 'route-metrics',
+  responseTimes: 'response-times',
 };

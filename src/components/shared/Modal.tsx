@@ -3,12 +3,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import type { MouseEvent } from 'react';
 
+import { useModal } from 'hooks/useModal';
+
 interface Props {
-  open: boolean;
-  onClose: () => void;
+  name: string;
 }
 
-const _Modal: React.FC<Props> = ({ open, onClose, children }) => {
+const _Modal: React.FC<Props> = ({ name, children }) => {
+  const { modal, handleCloseModal } = useModal();
+  const open = modal === name;
   const modalRef = useRef<HTMLDivElement>(null);
   const [el] = useState(() => document.createElement('div'));
 
@@ -37,7 +40,7 @@ const _Modal: React.FC<Props> = ({ open, onClose, children }) => {
 
   const handleBackdropClick = ({ target }: MouseEvent): void => {
     if (!modalRef.current?.contains(target as Node)) {
-      onClose();
+      handleCloseModal();
     }
   };
 
@@ -46,9 +49,9 @@ const _Modal: React.FC<Props> = ({ open, onClose, children }) => {
       className="fixed inset-0 z-50 backdrop-blur backdrop-filter flex justify-center items-center"
       onClick={handleBackdropClick}
     >
-      <div className="mx-auto w-full sm:w-96">
+      <div className="mx-auto w-128">
         <div
-          className="card sm:card-bordered sm:rounded-lg bg-base-100 flex flex-col h-screen sm:max-h-128 sm:h-auto animate-fade-in-top"
+          className="card card-bordered rounded-lg bg-base-100 flex flex-col max-h-128 h-auto animate-fade-in-top"
           ref={modalRef}
         >
           {children}

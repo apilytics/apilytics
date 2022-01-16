@@ -5,21 +5,22 @@ import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { useAccount } from 'hooks/useAccount';
 import { staticApiRoutes } from 'utils/router';
 
-export const withAccount = <T extends Record<string, unknown>>(
+export const withOrigins = <T extends Record<string, unknown>>(
   PageComponent: NextPage<T>,
 ): NextPage<T> => {
-  const WithAccount: NextPage<T> = (pageProps: T) => {
-    const [loading, setLoading] = useState(true);
-    const { setUser } = useAccount();
+  const WithOrigins: NextPage<T> = (pageProps: T) => {
+    const [loading, setLoading] = useState(false);
+    const { setOrigins } = useAccount();
 
     useEffect(() => {
       (async (): Promise<void> => {
-        const res = await fetch(staticApiRoutes.account);
+        setLoading(true);
+        const res = await fetch(staticApiRoutes.origins);
         const { data } = await res.json();
-        setUser(data);
+        setOrigins(data);
         setLoading(false);
       })();
-    }, [setUser]);
+    }, [setOrigins]);
 
     if (loading) {
       return <LoadingTemplate />;
@@ -28,5 +29,5 @@ export const withAccount = <T extends Record<string, unknown>>(
     return <PageComponent {...pageProps} />;
   };
 
-  return WithAccount;
+  return WithOrigins;
 };

@@ -38,6 +38,7 @@ export const DashboardOptions: React.FC<Props> = ({
         linkTo={dynamicRoutes.originSettings({ slug })}
         icon={CogIcon}
         tooltip="Go to origin settings."
+        tooltipProps={{ className: 'tooltip-left' }}
         className="ml-4"
       />
     )}

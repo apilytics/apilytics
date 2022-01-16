@@ -1,28 +1,28 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
-import { DocsTemplate } from 'components/layout/DocsTemplate';
+import { BlogTemplate } from 'components/layout/BlogTemplate';
 import { withAccount } from 'hocs/withAccount';
-import { getDocsData, getDocsFilePaths, getMDXContent } from 'utils/mdx';
-import type { DocsPageProps } from 'types';
+import { getBlogFilePaths, getDocsData, getMDXContent } from 'utils/mdx';
+import type { BlogPageProps } from 'types';
 
-const Docs: NextPage<DocsPageProps> = (props) => <DocsTemplate {...props} />;
+const Blog: NextPage<BlogPageProps> = (props) => <BlogTemplate {...props} />;
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { source, data } = await getMDXContent(`docs/${params?.slug}.mdx`);
-  const docsData = getDocsData();
+  const { source, data } = await getMDXContent(`blogs/${params?.slug}.mdx`);
+  const blogsData = getDocsData();
 
   return {
     props: {
       source,
       data,
-      docsData,
+      blogsData,
     },
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = getDocsFilePaths()
+  const paths = getBlogFilePaths()
     .map((path) => path.replace(/\.mdx?$/, ''))
     .map((slug) => ({
       params: { slug },
@@ -34,4 +34,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default withAccount(Docs);
+export default withAccount(Blog);

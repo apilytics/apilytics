@@ -11,6 +11,7 @@ export const Button: React.FC<ButtonProps> = ({
   className,
   endIcon: EndIcon,
   linkTo,
+  tooltipProps,
   children,
   ...props
 }) => {
@@ -33,7 +34,11 @@ export const Button: React.FC<ButtonProps> = ({
 
   if (tooltip) {
     return (
-      <div data-tip={tooltip} className={clsx(tooltip && 'tooltip')}>
+      <div
+        data-tip={tooltip}
+        {...tooltipProps}
+        className={clsx(tooltip && 'tooltip', tooltipProps?.className)}
+      >
         {renderButton}
       </div>
     );

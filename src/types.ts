@@ -41,9 +41,14 @@ export interface HeadProps {
 
 export interface HeaderProps {
   maxWidth?: string;
+  hideLogin?: boolean;
 }
 
-export type LayoutProps = HeadProps & HeaderProps;
+export interface FooterProps {
+  hideEmailList?: boolean;
+}
+
+export type LayoutProps = HeadProps & HeaderProps & FooterProps;
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean | 'mobile';
@@ -51,19 +56,38 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   tooltip?: string;
   endIcon?: React.FC<ComponentProps<'svg'>>;
   linkTo?: string | UrlObject;
+  tooltipProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export interface FrontMatter {
+interface DocsFrontMatter {
   name: string;
   routeName: keyof typeof staticRoutes;
   order: number;
   subOrder: number;
 }
 
+interface BlogsFrontMatter {
+  title: string;
+  slug: string;
+  readingTime: string;
+  author: string;
+  authorImage: string;
+  excerpt: string;
+  date: string;
+}
+
 export interface MDXPageProps extends Record<string, unknown> {
   source: MDXRemoteSerializeResult;
-  frontMatter?: FrontMatter;
-  docsInfo?: FrontMatter[];
+}
+
+export interface DocsPageProps extends MDXPageProps {
+  docsData: DocsFrontMatter[];
+  data: DocsFrontMatter;
+}
+
+export interface BlogPageProps extends MDXPageProps {
+  blogsData: BlogsFrontMatter[];
+  data: BlogsFrontMatter;
 }
 
 export interface Snippet {
@@ -85,6 +109,12 @@ export interface OriginContextType {
   setOrigin: Dispatch<SetStateAction<Origin | null>>;
   metrics: OriginMetrics | null;
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
+}
+
+export interface ModalContextType {
+  modal: string | null;
+  handleOpenModal: (name: string) => void;
+  handleCloseModal: () => void;
 }
 
 export type ApiHandler<T = unknown> = (

@@ -9,7 +9,9 @@ subOrder: 2
 
 The respository for our open source Python middleware can be found <ExternalLink href="https://github.com/apilytics/apilytics-python">here</ExternalLink>.
 
-#### Installation
+<br />
+
+#### [Installation](#installation) {#installation}
 
 Install with pip:
 
@@ -28,7 +30,9 @@ _A good practice is to securely store the API key as an environment variable.
 You can leave the env variable unset in e.g. development and test environments,
 the middleware will be automatically disabled if the key is `None`._
 
-#### Django:
+<br />
+
+#### [Django](#django) {#django}
 
 ```python
 # settings.py
@@ -42,7 +46,9 @@ MIDDLEWARE = [
 ]
 ```
 
-#### FastAPI:
+<br />
+
+#### [FastAPI](#fastapi) {#fastapi}
 
 ```python
 # main.py
@@ -55,7 +61,9 @@ app = FastAPI()
 app.add_middleware(ApilyticsFastAPIMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))
 ```
 
-#### Other Python frameworks:
+<br />
+
+#### [Other Python frameworks](#other) {#other}
 
 ```python
 # my_apilytics_middleware.py

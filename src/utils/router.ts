@@ -17,6 +17,7 @@ export const staticRoutes = {
   newOrigin: '/new-origin',
   account: '/account',
   contact: '/contact',
+  blog: '/blog',
   ...docsRoutes,
 };
 
@@ -25,6 +26,7 @@ type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;
 export const dynamicRoutes: DynamicRoutes = {
   origin: ({ slug }) => `/origins/${slug}`,
   originSettings: ({ slug }) => `/origins/${slug}/settings`,
+  blog: ({ slug }) => `/blog/${slug}`,
 };
 
 export const staticApiRoutes = {

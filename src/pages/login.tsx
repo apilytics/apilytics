@@ -68,17 +68,21 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
 
   if (submitted) {
     return (
-      <MainTemplate>
+      <MainTemplate hideLogin>
         <h4 className="text-white">
           Thanks! We sent you a <span className="text-primary">magic</span> link to your email that
           you can log in with.
         </h4>
+        <p>
+          Didn&lsquo;t receive an email? Check your spam folder and contact us at{' '}
+          <a href="mailto:support@apilytics.io">support@apilytics.io</a> is the problem persists.
+        </p>
       </MainTemplate>
     );
   }
 
   return (
-    <MainTemplate>
+    <MainTemplate hideLogin>
       <Form
         title="Sign up or log in using your email"
         onSubmit={handleSubmit}
