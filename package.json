@@ -19,7 +19,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
-    "@apilytics/next": "1.0.1",
+    "@apilytics/next": "1.0.2",
     "@fontsource/ubuntu": "4.5.0",
     "@heroicons/react": "1.0.5",
     "@next-auth/prisma-adapter": "1.0.1",
