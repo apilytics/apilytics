@@ -1,5 +1,4 @@
 import { readdirSync } from 'fs';
-import { join } from 'path';
 
 import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
@@ -12,7 +11,7 @@ import { TopSection } from 'components/Home/TopSection';
 import { Why } from 'components/Home/Why';
 import { Layout } from 'components/layout/Layout';
 import { withNoAuth } from 'hocs/withNoAuth';
-import { getMDXContent } from 'utils/mdx';
+import { getFullPath, getMDXContent } from 'utils/mdx';
 import type { Snippet } from 'types';
 
 interface Props extends Record<string, unknown> {
@@ -31,9 +30,8 @@ const Home: NextPage<Props> = ({ snippets }) => (
 );
 
 export const getStaticProps: GetStaticProps = async () => {
-  const path = 'snippets';
-  const fullPath = join(process.cwd(), path);
-  const files = readdirSync(fullPath).filter((path) => /\.mdx?$/.test(path));
+  const path = getFullPath('src/snippets');
+  const files = readdirSync(path).filter((path) => /\.mdx?$/.test(path));
 
   // @ts-ignore: The front matter types are inferred as `any`;
   const _snippets: Snippet[] = await Promise.all(
@@ -41,7 +39,7 @@ export const getStaticProps: GetStaticProps = async () => {
       const {
         source,
         data: { name, order },
-      } = await getMDXContent(`${path}/${file}`);
+      } = await getMDXContent(`src/snippets/${file}`);
 
       return {
         name,
