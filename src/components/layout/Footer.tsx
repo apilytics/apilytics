@@ -2,39 +2,35 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-import { EmailListForm } from 'components/shared/EmailListForm';
 import { ExternalLink } from 'components/shared/ExternalLink';
 import { staticRoutes } from 'utils/router';
-import type { FooterProps } from 'types';
+import { DESCRIPTION } from 'utils/constants';
 
-export const Footer: React.FC<FooterProps> = ({ hideEmailList }) => (
+export const Footer: React.FC = () => (
   <footer className="footer footer-center bg-base-100">
-    <div className="container">
-      <div className="flex flex-col-reverse sm:flex-row">
-        <div className="flex flex-col text-left py-4 sm:p-4">
-          <Image
-            src="/logo.svg"
-            layout="fixed"
-            width={150}
-            height={100}
-            objectFit="contain"
-            alt="Logo"
-          />
-          <p className="py-2">
+    <div className="container text-left max-w-3xl py-4 sm:py-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <div>
+          <div className="flex">
+            <Image
+              src="/logo.svg"
+              layout="fixed"
+              width={50}
+              height={40}
+              objectFit="contain"
+              alt="Logo"
+            />
+            <h6 className="footer-title text-white ml-2">Apilytics</h6>
+          </div>
+          <p className="py-2">{DESCRIPTION}</p>
+          <p className="text-xs">
             Built by <ExternalLink href="https://github.com/blomqma">@blomqma</ExternalLink> and{' '}
             <ExternalLink href="https://github.com/ruohola">@ruohola</ExternalLink>
           </p>
-          {!hideEmailList && <EmailListForm label="Keep me updated" />}
-          <h6 className="footer-title mt-4">© {new Date().getFullYear()} Apilytics</h6>
         </div>
-        <div className="flex flex-col text-left py-4 sm:p-4">
-          <h6 className="footer-title">Product</h6>
+        <div>
+          <h6 className="footer-title text-white">Company</h6>
           <ul>
-            <p>
-              <Link href={staticRoutes.docs}>
-                <a>Docs</a>
-              </Link>
-            </p>
             <p>
               <Link href={staticRoutes.blog}>
                 <a>Blog</a>
@@ -50,10 +46,15 @@ export const Footer: React.FC<FooterProps> = ({ hideEmailList }) => (
                 <a>Privacy</a>
               </Link>
             </p>
+            <p>
+              <Link href={staticRoutes.about}>
+                <a>About</a>
+              </Link>
+            </p>
           </ul>
         </div>
-        <div className="flex flex-col text-left py-4 sm:p-4">
-          <h6 className="footer-title">Community</h6>
+        <div>
+          <h6 className="footer-title text-white">Community</h6>
           <ul>
             <p>
               <ExternalLink href="https://github.com/apilytics">Github</ExternalLink>

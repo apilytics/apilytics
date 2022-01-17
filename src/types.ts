@@ -44,11 +44,7 @@ export interface HeaderProps {
   hideLogin?: boolean;
 }
 
-export interface FooterProps {
-  hideEmailList?: boolean;
-}
-
-export type LayoutProps = HeadProps & HeaderProps & FooterProps;
+export type LayoutProps = HeadProps & HeaderProps;
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean | 'mobile';

@@ -67,7 +67,7 @@ export const EmailListForm: React.FC<Props> = ({ label }) => {
           />
           <Button
             type="submit"
-            className="btn-primary mt-2 sm:mt-0 sm:ml-2"
+            className="btn-primary btn-outline mt-2 sm:mt-0 sm:ml-2"
             fullWidth="mobile"
             loading={loading}
           >
