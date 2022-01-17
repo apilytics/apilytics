@@ -12,7 +12,7 @@ import { dynamicRoutes } from 'utils/router';
 import type { BlogPageProps } from 'types';
 
 const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
-  <MainTemplate hideEmailList>
+  <MainTemplate hideEmailList noIndex={false}>
     <h5 className="text-white">Apilytics Blog</h5>
     <EmailListForm
       label={
