@@ -16,7 +16,7 @@ const Privacy: NextPage<MDXPageProps> = ({ source }) => (
 );
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { source } = await getMDXContent('privacy.mdx');
+  const { source } = await getMDXContent('src/privacy.mdx');
 
   return {
     props: {

@@ -1,7 +1,6 @@
 import type { GetServerSideProps } from 'next';
 
 import { FRONTEND_URL } from 'utils/constants';
-import { getBlogFilePaths, getDocsFilePaths } from 'utils/mdx';
 import { staticRoutes } from 'utils/router';
 
 type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
@@ -14,29 +13,23 @@ interface Route {
   modified?: string; // ISO date
 }
 
-const dynamicDocsRoutes = getDocsFilePaths()
-  .map((path) => path.replace(/\.mdx?$/, ''))
-  .map((name) => ({
-    path: `/docs/${name}`,
-    changeFreq: 'weekly' as const,
-    priority: '0.75',
-  }));
+const DOCS_ROUTES = ['', '/get-started', '/node', '/python', '/dashboard', '/byom'].map((path) => ({
+  path: `/docs${path}`,
+  changeFreq: 'weekly' as const,
+  priority: '0.75',
+}));
 
-const dynamicBlogRoutes = getBlogFilePaths()
-  .map((path) => path.replace(/\.mdx?$/, ''))
-  .map((name) => ({
-    path: `/blog/${name}`,
-    changeFreq: 'weekly' as const,
-    priority: '0.75',
-  }));
+const BLOG_ROUTES = ['', '/problem-with-api-monitoring'].map((path) => ({
+  path: `/blog${path}`,
+  changeFreq: 'weekly' as const,
+  priority: '0.75',
+}));
 
 // We only want to index the landing page for now.
 const INDEXABLE_ROUTES: Route[] = [
   { path: '', changeFreq: 'weekly', priority: '1.0' },
-  { path: staticRoutes.docs, changeFreq: 'weekly', priority: '0.75' },
-  ...dynamicDocsRoutes,
-  { path: staticRoutes.blog, changeFreq: 'weekly', priority: '0.75' },
-  ...dynamicBlogRoutes,
+  ...DOCS_ROUTES,
+  ...BLOG_ROUTES,
   { path: staticRoutes.contact, changeFreq: 'weekly', priority: '0.5' },
 ];
 

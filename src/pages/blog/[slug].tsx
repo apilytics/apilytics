@@ -9,7 +9,7 @@ import type { BlogPageProps } from 'types';
 const Blog: NextPage<BlogPageProps> = (props) => <BlogTemplate {...props} />;
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { source, data } = await getMDXContent(`blogs/${params?.slug}.mdx`);
+  const { source, data } = await getMDXContent(`src/blogs/${params?.slug}.mdx`);
   const blogsData = getDocsData();
 
   return {

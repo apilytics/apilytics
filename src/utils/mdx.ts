@@ -9,7 +9,7 @@ import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 import { staticRoutes } from 'utils/router';
 
-const getFullPath = (path: string): string => join(process.cwd(), path);
+export const getFullPath = (path: string): string => join(process.cwd(), path);
 
 interface MDXContent {
   source: MDXRemoteSerializeResult;
@@ -33,7 +33,7 @@ export const getMDXContent = async (path: string): Promise<MDXContent> => {
 
 const filterMDXFiles = (path: string): boolean => /\.mdx?$/.test(path);
 
-const DOCS_PATH = getFullPath('docs');
+const DOCS_PATH = getFullPath('src/docs');
 
 export const getDocsFilePaths = (): string[] => readdirSync(DOCS_PATH).filter(filterMDXFiles);
 
@@ -71,7 +71,7 @@ export const getDocsData = (): Record<string, unknown>[] =>
     })
     .sort((a, b) => a.order - b.order);
 
-const BLOGS_PATH = getFullPath('blogs');
+const BLOGS_PATH = getFullPath('src/blogs');
 
 export const getBlogFilePaths = (): string[] => readdirSync(BLOGS_PATH).filter(filterMDXFiles);
 

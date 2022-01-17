@@ -9,7 +9,7 @@ import type { DocsPageProps } from 'types';
 const Docs: NextPage<DocsPageProps> = (props) => <DocsTemplate {...props} />;
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { source, data } = await getMDXContent(`docs/${params?.slug}.mdx`);
+  const { source, data } = await getMDXContent(`src/docs/${params?.slug}.mdx`);
   const docsData = getDocsData();
 
   return {
