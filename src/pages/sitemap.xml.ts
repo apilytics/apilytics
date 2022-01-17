@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from 'next';
 
 import { FRONTEND_URL } from 'utils/constants';
-import { getDocsFilePaths } from 'utils/mdx';
+import { getBlogFilePaths, getDocsFilePaths } from 'utils/mdx';
 import { staticRoutes } from 'utils/router';
 
 type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
@@ -22,11 +22,21 @@ const dynamicDocsRoutes = getDocsFilePaths()
     priority: '0.75',
   }));
 
+const dynamicBlogRoutes = getBlogFilePaths()
+  .map((path) => path.replace(/\.mdx?$/, ''))
+  .map((name) => ({
+    path: `/blog/${name}`,
+    changeFreq: 'weekly' as const,
+    priority: '0.75',
+  }));
+
 // We only want to index the landing page for now.
 const INDEXABLE_ROUTES: Route[] = [
   { path: '', changeFreq: 'weekly', priority: '1.0' },
   { path: staticRoutes.docs, changeFreq: 'weekly', priority: '0.75' },
   ...dynamicDocsRoutes,
+  { path: staticRoutes.blog, changeFreq: 'weekly', priority: '0.75' },
+  ...dynamicBlogRoutes,
   { path: staticRoutes.contact, changeFreq: 'weekly', priority: '0.5' },
 ];
 
