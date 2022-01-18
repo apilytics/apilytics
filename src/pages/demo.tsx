@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
-import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
-import { RequestsOverview } from 'components/dashboard/RequestsOverview';
-import { ResponseTimes } from 'components/dashboard/ResponseTimes';
+import { EndpointRequests } from 'components/dashboard/EndpointRequests';
+import { EndpointResponseTimes } from 'components/dashboard/EndpointResponseTimes';
+import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
 import { withNoAuth } from 'hocs/withNoAuth';
@@ -27,10 +27,15 @@ const Demo: NextPage = () => {
         origin={origin}
         hideSettingsButton
       />
-      <RequestsOverview timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
+      <RequestsTimeFrame
+        timeFrame={timeFrame}
+        origin={origin}
+        metrics={metrics}
+        loading={loading}
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 grow">
-        <EndpointMetrics metrics={metrics} loading={loading} />
-        <ResponseTimes metrics={metrics} loading={loading} />
+        <EndpointRequests metrics={metrics} loading={loading} />
+        <EndpointResponseTimes metrics={metrics} loading={loading} />
       </div>
       <div className="flex flex-col lg:flex-row lg:items-center mt-4">
         <div className="grow">

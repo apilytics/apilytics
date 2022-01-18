@@ -5,7 +5,7 @@ import { LoadingIndicator } from 'components/shared/LoadingIndicator';
 
 export const LoadingTemplate: React.FC = () => (
   <MainTemplate hideLogin>
-    <div className="grow flex items-center justify-center p-4">
+    <div className="grow flex items-center justify-center py-40">
       <LoadingIndicator />
     </div>
   </MainTemplate>

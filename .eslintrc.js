@@ -21,7 +21,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'import/no-duplicates': 'error',
     'simple-import-sort/imports': [
-      'error',
+      'warn',
       {
         groups: [
           ['^\\u0000'],
@@ -35,7 +35,7 @@ module.exports = {
     ],
     'simple-import-sort/exports': 'error',
     'no-restricted-imports': [
-      'error',
+      'warn',
       {
         patterns: [
           { group: ['.*'], message: "Don't use relative imports!" },

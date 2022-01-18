@@ -130,10 +130,12 @@ export interface EndpointData {
   path: string;
   method: string;
   status_codes: number[];
-  response_time: number;
-  count_green: number;
-  count_yellow: number;
-  count_red: number;
+  avg_response_time: number;
+  p50: number;
+  p75: number;
+  p90: number;
+  p95: number;
+  p99: number;
 }
 
 export interface OriginMetrics {

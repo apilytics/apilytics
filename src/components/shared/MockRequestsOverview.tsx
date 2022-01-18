@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RequestsOverview } from 'components/dashboard/RequestsOverview';
+import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
 import { MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
 
@@ -10,5 +10,5 @@ const metrics = getMockMetrics(timeFrame);
 const loading = !origin || !metrics;
 
 export const MockRequestsOverview: React.FC = () => (
-  <RequestsOverview timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
+  <RequestsTimeFrame timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
 );

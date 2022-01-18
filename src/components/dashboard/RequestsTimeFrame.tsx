@@ -16,7 +16,7 @@ import {
   WEEK_DAYS,
   YEAR_DAYS,
 } from 'utils/constants';
-import { getDataPointsBetweenTimeFrame, getTimeFrameScope } from 'utils/metrics';
+import { formatRequests, getDataPointsBetweenTimeFrame, getTimeFrameScope } from 'utils/metrics';
 import type { OriginMetrics, TimeFrame, TimeFrameData } from 'types';
 
 const HOUR_FORMAT = 'h A';
@@ -30,7 +30,7 @@ interface Props {
   loading: boolean;
 }
 
-export const RequestsOverview: React.FC<Props> = ({
+export const RequestsTimeFrame: React.FC<Props> = ({
   timeFrame,
   origin: { name },
   metrics: { totalRequests, totalRequestsGrowth, timeFrameData },
@@ -108,18 +108,6 @@ export const RequestsOverview: React.FC<Props> = ({
     }
   };
 
-  const getTotalRequests = (): string => {
-    if (totalRequests > 1_000_000) {
-      return `${(totalRequests / 1_000_000).toFixed(1)}m`;
-    }
-
-    if (totalRequests > 1_000) {
-      return `${(totalRequests / 1_000).toFixed(1)}k`;
-    }
-
-    return `${totalRequests}`;
-  };
-
   const renderTooltipContent = ({
     payload,
   }: TooltipProps<ValueType, NameType>): JSX.Element | null => {
@@ -171,7 +159,7 @@ export const RequestsOverview: React.FC<Props> = ({
         </div>
         <div className="p-4">
           <h6 className="text-white">Total requests</h6>
-          <p className="text-lg">{getTotalRequests()}</p>
+          <p className="text-lg">{formatRequests(totalRequests)}</p>
         </div>
         {isFinite(totalRequestsGrowth) && (
           <div className="p-4">

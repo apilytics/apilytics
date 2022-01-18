@@ -88,23 +88,22 @@ GROUP BY time;`;
   const routeData: EndpointData[] = await prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
-  filtered_metrics.path,
-  filtered_metrics.method,
-  ARRAY_AGG(DISTINCT(filtered_metrics.status_code)) as status_codes,
-  ROUND(AVG(filtered_metrics.time_millis)) as response_time,
-  CARDINALITY(ARRAY_POSITIONS(ARRAY_AGG(filtered_metrics.rank), 1)) AS count_green,
-  CARDINALITY(ARRAY_POSITIONS(ARRAY_AGG(filtered_metrics.rank), 2)) AS count_yellow,
-  CARDINALITY(ARRAY_POSITIONS(ARRAY_AGG(filtered_metrics.rank), 3)) AS count_red
-FROM (
-  SELECT path, method, status_code, time_millis, NTILE(3) OVER ( ORDER BY time_millis ) AS rank
-  FROM metrics
+  metrics.path,
+  metrics.method,
+  ARRAY_AGG(DISTINCT(metrics.status_code)) as status_codes,
+  ROUND(AVG(metrics.time_millis)) as avg_response_time,
+  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS p50,
+  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS p75,
+  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS p90,
+  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS p95,
+  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS p99
+FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
   WHERE origins.id = ${originId}
     AND origins.user_id = ${userId}
     AND metrics.created_at >= ${fromDate}
     AND metrics.created_at <= ${toDate}
-) AS filtered_metrics
-GROUP BY filtered_metrics.path, filtered_metrics.method;`;
+GROUP BY metrics.path, metrics.method;`;
 
   const data = {
     totalRequests,

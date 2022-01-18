@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
-import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
-import { RequestsOverview } from 'components/dashboard/RequestsOverview';
-import { ResponseTimes } from 'components/dashboard/ResponseTimes';
+import { EndpointRequests } from 'components/dashboard/EndpointRequests';
+import { EndpointResponseTimes } from 'components/dashboard/EndpointResponseTimes';
+import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
@@ -58,10 +58,15 @@ const Origin: NextPage = () => {
   return (
     <MainTemplate maxWidth="max-w-6xl" dense>
       <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
-      <RequestsOverview timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
+      <RequestsTimeFrame
+        timeFrame={timeFrame}
+        origin={origin}
+        metrics={metrics}
+        loading={loading}
+      />
       <div className="grow flex flex-col lg:flex-row gap-4 mt-4">
-        <EndpointMetrics metrics={metrics} loading={loading} />
-        <ResponseTimes metrics={metrics} loading={loading} />
+        <EndpointRequests metrics={metrics} loading={loading} />
+        <EndpointResponseTimes metrics={metrics} loading={loading} />
       </div>
       <p className="mt-4 text-center">
         Help us improve this dashboard by{' '}

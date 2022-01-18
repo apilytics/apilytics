@@ -5,9 +5,6 @@
 :root {
   --primary: #529dff;
   --base-content: #8a8a8a;
-  --requests-red: rgba(231, 111, 111, 0.2);
-  --requests-yellow: rgba(255, 255, 0, 0.2);
-  --requests-green: rgba(0, 255, 0, 0.2);
 
   /* DaisyUI overrides */
   --rounded-box: 0.5rem;
@@ -82,10 +79,6 @@
     margin-right: 0 !important;
   }
 
-  .card {
-    @apply overflow-visible;
-  }
-
   h1 > a,
   h2 > a,
   h3 > a,
@@ -100,16 +93,16 @@
   background-color: rgba(0, 0, 0, 0.75);
 }
 
-.text-requests-green {
-  color: var(--requests-green);
+.card {
+  @apply overflow-visible;
 }
 
-.text-requests-yellow {
-  color: var(--requests-yellow);
+.recharts-bar-rectangle {
+  cursor: pointer;
 }
 
-.text-requests-red {
-  color: var(--requests-red);
+.recharts-bar-rectangle:hover > path {
+  fill: rgba(82, 157, 255, 0.1);
 }
 
 /* https://github.com/swagger-api/swagger-ui/blob/master/src/style/_variables.scss#L46-L53 */

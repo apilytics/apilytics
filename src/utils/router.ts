@@ -1,3 +1,7 @@
+const DOCS_ROUTES = {
+  dashboard: '/docs/dashboard',
+};
+
 export const staticRoutes = {
   root: '/',
   login: '/login',
@@ -15,6 +19,7 @@ export const staticRoutes = {
   lightweight: '/lightweight',
   openSource: '/open-source',
   easeOfUse: '/ease-of-use',
+  ...DOCS_ROUTES,
 };
 
 type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;
