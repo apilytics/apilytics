@@ -11,11 +11,10 @@ interface Props extends LayoutProps {
 export const MainTemplate: React.FC<Props> = ({
   maxWidth = 'max-w-3xl',
   dense = false,
-  noIndex = true,
   children,
   ...props
 }) => (
-  <Layout noIndex={noIndex} maxWidth={maxWidth} {...props}>
+  <Layout maxWidth={maxWidth} {...props}>
     <div
       className={clsx(
         'container py-4 animate-fade-in-top grow flex flex-col',

@@ -7,7 +7,7 @@ import rehypeHighlight from 'rehype-highlight';
 import remarkHeadingId from 'remark-heading-id';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
-import { staticRoutes } from 'utils/router';
+import type { DocsFrontMatter } from 'types';
 
 export const getFullPath = (path: string): string => join(process.cwd(), path);
 
@@ -32,10 +32,11 @@ export const getMDXContent = async (path: string): Promise<MDXContent> => {
 };
 
 const filterMDXFiles = (path: string): boolean => /\.mdx?$/.test(path);
+export const getFilePaths = (path: string): string[] => readdirSync(path).filter(filterMDXFiles);
 
-const DOCS_PATH = getFullPath('src/docs');
-
-export const getDocsFilePaths = (): string[] => readdirSync(DOCS_PATH).filter(filterMDXFiles);
+export const DOCS_PATH = getFullPath('src/docs');
+export const BLOGS_PATH = getFullPath('src/blogs');
+export const CONTENT_PATH = getFullPath('src/content');
 
 const validateMandatoryFrontMatterKeys = (
   data: Record<string, unknown>,
@@ -49,38 +50,32 @@ const validateMandatoryFrontMatterKeys = (
   });
 };
 
-const validateDocsFrontMatter = (data: Record<string, unknown>, path: string): void => {
-  const properties = ['name', 'routeName', 'order'];
-  validateMandatoryFrontMatterKeys(data, properties, path);
-
-  if (typeof data.routeName === 'string') {
-    if (!Object.keys(staticRoutes).includes(data.routeName)) {
-      throw Error(`Invalid route name '${data.routeName}' for ${path}!`);
-    }
-  }
-};
-
 export const getDocsData = (): Record<string, unknown>[] =>
-  getDocsFilePaths()
+  getFilePaths(DOCS_PATH)
     .map((path) => {
       const fullPath = join(DOCS_PATH, path);
       const source = readFileSync(fullPath);
       const { data } = matter(source);
-      validateDocsFrontMatter(data, path);
-      return data;
+      const properties = ['name', 'order'];
+      validateMandatoryFrontMatterKeys(data, properties, path);
+
+      return {
+        ...(data as DocsFrontMatter),
+        path,
+      };
     })
+    .map((doc) => ({
+      ...doc,
+      path: doc.path.replace(/\.mdx?$/, ''),
+    }))
     .sort((a, b) => a.order - b.order);
 
-const BLOGS_PATH = getFullPath('src/blogs');
-
-export const getBlogFilePaths = (): string[] => readdirSync(BLOGS_PATH).filter(filterMDXFiles);
-
 export const getBlogsData = (): Record<string, unknown>[] =>
-  getBlogFilePaths().map((path) => {
+  getFilePaths(BLOGS_PATH).map((path) => {
     const fullPath = join(BLOGS_PATH, path);
     const source = readFileSync(fullPath);
     const { data } = matter(source);
-    const properties = ['title', 'slug', 'readingTime', 'author', 'authorImage', 'excerpt'];
+    const properties = ['title', 'slug', 'author', 'authorImage', 'excerpt'];
     validateMandatoryFrontMatterKeys(data, properties, path);
     return data;
   });

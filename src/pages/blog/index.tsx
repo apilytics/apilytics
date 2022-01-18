@@ -5,26 +5,22 @@ import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
-import { EmailListForm } from 'components/shared/EmailListForm';
+import { CTASection } from 'components/shared/CTASection';
 import { withAccount } from 'hocs/withAccount';
 import { getBlogsData } from 'utils/mdx';
 import { dynamicRoutes } from 'utils/router';
 import type { BlogPageProps } from 'types';
 
 const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
-  <MainTemplate hideEmailList noIndex={false}>
-    <h5 className="text-white">Apilytics Blog</h5>
-    <EmailListForm
-      label={
-        <>
-          Hi there! 👋
-          <br />
-          You can read about our journey in this blog.
-        </>
-      }
-    />
+  <MainTemplate index>
+    <h4 className="text-white">Apilytics Blog</h4>
+    <p>
+      Hi there! 👋
+      <br />
+      You can read about our journey in this blog.
+    </p>
     <div className="py-4 flex flex-col gap-2">
-      {blogsData.map(({ title, slug, author, authorImage, excerpt, readingTime, date }) => (
+      {blogsData.map(({ title, slug, author, authorImage, excerpt, date }) => (
         <Link href={dynamicRoutes.blog({ slug })} key={slug}>
           <a className="unstyled">
             <div className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2" key={slug}>
@@ -45,8 +41,6 @@ const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
                   <p className="ml-2">{author}</p>
                 </div>
                 <span className="ml-2 hidden sm:block">·</span>
-                <p className="sm:ml-2">{readingTime}</p>
-                <span className="ml-2 hidden sm:block">·</span>
                 <p className="sm:ml-2">{dayjs(date).format('LL')}</p>
               </div>
             </div>
@@ -54,6 +48,7 @@ const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
         </Link>
       ))}
     </div>
+    <CTASection />
   </MainTemplate>
 );
 

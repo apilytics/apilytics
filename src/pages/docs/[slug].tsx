@@ -3,7 +3,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
 import { DocsTemplate } from 'components/layout/DocsTemplate';
 import { withAccount } from 'hocs/withAccount';
-import { getDocsData, getDocsFilePaths, getMDXContent } from 'utils/mdx';
+import { DOCS_PATH, getDocsData, getFilePaths, getMDXContent } from 'utils/mdx';
 import type { DocsPageProps } from 'types';
 
 const Docs: NextPage<DocsPageProps> = (props) => <DocsTemplate {...props} />;
@@ -22,7 +22,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = getDocsFilePaths()
+  const paths = getFilePaths(DOCS_PATH)
     .map((path) => path.replace(/\.mdx?$/, ''))
     .map((slug) => ({
       params: { slug },

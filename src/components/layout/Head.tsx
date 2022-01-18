@@ -8,7 +8,7 @@ import type { HeadProps } from 'types';
 
 const OG_IMAGE = `${FRONTEND_URL}/og-image.png`;
 
-export const Head: React.FC<HeadProps> = ({ noIndex }) => {
+export const Head: React.FC<HeadProps> = ({ index }) => {
   const { asPath } = useRouter();
   const ogUrl = `${FRONTEND_URL}${asPath === staticRoutes.root ? '' : asPath}`;
 
@@ -24,7 +24,7 @@ export const Head: React.FC<HeadProps> = ({ noIndex }) => {
       <meta name="twitter:title" content={TITLE} />
       <meta name="twitter:description" content={DESCRIPTION} />
       <meta name="twitter:image" content={OG_IMAGE} />
-      {noIndex && <meta name="robots" content="noindex,noarchive,nosnippet,follow" />}
+      {!index && <meta name="robots" content="noindex,noarchive,nosnippet,follow" />}
       <meta
         name="viewport"
         content="width=device-width, user-scalable=no, maximum-scale=1.0, initial-scale=1.0"
