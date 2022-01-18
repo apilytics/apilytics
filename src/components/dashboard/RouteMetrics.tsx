@@ -38,7 +38,7 @@ export const RouteMetrics: React.FC<Props> = ({ metrics: { routeData }, loading 
   );
 
   const renderBarChart = (expanded: boolean): JSX.Element => {
-    const _data = data.slice(0, expanded ? data.length : 10);
+    const _data = data.slice(0, expanded ? data.length : 15);
     const height = 100 + _data.length * 35;
 
     return (
