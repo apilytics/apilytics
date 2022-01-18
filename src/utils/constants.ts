@@ -1,7 +1,7 @@
 export const TITLE = 'Apilytics - API analytics made easy';
 
 export const DESCRIPTION =
-  'Apilytics is a service that lets you analyze operational, performance and security metrics from your APIs easily.';
+  'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliancy.';
 
 // `NEXT_PUBLIC_APP_URL` is defined everywhere except in preview environments
 // (where the URL changes always), there we'll use `VERCEL_URL`.
