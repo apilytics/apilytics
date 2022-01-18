@@ -1,7 +1,10 @@
 import type { GetServerSideProps } from 'next';
 
 import { FRONTEND_URL } from 'utils/constants';
-import { staticRoutes } from 'utils/router';
+import { BLOG_ROUTES, CONTENT_ROUTES, DOCS_ROUTES, staticRoutes } from 'utils/router';
+
+// This should be manually updated whenever we want Google to re-index the sitemap.
+const MODIFIED = '2022-01-18';
 
 type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
@@ -13,44 +16,45 @@ interface Route {
   modified?: string; // ISO date
 }
 
-const CONTENT_ROUTES = [
-  staticRoutes.about,
-  staticRoutes.easeOfUse,
-  staticRoutes.lightweight,
-  staticRoutes.openSource,
-  staticRoutes.privacyFriendly,
-].map((path) => ({
+const contentRoutes = Object.values(CONTENT_ROUTES).map((path) => ({
   path,
   changeFreq: 'weekly' as const,
   priority: '0.90',
 }));
 
-const DOCS_ROUTES = ['', '/get-started', '/node', '/python', '/dashboard', '/byom'].map((path) => ({
-  path: `/docs${path}`,
+const docsRoutes = Object.values(DOCS_ROUTES).map((path) => ({
+  path,
   changeFreq: 'weekly' as const,
   priority: '0.75',
 }));
 
-const BLOG_ROUTES = ['', '/problem-with-api-monitoring'].map((path) => ({
-  path: `/blog${path}`,
+const blogRoutes = Object.values(BLOG_ROUTES).map((path) => ({
+  path,
   changeFreq: 'weekly' as const,
   priority: '0.75',
 }));
 
-// We only want to index the landing page for now.
+const MISC_INDEXABLE_ROUTES = [staticRoutes.contact, staticRoutes.demo, staticRoutes.privacyPolicy];
+
+const miscRoutes = MISC_INDEXABLE_ROUTES.map((path) => ({
+  path,
+  changeFreq: 'weekly' as const,
+  priority: '0.5',
+}));
+
 const INDEXABLE_ROUTES: Route[] = [
   { path: '', changeFreq: 'weekly', priority: '1.0' },
-  ...CONTENT_ROUTES,
-  ...DOCS_ROUTES,
-  ...BLOG_ROUTES,
-  { path: staticRoutes.contact, changeFreq: 'weekly', priority: '0.5' },
+  ...contentRoutes,
+  ...docsRoutes,
+  ...blogRoutes,
+  ...miscRoutes,
 ];
 
-const toUrl = ({ path, modified, changeFreq, priority }: Route): string => {
+const toUrl = ({ path, changeFreq, priority }: Route): string => {
   return `
     <url>
       <loc>${FRONTEND_URL}${path}</loc>
-      <lastmod>${modified}</lastmod>
+      <lastmod>${MODIFIED}</lastmod>
       <changefreq>${changeFreq}</changefreq>
       <priority>${priority}</priority>
     </url>`;
@@ -67,14 +71,7 @@ const createSitemap = (routes: Route[]): string =>
     </urlset>`;
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const modified = process.env.BUILD_DATE || new Date().toISOString().slice(0, 10);
-
-  const routes = INDEXABLE_ROUTES.map((route) => ({
-    ...route,
-    modified,
-  }));
-
-  const sitemap = createSitemap(routes);
+  const sitemap = createSitemap(INDEXABLE_ROUTES);
   res.setHeader('Content-Type', 'application/xml');
   res.write(sitemap);
   res.end();

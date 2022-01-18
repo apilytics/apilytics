@@ -1,5 +1,23 @@
-const DOCS_ROUTES = {
+export const CONTENT_ROUTES = {
+  about: '/about',
+  privacyFriendly: '/privacy-friendly',
+  lightweight: '/lightweight',
+  openSource: '/open-source',
+  easeOfUse: '/ease-of-use',
+};
+
+export const DOCS_ROUTES = {
+  docs: '/docs',
+  getStarted: '/docs/get-started',
+  node: '/docs/node',
+  python: '/docs/python',
   dashboard: '/docs/dashboard',
+  byom: '/docs/dashboard',
+};
+
+export const BLOG_ROUTES = {
+  blog: '/blog',
+  1: '/blog/problem-with-api-monitoring',
 };
 
 export const staticRoutes = {
@@ -7,19 +25,14 @@ export const staticRoutes = {
   login: '/login',
   logout: '/logout',
   demo: '/demo',
-  privacyPolicy: '/privacy-policy',
   origins: '/origins',
   newOrigin: '/new-origin',
   account: '/account',
   contact: '/contact',
-  blog: '/blog',
-  docs: '/docs',
-  about: '/about',
-  privacyFriendly: '/privacy-friendly',
-  lightweight: '/lightweight',
-  openSource: '/open-source',
-  easeOfUse: '/ease-of-use',
+  privacyPolicy: '/privacy-policy',
+  ...CONTENT_ROUTES,
   ...DOCS_ROUTES,
+  ...BLOG_ROUTES,
 };
 
 type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;
