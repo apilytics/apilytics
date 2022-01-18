@@ -3,7 +3,7 @@ import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
-import type { ApiHandler, OriginMetrics, RouteData, TimeFrameData } from 'types';
+import type { ApiHandler, EndpointData, OriginMetrics, TimeFrameData } from 'types';
 
 const DAY_MILLIS = 24 * 60 * 60 * 1000;
 const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
@@ -85,11 +85,11 @@ GROUP BY time;`;
 
   const totalRequestsGrowth = Number((totalRequests / lastTotalRequests).toFixed(2));
 
-  const routeData: RouteData[] = await prisma.$queryRaw`
+  const routeData: EndpointData[] = await prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
-  filtered_metrics.path AS name,
-  ARRAY_AGG(DISTINCT(filtered_metrics.method)) as methods,
+  filtered_metrics.path,
+  filtered_metrics.method,
   ARRAY_AGG(DISTINCT(filtered_metrics.status_code)) as status_codes,
   ROUND(AVG(filtered_metrics.time_millis)) as response_time,
   CARDINALITY(ARRAY_POSITIONS(ARRAY_AGG(filtered_metrics.rank), 1)) AS count_green,
@@ -104,7 +104,7 @@ FROM (
     AND metrics.created_at >= ${fromDate}
     AND metrics.created_at <= ${toDate}
 ) AS filtered_metrics
-GROUP BY filtered_metrics.path;`;
+GROUP BY filtered_metrics.path, filtered_metrics.method;`;
 
   const data = {
     totalRequests,

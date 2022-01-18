@@ -15,7 +15,7 @@ interface Props {
   modalName: string;
 }
 
-export const RouteMetricsContainer: React.FC<Props> = ({
+export const EndpointMetricsContainer: React.FC<Props> = ({
   title,
   loading,
   noRequests,

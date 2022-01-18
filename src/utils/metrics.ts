@@ -48,7 +48,7 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
   const dataPoints = getDataPointsBetweenTimeFrame(timeFrame);
 
   const _timeFramePoints = dataPoints.flatMap((time) =>
-    MOCK_ENDPOINTS.map(({ name }) => {
+    MOCK_ENDPOINTS.map(({ path, method }) => {
       // 1 - 5 requests for each endpoint per each data point.
       const requests = Number(
         ((Math.floor(Math.random() * 5) + 1) * requestsMultiplier * dataPoints.length).toFixed(),
@@ -56,7 +56,8 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
 
       return {
         requests,
-        name,
+        path,
+        method,
         time,
       };
     }),
@@ -66,9 +67,9 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
   const totalRequestsGrowth = Number(Math.random().toFixed(2));
 
-  const routeData = MOCK_ENDPOINTS.map(({ name, methods, status_codes }) => {
+  const routeData = MOCK_ENDPOINTS.map(({ path, method, status_codes }) => {
     const requests = _timeFramePoints
-      .filter((data) => data.name === name)
+      .filter((data) => data.path === path && data.method === method)
       .reduce((prev, curr) => prev + curr.requests, 0);
 
     const response_time = Number((Math.floor(Math.random() * 200) + 20).toFixed());
@@ -83,8 +84,8 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
 
     return {
       requests,
-      name,
-      methods,
+      path,
+      method,
       status_codes,
       response_time,
       count_green,

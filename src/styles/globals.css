@@ -111,3 +111,26 @@
 .text-requests-red {
   color: var(--requests-red);
 }
+
+/* https://github.com/swagger-api/swagger-ui/blob/master/src/style/_variables.scss#L46-L53 */
+.text-method-post {
+  color: #49cc90;
+}
+.text-method-get {
+  color: #61affe;
+}
+.text-method-put {
+  color: #fca130;
+}
+.text-method-delete {
+  color: #f93e3e;
+}
+.text-method-head {
+  color: #9012fe;
+}
+.text-method-patch {
+  color: #50e3c2;
+}
+.text-method-options {
+  color: #0d5aa7;
+}
