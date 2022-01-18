@@ -13,6 +13,18 @@ interface Route {
   modified?: string; // ISO date
 }
 
+const CONTENT_ROUTES = [
+  staticRoutes.about,
+  staticRoutes.easeOfUse,
+  staticRoutes.lightweight,
+  staticRoutes.openSource,
+  staticRoutes.privacyFriendly,
+].map((path) => ({
+  path,
+  changeFreq: 'weekly' as const,
+  priority: '0.90',
+}));
+
 const DOCS_ROUTES = ['', '/get-started', '/node', '/python', '/dashboard', '/byom'].map((path) => ({
   path: `/docs${path}`,
   changeFreq: 'weekly' as const,
@@ -28,6 +40,7 @@ const BLOG_ROUTES = ['', '/problem-with-api-monitoring'].map((path) => ({
 // We only want to index the landing page for now.
 const INDEXABLE_ROUTES: Route[] = [
   { path: '', changeFreq: 'weekly', priority: '1.0' },
+  ...CONTENT_ROUTES,
   ...DOCS_ROUTES,
   ...BLOG_ROUTES,
   { path: staticRoutes.contact, changeFreq: 'weekly', priority: '0.5' },
