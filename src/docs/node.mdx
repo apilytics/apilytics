@@ -97,22 +97,20 @@ import { milliSecondTimer, sendApilyticsMetrics } from '@apilytics/core';
 
 const myApilyticsMiddleware = async (req, handler) => {
   const apiKey = process.env.APILYTICS_API_KEY;
-
   if (!apiKey) {
     return await handler(req);
   }
 
   const timer = milliSecondTimer();
   const res = await handler(req);
-
   sendApilyticsMetrics({
     apiKey,
     path: req.path,
+    query: req.queryString,
     method: req.method,
     statusCode: res.statusCode,
     timeMillis: timer(),
   });
-
   return res;
 };
 ```

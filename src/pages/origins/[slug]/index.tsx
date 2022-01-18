@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
+import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
 import { RequestsOverview } from 'components/dashboard/RequestsOverview';
 import { ResponseTimes } from 'components/dashboard/ResponseTimes';
-import { RouteMetrics } from 'components/dashboard/RouteMetrics';
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
@@ -60,7 +60,7 @@ const Origin: NextPage = () => {
       <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
       <RequestsOverview timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
       <div className="grow flex flex-col lg:flex-row gap-4 mt-4">
-        <RouteMetrics metrics={metrics} loading={loading} />
+        <EndpointMetrics metrics={metrics} loading={loading} />
         <ResponseTimes metrics={metrics} loading={loading} />
       </div>
       <p className="mt-4 text-center">

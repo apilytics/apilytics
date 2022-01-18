@@ -6,7 +6,7 @@ interface Props {
   formatter: (value?: string | number) => string;
 }
 
-export const RouteValue: React.FC<
+export const EndpointValue: React.FC<
   Props & Omit<SVGProps<SVGTextElement>, 'viewBox'> & LabelProps
 > = ({ y, value, formatter }) => (
   <g>

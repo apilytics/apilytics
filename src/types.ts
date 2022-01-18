@@ -125,10 +125,10 @@ export interface TimeFrameData {
   time: string;
 }
 
-export interface RouteData {
+export interface EndpointData {
   requests: number;
-  name: string;
-  methods: string[];
+  path: string;
+  method: string;
   status_codes: number[];
   response_time: number;
   count_green: number;
@@ -140,5 +140,5 @@ export interface OriginMetrics {
   totalRequests: number;
   totalRequestsGrowth: number;
   timeFrameData: TimeFrameData[];
-  routeData: RouteData[];
+  routeData: EndpointData[];
 }

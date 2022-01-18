@@ -1,7 +1,7 @@
 export const TITLE = 'Apilytics - API analytics made easy';
 
 export const DESCRIPTION =
-  'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliancy.';
+  'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliance.';
 
 // `NEXT_PUBLIC_APP_URL` is defined everywhere except in preview environments
 // (where the URL changes always), there we'll use `VERCEL_URL`.
@@ -41,80 +41,156 @@ export const TIME_FRAME_OPTIONS = {
 
 export const UNEXPECTED_ERROR = 'Unexpected error.';
 
-export const MOCK_ENDPOINTS = [
+interface MockEndpointData {
+  path: string;
+  method: string;
+  status_codes: number[];
+}
+
+export const MOCK_ENDPOINTS: MockEndpointData[] = [
   {
-    name: '/profile',
-    methods: ['GET', 'PUT', 'DELETE'],
+    path: '/profile',
+    method: 'GET',
     status_codes: [200],
   },
   {
-    name: '/users',
-    methods: ['GET'],
+    path: '/profile',
+    method: 'PUT',
+    status_codes: [200, 400],
+  },
+  {
+    path: '/profile',
+    method: 'DELETE',
+    status_codes: [204],
+  },
+  {
+    path: '/profile',
+    method: 'OPTIONS',
     status_codes: [200],
   },
   {
-    name: '/users/johndoe',
-    methods: ['GET', 'POST', 'PUT'],
+    path: '/users',
+    method: 'GET',
+    status_codes: [200, 401],
+  },
+  {
+    path: '/users/johndoe',
+    method: 'GET',
     status_codes: [200],
   },
   {
-    name: '/users/janedoe',
-    methods: ['GET', 'POST', 'PUT'],
+    path: '/users/johndoe',
+    method: 'PUT',
+    status_codes: [200, 403],
+  },
+  {
+    path: '/users/johndoe',
+    method: 'PATCH',
     status_codes: [200],
   },
   {
-    name: '/posts',
-    methods: ['GET'],
+    path: '/users/janedoe',
+    method: 'GET',
     status_codes: [200],
   },
   {
-    name: '/posts/123',
-    methods: ['GET'],
-    status_codes: [200, 404],
+    path: '/users/janedoe',
+    method: 'PUT',
+    status_codes: [200],
   },
   {
-    name: '/posts/456',
-    methods: ['GET'],
-    status_codes: [200, 404],
+    path: '/posts',
+    method: 'GET',
+    status_codes: [200],
   },
   {
-    name: '/posts/789',
-    methods: ['GET'],
-    status_codes: [200, 404],
+    path: '/posts',
+    method: 'POST',
+    status_codes: [204],
   },
   {
-    name: '/login',
-    methods: ['POST'],
+    path: '/posts/123',
+    method: 'GET',
+    status_codes: [404],
+  },
+  {
+    path: '/posts/123',
+    method: 'PUT',
+    status_codes: [404],
+  },
+  {
+    path: '/posts/456',
+    method: 'GET',
+    status_codes: [200],
+  },
+  {
+    path: '/posts/789',
+    method: 'GET',
+    status_codes: [200],
+  },
+  {
+    path: '/posts/789',
+    method: 'PUT',
+    status_codes: [401, 403],
+  },
+  {
+    path: '/posts/789',
+    method: 'PATCH',
+    status_codes: [403],
+  },
+  {
+    path: '/login',
+    method: 'POST',
     status_codes: [200, 500],
   },
   {
-    name: '/logout',
-    methods: ['POST'],
+    path: '/login',
+    method: 'OPTIONS',
     status_codes: [200],
   },
   {
-    name: '/contact',
-    methods: ['POST'],
+    path: '/logout',
+    method: 'POST',
+    status_codes: [200],
+  },
+  {
+    path: '/contact',
+    method: 'POST',
+    status_codes: [200],
+  },
+  {
+    path: '/blogs',
+    method: 'GET',
+    status_codes: [200],
+  },
+  {
+    path: '/blogs',
+    method: 'POST',
     status_codes: [201],
   },
   {
-    name: '/blogs',
-    methods: ['GET'],
+    path: '/blogs/123',
+    method: 'GET',
     status_codes: [200],
   },
   {
-    name: '/blogs/123',
-    methods: ['GET'],
+    path: '/blogs/123',
+    method: 'PATCH',
     status_codes: [200],
   },
   {
-    name: '/blogs/456',
-    methods: ['GET'],
+    path: '/blogs/456',
+    method: 'GET',
     status_codes: [200],
   },
   {
-    name: '/blogs/789',
-    methods: ['GET'],
+    path: '/blogs/456',
+    method: 'DELETE',
+    status_codes: [204],
+  },
+  {
+    path: '/blogs/789',
+    method: 'GET',
     status_codes: [200],
   },
 ];

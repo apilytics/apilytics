@@ -1,14 +1,21 @@
 import type { TooltipProps } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
-export const RouteTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
+export const EndpointTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
   active,
   payload,
-  label,
 }): JSX.Element | null => {
   if (active && payload) {
-    const { requests, response_time, methods, status_codes, count_green, count_yellow, count_red } =
-      payload[0].payload;
+    const {
+      requests,
+      response_time,
+      name,
+      method,
+      status_codes,
+      count_green,
+      count_yellow,
+      count_red,
+    } = payload[0].payload;
 
     const green = ((count_green / requests) * 100).toFixed();
     const yellow = ((count_yellow / requests) * 100).toFixed();
@@ -18,16 +25,17 @@ export const RouteTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
       <div className="bg-base-100 card shadow rounded-lg p-4">
         <ul className="list-none">
           <li>
-            Path: <span className="text-primary">{label}</span>
+            Path: <span className="font-bold text-white">{name}</span>
+          </li>
+          <li>
+            Method:{' '}
+            <span className={`font-bold text-method-${method.toLowerCase()}`}>{method}</span>
           </li>
           <li>
             Requests: <span className="font-bold">{requests}</span>
           </li>
           <li>
             Avg. response time: <span className="font-bold">{response_time}</span>
-          </li>
-          <li>
-            Methods: <span className="font-bold">{methods.join(', ')}</span>
           </li>
           <li>
             Status codes: <span className="font-bold">{status_codes.join(', ')}</span>

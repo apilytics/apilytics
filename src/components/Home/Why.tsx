@@ -22,7 +22,7 @@ const REASONS = [
   },
   {
     title: 'Privacy first',
-    content: 'Your privacy matters. Your data is stored within EU with 100% GDPR compliancy.',
+    content: 'Your privacy matters. Your data is stored within EU with 100% GDPR compliance.',
   },
   {
     title: 'Transparency',
