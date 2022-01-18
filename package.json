@@ -11,8 +11,8 @@
     "build": "BUILD_DATE=\"$(date '+%Y-%m-%d')\" next build",
     "vercel:build": "yarn generate && yarn build && if [ \"$VERCEL_ENV\" == 'preview' ]; then yarn migrate:reset; else yarn migrate:deploy; fi",
     "start": "next start",
-    "format": "prettier --write '**/*.{ts,tsx,js,json,css,prisma}' && eslint --fix --max-warnings=0 --ext=.ts,.tsx,.js .",
-    "lint": "prettier --check '**/*.{ts,tsx,js,json,css,prisma}' && eslint --max-warnings=0 --ext=.ts,.tsx,.js . && yarn dpdm --tree=false --exit-code=circular:1 $(find src/)",
+    "format": "prettier --write '**/*.{ts,tsx,js,json,css,prisma,mdx}' && eslint --fix --max-warnings=0 --ext=.ts,.tsx,.js .",
+    "lint": "prettier --check '**/*.{ts,tsx,js,json,css,prisma,mdx}' && eslint --max-warnings=0 --ext=.ts,.tsx,.js . && yarn dpdm --tree=false --exit-code=circular:1 $(find src/)",
     "test": "jest --verbose"
   },
   "prisma": {
