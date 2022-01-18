@@ -4,7 +4,7 @@ order: 2
 subOrder: 2
 ---
 
-### Python guide
+### Python Guide
 
 The respository for our open source Python middleware can be found <ExternalLink href="https://github.com/apilytics/apilytics-python">here</ExternalLink>.
 
@@ -24,7 +24,7 @@ Install with poetry:
 poetry add apilytics
 ```
 
-Enable the middleware and set your API key:  
+Enable the middleware and set your API key:
 _A good practice is to securely store the API key as an environment variable.
 You can leave the env variable unset in e.g. development and test environments,
 the middleware will be automatically disabled if the key is `None`._
@@ -63,7 +63,7 @@ app.add_middleware(ApilyticsFastAPIMiddleware, api_key=os.getenv("APILYTICS_API_
 
 <br />
 
-#### [Other Python frameworks](#other) {#other}
+#### [Other Python Frameworks](#other) {#other}
 
 ```python
 # my_apilytics_middleware.py

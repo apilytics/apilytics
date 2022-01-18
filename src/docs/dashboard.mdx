@@ -3,7 +3,7 @@ name: Dashboard
 order: 3
 ---
 
-### [Dashboard guide 📊](#dasboard) {#dashboard}
+### [Dashboard Guide 📊](#dasboard) {#dashboard}
 
 <br />
 
@@ -17,11 +17,11 @@ The dashboard is quite self explanatory, but the visualization is divided into t
 
 <br />
 
-#### [Time frame data ⌛](#time-frame-data) {#time-frame-data}
+#### [Time Frame ⌛](#time-frame) {#time-frame}
 
 <br />
 
-![Time frame](/mock-ups/time-frame.png)
+![Time Frame](/mock-ups/time-frame.png)
 
 <br />
 
@@ -31,35 +31,33 @@ So if you've for instance selected 24 hours as the time frame, the growth will b
 
 <br />
 
-#### [Route metrics 🧐](#route-metrics) {#route-metrics}
+#### [Endpoint Requests 🧐](#endpoint-metrics) {#endpoint-metrics}
 
 <br />
 
-![Route metrics](/mock-ups/route-metrics.png)
+![Endpoint Requests](/mock-ups/endpoint-requests.png)
 
 <br />
 
-The route metrics bar chart breaks down your requests to their corresponding endpoints.
+The endpoint requests bar chart breaks down your requests to their corresponding endpoints.
 From the right-hand side you can see the amount of requests to each endpoint.
-By hovering over individual bars you can get a set of additional information for the given endpoint.
+By clicking on individual endpoints you can get a set of additional information for the given endpoint.
 
 <br />
 
-#### [Reponse times ⚡](#response-times) {#response-times}
+#### [Endpoint Response Times ⚡](#endpoint-response-times) {#endpoint-response-times}
 
 <br />
 
-![Response times](/mock-ups/response-times.png)
+![Endpoint Response Times](/mock-ups/endpoint-response-times.png)
 
 <br />
 
-The reponse time visualization gives you a similar overview than the route metrics,
+The endpoint-specific response time visualization gives you a similar overview than the endpoint requests visualization,
 except that the endpoints have been sorted by the average response times that it took for the endpoints to respond.
 
-The color coding indicates response times compared to the average response time of all endpoints
-by divinding the response times into three categories be percentiles:
-The green color represents the fastest 33rd percentile of response times,
-yellow represents the mid 33rd percentile and red represents the bottom 33rd percentile of the response times.
+The percentile thresholds tell you the exact thresholds under which a certain percentage of the requests to the endpoint have responded.
+So for instance the `p75` threshold means that 75% of the requests made to the endpoint have a response time under the specified value for the given `p75` value.
 
 <br />
 
@@ -67,9 +65,8 @@ yellow represents the mid 33rd percentile and red represents the bottom 33rd per
 
 <br />
 
-If you see that the red bar takes a large space of the reponse time bar of any give endpoint,
-it means that that endpoint is probably a bottleneck for your API and you might want to do something about it.
+With the combination of response times, percentile thresholds and the amount of requests to each endpoint,
+you can spot bottlenecks in your API. E.g. gaving large percentile thresholds means that your endpoint is probably slow.
 
-The route metrics charts give you a nice breakdown of your different endpoints and allow you to do comparisons between your endpoints.
-
+The endpoint metrics charts give you a nice breakdown of your different endpoints and allow you to do comparisons between your endpoints.
 The time frame gives you an overview about the trends of your API and prepares you for e.g. peak hours.
