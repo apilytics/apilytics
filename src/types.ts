@@ -13,7 +13,6 @@ import type {
   WEEK_DAYS,
   YEAR_DAYS,
 } from 'utils/constants';
-import type { staticRoutes } from 'utils/router';
 
 export type TimeFrame =
   | typeof DAY
@@ -35,7 +34,7 @@ export type PlausibleEvents = {
 };
 
 export interface HeadProps {
-  noIndex?: boolean;
+  index?: boolean;
   customTags?: JSX.Element;
 }
 
@@ -55,9 +54,9 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   tooltipProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
-interface DocsFrontMatter {
+export interface DocsFrontMatter {
+  path: string;
   name: string;
-  routeName: keyof typeof staticRoutes;
   order: number;
   subOrder: number;
 }
@@ -65,7 +64,6 @@ interface DocsFrontMatter {
 interface BlogsFrontMatter {
   title: string;
   slug: string;
-  readingTime: string;
   author: string;
   authorImage: string;
   excerpt: string;

@@ -53,48 +53,46 @@ export const Pricing: React.FC = () => {
   };
 
   return (
-    <div className="bg-base-200">
-      <div className="container max-w-3xl py-4 lg:py-16">
-        <h1 className="text-white">
-          <span className="text-primary">Flexible pricing</span> with a
-          <br />
-          <span className="text-secondary">free trial</span>
-        </h1>
-        <h5 className="mt-8 text-white">
-          All features available from the start.
-          <br />
-          No credit card required.
-        </h5>
-        <div className="mt-8 card bg-base-100 rounded-lg p-4">
-          <div className="flex flex-col sm:flex-row justify-between">
-            <div className="text-left">
-              <h6>Monthly requests</h6>
-              <h3 className="font-bold text-primary">{getRequestsDisplay()}</h3>
-            </div>
-            <div className="text-left sm:text-right">
-              <h6>Your price</h6>
-              <h3 className={clsx('font-bold text-primary', !customRequests && 'line-through')}>
-                {getPriceDisplay()}
-              </h3>
-              {!customRequests && <p>Free during beta</p>}
-            </div>
+    <div className="container max-w-3xl py-4 lg:py-16">
+      <h1 className="text-white">
+        <span className="text-primary">Flexible pricing</span> with a
+        <br />
+        <span className="text-secondary">free trial</span>
+      </h1>
+      <h5 className="mt-8 text-white">
+        All features available from the start.
+        <br />
+        No credit card required.
+      </h5>
+      <div className="mt-8 card bg-base-100 rounded-lg p-4">
+        <div className="flex flex-col sm:flex-row justify-between">
+          <div className="text-left">
+            <h6>Monthly requests</h6>
+            <h3 className="font-bold text-primary">{getRequestsDisplay()}</h3>
           </div>
-          <input
-            type="range"
-            value={step}
-            onChange={({ target }): void => setStep(Number(target.value))}
-            min={1}
-            max={requestOptions.length + 1}
-            step={1}
-            className="range range-primary range-lg w-full mt-8 rounded-lg"
-          />
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mt-8 text-left leading-normal">
-            {FEATURES.map((feature) => (
-              <p className="flex items-center" key={feature}>
-                <CheckCircleIcon className="h-7 w-7 mr-4 text-success" /> {feature}
-              </p>
-            ))}
+          <div className="text-left sm:text-right">
+            <h6>Your price</h6>
+            <h3 className={clsx('font-bold text-primary', !customRequests && 'line-through')}>
+              {getPriceDisplay()}
+            </h3>
+            {!customRequests && <p>Free during beta</p>}
           </div>
+        </div>
+        <input
+          type="range"
+          value={step}
+          onChange={({ target }): void => setStep(Number(target.value))}
+          min={1}
+          max={requestOptions.length + 1}
+          step={1}
+          className="range range-primary range-lg w-full mt-8 rounded-lg"
+        />
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mt-8 text-left leading-normal">
+          {FEATURES.map((feature) => (
+            <p className="flex items-center" key={feature}>
+              <CheckCircleIcon className="h-7 w-7 mr-4 text-success" /> {feature}
+            </p>
+          ))}
         </div>
       </div>
     </div>

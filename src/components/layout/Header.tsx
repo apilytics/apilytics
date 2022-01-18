@@ -93,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
               <Image
                 src="/logo.svg"
                 layout="fixed"
-                width={80}
+                width={90}
                 height={60}
                 objectFit="contain"
                 alt="Logo"

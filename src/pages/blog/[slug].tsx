@@ -3,7 +3,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
 import { BlogTemplate } from 'components/layout/BlogTemplate';
 import { withAccount } from 'hocs/withAccount';
-import { getBlogFilePaths, getDocsData, getMDXContent } from 'utils/mdx';
+import { BLOGS_PATH, getDocsData, getFilePaths, getMDXContent } from 'utils/mdx';
 import type { BlogPageProps } from 'types';
 
 const Blog: NextPage<BlogPageProps> = (props) => <BlogTemplate {...props} />;
@@ -22,7 +22,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = getBlogFilePaths()
+  const paths = getFilePaths(BLOGS_PATH)
     .map((path) => path.replace(/\.mdx?$/, ''))
     .map((slug) => ({
       params: { slug },

@@ -1,10 +1,9 @@
 import Image from 'next/image';
 import React from 'react';
 
-import { RequestsOverview } from 'components/dashboard/RequestsOverview';
 import { Button } from 'components/shared/Button';
-import { DESCRIPTION, MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
-import { getMockMetrics } from 'utils/metrics';
+import { MockRequestsOverview } from 'components/shared/MockRequestsOverview';
+import { DESCRIPTION } from 'utils/constants';
 import { staticRoutes } from 'utils/router';
 
 const INTEGRATIONS = [
@@ -37,11 +36,6 @@ const INTEGRATIONS = [
     image: '/integration-logos/php-logo.png',
   },
 ];
-
-const timeFrame = WEEK_DAYS;
-const origin = MOCK_ORIGIN;
-const metrics = getMockMetrics(timeFrame);
-const loading = !origin || !metrics;
 
 export const TopSection: React.FC = () => (
   <div className="bg-background bg-no-repeat bg-cover">
@@ -81,12 +75,7 @@ export const TopSection: React.FC = () => (
           </div>
         </div>
         <div className="mt-8 lg:mt-0 select-none">
-          <RequestsOverview
-            timeFrame={timeFrame}
-            origin={origin}
-            metrics={metrics}
-            loading={loading}
-          />
+          <MockRequestsOverview />
         </div>
       </div>
     </div>

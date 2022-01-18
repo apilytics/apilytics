@@ -1,24 +1,20 @@
-const docsRoutes = {
-  docs: '/docs',
-  getStarted: '/docs/get-started',
-  python: '/docs/python',
-  node: '/docs/node',
-  dashboard: '/docs/dashboard',
-  byom: '/docs/byom',
-};
-
 export const staticRoutes = {
   root: '/',
   login: '/login',
   logout: '/logout',
   demo: '/demo',
-  privacy: '/privacy',
+  privacyPolicy: '/privacy-policy',
   origins: '/origins',
   newOrigin: '/new-origin',
   account: '/account',
   contact: '/contact',
   blog: '/blog',
-  ...docsRoutes,
+  docs: '/docs',
+  about: '/about',
+  privacyFriendly: '/privacy-friendly',
+  lightweight: '/lightweight',
+  openSource: '/open-source',
+  easeOfUse: '/ease-of-use',
 };
 
 type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;
