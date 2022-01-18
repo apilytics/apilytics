@@ -78,7 +78,7 @@ export const ResponseTimes: React.FC<Props> = ({ metrics: { routeData }, loading
             mirror
             stroke="white"
             padding={{ top: 30, bottom: 20 }}
-            tickFormatter={(val: string): string => truncateString(val, 15)}
+            tickFormatter={(val: string): string => truncateString(val, 50)}
           >
             <Label value="Routes" fill="var(--base-content)" position="insideTopLeft" />
           </YAxis>
