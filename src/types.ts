@@ -95,8 +95,8 @@ export interface AccountContextType {
   setUser: Dispatch<SetStateAction<User | null>>;
   status: 'authenticated' | 'unauthenticated' | 'loading';
   accountComplete: boolean;
-  origins: AggregatedOrigin[];
-  setOrigins: Dispatch<SetStateAction<AggregatedOrigin[]>>;
+  origins: Origin[];
+  setOrigins: Dispatch<SetStateAction<Origin[]>>;
 }
 export interface OriginContextType {
   origin: Origin | null;
@@ -115,10 +115,6 @@ export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,
 ) => Promise<void>;
-
-export interface AggregatedOrigin extends Origin {
-  last24hRequests: number;
-}
 
 export interface TimeFrameData {
   requests: number;
