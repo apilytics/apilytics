@@ -1,10 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-
-// Ignore: The module is not found without a relative path.
-// eslint-disable-next-line no-restricted-imports
-import { MOCK_ENDPOINTS } from '../src/utils/constants';
-
-const prisma = new PrismaClient();
+// Ignore: `ts-node` won't find these without relative imports.
+import prisma from '../src/prisma/client'; // eslint-disable-line no-restricted-imports
+import { MOCK_ENDPOINTS } from '../src/utils/constants'; // eslint-disable-line no-restricted-imports
 
 const USER_ID = 'a58025e5-cd8a-4586-94b9-d38f51aa9e72';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
@@ -68,7 +64,5 @@ const main = async (): Promise<void> => {
   } catch (e) {
     console.error(e);
     process.exit(1);
-  } finally {
-    await prisma.$disconnect();
   }
 })();
