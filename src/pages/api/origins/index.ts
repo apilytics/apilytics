@@ -7,35 +7,20 @@ import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
-import type { AggregatedOrigin, ApiHandler } from 'types';
+import type { ApiHandler } from 'types';
 
 interface GetResponse {
-  data: AggregatedOrigin[];
+  data: Origin[];
 }
 
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
 
-  // Get all origins for the user and the related metrics within 24 hours.
-  const _origins = await prisma.origin.findMany({
+  const data = await prisma.origin.findMany({
     where: { userId },
-    include: {
-      metrics: {
-        where: {
-          createdAt: {
-            gt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-          },
-        },
-      },
-    },
   });
 
-  const origins = _origins.map((origin) => ({
-    ...origin,
-    last24hRequests: origin.metrics.length,
-  }));
-
-  sendOk(res, { data: origins });
+  sendOk(res, { data });
 };
 
 interface PostResponse {

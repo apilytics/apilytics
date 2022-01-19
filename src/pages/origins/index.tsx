@@ -30,7 +30,7 @@ const Origins: NextPage = () => {
         </div>
         <div className="py-4 flex flex-col gap-2">
           {origins.length ? (
-            origins.map(({ name, slug, last24hRequests }) => (
+            origins.map(({ name, slug }) => (
               <Link href={dynamicRoutes.origin({ slug })} key={name}>
                 <a className="unstyled">
                   <div className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2" key={name}>
@@ -45,7 +45,6 @@ const Origins: NextPage = () => {
                         }
                       />
                     </div>
-                    <p>{last24hRequests} requests in last 24h</p>
                   </div>
                 </a>
               </Link>
