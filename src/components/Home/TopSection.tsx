@@ -47,8 +47,8 @@ export const TopSection: React.FC = () => (
             <br />
             made <span className="text-secondary">easy</span>
           </h1>
-          <h5 className="mt-12">{DESCRIPTION}</h5>
-          <h6 className="mt-12">Simple integration with any backend</h6>
+          <h5 className="mt-12 text-white">{DESCRIPTION}</h5>
+          <h6 className="mt-12 text-white">Simple integration with any backend</h6>
           <div className="flex flex-wrap gap-4 mt-8 grayscale">
             {INTEGRATIONS.map(({ name, image }) => (
               <div key={name}>

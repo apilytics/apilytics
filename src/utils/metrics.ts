@@ -72,25 +72,19 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
       .filter((data) => data.path === path && data.method === method)
       .reduce((prev, curr) => prev + curr.requests, 0);
 
-    const response_time = Number((Math.floor(Math.random() * 200) + 20).toFixed());
-
-    const green_multiplier = Number((Math.random() * (0.4 - 0.2) + 0.2).toFixed(2));
-    const yellow_multiplier = Number((Math.random() * (0.4 - 0.2) + 0.2).toFixed(2));
-    const red_multiplier = Number((1 - green_multiplier - yellow_multiplier).toFixed(2));
-
-    const count_green = Number((green_multiplier * requests).toFixed());
-    const count_yellow = Number((yellow_multiplier * requests).toFixed());
-    const count_red = Number((red_multiplier * requests).toFixed());
+    const avg_response_time = Number((Math.floor(Math.random() * 200) + 20).toFixed());
 
     return {
       requests,
       path,
       method,
       status_codes,
-      response_time,
-      count_green,
-      count_yellow,
-      count_red,
+      avg_response_time,
+      p50: avg_response_time,
+      p75: Number((avg_response_time + avg_response_time * 0.25).toFixed()),
+      p90: Number((avg_response_time + avg_response_time * 0.4).toFixed()),
+      p95: Number((avg_response_time + avg_response_time * 0.45).toFixed()),
+      p99: Number((avg_response_time + avg_response_time * 0.49).toFixed()),
     };
   });
 
@@ -100,4 +94,16 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
     timeFrameData,
     routeData,
   };
+};
+
+export const formatRequests = (requests: number): string => {
+  if (requests > 1_000_000) {
+    return `${(requests / 1_000_000).toFixed(1)}m`;
+  }
+
+  if (requests > 1_000) {
+    return `${(requests / 1_000).toFixed(1)}k`;
+  }
+
+  return `${requests}`;
 };

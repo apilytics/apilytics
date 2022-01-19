@@ -11,19 +11,19 @@ import React from 'react';
 const FEATURES = [
   {
     icon: LightBulbIcon,
-    title: 'Simple setup',
+    title: 'Simple Setup',
     content:
       'You can literally get started in 5 minutes. Simple configuration with no domain expertise or maintenance needed.',
   },
   {
     icon: LightningBoltIcon,
-    title: 'Powerful metrics',
+    title: 'Powerful Metrics',
     content:
       'Our insightful metrics will boost your API development by pointing out bottlenecks, trends and patterns in your APIs.',
   },
   {
     icon: BellIcon,
-    title: 'Smart alerts',
+    title: 'Smart Alerts',
     content: 'Get automatic alerts when your API faces unexpected events, like traffic spikes.',
     comingSoon: true,
   },
@@ -35,13 +35,13 @@ const FEATURES = [
   },
   {
     icon: DatabaseIcon,
-    title: 'Your data',
+    title: 'Your Data',
     content:
       'Your data will never be accessible to anyone but you. Export and delete your data whenever you want.',
   },
   {
     icon: ServerIcon,
-    title: 'Open source',
+    title: 'Open Source',
     content: 'Our open-source middlewares allow you to see exactly what data leaves your APIs.',
   },
 ];

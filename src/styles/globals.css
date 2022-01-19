@@ -5,9 +5,6 @@
 :root {
   --primary: #529dff;
   --base-content: #8a8a8a;
-  --requests-red: rgba(231, 111, 111, 0.2);
-  --requests-yellow: rgba(255, 255, 0, 0.2);
-  --requests-green: rgba(0, 255, 0, 0.2);
 
   /* DaisyUI overrides */
   --rounded-box: 0.5rem;
@@ -82,10 +79,6 @@
     margin-right: 0 !important;
   }
 
-  .card {
-    @apply overflow-visible;
-  }
-
   h1 > a,
   h2 > a,
   h3 > a,
@@ -100,37 +93,43 @@
   background-color: rgba(0, 0, 0, 0.75);
 }
 
-.text-requests-green {
-  color: var(--requests-green);
+.card {
+  @apply overflow-visible;
 }
 
-.text-requests-yellow {
-  color: var(--requests-yellow);
+.recharts-bar-rectangle {
+  cursor: pointer;
 }
 
-.text-requests-red {
-  color: var(--requests-red);
+.recharts-bar-rectangle:hover > path {
+  fill: rgba(82, 157, 255, 0.1); /* `primary` color with 10% opacity. */
 }
 
 /* https://github.com/swagger-api/swagger-ui/blob/master/src/style/_variables.scss#L46-L53 */
 .text-method-post {
   color: #49cc90;
 }
+
 .text-method-get {
   color: #61affe;
 }
+
 .text-method-put {
   color: #fca130;
 }
+
 .text-method-delete {
   color: #f93e3e;
 }
+
 .text-method-head {
   color: #9012fe;
 }
+
 .text-method-patch {
   color: #50e3c2;
 }
+
 .text-method-options {
   color: #0d5aa7;
 }

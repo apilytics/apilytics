@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -7,9 +8,10 @@ import { useModal } from 'hooks/useModal';
 
 interface Props {
   name: string;
+  mobileFullscreen?: boolean;
 }
 
-const _Modal: React.FC<Props> = ({ name, children }) => {
+const _Modal: React.FC<Props> = ({ name, mobileFullscreen, children }) => {
   const { modal, handleCloseModal } = useModal();
   const open = modal === name;
   const modalRef = useRef<HTMLDivElement>(null);
@@ -36,6 +38,10 @@ const _Modal: React.FC<Props> = ({ name, children }) => {
     } else {
       document.body.style.overflow = 'inherit';
     }
+
+    return (): void => {
+      document.body.style.overflow = 'inherit';
+    };
   }, [open]);
 
   const handleBackdropClick = ({ target }: MouseEvent): void => {
@@ -49,9 +55,12 @@ const _Modal: React.FC<Props> = ({ name, children }) => {
       className="fixed inset-0 z-50 backdrop-blur backdrop-filter flex justify-center items-center"
       onClick={handleBackdropClick}
     >
-      <div className="mx-auto w-128">
+      <div className={clsx('mx-auto w-128', mobileFullscreen && 'h-full sm:h-auto')}>
         <div
-          className="card card-bordered rounded-lg bg-base-100 flex flex-col max-h-128 h-auto animate-fade-in-top"
+          className={clsx(
+            'card card-bordered rounded-lg bg-base-100 flex flex-col max-h-128 animate-fade-in-top',
+            mobileFullscreen ? 'h-full max-h-full sm:h-auto sm:max-h-128' : 'h-auto',
+          )}
           ref={modalRef}
         >
           {children}

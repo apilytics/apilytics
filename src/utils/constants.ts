@@ -208,6 +208,7 @@ export const MOCK_ORIGIN = {
 export const MODAL_NAMES = {
   deleteOrigin: 'delete-origin',
   apiKey: 'api-key',
-  routeMetrics: 'route-metrics',
+  requests: 'requests',
   responseTimes: 'response-times',
+  requestDetails: 'request-details',
 };

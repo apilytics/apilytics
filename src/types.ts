@@ -1,6 +1,6 @@
 import type { UrlObject } from 'url';
 
-import type { Origin, User } from '@prisma/client';
+import type { Metric, Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 import type { ComponentProps, Dispatch, SetStateAction } from 'react';
@@ -127,13 +127,15 @@ export interface TimeFrameData {
 
 export interface EndpointData {
   requests: number;
-  path: string;
-  method: string;
-  status_codes: number[];
-  response_time: number;
-  count_green: number;
-  count_yellow: number;
-  count_red: number;
+  path: Metric['path'];
+  method: Metric['method'];
+  status_codes: Metric['statusCode'][];
+  avg_response_time: number;
+  p50: number;
+  p75: number;
+  p90: number;
+  p95: number;
+  p99: number;
 }
 
 export interface OriginMetrics {
