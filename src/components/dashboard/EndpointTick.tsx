@@ -9,7 +9,7 @@ interface Props {
   y?: number;
 }
 
-export const MethodPathTick: React.FC<Props> = ({ payload, x, y }) => {
+export const EndpointTick: React.FC<Props> = ({ payload, x, y }) => {
   if (!payload || !x || !y) {
     return null;
   }

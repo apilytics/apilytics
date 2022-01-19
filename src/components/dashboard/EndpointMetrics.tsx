@@ -5,7 +5,7 @@ import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } fr
 import type { ContentType } from 'recharts/types/component/Label';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
-import { MethodPathTick } from 'components/dashboard/MethodPathTick';
+import { EndpointTick } from 'components/dashboard/EndpointTick';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -81,7 +81,7 @@ export const EndpointMetrics: React.FC<Props> = ({
             axisLine={false}
             mirror
             stroke="white"
-            tick={<MethodPathTick />}
+            tick={<EndpointTick />}
             padding={{ top: 30, bottom: 20 }}
             tickFormatter={(val: string): string => truncateString(val, 50)}
           >
