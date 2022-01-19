@@ -18,30 +18,12 @@ Currently we have the following core modules that you can use to implement your 
 
 If your backend supports none of our open source middlewares
 and you cannot use our core modules to build your own middleware,
-you can still use Apilytics by implementing your own middleware from scratch with the following steps:
+you can still use Apilytics by implementing your own middleware.
 
-Perform an HTTP request to `https://www.apilytics.io/api/v1/middleware`
-for all of the requests that you want to track with Apilytics.
+The middleware simply send an HTTP request to `https://www.apilytics.io/api/v1/middleware`
+for all the requests that you want to track with Apilytics.
 
-<br />
-
-The HTTP requests must have the following specs:
-
-Method: `POST`
-
-Headers:
-
-- `Content-Type`: application/json
-- `X-API-Key`: your API key
-
-Body:
-
-- `path`: The path of the endpoint, e.g. `/api/v1/users`.
-- `method`: The HTTP method of the request that you want to track.
-- `timeMillis`: The time in milliseconds that the request took to complete.
-- `statusCode`: The status code of the response.
-
-<br />
+Check the specs for the request from our interactive <ExternalLink href="/api/docs">OpenAPI/Swagger docs</ExternalLink>.
 
 Note that your request should be done as a background job
 in your API and this way not bottleneck your API in any way.
