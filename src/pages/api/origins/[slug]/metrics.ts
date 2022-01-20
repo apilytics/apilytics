@@ -46,7 +46,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     scope = 'week';
   }
 
-  const timeFrameData: TimeFrameData[] = await prisma.$queryRaw`
+  const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
   DATE_TRUNC(${scope}, metrics.created_at) AS time
@@ -59,7 +59,7 @@ WHERE origins.id = ${originId}
 GROUP BY time;`;
 
   // Get number of requests during the last specified time frame.
-  const lastTotalRequests = await prisma.metric.count({
+  const lastTotalRequestsPromise = prisma.metric.count({
     where: {
       origin: {
         userId,
@@ -72,7 +72,7 @@ GROUP BY time;`;
     },
   });
 
-  const totalRequests = await prisma.metric.count({
+  const totalRequestsPromise = prisma.metric.count({
     where: {
       origin: {
         userId,
@@ -85,9 +85,7 @@ GROUP BY time;`;
     },
   });
 
-  const totalRequestsGrowth = Number((totalRequests / lastTotalRequests).toFixed(2));
-
-  const endpointData: EndpointData[] = await prisma.$queryRaw`
+  const endpointDataPromise: Promise<EndpointData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
   CASE WHEN origin_routes.route IS NULL THEN metrics.path ELSE origin_routes.route END AS endpoint,
@@ -107,6 +105,15 @@ WHERE origins.id = ${originId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
 GROUP BY metrics.method, endpoint;`;
+
+  const [timeFrameData, lastTotalRequests, totalRequests, endpointData] = await Promise.all([
+    timeFrameDataPromise,
+    lastTotalRequestsPromise,
+    totalRequestsPromise,
+    endpointDataPromise,
+  ]);
+
+  const totalRequestsGrowth = Number((totalRequests / lastTotalRequests).toFixed(2));
 
   const data = {
     totalRequests,
