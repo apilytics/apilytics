@@ -35,11 +35,7 @@ export const makeMethodsHandler =
           // Next.js's default 500 response is HTML based, but JSON is more easily comprehensible by our frontend.
           // This is only meant to be the last resort, and catches any completely unexpected errors.
           sendUnknownError(res);
-          if (process.env.VERCEL_ENV === 'production') {
-            console.error(e);
-          } else {
-            throw e;
-          }
+          console.error(e);
         }
         return;
       }
