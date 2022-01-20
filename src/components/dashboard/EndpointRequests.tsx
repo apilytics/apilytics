@@ -4,7 +4,7 @@ import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
 import { EndpointValue } from 'components/dashboard/EndpointValue';
 import { MODAL_NAMES } from 'utils/constants';
 import { formatRequests } from 'utils/metrics';
-import type { OriginMetrics } from 'types';
+import type { EndpointData, OriginMetrics } from 'types';
 
 const renderLabels = (
   <EndpointValue formatter={(value?: string | number): string => formatRequests(Number(value))} />
@@ -13,10 +13,17 @@ const renderLabels = (
 interface Props {
   metrics: OriginMetrics;
   loading: boolean;
+  selectedEndpoint: EndpointData | null;
+  setSelectedEndpoint: (data: EndpointData | null) => void;
 }
 
-export const EndpointRequests: React.FC<Props> = ({ metrics: { routeData }, loading }) => {
-  const data = routeData.sort((a, b) => b.requests - a.requests).map((c) => c);
+export const EndpointRequests: React.FC<Props> = ({
+  metrics: { endpointData },
+  loading,
+  selectedEndpoint,
+  setSelectedEndpoint,
+}) => {
+  const data = endpointData.sort((a, b) => b.requests - a.requests).map((c) => c);
 
   return (
     <EndpointMetrics
@@ -26,6 +33,8 @@ export const EndpointRequests: React.FC<Props> = ({ metrics: { routeData }, load
       renderLabels={renderLabels}
       data={data}
       dataKey="requests"
+      selectedEndpoint={selectedEndpoint}
+      setSelectedEndpoint={setSelectedEndpoint}
     />
   );
 };

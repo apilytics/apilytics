@@ -123,7 +123,7 @@ export interface TimeFrameData {
 
 export interface EndpointData {
   requests: number;
-  path: Metric['path'];
+  endpoint: string;
   method: Metric['method'];
   status_codes: Metric['statusCode'][];
   avg_response_time: number;
@@ -138,5 +138,5 @@ export interface OriginMetrics {
   totalRequests: number;
   totalRequestsGrowth: number;
   timeFrameData: TimeFrameData[];
-  routeData: EndpointData[];
+  endpointData: EndpointData[];
 }

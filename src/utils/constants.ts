@@ -41,13 +41,13 @@ export const TIME_FRAME_OPTIONS = {
 
 export const UNEXPECTED_ERROR = 'Unexpected error.';
 
-interface MockEndpointData {
+interface MockMetric {
   path: string;
   method: string;
   status_codes: number[];
 }
 
-export const MOCK_ENDPOINTS: MockEndpointData[] = [
+export const MOCK_METRICS: MockMetric[] = [
   {
     path: '/profile',
     method: 'GET',
@@ -193,6 +193,17 @@ export const MOCK_ENDPOINTS: MockEndpointData[] = [
     method: 'GET',
     status_codes: [200],
   },
+];
+
+interface MockOriginRoute {
+  route: string;
+  pattern: string;
+}
+
+export const MOCK_ORIGIN_ROUTES: MockOriginRoute[] = [
+  { route: '/blogs/<id>', pattern: '^/blogs/[^/]+$' },
+  { route: '/posts/<id>', pattern: '^/posts/[^/]+$' },
+  { route: '/users/<slug>', pattern: '^/users/[^/]+$' },
 ];
 
 export const MOCK_ORIGIN = {

@@ -1,11 +1,11 @@
 import { ArrowsExpandIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import type { ContentType } from 'recharts/types/component/Label';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
-import { EndpointTick } from 'components/dashboard/EndpointTick';
+import { MethodAndEndpointTick } from 'components/dashboard/MethodAndEndpointTick';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -23,6 +23,8 @@ interface Props {
   data: EndpointData[];
   dataKey: string;
   renderLabels: ContentType;
+  selectedEndpoint: EndpointData | null;
+  setSelectedEndpoint: (data: EndpointData | null) => void;
 }
 
 export const EndpointMetrics: React.FC<Props> = ({
@@ -32,9 +34,10 @@ export const EndpointMetrics: React.FC<Props> = ({
   data,
   dataKey,
   renderLabels,
+  selectedEndpoint,
+  setSelectedEndpoint,
 }) => {
   const { handleOpenModal, handleCloseModal } = useModal();
-  const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
 
   const handleBarClick = (data: EndpointData): void => {
     setSelectedEndpoint(data);
@@ -49,7 +52,7 @@ export const EndpointMetrics: React.FC<Props> = ({
   const renderBarChart = (expanded: boolean): JSX.Element => {
     const _data = data
       .slice(0, expanded ? data.length : 12)
-      .map((d) => ({ ...d, endpoint: `${d.method} ${d.path}` }));
+      .map((d) => ({ ...d, methodAndEndpoint: `${d.method} ${d.endpoint}` }));
 
     const height = 100 + _data.length * 35;
 
@@ -75,13 +78,13 @@ export const EndpointMetrics: React.FC<Props> = ({
             <Label value="Requests" fill="var(--base-content)" position="insideTopRight" />
           </XAxis>
           <YAxis
-            dataKey="endpoint"
+            dataKey="methodAndEndpoint"
             type="category"
             tickLine={false}
             axisLine={false}
             mirror
             stroke="white"
-            tick={<EndpointTick />}
+            tick={<MethodAndEndpointTick />}
             padding={{ top: 30, bottom: 20 }}
             tickFormatter={(val: string): string => truncateString(val, 50)}
           >
@@ -115,15 +118,25 @@ export const EndpointMetrics: React.FC<Props> = ({
 
   const renderEndpointDetailsModal = (): JSX.Element | void => {
     if (selectedEndpoint) {
-      const { path, method, requests, avg_response_time, status_codes, p50, p75, p90, p95, p99 } =
-        selectedEndpoint;
+      const {
+        endpoint,
+        method,
+        requests,
+        avg_response_time,
+        status_codes,
+        p50,
+        p75,
+        p90,
+        p95,
+        p99,
+      } = selectedEndpoint;
 
       return (
         <Modal name={MODAL_NAMES.requestDetails}>
           <div className="flex justify-between items-center p-2">
             <p className="font-bold px-2">
               <span className={`text-method-${method.toLowerCase()}`}>{method}</span>{' '}
-              <span className="text-white">{path}</span>
+              <span className="text-white">{endpoint}</span>
             </p>
             <ModalCloseButton onClick={handleCloseEndpointDetails} />
           </div>
