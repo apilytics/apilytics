@@ -33,7 +33,6 @@
     "next-auth": "4.0.5",
     "next-mdx-remote": "3.0.8",
     "next-plausible": "3.1.4",
-    "next-swagger-doc": "0.1.11",
     "nodemailer": "6.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -42,7 +41,8 @@
     "remark-heading-id": "1.0.0",
     "simple-encryptor": "4.0.0",
     "slugify": "1.6.4",
-    "swagger-ui-react": "4.1.3"
+    "swagger-jsdoc": "6.1.0",
+    "swagger-ui-react": "4.2.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "0.5.0",
@@ -50,6 +50,7 @@
     "@types/node": "14.18",
     "@types/react": "17.0.37",
     "@types/react-dom": "17.0.11",
+    "@types/swagger-jsdoc": "^6.0.1",
     "@types/swagger-ui-react": "4.1.1",
     "@typescript-eslint/eslint-plugin": "5.7.0",
     "autoprefixer": "10.4.0",

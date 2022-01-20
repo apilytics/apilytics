@@ -1,9 +1,16 @@
 import 'swagger-ui-react/swagger-ui.css';
 
 import SwaggerUI from 'swagger-ui-react';
+import type { NextPage } from 'next';
 
-const ApiDocs = (): JSX.Element => {
-  return <SwaggerUI url="/api/openapi.json" />;
-};
+import { MainTemplate } from 'components/layout/MainTemplate';
+
+const ApiDocs: NextPage = () => (
+  <MainTemplate index>
+    <div className="card rounded-lg shadow p-4 bg-white">
+      <SwaggerUI url="/api/openapi.json" />
+    </div>
+  </MainTemplate>
+);
 
 export default ApiDocs;
