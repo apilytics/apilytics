@@ -1,6 +1,6 @@
 import { ArrowsExpandIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import type { ContentType } from 'recharts/types/component/Label';
 
@@ -23,6 +23,8 @@ interface Props {
   data: EndpointData[];
   dataKey: string;
   renderLabels: ContentType;
+  selectedEndpoint: EndpointData | null;
+  setSelectedEndpoint: (data: EndpointData | null) => void;
 }
 
 export const EndpointMetrics: React.FC<Props> = ({
@@ -32,9 +34,10 @@ export const EndpointMetrics: React.FC<Props> = ({
   data,
   dataKey,
   renderLabels,
+  selectedEndpoint,
+  setSelectedEndpoint,
 }) => {
   const { handleOpenModal, handleCloseModal } = useModal();
-  const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
 
   const handleBarClick = (data: EndpointData): void => {
     setSelectedEndpoint(data);

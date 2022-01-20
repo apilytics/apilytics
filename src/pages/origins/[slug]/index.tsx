@@ -19,7 +19,7 @@ import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { MODAL_NAMES, WEEK_DAYS } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
-import type { TimeFrame } from 'types';
+import type { EndpointData, TimeFrame } from 'types';
 
 const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
 
@@ -28,6 +28,7 @@ const Origin: NextPage = () => {
   const { showApiKey } = router.query;
   const { origin, metrics, setMetrics } = useOrigin();
   const [loading, setLoading] = useState(true);
+  const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
   const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const { handleOpenModal, handleCloseModal } = useModal();
   const slug = origin?.slug || '';
@@ -65,8 +66,18 @@ const Origin: NextPage = () => {
         loading={loading}
       />
       <div className="grow flex flex-col lg:flex-row gap-4 mt-4">
-        <EndpointRequests metrics={metrics} loading={loading} />
-        <EndpointResponseTimes metrics={metrics} loading={loading} />
+        <EndpointRequests
+          metrics={metrics}
+          loading={loading}
+          selectedEndpoint={selectedEndpoint}
+          setSelectedEndpoint={setSelectedEndpoint}
+        />
+        <EndpointResponseTimes
+          metrics={metrics}
+          loading={loading}
+          selectedEndpoint={selectedEndpoint}
+          setSelectedEndpoint={setSelectedEndpoint}
+        />
       </div>
       <p className="mt-4 text-center">
         Help us improve this dashboard by{' '}
