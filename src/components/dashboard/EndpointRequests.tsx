@@ -18,16 +18,15 @@ interface Props {
 }
 
 export const EndpointRequests: React.FC<Props> = ({
-  metrics: { routeData },
+  metrics: { endpointData },
   loading,
   selectedEndpoint,
   setSelectedEndpoint,
 }) => {
-  const data = routeData.sort((a, b) => b.requests - a.requests).map((c) => c);
+  const data = endpointData.sort((a, b) => b.requests - a.requests).map((c) => c);
 
   return (
     <EndpointMetrics
-      key="requests"
       loading={loading}
       title="Requests per route 📊"
       modalName={MODAL_NAMES.requests}

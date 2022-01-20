@@ -17,16 +17,15 @@ interface Props {
 }
 
 export const EndpointResponseTimes: React.FC<Props> = ({
-  metrics: { routeData },
+  metrics: { endpointData },
   loading,
   selectedEndpoint,
   setSelectedEndpoint,
 }) => {
-  const data = routeData.sort((a, b) => b.avg_response_time - a.avg_response_time).map((c) => c);
+  const data = endpointData.sort((a, b) => b.avg_response_time - a.avg_response_time).map((c) => c);
 
   return (
     <EndpointMetrics
-      key="responseTimes"
       loading={loading}
       title="Response times ⚡"
       modalName={MODAL_NAMES.responseTimes}

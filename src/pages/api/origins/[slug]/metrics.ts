@@ -47,9 +47,11 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   }
 
   const timeFrameData: TimeFrameData[] = await prisma.$queryRaw`
-SELECT COUNT(*) AS requests, DATE_TRUNC(${scope}, metrics.created_at) AS time
+SELECT
+  COUNT(*) AS requests,
+  DATE_TRUNC(${scope}, metrics.created_at) AS time
 FROM metrics
-LEFT JOIN origins ON metrics.origin_id = origins.id
+  LEFT JOIN origins ON metrics.origin_id = origins.id
 WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
@@ -85,13 +87,13 @@ GROUP BY time;`;
 
   const totalRequestsGrowth = Number((totalRequests / lastTotalRequests).toFixed(2));
 
-  const routeData: EndpointData[] = await prisma.$queryRaw`
+  const endpointData: EndpointData[] = await prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
-  metrics.path,
+  CASE WHEN origin_routes.route IS NULL THEN metrics.path ELSE origin_routes.route END AS endpoint,
   metrics.method,
-  ARRAY_AGG(DISTINCT(metrics.status_code)) as status_codes,
-  ROUND(AVG(metrics.time_millis)) as avg_response_time,
+  ARRAY_AGG(DISTINCT(metrics.status_code)) AS status_codes,
+  ROUND(AVG(metrics.time_millis)) AS avg_response_time,
   PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS p50,
   PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS p75,
   PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS p90,
@@ -99,17 +101,18 @@ SELECT
   PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS p99
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-  WHERE origins.id = ${originId}
-    AND origins.user_id = ${userId}
-    AND metrics.created_at >= ${fromDate}
-    AND metrics.created_at <= ${toDate}
-GROUP BY metrics.path, metrics.method;`;
+  LEFT JOIN origin_routes ON metrics.origin_id = origin_routes.origin_id AND metrics.path ~ origin_routes.pattern
+WHERE origins.id = ${originId}
+  AND origins.user_id = ${userId}
+  AND metrics.created_at >= ${fromDate}
+  AND metrics.created_at <= ${toDate}
+GROUP BY metrics.method, endpoint;`;
 
   const data = {
     totalRequests,
     totalRequestsGrowth,
     timeFrameData,
-    routeData,
+    endpointData,
   };
 
   sendOk(res, { data });

@@ -1,6 +1,6 @@
 // Ignore: `ts-node` won't find these without relative imports.
 import prisma from '../src/prisma/client'; // eslint-disable-line no-restricted-imports
-import { MOCK_ENDPOINTS } from '../src/utils/constants'; // eslint-disable-line no-restricted-imports
+import { MOCK_METRICS, MOCK_ORIGIN_ROUTES } from '../src/utils/constants'; // eslint-disable-line no-restricted-imports
 
 const USER_ID = 'a58025e5-cd8a-4586-94b9-d38f51aa9e72';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
@@ -15,7 +15,7 @@ const TEST_METRICS = Array(365 * 24)
       .fill(null)
       .map(() => {
         const { path, method, status_codes } =
-          MOCK_ENDPOINTS[Math.floor(Math.random() * MOCK_ENDPOINTS.length)];
+          MOCK_METRICS[Math.floor(Math.random() * MOCK_METRICS.length)];
 
         return {
           path,
@@ -28,6 +28,12 @@ const TEST_METRICS = Array(365 * 24)
       }),
   )
   .flat();
+
+const TEST_ORIGIN_ROUTES = MOCK_ORIGIN_ROUTES.map(({ route, pattern }) => ({
+  originId: ORIGIN_ID,
+  route,
+  pattern,
+}));
 
 const main = async (): Promise<void> => {
   // Delete and re-create user to cascade changes to all relations.
@@ -55,7 +61,10 @@ const main = async (): Promise<void> => {
     },
   });
 
-  await prisma.metric.createMany({ data: TEST_METRICS });
+  await Promise.all([
+    prisma.metric.createMany({ data: TEST_METRICS }),
+    prisma.originRoute.createMany({ data: TEST_ORIGIN_ROUTES }),
+  ]);
 };
 
 (async (): Promise<void> => {
