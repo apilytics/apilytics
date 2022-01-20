@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import prisma from 'prisma/client';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+const handler = async (_req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   try {
     await prisma.$queryRaw`SELECT 1;`;
     res.status(200).end();
