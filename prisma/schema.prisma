@@ -19,7 +19,7 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  origins  Origin[]
+  origins Origin[]
 
   @@map("users")
 }
@@ -62,9 +62,23 @@ model Origin {
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  metrics Metric[]
+  metrics      Metric[]
+  originRoutes OriginRoute[]
 
   @@map("origins")
+}
+
+model OriginRoute {
+  id      String @id @default(uuid()) @db.Uuid
+  route   String
+  pattern String
+
+  originId String @map("origin_id") @db.Uuid
+  origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
+
+  @@unique([route, originId])
+  @@unique([pattern, originId])
+  @@map("origin_routes")
 }
 
 model Metric {
