@@ -28,6 +28,7 @@ export const EndpointResponseTimes: React.FC<Props> = ({
     <EndpointMetrics
       loading={loading}
       title="Response times ⚡"
+      label="Response times"
       modalName={MODAL_NAMES.responseTimes}
       renderLabels={renderLabels}
       data={data}
