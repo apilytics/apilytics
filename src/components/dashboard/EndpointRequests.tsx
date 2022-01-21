@@ -29,6 +29,7 @@ export const EndpointRequests: React.FC<Props> = ({
     <EndpointMetrics
       loading={loading}
       title="Requests per route 📊"
+      label="Requests"
       modalName={MODAL_NAMES.requests}
       renderLabels={renderLabels}
       data={data}

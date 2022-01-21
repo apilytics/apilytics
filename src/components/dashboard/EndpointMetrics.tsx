@@ -18,6 +18,7 @@ import type { EndpointData } from 'types';
 
 interface Props {
   title: string;
+  label: string;
   loading: boolean;
   modalName: string;
   data: EndpointData[];
@@ -29,6 +30,7 @@ interface Props {
 
 export const EndpointMetrics: React.FC<Props> = ({
   title,
+  label,
   modalName,
   loading,
   data,
@@ -75,7 +77,7 @@ export const EndpointMetrics: React.FC<Props> = ({
             mirror
             domain={[0, (dataMax: number): number => dataMax * 1.2]} // Prevent bars from overlapping labels.
           >
-            <Label value="Requests" fill="var(--base-content)" position="insideTopRight" />
+            <Label value={label} fill="var(--base-content)" position="insideTopRight" />
           </XAxis>
           <YAxis
             dataKey="methodAndEndpoint"
