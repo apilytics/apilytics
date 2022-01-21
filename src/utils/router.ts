@@ -13,6 +13,7 @@ export const DOCS_ROUTES = {
   python: '/docs/python',
   dashboard: '/docs/dashboard',
   byom: '/docs/dashboard',
+  apiDocs: '/api/docs',
 };
 
 export const BLOG_ROUTES = {

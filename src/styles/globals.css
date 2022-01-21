@@ -133,3 +133,7 @@
 .text-method-options {
   color: #0d5aa7;
 }
+
+.swagger-ui .nostyle span {
+  color: initial;
+}
