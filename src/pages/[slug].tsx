@@ -5,17 +5,24 @@ import { MainTemplate } from 'components/layout/MainTemplate';
 import { CTASection } from 'components/shared/CTASection';
 import { MDX } from 'components/shared/MDX';
 import { withAccount } from 'hocs/withAccount';
-import { CONTENT_PATH, getFilePaths, getMDXContent } from 'utils/mdx';
+import {
+  CONTENT_PATH,
+  getFilePaths,
+  getMDXContent,
+  validateMandatoryFrontMatterKeys,
+} from 'utils/mdx';
 import type { MDXPageProps } from 'types';
 
 interface Props extends MDXPageProps {
   data: {
-    index?: boolean;
+    title: string;
+    description?: string;
+    indexable?: boolean;
   };
 }
 
-const Content: NextPage<Props> = ({ source, data: { index } }) => (
-  <MainTemplate index={index}>
+const Content: NextPage<Props> = ({ source, data }) => (
+  <MainTemplate {...data}>
     <div className="card rounded-lg shadow p-4 bg-base-100 text-white">
       <MDX source={source} />
     </div>
@@ -24,7 +31,10 @@ const Content: NextPage<Props> = ({ source, data: { index } }) => (
 );
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { source, data } = await getMDXContent(`src/content/${params?.slug}.mdx`);
+  const path = `src/content/${params?.slug}.mdx`;
+  const { source, data } = await getMDXContent(path);
+  const properties = ['title'];
+  validateMandatoryFrontMatterKeys(data, properties, path);
 
   return {
     props: {

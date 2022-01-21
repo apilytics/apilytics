@@ -26,6 +26,7 @@ interface Props extends Record<string, unknown> {
 }
 
 const Login: NextPage<Props> = ({ csrfToken }) => {
+  const title = 'Login';
   const [email, setEmail] = useState('');
   const { query } = useRouter();
   const [loading, setLoading] = useState(false);
@@ -68,7 +69,7 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
 
   if (submitted) {
     return (
-      <MainTemplate hideLogin>
+      <MainTemplate title={title} hideLogin>
         <h4 className="text-white">
           Thanks! We sent you a <span className="text-primary">magic</span> link to your email that
           you can log in with.
@@ -82,7 +83,7 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
   }
 
   return (
-    <MainTemplate hideLogin>
+    <MainTemplate title={title} hideLogin>
       <Form
         title="Sign up or log in using your email"
         onSubmit={handleSubmit}

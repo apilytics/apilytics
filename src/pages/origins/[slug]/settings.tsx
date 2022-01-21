@@ -19,6 +19,7 @@ import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
 const OriginSettings: NextPage = () => {
+  const title = 'Origin Settings';
   const { origin, setOrigin } = useOrigin();
   const { name: _name, apiKey = '', slug = '' } = origin ?? {};
   const [name, setName] = useState(_name);
@@ -95,9 +96,9 @@ const OriginSettings: NextPage = () => {
   );
 
   return (
-    <MainTemplate>
+    <MainTemplate title={title}>
       <Form
-        title="Origin settings"
+        title={title}
         onSubmit={handleSubmit}
         error={error}
         loading={loading}

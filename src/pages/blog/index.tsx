@@ -12,7 +12,11 @@ import { dynamicRoutes } from 'utils/router';
 import type { BlogPageProps } from 'types';
 
 const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
-  <MainTemplate index>
+  <MainTemplate
+    indexable
+    title="Blog"
+    description="Stay updated about Apilytics by following our blog."
+  >
     <h4 className="text-white">Apilytics Blog</h4>
     <p>
       Hi there! 👋

@@ -1,10 +1,6 @@
-export const CONTENT_ROUTES = {
-  about: '/about',
-  privacyFriendly: '/privacy-friendly',
-  lightweight: '/lightweight',
-  openSource: '/open-source',
-  easeOfUse: '/ease-of-use',
-};
+// `NEXT_PUBLIC_APP_URL` is defined everywhere except in preview environments
+// (where the URL changes always), there we'll use `VERCEL_URL`.
+export const FRONTEND_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${process.env.VERCEL_URL}`;
 
 export const DOCS_ROUTES = {
   docs: '/docs',
@@ -12,8 +8,8 @@ export const DOCS_ROUTES = {
   node: '/docs/node',
   python: '/docs/python',
   dashboard: '/docs/dashboard',
-  byom: '/docs/dashboard',
-  apiDocs: '/api/docs',
+  byom: '/docs/byom',
+  apiDocs: '/docs/api',
 };
 
 export const BLOG_ROUTES = {
@@ -31,10 +27,36 @@ export const staticRoutes = {
   account: '/account',
   contact: '/contact',
   privacyPolicy: '/privacy-policy',
-  ...CONTENT_ROUTES,
+  about: '/about',
+  privacyFriendly: '/privacy-friendly',
+  lightweight: '/lightweight',
+  openSource: '/open-source',
+  easeOfUse: '/ease-of-use',
   ...DOCS_ROUTES,
   ...BLOG_ROUTES,
 };
+
+export const INDEXABLE_CONTENT_ROUTES = [
+  staticRoutes.about,
+  staticRoutes.privacyFriendly,
+  staticRoutes.lightweight,
+  staticRoutes.openSource,
+  staticRoutes.easeOfUse,
+];
+
+export const INDEXABLE_DOCS_ROUTES = Object.values(DOCS_ROUTES);
+
+export const INDEXABLE_BLOG_ROUTES = Object.values(BLOG_ROUTES);
+
+export const MISC_INDEXABLE_ROUTES = [staticRoutes.demo];
+
+export const INDEXABLE_ROUTES = [
+  staticRoutes.root,
+  ...INDEXABLE_CONTENT_ROUTES,
+  ...INDEXABLE_DOCS_ROUTES,
+  ...INDEXABLE_BLOG_ROUTES,
+  ...MISC_INDEXABLE_ROUTES,
+];
 
 type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;
 

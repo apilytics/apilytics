@@ -1,5 +1,3 @@
-export const TITLE = 'Apilytics - API analytics made easy';
-
 export const DESCRIPTION =
   'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliance.';
 
