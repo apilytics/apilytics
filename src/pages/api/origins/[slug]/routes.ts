@@ -2,8 +2,9 @@ import type { OriginRoute } from '@prisma/client';
 
 import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
-import { sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
+import { sendConflict, sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
+import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler } from 'types';
 
@@ -66,16 +67,24 @@ const handlePut: ApiHandler<RoutesResponse> = async (req, res) => {
 
   const routes = body as RoutesPutBody;
 
-  const originRoutes = routes.map((route) => ({
+  const originRoutes = Array.from(new Set(routes)).map((route) => ({
     originId: origin.id,
     route,
     pattern: routeToPattern(route),
   }));
 
-  await prisma.$transaction([
-    prisma.originRoute.deleteMany({ where: { originId: origin.id } }),
-    prisma.originRoute.createMany({ data: originRoutes }),
-  ]);
+  try {
+    await prisma.$transaction([
+      prisma.originRoute.deleteMany({ where: { originId: origin.id } }),
+      prisma.originRoute.createMany({ data: originRoutes }),
+    ]);
+  } catch (e) {
+    if (isUniqueConstraintFailed(e)) {
+      sendConflict(res, 'Two or more routes map to conflicting patterns.');
+      return;
+    }
+    throw e;
+  }
 
   sendOk(res, { data: routes });
 };
