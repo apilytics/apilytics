@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
@@ -11,14 +11,13 @@ import { withNoAuth } from 'hocs/withNoAuth';
 import { MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
-import type { EndpointData, TimeFrame } from 'types';
+import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
   const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const origin = MOCK_ORIGIN;
-  const [metrics] = useState(() => getMockMetrics(timeFrame));
+  const metrics = useMemo(() => getMockMetrics(timeFrame), [timeFrame]);
   const loading = !origin || !metrics;
-  const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
 
   return (
     <MainTemplate
@@ -44,14 +43,12 @@ const Demo: NextPage = () => {
         <EndpointRequests
           metrics={metrics}
           loading={loading}
-          selectedEndpoint={selectedEndpoint}
-          setSelectedEndpoint={setSelectedEndpoint}
+          key={Math.random()} // Prevent label list from not showing on first render.
         />
         <EndpointResponseTimes
           metrics={metrics}
           loading={loading}
-          selectedEndpoint={selectedEndpoint}
-          setSelectedEndpoint={setSelectedEndpoint}
+          key={Math.random()} // Prevent label list from not showing on first render.
         />
       </div>
       <div className="flex flex-col lg:flex-row lg:items-center mt-4">

@@ -1,17 +1,15 @@
 import { ArrowsExpandIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import React from 'react';
-import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import React, { useState } from 'react';
 import type { ContentType } from 'recharts/types/component/Label';
 
 import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
-import { MethodAndEndpointTick } from 'components/dashboard/MethodAndEndpointTick';
+import { EndpointBarChart } from 'components/dashboard/EndpointBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { useModal } from 'hooks/useModal';
 import { MODAL_NAMES } from 'utils/constants';
-import { truncateString } from 'utils/helpers';
 import { formatRequests } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
 import type { EndpointData } from 'types';
@@ -24,8 +22,6 @@ interface Props {
   data: EndpointData[];
   dataKey: string;
   renderLabels: ContentType;
-  selectedEndpoint: EndpointData | null;
-  setSelectedEndpoint: (data: EndpointData | null) => void;
 }
 
 export const EndpointMetrics: React.FC<Props> = ({
@@ -33,13 +29,19 @@ export const EndpointMetrics: React.FC<Props> = ({
   label,
   modalName,
   loading,
-  data,
+  data: _data,
   dataKey,
   renderLabels,
-  selectedEndpoint,
-  setSelectedEndpoint,
 }) => {
+  const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
   const { handleOpenModal, handleCloseModal } = useModal();
+
+  const data = _data.map((d) => ({ ...d, methodAndEndpoint: `${d.method} ${d.endpoint}` }));
+  const truncatedData = data.slice(0, 12);
+
+  const getHeight = (dataLength: number): number => 100 + dataLength * 35;
+  const height = getHeight(data.length);
+  const truncatedHeight = getHeight(truncatedData.length);
 
   const handleBarClick = (data: EndpointData): void => {
     setSelectedEndpoint(data);
@@ -49,52 +51,6 @@ export const EndpointMetrics: React.FC<Props> = ({
   const handleCloseEndpointDetails = (): void => {
     setSelectedEndpoint(null);
     handleCloseModal();
-  };
-
-  const renderBarChart = (expanded: boolean): JSX.Element => {
-    const _data = data
-      .slice(0, expanded ? data.length : 12)
-      .map((d) => ({ ...d, methodAndEndpoint: `${d.method} ${d.endpoint}` }));
-
-    const height = 100 + _data.length * 35;
-
-    return (
-      <ResponsiveContainer height={height}>
-        <BarChart data={_data} layout="vertical" barSize={30}>
-          <Bar
-            dataKey={dataKey}
-            fill="rgba(82, 157, 255, 0.25)" // `primary` with 25% opacity.
-            onClick={handleBarClick}
-          >
-            <LabelList content={renderLabels} />
-          </Bar>
-          <XAxis
-            dataKey={dataKey}
-            type="number"
-            orientation="top"
-            axisLine={false}
-            tick={false}
-            mirror
-            domain={[0, (dataMax: number): number => dataMax * 1.2]} // Prevent bars from overlapping labels.
-          >
-            <Label value={label} fill="var(--base-content)" position="insideTopRight" />
-          </XAxis>
-          <YAxis
-            dataKey="methodAndEndpoint"
-            type="category"
-            tickLine={false}
-            axisLine={false}
-            mirror
-            stroke="white"
-            tick={<MethodAndEndpointTick />}
-            padding={{ top: 30, bottom: 20 }}
-            tickFormatter={(val: string): string => truncateString(val, 50)}
-          >
-            <Label value="Endpoints" fill="var(--base-content)" position="insideTopLeft" />
-          </YAxis>
-        </BarChart>
-      </ResponsiveContainer>
-    );
   };
 
   const renderNoRequests = !data.length && (
@@ -112,7 +68,16 @@ export const EndpointMetrics: React.FC<Props> = ({
         <ModalCloseButton onClick={handleCloseModal} />
       </div>
       <div className="overflow-y-auto px-4">
-        <div className="grow flex">{renderBarChart(true)}</div>
+        <div className="grow flex">
+          <EndpointBarChart
+            height={height}
+            data={data}
+            dataKey={dataKey}
+            onBarClick={handleBarClick}
+            renderLabels={renderLabels}
+            label={label}
+          />
+        </div>
       </div>
       <div className="p-6" />
     </Modal>
@@ -134,7 +99,7 @@ export const EndpointMetrics: React.FC<Props> = ({
       } = selectedEndpoint;
 
       return (
-        <Modal name={MODAL_NAMES.requestDetails}>
+        <Modal name={MODAL_NAMES.requestDetails} onClose={handleCloseEndpointDetails}>
           <div className="flex justify-between items-center p-2">
             <p className="font-bold px-2">
               <span className={`text-method-${method.toLowerCase()}`}>{method}</span>{' '}
@@ -184,13 +149,22 @@ export const EndpointMetrics: React.FC<Props> = ({
 
   const renderRequests = (
     <>
-      <div className="grow flex">{renderBarChart(false)}</div>
+      <div className="grow flex">
+        <EndpointBarChart
+          height={truncatedHeight}
+          data={truncatedData}
+          dataKey={dataKey}
+          onBarClick={handleBarClick}
+          renderLabels={renderLabels}
+          label={label}
+        />
+      </div>
       <Button
         onClick={(): void => handleOpenModal(modalName)}
         className="btn-sm btn-ghost self-start"
         endIcon={ArrowsExpandIcon}
       >
-        Details
+        Show all ({formatRequests(data.length)})
       </Button>
     </>
   );
