@@ -7,7 +7,7 @@ import { MainTemplate } from 'components/layout/MainTemplate';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { TextArea } from 'components/shared/TextArea';
-import { withAccount } from 'hocs/withAccount';
+import { withUser } from 'hocs/withUser';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
@@ -96,4 +96,4 @@ const Contact: NextPage = () => {
   );
 };
 
-export default withAccount(Contact);
+export default withUser(Contact);

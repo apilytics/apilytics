@@ -5,10 +5,10 @@ import { ErrorTemplate } from 'components/layout/ErrorTemplate';
 import { useAccount } from 'hooks/useAccount';
 import { staticApiRoutes } from 'utils/router';
 
-export const withAccount = <T extends Record<string, unknown>>(
+export const withUser = <T extends Record<string, unknown>>(
   PageComponent: NextPage<T>,
 ): NextPage<T> => {
-  const WithAccount: NextPage<T> = (pageProps: T) => {
+  const WithUser: NextPage<T> = (pageProps: T) => {
     const [error, setError] = useState(false);
     const { setUser } = useAccount();
 
@@ -31,5 +31,5 @@ export const withAccount = <T extends Record<string, unknown>>(
     return <PageComponent {...pageProps} />;
   };
 
-  return WithAccount;
+  return WithUser;
 };

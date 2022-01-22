@@ -2,7 +2,7 @@ import React from 'react';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
 import { BlogTemplate } from 'components/layout/BlogTemplate';
-import { withAccount } from 'hocs/withAccount';
+import { withUser } from 'hocs/withUser';
 import { BLOGS_PATH, getDocsData, getFilePaths, getMDXContent } from 'utils/mdx';
 import type { BlogPageProps } from 'types';
 
@@ -34,4 +34,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default withAccount(Blog);
+export default withUser(Blog);
