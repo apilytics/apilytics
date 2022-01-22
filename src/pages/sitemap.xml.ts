@@ -4,6 +4,7 @@ import {
   FRONTEND_URL,
   INDEXABLE_BLOG_ROUTES,
   INDEXABLE_CONTENT_ROUTES,
+  INDEXABLE_DOCS_ROUTES,
   MISC_INDEXABLE_ROUTES,
 } from 'utils/router';
 
@@ -26,7 +27,7 @@ const contentRoutes = INDEXABLE_CONTENT_ROUTES.map((path) => ({
   priority: '0.90',
 }));
 
-const docsRoutes = INDEXABLE_CONTENT_ROUTES.map((path) => ({
+const docsRoutes = INDEXABLE_DOCS_ROUTES.map((path) => ({
   path,
   changeFreq: 'weekly' as const,
   priority: '0.75',
