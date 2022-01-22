@@ -1,12 +1,6 @@
 export const DESCRIPTION =
   'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliance.';
 
-// `NEXT_PUBLIC_APP_URL` is defined everywhere except in preview environments
-// (where the URL changes always), there we'll use `VERCEL_URL`.
-export const FRONTEND_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${process.env.VERCEL_URL}`;
-
-export const FRONTEND_DOMAIN = new URL(FRONTEND_URL).host;
-
 export const METHODS = [
   'GET',
   'HEAD',
