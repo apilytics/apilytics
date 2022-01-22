@@ -70,7 +70,7 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
 
   if (submitted) {
     return (
-      <MainTemplate title={title} hideLogin>
+      <MainTemplate title={title}>
         <h4 className="text-white">
           Thanks! We sent you a <span className="text-primary">magic</span> link to your email that
           you can log in with.
@@ -88,7 +88,7 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
   }
 
   return (
-    <MainTemplate title={title} hideLogin>
+    <MainTemplate title={title}>
       <Form
         title="Sign up or log in using your email"
         onSubmit={handleSubmit}

@@ -2,6 +2,7 @@ import { DotsVerticalIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import { Button } from 'components/shared/Button';
@@ -33,11 +34,12 @@ const MENU_ITEMS = [
   },
 ];
 
-export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
+export const Header: React.FC<HeaderProps> = ({ maxWidth, loading }) => {
+  const { pathname } = useRouter();
   const { user, accountComplete } = useAccount();
 
   const renderDynamicContent = (): JSX.Element | void => {
-    if (!user && !hideLogin) {
+    if (!user && pathname !== staticRoutes.login) {
       return (
         <Button linkTo={staticRoutes.login} className="btn-primary btn-outline">
           Log in
@@ -45,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
       );
     }
 
-    if (!!user && !accountComplete) {
+    if (user && !accountComplete) {
       return (
         <Button linkTo={staticRoutes.logout} className="btn-primary btn-outline">
           Log out
@@ -53,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
       );
     }
 
-    if (user) {
+    if (user && accountComplete) {
       return (
         <div className="flex items-center">
           <div className="dropdown dropdown-end">
@@ -102,15 +104,17 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth, hideLogin }) => {
           </Link>
           <div className="ml-2 badge badge badge-primary badge-sm badge-outline">Beta</div>
         </div>
-        <div className="flex items-center">
-          <Button
-            linkTo={staticRoutes.docs}
-            className="btn-secondary btn-outline mr-4 hidden sm:block"
-          >
-            Docs
-          </Button>
-          {renderDynamicContent()}
-        </div>
+        {!loading && (
+          <div className="flex items-center">
+            <Button
+              linkTo={staticRoutes.docs}
+              className="btn-secondary btn-outline mr-4 hidden sm:block"
+            >
+              Docs
+            </Button>
+            {renderDynamicContent()}
+          </div>
+        )}
       </div>
     </header>
   );
