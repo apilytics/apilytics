@@ -34,8 +34,9 @@ export type PlausibleEvents = {
 };
 
 export interface HeadProps {
-  index?: boolean;
-  customTags?: JSX.Element;
+  indexable?: boolean;
+  title: string;
+  description?: string;
 }
 
 export interface HeaderProps {
@@ -55,14 +56,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 export interface DocsFrontMatter {
-  path: string;
   name: string;
+  description: string;
+  path: string;
   order: number;
-  subOrder: number;
+  subOrder?: number;
 }
 
 interface BlogsFrontMatter {
   title: string;
+  description: string;
   slug: string;
   author: string;
   authorImage: string;

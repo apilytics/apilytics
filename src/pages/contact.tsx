@@ -67,7 +67,7 @@ const Contact: NextPage = () => {
   );
 
   return (
-    <MainTemplate>
+    <MainTemplate title="Contact">
       <Form
         title="Send us a message"
         subTitle={renderSubTitle}

@@ -57,7 +57,7 @@ const Origin: NextPage = () => {
   }
 
   return (
-    <MainTemplate maxWidth="max-w-6xl" dense>
+    <MainTemplate maxWidth="max-w-6xl" dense title={origin.name}>
       <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
       <RequestsTimeFrame
         timeFrame={timeFrame}

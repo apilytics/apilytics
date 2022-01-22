@@ -1,7 +1,11 @@
 import type { GetServerSideProps } from 'next';
 
-import { FRONTEND_URL } from 'utils/constants';
-import { BLOG_ROUTES, CONTENT_ROUTES, DOCS_ROUTES, staticRoutes } from 'utils/router';
+import {
+  FRONTEND_URL,
+  INDEXABLE_BLOG_ROUTES,
+  INDEXABLE_CONTENT_ROUTES,
+  MISC_INDEXABLE_ROUTES,
+} from 'utils/router';
 
 // This should be manually updated whenever we want Google to re-index the sitemap.
 const MODIFIED = '2022-01-18';
@@ -16,25 +20,23 @@ interface Route {
   modified?: string; // ISO date
 }
 
-const contentRoutes = Object.values(CONTENT_ROUTES).map((path) => ({
+const contentRoutes = INDEXABLE_CONTENT_ROUTES.map((path) => ({
   path,
   changeFreq: 'weekly' as const,
   priority: '0.90',
 }));
 
-const docsRoutes = Object.values(DOCS_ROUTES).map((path) => ({
+const docsRoutes = INDEXABLE_CONTENT_ROUTES.map((path) => ({
   path,
   changeFreq: 'weekly' as const,
   priority: '0.75',
 }));
 
-const blogRoutes = Object.values(BLOG_ROUTES).map((path) => ({
+const blogRoutes = INDEXABLE_BLOG_ROUTES.map((path) => ({
   path,
   changeFreq: 'weekly' as const,
   priority: '0.75',
 }));
-
-const MISC_INDEXABLE_ROUTES = [staticRoutes.contact, staticRoutes.demo, staticRoutes.privacyPolicy];
 
 const miscRoutes = MISC_INDEXABLE_ROUTES.map((path) => ({
   path,

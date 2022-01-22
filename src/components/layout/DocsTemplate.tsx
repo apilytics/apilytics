@@ -4,13 +4,14 @@ import React, { Fragment } from 'react';
 
 import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
+import { CTASection } from 'components/shared/CTASection';
 import { MDX } from 'components/shared/MDX';
 import { staticRoutes } from 'utils/router';
 import type { DocsPageProps } from 'types';
 
 export const DocsTemplate: React.FC<DocsPageProps> = ({
   source,
-  data: { order, subOrder = 0 },
+  data: { name, description, order, subOrder = 0 },
   docsData,
 }) => {
   const nextDoc = docsData?.find((doc) => {
@@ -21,17 +22,15 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
     return doc.order === order + 1;
   });
 
-  const getRoute = (path: string): string => `/docs/${path}`;
-
   return (
-    <Layout maxWidth="max-w-full" index>
+    <Layout maxWidth="max-w-full" title={`Docs: ${name}`} description={description} indexable>
       <ul className="menu p-4 w-50 h-full absolute border-r border-1 border-base-content invisible xl:visible text-primary">
         {docsData
           ?.filter(({ subOrder }) => !subOrder)
           .map(({ path, name, order: parentOrder }) => (
             <Fragment key={path}>
               <li>
-                <Link href={getRoute(path)}>
+                <Link href={path}>
                   <a>{name}</a>
                 </Link>
               </li>
@@ -40,7 +39,7 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
                   ?.filter(({ order, subOrder }) => order === parentOrder && subOrder)
                   .map(({ name, path }) => (
                     <li key={path}>
-                      <Link href={getRoute(path)}>
+                      <Link href={path}>
                         <a>{name}</a>
                       </Link>
                     </li>
@@ -50,11 +49,11 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
           ))}
       </ul>
       <div className="container py-4 lg:pt-16 animate-fade-in-top grow flex flex-col height-full max-w-3xl">
-        <div className="card rounded-lg shadow p-4 bg-base-100 break-words items-start text-white">
+        <div className="card rounded-lg shadow p-4 bg-base-100 break-words text-white">
           <MDX source={source} />
           {nextDoc && (
             <Button
-              linkTo={getRoute(nextDoc.path)}
+              linkTo={nextDoc.path}
               endIcon={ArrowSmRightIcon}
               fullWidth="mobile"
               className="btn-secondary btn-outline mt-8 mx-auto"
@@ -70,6 +69,7 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
           </Link>
           .
         </p>
+        <CTASection />
       </div>
     </Layout>
   );

@@ -21,7 +21,13 @@ const Demo: NextPage = () => {
   const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
 
   return (
-    <MainTemplate maxWidth="max-w-6xl" dense>
+    <MainTemplate
+      maxWidth="max-w-6xl"
+      dense
+      indexable
+      title="Demo"
+      description="The Apilytics live demo shows you what kind of metrics you can analyze from your APIs using our service."
+    >
       <DashboardOptions
         timeFrame={timeFrame}
         setTimeFrame={setTimeFrame}

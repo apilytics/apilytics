@@ -7,8 +7,6 @@ import rehypeHighlight from 'rehype-highlight';
 import remarkHeadingId from 'remark-heading-id';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
-import type { DocsFrontMatter } from 'types';
-
 export const getFullPath = (path: string): string => join(process.cwd(), path);
 
 interface MDXContent {
@@ -38,7 +36,7 @@ export const DOCS_PATH = getFullPath('src/docs');
 export const BLOGS_PATH = getFullPath('src/blogs');
 export const CONTENT_PATH = getFullPath('src/content');
 
-const validateMandatoryFrontMatterKeys = (
+export const validateMandatoryFrontMatterKeys = (
   data: Record<string, unknown>,
   properties: string[],
   path: string,
@@ -56,18 +54,10 @@ export const getDocsData = (): Record<string, unknown>[] =>
       const fullPath = join(DOCS_PATH, path);
       const source = readFileSync(fullPath);
       const { data } = matter(source);
-      const properties = ['name', 'order'];
+      const properties = ['name', 'description', 'order'];
       validateMandatoryFrontMatterKeys(data, properties, path);
-
-      return {
-        ...(data as DocsFrontMatter),
-        path,
-      };
+      return data;
     })
-    .map((doc) => ({
-      ...doc,
-      path: doc.path.replace(/\.mdx?$/, ''),
-    }))
     .sort((a, b) => a.order - b.order);
 
 export const getBlogsData = (): Record<string, unknown>[] =>
@@ -75,7 +65,7 @@ export const getBlogsData = (): Record<string, unknown>[] =>
     const fullPath = join(BLOGS_PATH, path);
     const source = readFileSync(fullPath);
     const { data } = matter(source);
-    const properties = ['title', 'slug', 'author', 'authorImage', 'excerpt'];
+    const properties = ['title', 'description', 'slug', 'author', 'authorImage', 'excerpt'];
     validateMandatoryFrontMatterKeys(data, properties, path);
     return data;
   });

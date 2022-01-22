@@ -134,6 +134,25 @@
   color: #0d5aa7;
 }
 
-.swagger-ui .nostyle span {
-  color: initial;
+#swagger-ui .scheme-container {
+  background: unset;
+  @apply shadow-none;
+}
+
+#swagger-ui *:not(.cancel, a) {
+  color: unset;
+}
+
+#swagger-ui .opblock-section-header {
+  background: unset;
+}
+
+#swagger-ui svg {
+  @apply fill-white;
+}
+
+#swagger-ui textarea,
+#swagger-ui input,
+#swagger-ui select {
+  @apply bg-base-100;
 }
