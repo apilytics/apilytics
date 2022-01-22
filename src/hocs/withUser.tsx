@@ -15,7 +15,7 @@ export const withUser = <T extends Record<string, unknown>>(
     useEffect(() => {
       (async (): Promise<void> => {
         try {
-          const res = await fetch(staticApiRoutes.account);
+          const res = await fetch(staticApiRoutes.user);
           const { data } = await res.json();
           setUser(data);
         } catch {

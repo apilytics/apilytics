@@ -69,7 +69,7 @@ export const dynamicRoutes: DynamicRoutes = {
 export const staticApiRoutes = {
   emailSignIn: '/api/auth/signin/email',
   csrfToken: '/api/auth/csrf',
-  account: '/api/account',
+  user: '/api/user',
   origins: '/api/origins',
   emailList: '/api/email-list',
   contact: '/api/contact',
