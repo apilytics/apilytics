@@ -9,6 +9,7 @@ export const Button: React.FC<ButtonProps> = ({
   loading,
   tooltip,
   className,
+  startIcon: StartIcon,
   endIcon: EndIcon,
   linkTo,
   tooltipProps,
@@ -20,7 +21,8 @@ export const Button: React.FC<ButtonProps> = ({
 
   let renderButton = (
     <button className={clsx('btn', _width, _loading, className)} {...props}>
-      {children} {!!EndIcon && <EndIcon className="w-5 h-5 ml-2" />}
+      {!!StartIcon && <StartIcon className="w-5 h-5 mr-2" />} {children}{' '}
+      {!!EndIcon && <EndIcon className="w-5 h-5 ml-2" />}
     </button>
   );
 

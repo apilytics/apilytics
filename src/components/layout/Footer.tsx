@@ -19,7 +19,7 @@ export const Footer: React.FC = () => (
             objectFit="contain"
             alt="Logo"
           />
-          <h6 className="text-white ml-2">Apilytics</h6>
+          <h6 className="ml-2">Apilytics</h6>
         </div>
         <p className="py-2">{DESCRIPTION}</p>
         <p className="text-xs">
@@ -48,6 +48,9 @@ export const Footer: React.FC = () => (
         <div>
           <h6 className="footer-title text-sm text-white">Community</h6>
           <ul>
+            <p>
+              <Link href={staticRoutes.docs}>Docs</Link>
+            </p>
             <p>
               <ExternalLink href="https://github.com/apilytics">Github</ExternalLink>
             </p>

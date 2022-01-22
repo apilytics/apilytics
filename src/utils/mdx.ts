@@ -61,11 +61,18 @@ export const getDocsData = (): Record<string, unknown>[] =>
     .sort((a, b) => a.order - b.order);
 
 export const getBlogsData = (): Record<string, unknown>[] =>
-  getFilePaths(BLOGS_PATH).map((path) => {
-    const fullPath = join(BLOGS_PATH, path);
-    const source = readFileSync(fullPath);
-    const { data } = matter(source);
-    const properties = ['title', 'description', 'slug', 'author', 'authorImage', 'excerpt'];
-    validateMandatoryFrontMatterKeys(data, properties, path);
-    return data;
-  });
+  getFilePaths(BLOGS_PATH)
+    .map((path) => {
+      const fullPath = join(BLOGS_PATH, path);
+      const source = readFileSync(fullPath);
+      const { data } = matter(source);
+      const properties = ['title', 'description', 'slug', 'author', 'authorLink', 'excerpt'];
+      validateMandatoryFrontMatterKeys(data, properties, path);
+
+      if (data.slug !== path.replace(/\.mdx?$/, '')) {
+        throw Error(`Blog slug '${data.slug}' does not match path '${path}'.`);
+      }
+
+      return data;
+    })
+    .sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1));
