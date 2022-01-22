@@ -26,18 +26,21 @@ const handleGet: ApiHandler<PathsResponse> = async (req, res) => {
     return;
   }
 
-  const _paths: { path: Path }[] = await prisma.$queryRaw`
-SELECT DISTINCT path
+  const result: { path: Path; part_count: number }[] = await prisma.$queryRaw`
+SELECT DISTINCT
+  path,
+  LENGTH(path) - LENGTH(REPLACE(path, '/', '')) AS part_count
 FROM metrics
 WHERE origin_id = ${origin.id}
-AND NOT EXISTS (
-  SELECT
-  FROM origin_routes
-  WHERE metrics.origin_id = origin_routes.origin_id
-    AND metrics.path ~ origin_routes.pattern
-);`;
+  AND NOT EXISTS (
+    SELECT
+    FROM origin_routes
+    WHERE metrics.origin_id = origin_routes.origin_id
+      AND metrics.path ~ origin_routes.pattern
+  )
+ORDER BY part_count, path;`;
 
-  const paths = _paths.map(({ path }) => path);
+  const paths = result.map(({ path }) => path);
 
   sendOk(res, { data: paths });
 };

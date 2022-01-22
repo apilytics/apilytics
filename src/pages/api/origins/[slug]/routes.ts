@@ -21,6 +21,22 @@ const routeToPattern = (route: string): string => {
   return `^${route.replace(/<[a-z_-]+>/g, '[^/]+')}$`;
 };
 
+const getRoutes = async (originId: string): Promise<string[]> => {
+  // No need to order by `part_count` here (as is done in paths API),
+  // these get ordered very nicely without it.
+  const result = await prisma.originRoute.findMany({
+    where: { originId },
+    select: {
+      route: true,
+    },
+    orderBy: {
+      route: 'asc',
+    },
+  });
+
+  return result.map(({ route }) => route);
+};
+
 const handleGet: ApiHandler<RoutesResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
@@ -34,14 +50,7 @@ const handleGet: ApiHandler<RoutesResponse> = async (req, res) => {
     return;
   }
 
-  const _routes = await prisma.originRoute.findMany({
-    where: { originId: origin.id },
-    select: {
-      route: true,
-    },
-  });
-
-  const routes = _routes.map(({ route }) => route);
+  const routes = await getRoutes(origin.id);
 
   sendOk(res, { data: routes });
 };
@@ -65,9 +74,9 @@ const handlePut: ApiHandler<RoutesResponse> = async (req, res) => {
     return;
   }
 
-  const routes = body as RoutesPutBody;
+  const newRoutes = body as RoutesPutBody;
 
-  const originRoutes = Array.from(new Set(routes)).map((route) => ({
+  const originRoutes = Array.from(new Set(newRoutes)).map((route) => ({
     originId: origin.id,
     route,
     pattern: routeToPattern(route),
@@ -85,6 +94,8 @@ const handlePut: ApiHandler<RoutesResponse> = async (req, res) => {
     }
     throw e;
   }
+
+  const routes = await getRoutes(origin.id);
 
   sendOk(res, { data: routes });
 };
