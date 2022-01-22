@@ -9,9 +9,10 @@ import { useModal } from 'hooks/useModal';
 interface Props {
   name: string;
   mobileFullscreen?: boolean;
+  onClose?: () => void;
 }
 
-const _Modal: React.FC<Props> = ({ name, mobileFullscreen, children }) => {
+const _Modal: React.FC<Props> = ({ name, mobileFullscreen, onClose, children }) => {
   const { modal, handleCloseModal } = useModal();
   const open = modal === name;
   const modalRef = useRef<HTMLDivElement>(null);
@@ -46,7 +47,11 @@ const _Modal: React.FC<Props> = ({ name, mobileFullscreen, children }) => {
 
   const handleBackdropClick = ({ target }: MouseEvent): void => {
     if (!modalRef.current?.contains(target as Node)) {
-      handleCloseModal();
+      if (onClose) {
+        onClose();
+      } else {
+        handleCloseModal();
+      }
     }
   };
 

@@ -42,7 +42,7 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
     setError('');
 
     try {
-      const res = await fetch(staticApiRoutes.account, {
+      const res = await fetch(staticApiRoutes.user, {
         method: 'PUT',
         body: JSON.stringify(formValues),
         headers: {

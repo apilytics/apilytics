@@ -9,6 +9,6 @@ const origin = MOCK_ORIGIN;
 const metrics = getMockMetrics(timeFrame);
 const loading = !origin || !metrics;
 
-export const MockRequestsOverview: React.FC = () => (
+export const MockRequestsTimeFrame: React.FC = () => (
   <RequestsTimeFrame timeFrame={timeFrame} origin={origin} metrics={metrics} loading={loading} />
 );

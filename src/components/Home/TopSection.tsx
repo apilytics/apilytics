@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React from 'react';
 
 import { Button } from 'components/shared/Button';
-import { MockRequestsOverview } from 'components/shared/MockRequestsOverview';
+import { MockRequestsTimeFrame } from 'components/shared/MockRequestsTimeFrame';
 import { DESCRIPTION } from 'utils/constants';
 import { staticRoutes } from 'utils/router';
 
@@ -75,7 +75,7 @@ export const TopSection: React.FC = () => (
           </div>
         </div>
         <div className="mt-8 lg:mt-0 select-none">
-          <MockRequestsOverview />
+          <MockRequestsTimeFrame />
         </div>
       </div>
     </div>

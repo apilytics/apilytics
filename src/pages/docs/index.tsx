@@ -2,7 +2,7 @@ import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 
 import { DocsTemplate } from 'components/layout/DocsTemplate';
-import { withAccount } from 'hocs/withAccount';
+import { withUser } from 'hocs/withUser';
 import { getDocsData, getMDXContent } from 'utils/mdx';
 import type { DocsPageProps } from 'types';
 
@@ -21,4 +21,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default withAccount(Docs);
+export default withUser(Docs);

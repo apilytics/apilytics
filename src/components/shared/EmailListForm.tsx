@@ -6,11 +6,7 @@ import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 import type { PlausibleEvents } from 'types';
 
-interface Props {
-  label: JSX.Element | string;
-}
-
-export const EmailListForm: React.FC<Props> = ({ label }) => {
+export const EmailListForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -53,7 +49,7 @@ export const EmailListForm: React.FC<Props> = ({ label }) => {
     <form onSubmit={handleSubmit} className="text-left">
       <div className="form-control">
         <label className="label">
-          <span className="label-text">{label}</span>
+          <span className="label-text">Keep me updated</span>
         </label>
         <div className="flex flex-wrap">
           <input

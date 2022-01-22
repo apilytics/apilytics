@@ -8,7 +8,7 @@ import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { AccountForm } from 'components/shared/AccountForm';
 import { Button } from 'components/shared/Button';
-import { withAccount } from 'hocs/withAccount';
+import { withUser } from 'hocs/withUser';
 import { useAccount } from 'hooks/useAccount';
 import { staticRoutes } from 'utils/router';
 
@@ -69,5 +69,5 @@ export const withAuth = <T extends Record<string, unknown>>(
     return <PageComponent {...pageProps} />;
   };
 
-  return withAccount(WithAuth);
+  return withUser(WithAuth);
 };

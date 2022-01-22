@@ -10,13 +10,13 @@ const DEFAULT_DESCRIPTION =
 
 const OG_IMAGE = `${FRONTEND_URL}/og-image.png`;
 
-export const Head: React.FC<HeadProps> = ({ indexable, title, description }) => {
+export const Head: React.FC<HeadProps> = ({ indexable, title, description, loading }) => {
   const { asPath } = useRouter();
   const ogUrl = `${FRONTEND_URL}${asPath === staticRoutes.root ? '' : asPath}`;
   const _title = `Apilytics | ${title}`;
   const _description = description ?? DEFAULT_DESCRIPTION;
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && !loading) {
     const path = asPath.split('#')[0];
 
     if (INDEXABLE_ROUTES.includes(path) && !indexable) {

@@ -4,7 +4,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { CTASection } from 'components/shared/CTASection';
 import { MDX } from 'components/shared/MDX';
-import { withAccount } from 'hocs/withAccount';
+import { withUser } from 'hocs/withUser';
 import {
   CONTENT_PATH,
   getFilePaths,
@@ -57,4 +57,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default withAccount(Content);
+export default withUser(Content);

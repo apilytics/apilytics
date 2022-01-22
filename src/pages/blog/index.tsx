@@ -6,7 +6,7 @@ import type { GetStaticProps, NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { CTASection } from 'components/shared/CTASection';
-import { withAccount } from 'hocs/withAccount';
+import { withUser } from 'hocs/withUser';
 import { getBlogsData } from 'utils/mdx';
 import { dynamicRoutes } from 'utils/router';
 import type { BlogPageProps } from 'types';
@@ -66,4 +66,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default withAccount(Blogs);
+export default withUser(Blogs);

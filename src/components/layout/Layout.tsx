@@ -10,14 +10,14 @@ export const Layout: React.FC<LayoutProps> = ({
   title,
   description,
   maxWidth,
-  hideLogin,
+  loading,
   children,
 }) => (
   <>
-    <Head indexable={indexable} title={title} description={description} />
+    <Head indexable={indexable} title={title} description={description} loading={loading} />
     <div className="min-h-screen flex flex-col bg-base-200">
       <div id="main" className="grow flex flex-col">
-        <Header maxWidth={maxWidth} hideLogin={hideLogin} />
+        <Header maxWidth={maxWidth} loading={loading} />
         <div className="grow flex flex-col relative">{children}</div>
         <Footer />
       </div>

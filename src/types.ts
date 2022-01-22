@@ -37,11 +37,12 @@ export interface HeadProps {
   indexable?: boolean;
   title: string;
   description?: string;
+  loading?: boolean;
 }
 
 export interface HeaderProps {
   maxWidth?: string;
-  hideLogin?: boolean;
+  loading?: boolean;
 }
 
 export type LayoutProps = HeadProps & HeaderProps;
