@@ -44,6 +44,9 @@ module.exports = {
       maxHeight: {
         128: '32rem',
       },
+      minWidth: {
+        40: '10rem',
+      },
     },
     fontFamily: {
       sans: ['Ubuntu', 'sans-serif'],

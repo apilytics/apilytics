@@ -5,23 +5,23 @@ import { EmailListForm } from 'components/shared/EmailListForm';
 import { staticRoutes } from 'utils/router';
 
 export const CTASection: React.FC = () => (
-  <div className="container py-4 sm:py-16 max-w-3xl">
-    <div className="grid grid-cols-1 sm:grid-cols-2 justify-center">
-      <div>
-        <h3 className="text-white">Try Apilytics?</h3>
-        <h3 className="text-primary">Start your free trial.</h3>
+  <div className="container py-4 sm:py-8 max-w-3xl">
+    <div className="flex flex-col sm:flex-row gap-8">
+      <div className="grow">
+        <h3 className="text-white">Would you like to try Apilytics?</h3>
+        <h3 className="text-primary">Start a free trial now.</h3>
       </div>
-      <div className="mt-8 sm:mt-0 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-end">
-        <Button linkTo={staticRoutes.login} className="btn-primary" fullWidth="mobile">
+      <div className="flex flex-col gap-2">
+        <Button linkTo={staticRoutes.login} className="btn-primary" fullWidth>
           Get started
         </Button>
-        <Button linkTo={staticRoutes.demo} className="btn-secondary btn-outline" fullWidth="mobile">
+        <Button linkTo={staticRoutes.demo} className="btn-secondary btn-outline" fullWidth>
           Live demo
         </Button>
       </div>
     </div>
-    <div className="mt-8 sm:mt-16 sm:flex sm:justify-center">
-      <EmailListForm label="Keep me updated" />
+    <div className="mt-8">
+      <EmailListForm />
     </div>
   </div>
 );
