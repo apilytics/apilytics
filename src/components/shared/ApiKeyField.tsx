@@ -30,6 +30,7 @@ export const ApiKeyField: React.FC<Props> = ({ value }) => {
           readOnly
         />
         <IconButton
+          type="button"
           onClick={onClick}
           icon={ClipboardCopyIcon}
           tooltip="Copy your API key to the clipboard."
