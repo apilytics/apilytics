@@ -3,8 +3,6 @@ info:
   title: Apilytics
   description: 'This is the public API documentation for Apilytics. You need an API key to use the API.'
   version: '1.0'
-  contact:
-    email: 'hello@apilytics.io'
 servers:
   - url: https://www.apilytics.io
 paths:
