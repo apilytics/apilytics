@@ -66,7 +66,7 @@ export const TopSection: React.FC = () => (
             ))}
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8">
-            <Button linkTo={staticRoutes.login} className="btn-primary">
+            <Button linkTo={staticRoutes.register} className="btn-primary">
               Get started
             </Button>
             <Button linkTo={staticRoutes.demo} className="btn-secondary btn-outline">

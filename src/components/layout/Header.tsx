@@ -1,15 +1,89 @@
-import { DotsVerticalIcon } from '@heroicons/react/solid';
+import {
+  ChartBarIcon,
+  ChevronDownIcon,
+  CodeIcon,
+  DocumentSearchIcon,
+  DotsVerticalIcon,
+  GlobeAltIcon,
+  LightningBoltIcon,
+  MapIcon,
+  RssIcon,
+  ShieldCheckIcon,
+} from '@heroicons/react/solid';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 
 import { Button } from 'components/shared/Button';
+import { ExternalLink } from 'components/shared/ExternalLink';
 import { useAccount } from 'hooks/useAccount';
+import { DEFAULT_MAX_WIDTH } from 'utils/constants';
 import { truncateString } from 'utils/helpers';
 import { staticRoutes } from 'utils/router';
 import type { HeaderProps } from 'types';
+
+const WHY_ITEMS = [
+  {
+    icon: ChartBarIcon,
+    href: staticRoutes.easeOfUse,
+    title: 'Ease of Use',
+    description:
+      'Ease of use is one of the main reasons why you should choose Apilytics over other API monitoring solutions.',
+  },
+  {
+    icon: LightningBoltIcon,
+    href: staticRoutes.lightweight,
+    title: 'Lightweight',
+    description:
+      'The lightweightness of Apilytics makes it a viable monitoring solution for your application.',
+  },
+  {
+    icon: ShieldCheckIcon,
+    href: staticRoutes.privacyFriendly,
+    title: 'Privacy Friendly',
+    description: ' Apilytics is a privacy friendly monitoring service for your APIs.',
+  },
+  {
+    icon: GlobeAltIcon,
+    href: staticRoutes.openSource,
+    title: 'Open Source',
+    description: 'Monitor your APIs with the power of open source using Apilytics.',
+  },
+];
+
+const COMMUNITY_ITEMS = [
+  {
+    component: Link,
+    icon: RssIcon,
+    href: staticRoutes.blog,
+    title: 'Blog',
+    description: 'Read our blog to learn about the latest updates and features.',
+  },
+  {
+    component: Link,
+    icon: DocumentSearchIcon,
+    href: staticRoutes.docs,
+    title: 'Docs',
+    description:
+      'Documentation for using Apilytics. In-depth guides and tutorials for different tools and technologies.',
+  },
+  {
+    component: ExternalLink,
+    icon: CodeIcon,
+    href: staticRoutes.github,
+    title: 'Github',
+    description:
+      'Our Github organizations gives you access to our open source work as well as our Github community.',
+  },
+  {
+    component: ExternalLink,
+    icon: MapIcon,
+    href: staticRoutes.roadmap,
+    title: 'Public Roadmap',
+    description: 'Check out our plans for the future and submit your own feature requests.',
+  },
+];
 
 const MENU_ITEMS = [
   {
@@ -35,86 +109,169 @@ const MENU_ITEMS = [
 ];
 
 export const Header: React.FC<HeaderProps> = ({ maxWidth, loading }) => {
-  const { pathname } = useRouter();
   const { user, accountComplete } = useAccount();
+  const maxWidthForNotAuthenticated = maxWidth !== DEFAULT_MAX_WIDTH ? maxWidth : 'max-w-5xl';
 
-  const renderDynamicContent = (): JSX.Element | void => {
-    if (!user && pathname !== staticRoutes.login) {
-      return (
-        <Button linkTo={staticRoutes.login} className="btn-primary btn-outline">
-          Log in
-        </Button>
-      );
-    }
+  const renderLogo = !loading && (
+    <div className="flex flex-row items-center">
+      <Link href={staticRoutes.root}>
+        <a>
+          <Image
+            src="/logo.svg"
+            layout="fixed"
+            width={90}
+            height={60}
+            objectFit="contain"
+            alt="Logo"
+          />
+        </a>
+      </Link>
+      <div className="ml-2 badge badge badge-primary badge-sm badge-outline">Beta</div>
+    </div>
+  );
 
-    if (user && !accountComplete) {
-      return (
-        <Button linkTo={staticRoutes.logout} className="btn-primary btn-outline">
-          Log out
-        </Button>
-      );
-    }
+  const renderWhyDropdown = (
+    <div className="dropdown dropdown-hover">
+      <div tabIndex={0} className="btn btn-ghost flex">
+        Why Apilytics?
+        <ChevronDownIcon className="ml-2 w-5 h-5" />
+      </div>
+      <ul
+        tabIndex={0}
+        className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-96 text-primary"
+      >
+        {WHY_ITEMS.map(({ icon: Icon, href, title, description }) => (
+          <li key={title}>
+            <Link href={href}>
+              <a className="unstyled flex flex-col">
+                <p className="self-start flex items-center">
+                  <Icon className="w-5 h-5 mr-2" /> {title}
+                </p>
+                <p className="text-sm text-base-content">{description}</p>
+              </a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 
-    if (user && accountComplete) {
-      return (
-        <div className="flex items-center">
-          <div className="dropdown dropdown-end">
-            <div tabIndex={0} className="btn btn-ghost flex">
-              <span className="hidden sm:block">{truncateString(user?.name, 10)}</span>
-              <DotsVerticalIcon className="sm:ml-2 w-5 h-5" />
-            </div>
-            <ul
-              tabIndex={0}
-              className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52 text-primary"
-            >
-              {MENU_ITEMS.map(({ name, href }) => (
-                <li key={name}>
-                  <Link href={href}>
-                    <a>{name}</a>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+  const renderCommunityDropdown = (
+    <div className="dropdown dropdown-hover">
+      <div tabIndex={0} className="btn btn-ghost flex">
+        Community
+        <ChevronDownIcon className="ml-2 w-5 h-5" />
+      </div>
+      <ul
+        tabIndex={0}
+        className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-96 text-primary"
+      >
+        {COMMUNITY_ITEMS.map(({ component: Component, icon: Icon, href, title, description }) => (
+          <li key={title}>
+            <Component href={href} className="unstyled">
+              <a className="unstyled flex flex-col">
+                <p className="self-start flex items-center">
+                  <Icon className="w-5 h-5 mr-2" /> {title}
+                </p>
+                <p className="text-sm text-base-content">{description}</p>
+              </a>
+            </Component>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
+  const renderLinksForNotAuthenticated = !loading && !user && (
+    <div className="hidden lg:flex">
+      {renderWhyDropdown}
+      {renderCommunityDropdown}
+      <Button className="btn-ghost" linkTo={staticRoutes.pricing}>
+        Pricing
+      </Button>
+    </div>
+  );
+
+  const renderButtonsForNotAuthenticated = !loading && !user && (
+    <div className="flex gap-2">
+      <div className="dropdown dropdown-hover dropdown-end sm:hidden">
+        <div tabIndex={0} className="btn btn-ghost">
+          <DotsVerticalIcon className="sm:ml-2 w-5 h-5" />
         </div>
-      );
-    }
-  };
+        <ul
+          tabIndex={0}
+          className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-52 text-primary"
+        >
+          <li>
+            <Link href={staticRoutes.register}>
+              <a className="unstyled">Start free trial</a>
+            </Link>
+          </li>
+          <li>
+            <Link href={staticRoutes.login}>
+              <a className="unstyled">Log in</a>
+            </Link>
+          </li>
+        </ul>
+      </div>
+      <Button linkTo={staticRoutes.login} className="btn-link hidden sm:block">
+        Log in
+      </Button>
+      <Button className="btn-primary hidden sm:block" linkTo={staticRoutes.register}>
+        Start free trial
+      </Button>
+    </div>
+  );
+
+  const renderAccountMenu = accountComplete && (
+    <div className="dropdown dropdown-hover dropdown-end">
+      <div tabIndex={0} className="btn btn-ghost flex">
+        <span className="hidden sm:block">{truncateString(user?.name ?? '', 10)}</span>
+        <DotsVerticalIcon className="sm:ml-2 w-5 h-5" />
+      </div>
+      <ul
+        tabIndex={0}
+        className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-52 text-primary"
+      >
+        {MENU_ITEMS.map(({ name, href }) => (
+          <li key={name}>
+            <Link href={href}>
+              <a className="unstyled">{name}</a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
+  const renderLogoutButton = !accountComplete && (
+    <Button linkTo={staticRoutes.logout} className="btn-primary btn-outline">
+      Log out
+    </Button>
+  );
+
+  const renderButtonsForAuthenticated = !loading && user && (
+    <div className="flex gap-2">
+      <Button className="btn-ghost" linkTo={staticRoutes.docs}>
+        Docs
+      </Button>
+      {renderLogoutButton}
+      {renderAccountMenu}
+    </div>
+  );
 
   return (
     <header className="py-2 flex items-center bg-base-100">
       <div
         className={clsx(
           'container flex justify-between items-center animate-fade-in-top relative z-10',
-          maxWidth,
+          user ? maxWidth : maxWidthForNotAuthenticated,
         )}
       >
-        <div className="flex flex-row items-center">
-          <Link href={staticRoutes.root}>
-            <a>
-              <Image
-                src="/logo.svg"
-                layout="fixed"
-                width={90}
-                height={60}
-                objectFit="contain"
-                alt="Logo"
-              />
-            </a>
-          </Link>
-          <div className="ml-2 badge badge badge-primary badge-sm badge-outline">Beta</div>
-        </div>
-        {!loading && (
-          <div className="flex items-center">
-            <Button
-              linkTo={staticRoutes.docs}
-              className="btn-secondary btn-outline mr-4 hidden sm:block"
-            >
-              Docs
-            </Button>
-            {renderDynamicContent()}
-          </div>
-        )}
+        {renderLogo}
+        {renderLinksForNotAuthenticated}
+        {renderButtonsForNotAuthenticated}
+        {renderButtonsForAuthenticated}
       </div>
     </header>
   );
