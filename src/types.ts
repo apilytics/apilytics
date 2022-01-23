@@ -51,6 +51,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   fullWidth?: boolean | 'mobile';
   loading?: boolean;
   tooltip?: string;
+  startIcon?: React.FC<ComponentProps<'svg'>>;
   endIcon?: React.FC<ComponentProps<'svg'>>;
   linkTo?: string | UrlObject;
   tooltipProps?: React.HTMLAttributes<HTMLDivElement>;
@@ -64,12 +65,12 @@ export interface DocsFrontMatter {
   subOrder?: number;
 }
 
-interface BlogsFrontMatter {
+export interface BlogsFrontMatter {
   title: string;
   description: string;
   slug: string;
   author: string;
-  authorImage: string;
+  authorLink: string;
   excerpt: string;
   date: string;
 }

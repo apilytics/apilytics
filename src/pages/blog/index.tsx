@@ -1,14 +1,11 @@
-import dayjs from 'dayjs';
-import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
+import { BlogCard } from 'components/shared/BlogCard';
 import { CTASection } from 'components/shared/CTASection';
 import { withUser } from 'hocs/withUser';
 import { getBlogsData } from 'utils/mdx';
-import { dynamicRoutes } from 'utils/router';
 import type { BlogPageProps } from 'types';
 
 const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
@@ -18,38 +15,10 @@ const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
     description="Stay updated about Apilytics by following our blog."
   >
     <h4 className="text-white">Apilytics Blog</h4>
-    <p>
-      Hi there! 👋
-      <br />
-      You can read about our journey in this blog.
-    </p>
+    <p>Hi there! 👋 You can read about our journey in this blog.</p>
     <div className="py-4 flex flex-col gap-2">
-      {blogsData.map(({ title, slug, author, authorImage, excerpt, date }) => (
-        <Link href={dynamicRoutes.blog({ slug })} key={slug}>
-          <a className="unstyled">
-            <div className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2" key={slug}>
-              <div className="flex flex-col p-2">
-                <h5 className="text-white">{title}</h5>
-                <p>{excerpt}</p>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:items-center p-2">
-                <div className="flex">
-                  <Image
-                    src={authorImage}
-                    layout="fixed"
-                    width={25}
-                    height={25}
-                    alt="Author Image"
-                    className="rounded-full"
-                  />
-                  <p className="ml-2">{author}</p>
-                </div>
-                <span className="ml-2 hidden sm:block">·</span>
-                <p className="sm:ml-2">{dayjs(date).format('LL')}</p>
-              </div>
-            </div>
-          </a>
-        </Link>
+      {blogsData.map((blog) => (
+        <BlogCard {...blog} key={blog.title} />
       ))}
     </div>
     <CTASection />

@@ -15,6 +15,7 @@ export const DOCS_ROUTES = {
 export const BLOG_ROUTES = {
   blog: '/blog',
   1: '/blog/problem-with-api-monitoring',
+  2: '/blog/announcing-apilytics-api',
 };
 
 export const staticRoutes = {
