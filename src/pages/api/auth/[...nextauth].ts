@@ -3,9 +3,10 @@ import NextAuth from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 
 import prisma from 'prisma/client';
+import { withApilytics } from 'utils/apilytics';
 import { staticRoutes } from 'utils/router';
 
-export default NextAuth({
+const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
   callbacks: {
     session: async ({ session, token }) => ({
@@ -30,3 +31,5 @@ export default NextAuth({
     verifyRequest: staticRoutes.login,
   },
 });
+
+export default withApilytics(handler);
