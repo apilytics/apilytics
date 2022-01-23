@@ -1,6 +1,9 @@
-// `NEXT_PUBLIC_APP_URL` is defined everywhere except in preview environments
-// (where the URL changes always), there we'll use `VERCEL_URL`.
-export const FRONTEND_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${process.env.VERCEL_URL}`;
+if (!process.env.NEXT_PUBLIC_FRONTEND_URL) {
+  // Should never happen, next.config.js should handle this.
+  throw new Error('Missing value for NEXT_PUBLIC_FRONTEND_URL env variable.');
+}
+
+export const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL;
 
 export const DOCS_ROUTES = {
   docs: '/docs',
