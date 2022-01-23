@@ -11,11 +11,11 @@ order: 2
 
 #### [1. Sign Up 🚀](#sign-up) {#sign-up}
 
-Create your free account at <ExternalLink href="/login">https://apilytics.io/login</ExternalLink>.
+Star your free trial at <ExternalLink href={routes.register} children={FRONTEND_URL + routes.register} />.
 You can start your free trial without assigning a credit card. We use magic links for authentication
 so you don’t have to remember your password.
 
-<Link href="/register">
+<Link href={routes.register}>
   <Button className="btn-primary btn-outline mt-4">Sign up here!</Button>
 </Link>
 
@@ -43,10 +43,10 @@ later in the origin settings.
 Our open-source middlewares are easy to integrate with your backend.
 We currently have plug & play solutions for the following frameworks:
 
-- [Express.js](/docs/node)
-- [Next.js](/docs/node)
-- [Django](/docs/python)
-- [FastAPI](/docs/python)
+- <Link href={routes.node + '#express'}>Express.js</Link>
+- <Link href={routes.node + '#next'}>Next.js</Link>
+- <Link href={routes.python + '#django'}>Django</Link>
+- <Link href={routes.python + '#fastapi'}>FastAPI</Link>
 
-See instructions for integrating other frameworks [here](/docs/byom).
+See instructions for integrating other frameworks <Link href={routes.byom}>here</Link>.
 The service is still in beta and we're working hard to add more integrations ASAP.

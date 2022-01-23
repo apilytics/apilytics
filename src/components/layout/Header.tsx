@@ -108,7 +108,7 @@ const MENU_ITEMS = [
   },
 ];
 
-export const Header: React.FC<HeaderProps> = ({ maxWidth, loading }) => {
+export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, loading }) => {
   const { user, accountComplete } = useAccount();
   const maxWidthForNotAuthenticated = maxWidth !== DEFAULT_MAX_WIDTH ? maxWidth : 'max-w-5xl';
 

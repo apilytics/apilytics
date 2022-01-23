@@ -9,23 +9,27 @@ order: 4
 
 <br />
 
-Currently we have the following core modules that you can use to implement your own middleware:
-
-- Node.js: <ExternalLink href="https://www.npmjs.com/package/@apilytics/core">
-  @apilytics/core
-  </ExternalLink>
-- Python: <ExternalLink href="https://pypi.org/project/apilytics/">apilytics</ExternalLink>
-
-<br />
-
 If your backend supports none of our open source middlewares
 and you cannot use our core modules to build your own middleware,
 you can still use Apilytics by implementing your own middleware.
 
-The middleware simply send an HTTP request to `https://www.apilytics.io/api/v1/middleware`
+<br />
+
+Currently we have the following core modules that you can use to implement your own middleware:
+
+- Node.js: <ExternalLink href="https://www.npmjs.com/package/@apilytics/core">@apilytics/core</ExternalLink>
+- Python: <ExternalLink href="https://pypi.org/project/apilytics">apilytics</ExternalLink>
+
+<br />
+
+The middleware must simply send HTTP requests to `https://www.apilytics.io/api/v1/middleware`
 for all the requests that you want to track with Apilytics.
 
-Check the specs for the request from our interactive <ExternalLink href="/api/docs">OpenAPI/Swagger docs</ExternalLink>.
+<br />
+
+Check the specs for the request from our interactive <ExternalLink href={routes.apiDocs}>OpenAPI/Swagger docs</ExternalLink>.
+
+<br />
 
 Note that your request should be done as a background job
 in your API and this way not bottleneck your API in any way.
