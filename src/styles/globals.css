@@ -87,6 +87,16 @@
   h6 > a {
     @apply text-white !important;
   }
+
+  .btn {
+    height: auto !important;
+    min-height: 2.5rem !important;
+  }
+
+  .step:not(.step-primary)::before,
+  .step:not(.step-primary)::after {
+    background-color: #404040 !important;
+  }
 }
 
 .bg-filter {

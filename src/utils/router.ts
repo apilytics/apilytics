@@ -18,9 +18,18 @@ export const BLOG_ROUTES = {
   2: '/blog/announcing-apilytics-api',
 };
 
+const COMMUNITY_ROUTES = {
+  github: 'https://github.com/apilytics',
+  roadmap: 'https://github.com/apilytics/roadmap',
+  twitter: 'https://twitter.com/apilytics',
+  reddit: 'https://reddit.com/r/apilytics',
+};
+
 export const staticRoutes = {
   root: '/',
+  pricing: '/#pricing',
   login: '/login',
+  register: '/register',
   logout: '/logout',
   demo: '/demo',
   origins: '/origins',
@@ -35,6 +44,7 @@ export const staticRoutes = {
   easeOfUse: '/ease-of-use',
   ...DOCS_ROUTES,
   ...BLOG_ROUTES,
+  ...COMMUNITY_ROUTES,
 };
 
 export const INDEXABLE_CONTENT_ROUTES = [

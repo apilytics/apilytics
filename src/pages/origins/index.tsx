@@ -34,7 +34,7 @@ const Origins: NextPage = () => {
               <Link href={dynamicRoutes.origin({ slug })} key={name}>
                 <a className="unstyled">
                   <div className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2" key={name}>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                       <h5>{name}</h5>
                       <IconButton
                         icon={CogIcon}

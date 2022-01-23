@@ -49,16 +49,19 @@ export const Footer: React.FC = () => (
           <h6 className="footer-title text-sm text-white">Community</h6>
           <ul>
             <p>
+              <Link href={staticRoutes.blog}>Blog</Link>
+            </p>
+            <p>
               <Link href={staticRoutes.docs}>Docs</Link>
             </p>
             <p>
-              <ExternalLink href="https://github.com/apilytics">Github</ExternalLink>
+              <ExternalLink href={staticRoutes.github}>Github</ExternalLink>
             </p>
             <p>
-              <ExternalLink href="https://twitter.com/apilytics">Twitter</ExternalLink>
+              <ExternalLink href={staticRoutes.twitter}>Twitter</ExternalLink>
             </p>
             <p>
-              <ExternalLink href="https://reddit.com/r/apilytics">Reddit</ExternalLink>
+              <ExternalLink href={staticRoutes.reddit}>Reddit</ExternalLink>
             </p>
           </ul>
         </div>
@@ -66,24 +69,13 @@ export const Footer: React.FC = () => (
           <h6 className="footer-title text-sm text-white">Company</h6>
           <ul>
             <p>
-              <Link href={staticRoutes.about}>
-                <a>About</a>
-              </Link>
+              <Link href={staticRoutes.about}>About</Link>
             </p>
             <p>
-              <Link href={staticRoutes.blog}>
-                <a>Blog</a>
-              </Link>
+              <Link href={staticRoutes.contact}>Contact</Link>
             </p>
             <p>
-              <Link href={staticRoutes.contact}>
-                <a>Contact</a>
-              </Link>
-            </p>
-            <p>
-              <Link href={staticRoutes.privacyPolicy}>
-                <a>Privacy Policy</a>
-              </Link>
+              <Link href={staticRoutes.privacyPolicy}>Privacy Policy</Link>
             </p>
           </ul>
         </div>

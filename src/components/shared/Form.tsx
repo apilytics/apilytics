@@ -1,20 +1,9 @@
 import React from 'react';
-import type { FormEvent } from 'react';
 
 import { Button } from 'components/shared/Button';
+import type { FormProps } from 'types';
 
-interface Props {
-  title?: string;
-  subTitle?: JSX.Element | string;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  error: string;
-  loading?: boolean;
-  submittedText?: string;
-  secondaryContent?: React.ReactNode;
-  renderAlert?: JSX.Element | false;
-}
-
-export const Form: React.FC<Props> = ({
+export const Form: React.FC<FormProps> = ({
   title,
   subTitle,
   onSubmit,

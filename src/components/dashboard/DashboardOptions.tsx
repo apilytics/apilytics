@@ -22,7 +22,7 @@ export const DashboardOptions: React.FC<Props> = ({
   setTimeFrame,
   hideSettingsButton,
 }) => (
-  <div className="flex justify-end mb-4">
+  <div className="flex justify-end items-center mb-4">
     <Select
       value={timeFrame}
       onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}

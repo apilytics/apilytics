@@ -1,4 +1,5 @@
 import 'styles/globals.css';
+import 'styles/github-dark.min.css';
 import '@fontsource/ubuntu';
 
 import dayjs from 'dayjs';

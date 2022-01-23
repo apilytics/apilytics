@@ -12,7 +12,7 @@ export const CTASection: React.FC = () => (
         <h3 className="text-primary">Start a free trial now.</h3>
       </div>
       <div className="flex flex-col gap-2">
-        <Button linkTo={staticRoutes.login} className="btn-primary" fullWidth>
+        <Button linkTo={staticRoutes.register} className="btn-primary" fullWidth>
           Get started
         </Button>
         <Button linkTo={staticRoutes.demo} className="btn-secondary btn-outline" fullWidth>

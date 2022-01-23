@@ -53,7 +53,7 @@ export const Pricing: React.FC = () => {
   };
 
   return (
-    <div className="container max-w-3xl py-4 lg:py-16">
+    <div id="pricing" className="container max-w-3xl py-4 lg:py-16">
       <h1 className="text-white">
         <span className="text-primary">Flexible pricing</span> with a
         <br />

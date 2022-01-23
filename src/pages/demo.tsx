@@ -59,7 +59,7 @@ const Demo: NextPage = () => {
             <h3 className="text-primary">Start a free trial now.</h3>
           </div>
           <div className="flex flex-col justify-center gap-2 min-w-40">
-            <Button linkTo={staticRoutes.login} className="btn-primary" fullWidth>
+            <Button linkTo={staticRoutes.register} className="btn-primary" fullWidth>
               Get started
             </Button>
             <Button linkTo={staticRoutes.root} className="btn-secondary btn-outline" fullWidth>

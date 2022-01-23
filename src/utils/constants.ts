@@ -215,3 +215,5 @@ export const MODAL_NAMES = {
   responseTimes: 'response-times',
   requestDetails: 'request-details',
 };
+
+export const DEFAULT_MAX_WIDTH = 'max-w-3xl';

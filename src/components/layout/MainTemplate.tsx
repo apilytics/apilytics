@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import React from 'react';
 
 import { Layout } from 'components/layout/Layout';
+import { DEFAULT_MAX_WIDTH } from 'utils/constants';
 import type { LayoutProps } from 'types';
 
 interface Props extends LayoutProps {
@@ -9,12 +10,12 @@ interface Props extends LayoutProps {
 }
 
 export const MainTemplate: React.FC<Props> = ({
-  maxWidth = 'max-w-3xl',
+  maxWidth = DEFAULT_MAX_WIDTH,
   dense = false,
   children,
   ...props
 }) => (
-  <Layout maxWidth={maxWidth} {...props}>
+  <Layout {...props} maxWidth={maxWidth}>
     <div
       className={clsx(
         'container py-4 animate-fade-in-top grow flex flex-col',

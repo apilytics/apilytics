@@ -3,7 +3,7 @@ import type { UrlObject } from 'url';
 import type { Metric, Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
-import type { ComponentProps, Dispatch, SetStateAction } from 'react';
+import type { ComponentProps, Dispatch, FormEvent, SetStateAction } from 'react';
 
 import type {
   DAY,
@@ -24,6 +24,7 @@ export type TimeFrame =
 
 export type PlausibleEvents = {
   login: never;
+  register: never;
   logout: never;
   'update-account': never;
   'new-origin': never;
@@ -57,6 +58,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   tooltipProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
+export interface FormProps {
+  title?: string;
+  subTitle?: JSX.Element | string;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  error: string;
+  loading?: boolean;
+  submittedText?: string;
+  secondaryContent?: React.ReactNode;
+  renderAlert?: JSX.Element | false;
+}
+
 export interface DocsFrontMatter {
   name: string;
   description: string;
@@ -87,6 +99,10 @@ export interface DocsPageProps extends MDXPageProps {
 export interface BlogPageProps extends MDXPageProps {
   blogsData: BlogsFrontMatter[];
   data: BlogsFrontMatter;
+}
+
+export interface LoginPageProps extends Record<string, unknown> {
+  csrfToken: string;
 }
 
 export interface Snippet {
