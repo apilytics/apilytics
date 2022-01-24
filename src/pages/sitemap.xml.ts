@@ -6,10 +6,11 @@ import {
   INDEXABLE_CONTENT_ROUTES,
   INDEXABLE_DOCS_ROUTES,
   MISC_INDEXABLE_ROUTES,
+  staticRoutes,
 } from 'utils/router';
 
 // This should be manually updated whenever we want Google to re-index the sitemap.
-const MODIFIED = '2022-01-18';
+const MODIFIED = '2022-01-24';
 
 type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
@@ -46,7 +47,7 @@ const miscRoutes = MISC_INDEXABLE_ROUTES.map((path) => ({
 }));
 
 const INDEXABLE_ROUTES: Route[] = [
-  { path: '', changeFreq: 'weekly', priority: '1.0' },
+  { path: staticRoutes.root, changeFreq: 'weekly', priority: '1.0' },
   ...contentRoutes,
   ...docsRoutes,
   ...blogRoutes,
