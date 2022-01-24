@@ -18,7 +18,10 @@ type RequiredFields = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
 type OptionalFields = {
   query?: 'string';
   statusCode?: number | null; // Nullable for backwards compatibility.
+  requestSize?: number;
+  responseSize?: number;
 };
+
 type PostBody = RequiredFields & OptionalFields;
 
 const handlePost: ApiHandler = async (req, res) => {
@@ -51,7 +54,8 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const { path, query, method, statusCode, timeMillis } = req.body as PostBody;
+  const { path, query, method, statusCode, timeMillis, requestSize, responseSize } =
+    req.body as PostBody;
 
   const queryParams = query ? Object.fromEntries(new URLSearchParams(query)) : undefined;
 
@@ -68,6 +72,8 @@ const handlePost: ApiHandler = async (req, res) => {
       method,
       statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
       timeMillis,
+      requestSize,
+      responseSize,
       apilyticsVersion,
     },
   });
