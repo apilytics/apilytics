@@ -9,7 +9,7 @@ import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { useModal } from 'hooks/useModal';
-import { MODAL_NAMES } from 'utils/constants';
+import { MODAL_NAMES, UNKNOWN_STATUS_CODE } from 'utils/constants';
 import { formatRequests } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
 import type { EndpointData } from 'types';
@@ -118,7 +118,11 @@ export const EndpointMetrics: React.FC<Props> = ({
               </li>
               <li>
                 Status codes:{' '}
-                <span className="font-bold text-white">{status_codes.join(', ')}</span>
+                <span className="font-bold text-white">
+                  {status_codes
+                    .map((code) => (code === UNKNOWN_STATUS_CODE ? 'unknown' : code))
+                    .join(', ')}
+                </span>
               </li>
               <p className="flex items-center">Thresholds:</p>
               <li>

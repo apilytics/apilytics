@@ -1,6 +1,8 @@
 import type { TooltipProps } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
+import { UNKNOWN_STATUS_CODE } from 'utils/constants';
+
 export const EndpointTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
   active,
   payload,
@@ -38,7 +40,12 @@ export const EndpointTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
             Avg. response time: <span className="font-bold">{response_time}</span>
           </li>
           <li>
-            Status codes: <span className="font-bold">{status_codes.join(', ')}</span>
+            Status codes:{' '}
+            <span className="font-bold">
+              {status_codes
+                .map((code: number) => (code === UNKNOWN_STATUS_CODE ? 'unknown' : code))
+                .join(', ')}
+            </span>
           </li>
           <p>Requests counts by response time percentiles:</p>
           <li>
