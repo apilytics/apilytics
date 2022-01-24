@@ -46,7 +46,10 @@ paths:
                 statusCode:
                   type: integer
                   nullable: true
-                  description: Status code for the sent HTTP response. Can be `null` if the middleware could not get the status code for the response. E.g. if the inner request handling threw an exception.
+                  description: Status code for the sent HTTP response. Can be omitted if the middleware could not
+                    get the status code for the response. E.g. if the inner request handling threw an exception.
+                    This accepts a `null` value as well, which currently behaves the same as if this were omitted.
+                    Sending a `null` value is deprecated and future code should simply omit this from the payload.
                   example: 200
                 timeMillis:
                   type: integer
@@ -55,7 +58,6 @@ paths:
               required:
                 - path
                 - method
-                - statusCode
                 - timeMillis
       responses:
         '200':

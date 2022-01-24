@@ -12,12 +12,13 @@ import { isInconsistentColumnData } from 'prisma/errors';
 import { UNKNOWN_STATUS_CODE } from 'utils/constants';
 import type { ApiHandler } from 'types';
 
-type RequiredFields = Pick<Metric, 'path' | 'method' | 'timeMillis'> & {
-  statusCode: number | null; // Nullable for backwards compatibility.
-};
+type RequiredFields = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
 
 // All fields added after v1.0.0 middleware packages need to be optional to ensure backwards compatibility.
-type OptionalFields = { query?: 'string' };
+type OptionalFields = {
+  query?: 'string';
+  statusCode?: number | null; // Nullable for backwards compatibility.
+};
 type PostBody = RequiredFields & OptionalFields;
 
 const handlePost: ApiHandler = async (req, res) => {
@@ -43,7 +44,7 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const requiredFields: (keyof RequiredFields)[] = ['path', 'method', 'statusCode', 'timeMillis'];
+  const requiredFields: (keyof RequiredFields)[] = ['path', 'method', 'timeMillis'];
   const missing = requiredFields.filter((field) => req.body[field] === undefined);
   if (missing.length) {
     sendMissingInput(res, missing);
