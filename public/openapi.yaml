@@ -54,6 +54,14 @@ paths:
                     This accepts a `null` value as well, which currently behaves the same as if this were omitted.
                     Sending a `null` value is deprecated and future code should simply omit this from the payload.
                   example: 200
+                requestSize:
+                  type: integer
+                  description: Size of the user's HTTP request's body in bytes.
+                  example: 1024
+                responseSize:
+                    type: integer
+                  description: Size of the body of the sent HTTP response in bytes.
+                  example: 2048
                 timeMillis:
                   type: integer
                   description: The amount of time in milliseconds it took to respond to the user's request.
