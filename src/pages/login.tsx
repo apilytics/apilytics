@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getCsrfToken } from 'next-auth/react';
 import React from 'react';
@@ -6,6 +7,7 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { LoginFormTemplate } from 'components/layout/LoginFormTemplate';
 import { withNoAuth } from 'hocs/withNoAuth';
 import { UNEXPECTED_ERROR } from 'utils/constants';
+import { staticRoutes } from 'utils/router';
 import type { LoginPageProps } from 'types';
 
 // https://next-auth.js.org/configuration/pages#error-codes
@@ -20,6 +22,13 @@ const Login: NextPage<LoginPageProps> = ({ csrfToken }) => {
   const { query } = useRouter();
   const initialError = ERRORS[query.error as keyof typeof ERRORS];
 
+  const renderRegisterLink = (
+    <p className="text-sm mt-4">
+      Don't have an account yet? Start your free trial by{' '}
+      <Link href={staticRoutes.register}>registering a new account</Link>.
+    </p>
+  );
+
   return (
     <LoginFormTemplate
       title="Login"
@@ -27,6 +36,7 @@ const Login: NextPage<LoginPageProps> = ({ csrfToken }) => {
       initialError={initialError}
       plausibleEvent="login"
       csrfToken={csrfToken}
+      secondaryContent={renderRegisterLink}
     />
   );
 };
