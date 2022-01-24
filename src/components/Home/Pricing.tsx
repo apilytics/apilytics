@@ -17,7 +17,7 @@ const PRICES = {
 };
 
 const FEATURES = [
-  '50 origins',
+  'Unlimited APIs',
   'Email support',
   'Automatic alerts',
   'Automatic reports',
