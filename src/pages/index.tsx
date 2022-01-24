@@ -23,6 +23,7 @@ const Home: NextPage<Props> = ({ snippets }) => (
     title="API analytics made easy"
     description="Apilytics is an easy to use, lightweight, privacy friendly API monitoring service with 5 minute installation."
     indexable
+    maxWidth="max-w-8xl"
   >
     <TopSection />
     <Features />
