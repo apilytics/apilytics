@@ -93,6 +93,7 @@ model Metric {
   timeMillis   Int     @map("time_millis")
   requestSize  BigInt? @map("request_size")
   responseSize BigInt? @map("response_size")
+  userAgent    String? @map("user_agent")
 
   apilyticsVersion String? @map("apilytics_version")
 

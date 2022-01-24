@@ -20,6 +20,7 @@ type OptionalFields = {
   statusCode?: number | null; // Nullable for backwards compatibility.
   requestSize?: number;
   responseSize?: number;
+  userAgent?: string;
 };
 
 type PostBody = RequiredFields & OptionalFields;
@@ -54,7 +55,7 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const { path, query, method, statusCode, timeMillis, requestSize, responseSize } =
+  const { path, query, method, statusCode, timeMillis, requestSize, responseSize, userAgent } =
     req.body as PostBody;
 
   const queryParams = query ? Object.fromEntries(new URLSearchParams(query)) : undefined;
@@ -74,6 +75,7 @@ const handlePost: ApiHandler = async (req, res) => {
       timeMillis,
       requestSize,
       responseSize,
+      userAgent,
       apilyticsVersion,
     },
   });
