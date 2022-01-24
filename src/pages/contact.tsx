@@ -4,6 +4,7 @@ import type { NextPage } from 'next';
 import type { ChangeEvent, FormEvent } from 'react';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
+import { EmailLink } from 'components/shared/EmailLink';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { TextArea } from 'components/shared/TextArea';
@@ -61,8 +62,7 @@ const Contact: NextPage = () => {
 
   const renderSubTitle = (
     <>
-      Any feedback is appreciated. You can also reach out to us by email at{' '}
-      <a href="mailto:hello@apilytics.io">hello@apilytics.io</a>.
+      Any feedback is appreciated. You can also reach out to us by email at <EmailLink />.
     </>
   );
 
