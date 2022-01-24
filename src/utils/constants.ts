@@ -1,6 +1,10 @@
 export const DESCRIPTION =
   'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliance.';
 
+// A shorter < 160 character version.
+export const DEFAULT_SEO_DESCRIPTION =
+  'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation with full GDPR compliance';
+
 export const METHODS = [
   'GET',
   'HEAD',
