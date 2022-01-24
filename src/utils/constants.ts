@@ -217,3 +217,8 @@ export const MODAL_NAMES = {
 };
 
 export const DEFAULT_MAX_WIDTH = 'max-w-3xl';
+
+// This value is stored in the DB metrics.status_code column to indicate that we didn't get
+// a response status code from the middleware, can happen e.g. when an inner request handler
+// function that the middleware wraps throws an error.
+export const UNKNOWN_STATUS_CODE = 0;

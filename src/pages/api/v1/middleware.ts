@@ -9,9 +9,12 @@ import {
 } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isInconsistentColumnData } from 'prisma/errors';
+import { UNKNOWN_STATUS_CODE } from 'utils/constants';
 import type { ApiHandler } from 'types';
 
-type RequiredFields = Pick<Metric, 'path' | 'method' | 'statusCode' | 'timeMillis'>;
+type RequiredFields = Pick<Metric, 'path' | 'method' | 'timeMillis'> & {
+  statusCode: number | null; // Nullable for backwards compatibility.
+};
 
 // All fields added after v1.0.0 middleware packages need to be optional to ensure backwards compatibility.
 type OptionalFields = { query?: 'string' };
@@ -62,7 +65,7 @@ const handlePost: ApiHandler = async (req, res) => {
       path,
       queryParams,
       method,
-      statusCode,
+      statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
       timeMillis,
       apilyticsVersion,
     },
