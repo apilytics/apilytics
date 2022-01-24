@@ -17,9 +17,9 @@ export const MethodAndEndpointTick: React.FC<Props> = ({ payload, x, y }) => {
   const [method, endpoint] = payload.value.split(' ');
 
   return (
-    <foreignObject x={x} y={y - 12} width="400" height="30">
-      <span className={`text-method-${method.toLowerCase()} pointer-events-none`}>{method}</span>{' '}
-      <span className="text-white pointer-events-none">{endpoint}</span>
+    <foreignObject x={x} y={y - 13} width="500" height="30" className="pointer-events-none">
+      <span className={`text-method-${method.toLowerCase()}`}>{method}</span>{' '}
+      <span className="text-white">{endpoint}</span>
     </foreignObject>
   );
 };
