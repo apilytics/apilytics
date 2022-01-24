@@ -18,7 +18,8 @@ import React from 'react';
 import { Button } from 'components/shared/Button';
 import { ExternalLink } from 'components/shared/ExternalLink';
 import { useAccount } from 'hooks/useAccount';
-import { DEFAULT_MAX_WIDTH } from 'utils/constants';
+import { usePlausible } from 'hooks/usePlausible';
+import { DEFAULT_MAX_WIDTH, EVENT_LOCATIONS } from 'utils/constants';
 import { truncateString } from 'utils/helpers';
 import { staticRoutes } from 'utils/router';
 import type { HeaderProps } from 'types';
@@ -109,13 +110,20 @@ const MENU_ITEMS = [
 ];
 
 export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, loading }) => {
+  const plausible = usePlausible();
   const { user, accountComplete } = useAccount();
   const maxWidthForNotAuthenticated = maxWidth !== DEFAULT_MAX_WIDTH ? maxWidth : 'max-w-5xl';
+
+  const eventOptions = { location: EVENT_LOCATIONS.HEADER };
+  const handleLogoClick = (): void => plausible('logo-click', eventOptions);
+  const handlePricingClick = (): void => plausible('pricing-click', eventOptions);
+  const handleLoginClick = (): void => plausible('login-click', eventOptions);
+  const handleRegisterClick = (): void => plausible('register-click', eventOptions);
 
   const renderLogo = !loading && (
     <div className="flex flex-row items-center">
       <Link href={staticRoutes.root}>
-        <a>
+        <a onClick={handleLogoClick}>
           <Image
             src="/logo.svg"
             layout="fixed"
@@ -186,7 +194,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, lo
     <div className="hidden lg:flex">
       {renderWhyDropdown}
       {renderCommunityDropdown}
-      <Button className="btn-ghost" linkTo={staticRoutes.pricing}>
+      <Button className="btn-ghost" linkTo={staticRoutes.pricing} onClick={handlePricingClick}>
         Pricing
       </Button>
     </div>
@@ -202,22 +210,35 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, lo
           tabIndex={0}
           className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-52 text-primary"
         >
-          <li>
+          <li onClick={handleRegisterClick}>
             <Link href={staticRoutes.register}>
               <a className="unstyled">Start free trial</a>
             </Link>
           </li>
-          <li>
+          <li onClick={handleLoginClick}>
             <Link href={staticRoutes.login}>
               <a className="unstyled">Log in</a>
             </Link>
           </li>
+          <li onClick={handlePricingClick}>
+            <Link href={staticRoutes.pricing}>
+              <a className="unstyled">Pricing</a>
+            </Link>
+          </li>
         </ul>
       </div>
-      <Button linkTo={staticRoutes.login} className="btn-link hidden sm:block">
+      <Button
+        linkTo={staticRoutes.login}
+        className="btn-link hidden sm:block"
+        onClick={handleLoginClick}
+      >
         Log in
       </Button>
-      <Button className="btn-primary hidden sm:block" linkTo={staticRoutes.register}>
+      <Button
+        className="btn-primary hidden sm:block"
+        linkTo={staticRoutes.register}
+        onClick={handleRegisterClick}
+      >
         Start free trial
       </Button>
     </div>

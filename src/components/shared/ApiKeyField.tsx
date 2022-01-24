@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 
 import { IconButton } from 'components/shared/IconButton';
+import { usePlausible } from 'hooks/usePlausible';
 import { staticRoutes } from 'utils/router';
 
 interface Props {
@@ -10,11 +11,13 @@ interface Props {
 }
 
 export const ApiKeyField: React.FC<Props> = ({ value }) => {
+  const plausible = usePlausible();
   const [isCopied, setIsCopied] = useState(false);
 
   const onClick = (): void => {
     navigator.clipboard.writeText(value);
     setIsCopied(true);
+    plausible('copy-api-key');
   };
 
   return (

@@ -226,3 +226,10 @@ export const DEFAULT_MAX_WIDTH = 'max-w-3xl';
 // a response status code from the middleware, can happen e.g. when an inner request handler
 // function that the middleware wraps throws an error.
 export const UNKNOWN_STATUS_CODE = 0;
+
+export enum EVENT_LOCATIONS {
+  HEADER = 'header',
+  PAGE_TOP = 'page-bottom',
+  PAGE_BOTTOM = 'page-bottom',
+  FOOTER = 'footer',
+}

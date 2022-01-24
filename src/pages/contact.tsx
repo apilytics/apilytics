@@ -1,17 +1,17 @@
-import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import type { ChangeEvent, FormEvent } from 'react';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
+import { CTASection } from 'components/shared/CTASection';
 import { EmailLink } from 'components/shared/EmailLink';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { TextArea } from 'components/shared/TextArea';
 import { withUser } from 'hocs/withUser';
+import { usePlausible } from 'hooks/usePlausible';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
-import type { PlausibleEvents } from 'types';
 
 const initialFormValues = {
   email: '',
@@ -23,7 +23,7 @@ const Contact: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
   const [error, setError] = useState('');
-  const plausible = usePlausible<PlausibleEvents>();
+  const plausible = usePlausible();
 
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
@@ -92,6 +92,7 @@ const Contact: NextPage = () => {
           required
         />
       </Form>
+      <CTASection />
     </MainTemplate>
   );
 };

@@ -9,16 +9,19 @@ import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
 import { EmailListForm } from 'components/shared/EmailListForm';
 import { withNoAuth } from 'hocs/withNoAuth';
-import { MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
+import { usePlausible } from 'hooks/usePlausible';
+import { EVENT_LOCATIONS, MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
 import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
+  const plausible = usePlausible();
   const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const origin = MOCK_ORIGIN;
   const metrics = useMemo(() => getMockMetrics(timeFrame), [timeFrame]);
   const loading = !origin || !metrics;
+  const eventOptions = { location: EVENT_LOCATIONS.PAGE_BOTTOM };
 
   return (
     <MainTemplate
@@ -59,10 +62,20 @@ const Demo: NextPage = () => {
             <h3 className="text-primary">Start a free trial now.</h3>
           </div>
           <div className="flex flex-col justify-center gap-2 min-w-40">
-            <Button linkTo={staticRoutes.register} className="btn-primary" fullWidth>
+            <Button
+              linkTo={staticRoutes.register}
+              onClick={(): void => plausible('register-click', eventOptions)}
+              className="btn-primary"
+              fullWidth
+            >
               Get started
             </Button>
-            <Button linkTo={staticRoutes.root} className="btn-secondary btn-outline" fullWidth>
+            <Button
+              linkTo={staticRoutes.root}
+              onClick={(): void => plausible('live-demo-click', eventOptions)}
+              className="btn-secondary btn-outline"
+              fullWidth
+            >
               Learn more
             </Button>
           </div>

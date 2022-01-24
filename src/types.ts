@@ -22,16 +22,31 @@ export type TimeFrame =
   | typeof SIX_MONTHS_DAYS
   | typeof YEAR_DAYS;
 
+type PlausibleProps = Record<string, unknown>;
+
 export type PlausibleEvents = {
-  login: never;
-  register: never;
-  logout: never;
-  'update-account': never;
-  'new-origin': never;
-  'update-origin': never;
-  'delete-origin': never;
-  'email-list-subscribe': never;
-  'contact-message': never;
+  login: PlausibleProps;
+  register: PlausibleProps;
+  logout: PlausibleProps;
+  'update-account': PlausibleProps;
+  'new-origin': PlausibleProps;
+  'update-origin': PlausibleProps;
+  'delete-origin': PlausibleProps;
+  'contact-message': PlausibleProps;
+  'logo-click': PlausibleProps;
+  'pricing-click': PlausibleProps;
+  'login-click': PlausibleProps;
+  'register-click': PlausibleProps;
+  'live-demo-click': PlausibleProps;
+  'setup-snippet-click': PlausibleProps;
+  'pricing-slider-click': PlausibleProps;
+  'email-list-subscribe': PlausibleProps;
+  'time-frame-selector-click': PlausibleProps;
+  'endpoint-click': PlausibleProps;
+  'show-all-requests-click': PlausibleProps;
+  'show-all-response-times-click': PlausibleProps;
+  'copy-api-key': PlausibleProps;
+  'footer-link-click': PlausibleProps;
 };
 
 export interface HeadProps {

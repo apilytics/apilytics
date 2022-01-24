@@ -1,5 +1,4 @@
 import Router from 'next/router';
-import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
@@ -14,9 +13,9 @@ import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
 import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
+import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
-import type { PlausibleEvents } from 'types';
 
 const OriginSettings: NextPage = () => {
   const title = 'Origin Settings';
@@ -27,7 +26,7 @@ const OriginSettings: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
   const { handleOpenModal, handleCloseModal } = useModal();
-  const plausible = usePlausible<PlausibleEvents>();
+  const plausible = usePlausible();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();

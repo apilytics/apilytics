@@ -3,7 +3,8 @@ import React from 'react';
 
 import { Button } from 'components/shared/Button';
 import { MockRequestsTimeFrame } from 'components/shared/MockRequestsTimeFrame';
-import { DESCRIPTION } from 'utils/constants';
+import { usePlausible } from 'hooks/usePlausible';
+import { DESCRIPTION, EVENT_LOCATIONS } from 'utils/constants';
 import { staticRoutes } from 'utils/router';
 
 const INTEGRATIONS = [
@@ -37,47 +38,60 @@ const INTEGRATIONS = [
   },
 ];
 
-export const TopSection: React.FC = () => (
-  <div className="bg-background bg-no-repeat bg-cover">
-    <div className="bg-filter">
-      <div className="container py-4 lg:py-16 grid gap-4 lg:gap-8 grid-cols-1 lg:grid-cols-2">
-        <div className="text-left">
-          <h1 className="text-white">
-            <span className="text-primary">API analytics</span>
-            <br />
-            made <span className="text-secondary">easy</span>
-          </h1>
-          <h5 className="mt-12 text-white">{DESCRIPTION}</h5>
-          <h6 className="mt-12 text-white">Simple integration with any backend</h6>
-          <div className="flex flex-wrap gap-4 mt-8 grayscale">
-            {INTEGRATIONS.map(({ name, image }) => (
-              <div key={name}>
-                <Image
-                  src={image}
-                  layout="fixed"
-                  width={60}
-                  height={60}
-                  quality={1}
-                  objectFit="contain"
-                  alt={name}
-                  priority
-                />
-              </div>
-            ))}
+export const TopSection: React.FC = () => {
+  const plausible = usePlausible();
+  const eventOptions = { location: EVENT_LOCATIONS.PAGE_TOP };
+
+  return (
+    <div className="bg-background bg-no-repeat bg-cover">
+      <div className="bg-filter">
+        <div className="container py-4 lg:py-16 grid gap-4 lg:gap-8 grid-cols-1 lg:grid-cols-2">
+          <div className="text-left">
+            <h1 className="text-white">
+              <span className="text-primary">API analytics</span>
+              <br />
+              made <span className="text-secondary">easy</span>
+            </h1>
+            <h5 className="mt-12 text-white">{DESCRIPTION}</h5>
+            <h6 className="mt-12 text-white">Simple integration with any backend</h6>
+            <div className="flex flex-wrap gap-4 mt-8 grayscale">
+              {INTEGRATIONS.map(({ name, image }) => (
+                <div key={name}>
+                  <Image
+                    src={image}
+                    layout="fixed"
+                    width={60}
+                    height={60}
+                    quality={1}
+                    objectFit="contain"
+                    alt={name}
+                    priority
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8">
+              <Button
+                linkTo={staticRoutes.register}
+                onClick={(): void => plausible('register-click', eventOptions)}
+                className="btn-primary"
+              >
+                Get started
+              </Button>
+              <Button
+                linkTo={staticRoutes.demo}
+                onClick={(): void => plausible('live-demo-click', eventOptions)}
+                className="btn-secondary btn-outline"
+              >
+                Live demo
+              </Button>
+            </div>
           </div>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8">
-            <Button linkTo={staticRoutes.register} className="btn-primary">
-              Get started
-            </Button>
-            <Button linkTo={staticRoutes.demo} className="btn-secondary btn-outline">
-              Live demo
-            </Button>
+          <div className="mt-8 lg:mt-0 select-none">
+            <MockRequestsTimeFrame />
           </div>
-        </div>
-        <div className="mt-8 lg:mt-0 select-none">
-          <MockRequestsTimeFrame />
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};

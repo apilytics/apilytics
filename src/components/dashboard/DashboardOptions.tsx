@@ -5,6 +5,7 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import { IconButton } from 'components/shared/IconButton';
 import { Select } from 'components/shared/Select';
+import { usePlausible } from 'hooks/usePlausible';
 import { TIME_FRAME_OPTIONS } from 'utils/constants';
 import { dynamicRoutes } from 'utils/router';
 import type { TimeFrame } from 'types';
@@ -21,26 +22,31 @@ export const DashboardOptions: React.FC<Props> = ({
   timeFrame,
   setTimeFrame,
   hideSettingsButton,
-}) => (
-  <div className="flex justify-end items-center mb-4">
-    <Select
-      value={timeFrame}
-      onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}
-    >
-      {Object.entries(TIME_FRAME_OPTIONS).map(([value, label]) => (
-        <option value={value} key={label}>
-          {label}
-        </option>
-      ))}
-    </Select>
-    {!hideSettingsButton && (
-      <IconButton
-        linkTo={dynamicRoutes.originSettings({ slug })}
-        icon={CogIcon}
-        tooltip="Go to origin settings."
-        tooltipProps={{ className: 'tooltip-left' }}
-        className="ml-4"
-      />
-    )}
-  </div>
-);
+}) => {
+  const plausible = usePlausible();
+
+  return (
+    <div className="flex justify-end items-center mb-4">
+      <Select
+        value={timeFrame}
+        onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}
+        onClick={(): void => plausible('time-frame-selector-click')}
+      >
+        {Object.entries(TIME_FRAME_OPTIONS).map(([value, label]) => (
+          <option value={value} key={label}>
+            {label}
+          </option>
+        ))}
+      </Select>
+      {!hideSettingsButton && (
+        <IconButton
+          linkTo={dynamicRoutes.originSettings({ slug })}
+          icon={CogIcon}
+          tooltip="Go to origin settings."
+          tooltipProps={{ className: 'tooltip-left' }}
+          className="ml-4"
+        />
+      )}
+    </div>
+  );
+};

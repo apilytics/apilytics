@@ -1,17 +1,16 @@
-import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 
 import { Button } from 'components/shared/Button';
+import { usePlausible } from 'hooks/usePlausible';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
-import type { PlausibleEvents } from 'types';
 
 export const EmailListForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
-  const plausible = usePlausible<PlausibleEvents>();
+  const plausible = usePlausible();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
