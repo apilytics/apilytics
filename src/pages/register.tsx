@@ -1,9 +1,11 @@
+import Link from 'next/link';
 import { getCsrfToken } from 'next-auth/react';
 import React from 'react';
 import type { GetServerSideProps, NextPage } from 'next';
 
 import { LoginFormTemplate } from 'components/layout/LoginFormTemplate';
 import { withNoAuth } from 'hocs/withNoAuth';
+import { staticRoutes } from 'utils/router';
 import type { LoginPageProps } from 'types';
 
 const Register: NextPage<LoginPageProps> = ({ csrfToken }) => {
@@ -16,17 +18,22 @@ const Register: NextPage<LoginPageProps> = ({ csrfToken }) => {
   );
 
   const renderSteps = (
-    <ul className="steps steps-horizontal mt-8">
-      <li className="step step-primary">
-        <p>Sign up & finish up your account</p>
-      </li>
-      <li className="step">
-        <p>Register your APIs</p>
-      </li>
-      <li className="step">
-        <p>Install middleware</p>
-      </li>
-    </ul>
+    <>
+      <p className="text-sm mt-4">
+        Already have an account? <Link href={staticRoutes.login}>Log in</Link> instead.
+      </p>
+      <ul className="steps steps-horizontal mt-8">
+        <li className="step step-primary">
+          <p>Sign up & finish up your account</p>
+        </li>
+        <li className="step">
+          <p>Register your APIs</p>
+        </li>
+        <li className="step">
+          <p>Install middleware</p>
+        </li>
+      </ul>
+    </>
   );
 
   return (

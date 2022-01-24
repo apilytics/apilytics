@@ -49,7 +49,7 @@ const FEATURES = [
 export const Features: React.FC = () => (
   <div className="container py-4 lg:py-16 max-w-3xl">
     <h1 className="text-white">
-      It&lsquo;s time to stop being <span className="text-primary">blind</span> about your
+      It's time to stop being <span className="text-primary">blind</span> about your
       <br />
       <span className="text-secondary">API metrics</span>
     </h1>

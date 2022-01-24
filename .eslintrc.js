@@ -45,6 +45,7 @@ module.exports = {
       },
     ],
     'no-return-await': 'error',
+    'react/no-unescaped-entities': 'off',
   },
   overrides: [
     {

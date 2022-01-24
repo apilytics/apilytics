@@ -72,9 +72,9 @@ export const LoginFormTemplate: React.FC<Props> = ({
           you can log in with.
         </h4>
         <p>
-          Didn&lsquo;t receive an email? Make sure you used the correct email address, request the
-          link again and check your spam folder. <Link href={staticRoutes.contact}>Contact us</Link>{' '}
-          if the problem still persists.
+          Didn't receive an email? Make sure you used the correct email address, request the link
+          again and check your spam folder. <Link href={staticRoutes.contact}>Contact us</Link> if
+          the problem still persists.
         </p>
         <Button className="btn-primary btn-outline mt-4" onClick={(): void => setSubmitted(false)}>
           Send again
