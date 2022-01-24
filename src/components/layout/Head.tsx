@@ -2,11 +2,9 @@ import NextHead from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import { DEFAULT_SEO_DESCRIPTION } from 'utils/constants';
 import { FRONTEND_URL, INDEXABLE_ROUTES, staticRoutes } from 'utils/router';
 import type { HeadProps } from 'types';
-
-const DEFAULT_DESCRIPTION =
-  'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service.';
 
 const OG_IMAGE = `${FRONTEND_URL}/og-image.png`;
 
@@ -14,7 +12,7 @@ export const Head: React.FC<HeadProps> = ({ indexable, title, description, loadi
   const { asPath } = useRouter();
   const ogUrl = `${FRONTEND_URL}${asPath === staticRoutes.root ? '' : asPath}`;
   const _title = `Apilytics | ${title}`;
-  const _description = description ?? DEFAULT_DESCRIPTION;
+  const _description = description ?? DEFAULT_SEO_DESCRIPTION;
 
   if (process.env.NODE_ENV !== 'production' && !loading) {
     const path = asPath.split('#')[0];
@@ -41,8 +39,10 @@ export const Head: React.FC<HeadProps> = ({ indexable, title, description, loadi
       throw Error(`Title shouldn't be between more than 60 characters for ${path}.`);
     }
 
-    if (_description?.length < 50 || _description?.length > 160) {
-      throw Error(`Description should be between 50 and 160 characters for ${path}.`);
+    // The actual minimum length for descriptions is said to be 60 characters but we want
+    // to maximize the odds of the search engines indexing our custom descriptions.
+    if (_description?.length < 100 || _description?.length > 160) {
+      throw Error(`Description should be between 100 and 160 characters for ${path}.`);
     }
   }
 

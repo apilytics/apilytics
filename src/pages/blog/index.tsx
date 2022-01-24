@@ -12,7 +12,7 @@ const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
   <MainTemplate
     indexable
     title="Blog"
-    description="Stay updated about Apilytics by following our blog."
+    description="Stay updated about Apilytics by following our blog. Follow our journey and learn about our new and upcoming features."
   >
     <h4 className="text-white">Apilytics Blog</h4>
     <p>Hi there! 👋 You can read about our journey in this blog.</p>

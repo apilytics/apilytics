@@ -1,6 +1,10 @@
 export const DESCRIPTION =
   'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliance.';
 
+// A shorter < 160 character version.
+export const DEFAULT_SEO_DESCRIPTION =
+  'Apilytics is an easy to use, lightweight, privacy friendly API monitoring service. Simple 5 minute installation with full GDPR compliance';
+
 export const METHODS = [
   'GET',
   'HEAD',
@@ -222,3 +226,10 @@ export const DEFAULT_MAX_WIDTH = 'max-w-3xl';
 // a response status code from the middleware, can happen e.g. when an inner request handler
 // function that the middleware wraps throws an error.
 export const UNKNOWN_STATUS_CODE = 0;
+
+export enum EVENT_LOCATIONS {
+  HEADER = 'header',
+  PAGE_TOP = 'page-bottom',
+  PAGE_BOTTOM = 'page-bottom',
+  FOOTER = 'footer',
+}

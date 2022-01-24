@@ -2,6 +2,8 @@ import { CheckCircleIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
+import { usePlausible } from 'hooks/usePlausible';
+
 const PRICES = {
   50_000: 5,
   200_000: 10,
@@ -15,7 +17,7 @@ const PRICES = {
 };
 
 const FEATURES = [
-  '50 origins',
+  'Unlimited APIs',
   'Email support',
   'Automatic alerts',
   'Automatic reports',
@@ -26,6 +28,7 @@ const FEATURES = [
 ];
 
 export const Pricing: React.FC = () => {
+  const plausible = usePlausible();
   const [step, setStep] = useState(1);
   const requestOptions = Object.keys(PRICES).map(Number);
   const requests = requestOptions[step - 1];
@@ -86,6 +89,7 @@ export const Pricing: React.FC = () => {
           max={requestOptions.length + 1}
           step={1}
           className="range range-primary range-lg w-full mt-8 rounded-lg"
+          onClick={(): void => plausible('pricing-slider-click')}
         />
         <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mt-8 text-left leading-normal">
           {FEATURES.map((feature) => (

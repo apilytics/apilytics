@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { MDXRemote } from 'next-mdx-remote';
 import React, { useState } from 'react';
 
+import { usePlausible } from 'hooks/usePlausible';
 import type { Snippet } from 'types';
 
 interface Props {
@@ -9,8 +10,14 @@ interface Props {
 }
 
 export const Setup: React.FC<Props> = ({ snippets }) => {
+  const plausible = usePlausible();
   const [selectedIntegration, setSelectedIntegration] = useState(snippets[0].name);
   const snippet = snippets.find(({ name }) => selectedIntegration === name);
+
+  const handleTabClick = (name: string) => (): void => {
+    setSelectedIntegration(name);
+    plausible('setup-snippet-click', { value: name });
+  };
 
   if (!snippet) {
     throw Error('Snippet not found!');
@@ -44,7 +51,7 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
                 <p
                   key={name}
                   className={clsx('tab tab-bordered', selectedIntegration === name && 'tab-active')}
-                  onClick={(): void => setSelectedIntegration(name)}
+                  onClick={handleTabClick(name)}
                 >
                   {name}
                 </p>

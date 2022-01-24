@@ -1,4 +1,3 @@
-import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 
 import { Form } from 'components/shared/Form';
@@ -6,9 +5,9 @@ import { Input } from 'components/shared/Input';
 import { Select } from 'components/shared/Select';
 import { TextArea } from 'components/shared/TextArea';
 import { useAccount } from 'hooks/useAccount';
+import { usePlausible } from 'hooks/usePlausible';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
-import type { PlausibleEvents } from 'types';
 
 interface Props {
   title: string;
@@ -28,7 +27,7 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
-  const plausible = usePlausible<PlausibleEvents>();
+  const plausible = usePlausible();
 
   const handleChange = ({
     target,

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { usePlausible } from 'next-plausible';
 import React, { useState } from 'react';
 import type { FormEvent } from 'react';
 
@@ -7,6 +6,7 @@ import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
+import { usePlausible } from 'hooks/usePlausible';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes, staticRoutes } from 'utils/router';
 import type { FormProps, PlausibleEvents } from 'types';
@@ -31,7 +31,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const plausible = usePlausible<PlausibleEvents>();
+  const plausible = usePlausible();
   const [error, setError] = useState(initialError || '');
 
   const handleSubmit = async (e: FormEvent): Promise<void> => {

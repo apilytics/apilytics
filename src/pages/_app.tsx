@@ -5,6 +5,8 @@ import '@fontsource/ubuntu';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { SessionProvider } from 'next-auth/react';
+// Ignore: Fine to import directly from `next-plausible`.
+// eslint-disable-next-line no-restricted-imports
 import PlausibleProvider from 'next-plausible';
 import type { AppProps } from 'next/app';
 

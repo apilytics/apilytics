@@ -9,6 +9,7 @@ import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { useModal } from 'hooks/useModal';
+import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES, UNKNOWN_STATUS_CODE } from 'utils/constants';
 import { formatRequests } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
@@ -33,6 +34,7 @@ export const EndpointMetrics: React.FC<Props> = ({
   dataKey,
   renderLabels,
 }) => {
+  const plausible = usePlausible();
   const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
   const { handleOpenModal, handleCloseModal } = useModal();
 
@@ -46,11 +48,22 @@ export const EndpointMetrics: React.FC<Props> = ({
   const handleBarClick = (data: EndpointData): void => {
     setSelectedEndpoint(data);
     handleOpenModal(MODAL_NAMES.requestDetails);
+    plausible('endpoint-click');
   };
 
   const handleCloseEndpointDetails = (): void => {
     setSelectedEndpoint(null);
     handleCloseModal();
+  };
+
+  const handleShowAllClick = (): void => {
+    handleOpenModal(modalName);
+
+    if (dataKey === 'requests') {
+      plausible('show-all-requests-click');
+    } else {
+      plausible('show-all-response-times-click');
+    }
   };
 
   const renderNoRequests = !data.length && (
@@ -164,7 +177,7 @@ export const EndpointMetrics: React.FC<Props> = ({
         />
       </div>
       <Button
-        onClick={(): void => handleOpenModal(modalName)}
+        onClick={handleShowAllClick}
         className="btn-sm btn-ghost self-start"
         endIcon={ArrowsExpandIcon}
       >

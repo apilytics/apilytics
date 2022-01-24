@@ -11,6 +11,7 @@ import { Why } from 'components/Home/Why';
 import { Layout } from 'components/layout/Layout';
 import { CTASection } from 'components/shared/CTASection';
 import { withNoAuth } from 'hocs/withNoAuth';
+import { DEFAULT_SEO_DESCRIPTION } from 'utils/constants';
 import { getFullPath, getMDXContent } from 'utils/mdx';
 import type { Snippet } from 'types';
 
@@ -21,7 +22,7 @@ interface Props extends Record<string, unknown> {
 const Home: NextPage<Props> = ({ snippets }) => (
   <Layout
     title="API analytics made easy"
-    description="Apilytics is an easy to use, lightweight, privacy friendly API monitoring service with 5 minute installation."
+    description={DEFAULT_SEO_DESCRIPTION}
     indexable
     maxWidth="max-w-8xl"
   >
