@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Apilytics
-  description: 'This is the public API documentation for Apilytics. You need an API key to use the API.'
+  description: This is the public API documentation for Apilytics. You need an API key to use the API.
   version: '1.0'
 servers:
   - url: https://www.apilytics.io
@@ -9,7 +9,8 @@ paths:
   /api/v1/middleware:
     post:
       summary: Log a metric from an origin
-      description: Log a metric from an origin. A metric is thought to correspond to a user's single request/response cycle. This is called by all Apilytics open source middleware packages. Can be called manually from any custom code as well.
+      description: Log a metric from an origin. A metric is thought to correspond to a user's single request/response cycle.
+        This is called by all Apilytics open source middleware packages. Can be called manually from any custom code as well.
       parameters:
         - in: header
           name: X-API-Key
@@ -20,7 +21,8 @@ paths:
           required: true
         - in: header
           name: Apilytics-Version
-          description: A version string identifying the official Apilytics middleware package in use. This should be omitted if calling this API from custom, non-official code.
+          description: A version string identifying the official Apilytics middleware package in use.
+            This should be omitted if calling this API from custom, non-official code.
           schema:
             type: string
           required: false
@@ -37,7 +39,8 @@ paths:
                   example: /foo/bar/123
                 query:
                   type: string
-                  description: Query string of the user's HTTP request. An empty string is treated as if this were omitted. Can have an optional "?" at the start.
+                  description: Query string of the user's HTTP request. An empty string is treated as if this were omitted.
+                    Can have an optional "?" at the start.
                   example: key=val&amp;other=123
                 method:
                   type: string
