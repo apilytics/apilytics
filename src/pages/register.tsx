@@ -41,7 +41,7 @@ const Register: NextPage<LoginPageProps> = ({ csrfToken }) => {
       title="Register"
       formTitle="Start your free 30-day trial"
       subTitle={renderSubTitle}
-      secondaryContent={renderSteps}
+      contentAfter={renderSteps}
       csrfToken={csrfToken}
       plausibleEvent="register"
     />

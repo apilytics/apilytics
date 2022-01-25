@@ -31,12 +31,7 @@ const Demo: NextPage = () => {
       title="Demo"
       description="The Apilytics live demo shows you what kind of metrics you can analyze from your APIs using our service."
     >
-      <DashboardOptions
-        timeFrame={timeFrame}
-        setTimeFrame={setTimeFrame}
-        origin={origin}
-        hideSettingsButton
-      />
+      <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
       <RequestsTimeFrame
         timeFrame={timeFrame}
         origin={origin}

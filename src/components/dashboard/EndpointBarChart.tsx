@@ -10,7 +10,7 @@ interface Props {
   height: number;
   data: EndpointData[];
   dataKey: string;
-  onBarClick: (data: EndpointData) => void;
+  onLabelClick: (data: EndpointData) => void;
   renderLabels: ContentType;
   label: string;
 }
@@ -19,7 +19,7 @@ export const EndpointBarChart: React.FC<Props> = ({
   height,
   data,
   dataKey,
-  onBarClick,
+  onLabelClick,
   renderLabels,
   label,
 }) => (
@@ -27,8 +27,7 @@ export const EndpointBarChart: React.FC<Props> = ({
     <BarChart data={data} layout="vertical" barSize={30}>
       <Bar
         dataKey={dataKey}
-        fill="rgba(82, 157, 255, 0.25)" // `primary` with 25% opacity.
-        onClick={onBarClick}
+        fill="rgba(82, 157, 255, 0.15)" // `primary` with 15% opacity.
       >
         <LabelList content={renderLabels} />
       </Bar>
@@ -53,6 +52,8 @@ export const EndpointBarChart: React.FC<Props> = ({
         tick={<MethodAndEndpointTick />}
         padding={{ top: 30, bottom: 20 }}
         tickFormatter={(val: string): string => truncateString(val, 50)}
+        // @ts-ignore: `recharts`doesn't have typings for the click handler.
+        onClick={({ index }: { index: number }): void => onLabelClick(data[index])}
       >
         <Label value="Endpoints" fill="var(--base-content)" position="insideTopLeft" />
       </YAxis>

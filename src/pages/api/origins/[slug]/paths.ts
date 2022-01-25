@@ -29,6 +29,7 @@ const handleGet: ApiHandler<PathsResponse> = async (req, res) => {
   const result: { path: Path; part_count: number }[] = await prisma.$queryRaw`
 SELECT DISTINCT
   path,
+  COUNT(matches)
   LENGTH(path) - LENGTH(REPLACE(path, '/', '')) AS part_count
 FROM metrics
 WHERE origin_id = ${origin.id}

@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import React from 'react';
 
 import { Button } from 'components/shared/Button';
@@ -10,30 +11,28 @@ export const Form: React.FC<FormProps> = ({
   error,
   loading,
   submittedText,
-  secondaryContent,
-  renderAlert,
+  contentAfter,
+  className,
   children,
+  ...props
 }) => (
-  <div className="card rounded-lg p-4 shadow bg-base-100">
-    {renderAlert}
+  <form onSubmit={onSubmit} className={clsx('mt-4 text-left', className)} {...props}>
     {title && <h5 className="text-white">{title}</h5>}
     {subTitle && <p className="text-sm">{subTitle}</p>}
-    <form onSubmit={onSubmit} className="mt-4 text-left">
-      {children}
-      {error && (
-        <label className="label">
-          <span className="label-text-alt text-error">{error}</span>
-        </label>
-      )}
-      {submittedText && (
-        <label className="label">
-          <span className="label-text-alt text-white">{submittedText}</span>
-        </label>
-      )}
-      <Button className="btn-primary mt-4" loading={loading} type="submit" fullWidth>
-        Submit
-      </Button>
-      {secondaryContent}
-    </form>
-  </div>
+    {children}
+    {error && (
+      <label className="label">
+        <span className="label-text-alt text-error">{error}</span>
+      </label>
+    )}
+    {submittedText && (
+      <label className="label">
+        <span className="label-text-alt text-white">{submittedText}</span>
+      </label>
+    )}
+    <Button className="btn-primary mt-4" loading={loading} type="submit" fullWidth>
+      Submit
+    </Button>
+    {contentAfter}
+  </form>
 );

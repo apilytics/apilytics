@@ -36,7 +36,7 @@ const Login: NextPage<LoginPageProps> = ({ csrfToken }) => {
       initialError={initialError}
       plausibleEvent="login"
       csrfToken={csrfToken}
-      secondaryContent={renderRegisterLink}
+      contentAfter={renderRegisterLink}
     />
   );
 };

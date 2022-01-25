@@ -218,6 +218,8 @@ export const MODAL_NAMES = {
   requests: 'requests',
   responseTimes: 'response-times',
   requestDetails: 'request-details',
+  dynamicRoute: 'dynamic-route',
+  deleteDynamicRoute: 'delete-dynamic-route',
 };
 
 export const DEFAULT_MAX_WIDTH = 'max-w-3xl';

@@ -1,20 +1,14 @@
-import type { OriginRoute } from '@prisma/client';
-
 import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
-import type { ApiHandler } from 'types';
+import type { ApiHandler, DynamicRouteWithMatches } from 'types';
 
-type Route = OriginRoute['route'];
-
-interface RoutesResponse {
-  data: Route[];
+interface DynamicRoutesResponse {
+  data: DynamicRouteWithMatches[];
 }
-
-type RoutesPutBody = Route[];
 
 // Remove all characters from the inputted route that are not valid in URL paths.
 // In addition to added safety, this avoids us storing invalid escape sequences in our DB column.
@@ -36,27 +30,25 @@ const encodeRoute = (route: string): string => {
 // https://www.postgresql.org/docs/9.3/functions-matching.html#POSIX-ATOMS-TABLE
 const routeToPattern = (route: string): string => {
   const escaped = route.replace(/[^A-Za-z0-9/]/g, '\\$&');
-
   return `^${escaped.replace(/\\<[a-z_-]+\\>/g, '[^/]+')}$`;
 };
 
-const getRoutes = async (originId: string): Promise<string[]> => {
-  // No need to order by `part_count` here (as is done in paths API),
-  // these get ordered very nicely without it.
-  const result = await prisma.originRoute.findMany({
-    where: { originId },
-    select: {
-      route: true,
-    },
-    orderBy: {
-      route: 'asc',
-    },
-  });
+const getRoutes = async (originId: string): Promise<DynamicRouteWithMatches[]> => {
+  const result: DynamicRouteWithMatches[] = await prisma.$queryRaw`
+SELECT
+  dynamic_routes.route,
+  COUNT(DISTINCT metrics.path) AS matching_paths
+FROM dynamic_routes
+  LEFT JOIN metrics ON metrics.origin_id = dynamic_routes.origin_id
+    AND metrics.path ~ dynamic_routes.pattern
+WHERE dynamic_routes.origin_id = ${originId}
+GROUP BY
+  dynamic_routes.route;`;
 
-  return result.map(({ route }) => route);
+  return result;
 };
 
-const handleGet: ApiHandler<RoutesResponse> = async (req, res) => {
+const handleGet: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
@@ -70,11 +62,10 @@ const handleGet: ApiHandler<RoutesResponse> = async (req, res) => {
   }
 
   const routes = await getRoutes(origin.id);
-
   sendOk(res, { data: routes });
 };
 
-const handlePut: ApiHandler<RoutesResponse> = async (req, res) => {
+const handlePut: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
@@ -87,37 +78,37 @@ const handlePut: ApiHandler<RoutesResponse> = async (req, res) => {
     return;
   }
 
-  const body = req.body;
-  if (!Array.isArray(body) || (body.length && typeof body[0] !== 'string')) {
-    sendInvalidInput(res);
+  const { id: originId } = origin;
+  const body: string[] = req.body;
+
+  if (new Set(body).size !== body.length) {
+    sendInvalidInput(res, 'This route is already in use.');
     return;
   }
 
-  const newRoutes = body as RoutesPutBody;
+  const uniqueEncodedRoutes = Array.from(new Set(body.map((route) => encodeRoute(route))));
 
-  const uniqueEncodedRoutes = Array.from(new Set(newRoutes.map((route) => encodeRoute(route))));
-
-  const originRoutes = uniqueEncodedRoutes.map((route) => ({
-    originId: origin.id,
+  const data = uniqueEncodedRoutes.map((route) => ({
+    originId,
     route,
     pattern: routeToPattern(route),
   }));
 
   try {
     await prisma.$transaction([
-      prisma.originRoute.deleteMany({ where: { originId: origin.id } }),
-      prisma.originRoute.createMany({ data: originRoutes }),
+      prisma.dynamicRoute.deleteMany({ where: { originId } }),
+      prisma.dynamicRoute.createMany({ data }),
     ]);
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'Two or more routes map to conflicting patterns.');
       return;
     }
+
     throw e;
   }
 
-  const routes = await getRoutes(origin.id);
-
+  const routes = await getRoutes(originId);
   sendOk(res, { data: routes });
 };
 

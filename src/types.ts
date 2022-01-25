@@ -3,7 +3,13 @@ import type { UrlObject } from 'url';
 import type { Metric, Origin, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
-import type { ComponentProps, Dispatch, FormEvent, SetStateAction } from 'react';
+import type {
+  ComponentProps,
+  Dispatch,
+  FormEvent,
+  FormHTMLAttributes,
+  SetStateAction,
+} from 'react';
 
 import type {
   DAY,
@@ -47,6 +53,9 @@ export type PlausibleEvents = {
   'show-all-response-times-click': PlausibleProps;
   'copy-api-key': PlausibleProps;
   'footer-link-click': PlausibleProps;
+  'add-dynamic-route': PlausibleProps;
+  'update-dynamic-route': PlausibleProps;
+  'delete-dynamic-route': PlausibleProps;
 };
 
 export interface HeadProps {
@@ -73,15 +82,18 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   tooltipProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export interface FormProps {
+export interface MainTemplateProps extends LayoutProps {
+  dense?: boolean;
+}
+
+export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
   title?: string;
   subTitle?: JSX.Element | string;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   error: string;
   loading?: boolean;
   submittedText?: string;
-  secondaryContent?: React.ReactNode;
-  renderAlert?: JSX.Element | false;
+  contentAfter?: React.ReactNode;
 }
 
 export interface DocsFrontMatter {
@@ -175,4 +187,9 @@ export interface OriginMetrics {
   totalRequestsGrowth: number;
   timeFrameData: TimeFrameData[];
   endpointData: EndpointData[];
+}
+
+export interface DynamicRouteWithMatches {
+  route: string;
+  matching_paths: number;
 }

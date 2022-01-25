@@ -11,7 +11,7 @@ import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes, staticRoutes } from 'utils/router';
 import type { FormProps, PlausibleEvents } from 'types';
 
-interface Props extends Pick<FormProps, 'subTitle' | 'secondaryContent'> {
+interface Props extends Pick<FormProps, 'subTitle' | 'contentAfter'> {
   title: string;
   formTitle: string;
   plausibleEvent: keyof PlausibleEvents;
@@ -23,7 +23,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
   title,
   formTitle,
   subTitle,
-  secondaryContent,
+  contentAfter,
   plausibleEvent,
   initialError,
   csrfToken,
@@ -85,23 +85,25 @@ export const LoginFormTemplate: React.FC<Props> = ({
 
   return (
     <MainTemplate title={title}>
-      <Form
-        title={formTitle}
-        subTitle={subTitle}
-        secondaryContent={secondaryContent}
-        onSubmit={handleSubmit}
-        error={error}
-        loading={loading}
-      >
-        <Input
-          type="email"
-          name="email"
-          value={email}
-          onChange={({ target }): void => setEmail(target.value)}
-          label="Email"
-          required
-        />
-      </Form>
+      <div className="card rounded-lg p-4 shadow bg-base-100">
+        <Form
+          title={formTitle}
+          subTitle={subTitle}
+          contentAfter={contentAfter}
+          onSubmit={handleSubmit}
+          error={error}
+          loading={loading}
+        >
+          <Input
+            type="email"
+            name="email"
+            value={email}
+            onChange={({ target }): void => setEmail(target.value)}
+            label="Email"
+            required
+          />
+        </Form>
+      </div>
     </MainTemplate>
   );
 };

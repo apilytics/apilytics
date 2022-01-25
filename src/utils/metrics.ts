@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import type { OpUnitType } from 'dayjs';
 
-import { DAY, MOCK_METRICS, MOCK_ORIGIN_ROUTES, THREE_MONTHS_DAYS } from 'utils/constants';
+import { DAY, MOCK_DYNAMIC_ROUTES, MOCK_METRICS, THREE_MONTHS_DAYS } from 'utils/constants';
 import type { OriginMetrics, TimeFrame } from 'types';
 
 export const getTimeFrameScope = (timeFrame: TimeFrame): OpUnitType => {
@@ -75,7 +75,7 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
     const avg_response_time = Number((Math.floor(Math.random() * 200) + 20).toFixed());
 
     const endpoint =
-      MOCK_ORIGIN_ROUTES.find(({ pattern }) => new RegExp(pattern).test(path))?.route ?? path;
+      MOCK_DYNAMIC_ROUTES.find(({ pattern }) => new RegExp(pattern).test(path))?.route ?? path;
 
     return {
       requests,

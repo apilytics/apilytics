@@ -3,13 +3,9 @@ import React from 'react';
 
 import { Layout } from 'components/layout/Layout';
 import { DEFAULT_MAX_WIDTH } from 'utils/constants';
-import type { LayoutProps } from 'types';
+import type { MainTemplateProps } from 'types';
 
-interface Props extends LayoutProps {
-  dense?: boolean;
-}
-
-export const MainTemplate: React.FC<Props> = ({
+export const MainTemplate: React.FC<MainTemplateProps> = ({
   maxWidth = DEFAULT_MAX_WIDTH,
   dense = false,
   children,

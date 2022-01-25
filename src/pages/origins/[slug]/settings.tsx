@@ -4,6 +4,7 @@ import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
+import { BackButton } from 'components/shared/BackButton';
 import { Button } from 'components/shared/Button';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
@@ -15,11 +16,11 @@ import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
-import { dynamicApiRoutes, staticRoutes } from 'utils/router';
+import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
 
 const OriginSettings: NextPage = () => {
-  const title = 'Origin Settings';
   const { origin, setOrigin } = useOrigin();
+  const title = `Settings for ${origin?.name}`;
   const { name: _name, apiKey = '', slug = '' } = origin ?? {};
   const [name, setName] = useState(_name);
   const [error, setError] = useState('');
@@ -96,43 +97,54 @@ const OriginSettings: NextPage = () => {
 
   return (
     <MainTemplate title={title}>
-      <Form
-        title={title}
-        onSubmit={handleSubmit}
-        error={error}
-        loading={loading}
-        submittedText={submittedText}
-        secondaryContent={renderDeleteOriginLink}
-      >
-        <Input
-          name="name"
-          label="Origin Name"
-          helperText='E.g. "example.api.com" or "Internal REST API"'
-          value={name}
-          onChange={({ target }): void => setName(target.value)}
-          required
-        />
-        <ApiKeyField value={apiKey} />
-      </Form>
-      <Modal name={MODAL_NAMES.deleteOrigin}>
-        <div className="flex justify-end p-2">
-          <ModalCloseButton onClick={handleCloseModal} />
-        </div>
-        <div className="p-4">
-          <p>
-            Are you sure you want to delete this origin? All data associated with it will be lost
-            forever.
-          </p>
-        </div>
-        <div className="p-2 grid grid-cols-2 gap-2">
-          <Button className="btn-error btn-outline" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
-            Confirm
-          </Button>
-        </div>
-      </Modal>
+      <div className="card rounded-lg p-4 shadow bg-base-100">
+        <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
+        <Form
+          title={title}
+          onSubmit={handleSubmit}
+          error={error}
+          loading={loading}
+          submittedText={submittedText}
+          contentAfter={renderDeleteOriginLink}
+        >
+          <Input
+            name="name"
+            label="Origin Name"
+            helperText='E.g. "example.api.com" or "Internal REST API"'
+            value={name}
+            onChange={({ target }): void => setName(target.value)}
+            required
+          />
+          <ApiKeyField value={apiKey} />
+          <div className="form-control mt-4">
+            <Button
+              linkTo={dynamicRoutes.originDynamicRoutes({ slug })}
+              className="btn-outline btn-primary"
+            >
+              Dynamic routes
+            </Button>
+          </div>
+          <Modal name={MODAL_NAMES.deleteOrigin}>
+            <div className="flex justify-end p-2">
+              <ModalCloseButton onClick={handleCloseModal} />
+            </div>
+            <div className="p-4">
+              <p className="text-white">
+                Are you sure you want to delete this origin? All data associated with it will be
+                lost forever.
+              </p>
+            </div>
+            <div className="p-2 grid grid-cols-2 gap-2">
+              <Button className="btn-error btn-outline" onClick={handleCloseModal}>
+                Cancel
+              </Button>
+              <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
+                Confirm
+              </Button>
+            </div>
+          </Modal>
+        </Form>
+      </div>
     </MainTemplate>
   );
 };
