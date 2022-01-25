@@ -16,9 +16,21 @@ interface RoutesResponse {
 
 type RoutesPutBody = Route[];
 
+// URL encode all non-valid URL characters, keep `<param>` style parameter indicating groups intact.
+const encodeRoute = (route: string): string => {
+  return encodeURI(route).replace(/%3C([a-z_-]+)%3E/g, '<$1>');
+};
+
 // Transform a route string from: '/api/blogs/<param>' into a regex pattern: '^/api/blogs/[^/]+$'
+// Escapes *all* non-alphanumeric characters, to guarantee that Postgres treats them as literals.
+// This is also less error-prone than manually listing the regex meta characters to escape.
+// Keep `/` unescaped since it for sure isn't a meta character and this avoids lots of
+// unnecessary escapes. More info:
+// https://www.postgresql.org/docs/9.3/functions-matching.html#POSIX-ATOMS-TABLE
 const routeToPattern = (route: string): string => {
-  return `^${route.replace(/<[a-z_-]+>/g, '[^/]+')}$`;
+  const escaped = route.replace(/[^A-Za-z0-9/]/g, '\\$&');
+
+  return `^${escaped.replace(/\\<[a-z_-]+\\>/g, '[^/]+')}$`;
 };
 
 const getRoutes = async (originId: string): Promise<string[]> => {
@@ -76,7 +88,9 @@ const handlePut: ApiHandler<RoutesResponse> = async (req, res) => {
 
   const newRoutes = body as RoutesPutBody;
 
-  const originRoutes = Array.from(new Set(newRoutes)).map((route) => ({
+  const uniqueEncodedRoutes = Array.from(new Set(newRoutes.map((route) => encodeRoute(route))));
+
+  const originRoutes = uniqueEncodedRoutes.map((route) => ({
     originId: origin.id,
     route,
     pattern: routeToPattern(route),
