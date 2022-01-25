@@ -38,6 +38,9 @@ const handlePost: ApiHandler = async (req, res) => {
     origin = await prisma.origin.findUnique({ where: { apiKey } });
   } catch (e) {
     if (!isInconsistentColumnData(e)) {
+      console.error('Prisma error, req path:', req.url);
+      console.error('Prisma error, req headers:', req.headers);
+      console.error('Prisma error, req body:', req.body);
       throw e;
     }
     // Was not a valid UUID.
