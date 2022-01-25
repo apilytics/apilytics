@@ -38,9 +38,9 @@ const handlePost: ApiHandler = async (req, res) => {
     origin = await prisma.origin.findUnique({ where: { apiKey } });
   } catch (e) {
     if (!isInconsistentColumnData(e)) {
-      console.error('Prisma error, req path:', req.url);
-      console.error('Prisma error, req headers:', req.headers);
-      console.error('Prisma error, req body:', req.body);
+      console.error('origin.findUnique error, req path:', req.url);
+      console.error('origin.findUnique error, req headers:', req.headers);
+      console.error('origin.findUnique error, req body:', req.body);
       throw e;
     }
     // Was not a valid UUID.
@@ -68,20 +68,27 @@ const handlePost: ApiHandler = async (req, res) => {
       ? req.headers['apilytics-version']
       : undefined;
 
-  await prisma.metric.create({
-    data: {
-      originId: origin.id,
-      path,
-      queryParams,
-      method,
-      statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
-      timeMillis,
-      requestSize,
-      responseSize,
-      userAgent,
-      apilyticsVersion,
-    },
-  });
+  try {
+    await prisma.metric.create({
+      data: {
+        originId: origin.id,
+        path,
+        queryParams,
+        method,
+        statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
+        timeMillis,
+        requestSize,
+        responseSize,
+        userAgent,
+        apilyticsVersion,
+      },
+    });
+  } catch (e) {
+    console.error('metric.create error, req path:', req.url);
+    console.error('metric.create error, req headers:', req.headers);
+    console.error('metric.create error, req body:', req.body);
+    throw e;
+  }
 
   sendOk(res);
 };
