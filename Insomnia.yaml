@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2022-01-20T18:47:24.319Z
+__export_date: 2022-01-25T19:59:22.556Z
 __export_source: insomnia.desktop.app:v2021.7.2
 resources:
   - _id: req_adc825807b5a4a38bb00d10c418f174b
@@ -32,38 +32,6 @@ resources:
     description: ""
     scope: collection
     _type: workspace
-  - _id: req_55ab9d87d3d04dc891fe294c36737223
-    parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641636798695
-    created: 1640728892377
-    url: "{{ _.url }}/api/signup"
-    name: /api/signup
-    description: ""
-    method: POST
-    body:
-      mimeType: application/json
-      text: |-
-        {
-          "email": "waitlistuser@test.com",
-          "role": "Software Engineer @ Google",
-          "useCases": "Analyzing",
-          "howThisCouldHelp": "My APIs"
-        }
-    parameters: []
-    headers:
-      - name: Content-Type
-        value: application/json
-        id: pair_1827b8c407404eafb6d210c0d89400ef
-    authentication: {}
-    metaSortKey: -1639683340391.9375
-    isPrivate: false
-    settingStoreCookies: true
-    settingSendCookies: true
-    settingDisableRenderRequestBody: false
-    settingEncodeUrl: true
-    settingRebuildPath: true
-    settingFollowRedirects: global
-    _type: request
   - _id: req_751c9755f8f54a0098b2d05619054baa
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
     modified: 1641148571069
@@ -87,7 +55,7 @@ resources:
     _type: request
   - _id: req_d2de2652fff24380b369538a419bca49
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641636840600
+    modified: 1642958897804
     created: 1640728892359
     url: "{{ _.url }}/api/origins"
     name: /api/origins
@@ -137,7 +105,7 @@ resources:
     _type: request
   - _id: req_27e5ed24e92d44b88021fc066b267d13
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1642341659742
+    modified: 1642958818390
     created: 1640728892367
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}"
     name: /api/origins/[slug]
@@ -166,23 +134,15 @@ resources:
     _type: request
   - _id: req_8ad2e9cff01441b5977bf9ae102cdefa
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641929009484
+    modified: 1642958911732
     created: 1640728892370
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}"
     name: /api/origins/[slug]
     description: ""
     method: DELETE
-    body:
-      mimeType: application/json
-      text: |-
-        {
-          "domain": "www.example.com"
-        }
+    body: {}
     parameters: []
-    headers:
-      - name: Content-Type
-        value: application/json
-        id: pair_755bf243066c4caea898b874ece37ca1
+    headers: []
     authentication: {}
     metaSortKey: -1639683126495.8438
     isPrivate: false
@@ -195,7 +155,7 @@ resources:
     _type: request
   - _id: req_2ffeceb6c0384b9481e2c7495de45dbf
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641636828282
+    modified: 1642959145053
     created: 1640728892372
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}/metrics"
     name: /api/origins/[slug]/metrics
@@ -205,11 +165,11 @@ resources:
     parameters:
       - id: pair_04c4d392871f4afda31a5ff9d623454b
         name: from
-        value: 2021-01-29:19:11:44
+        value: 2021-01-01:19:11:44
         description: ""
       - id: pair_55b461a77d2847ee8c9886e14d644cc8
         name: to
-        value: 2022-01-05:19:11:44
+        value: 2022-02-05:19:11:44
         description: ""
     headers: []
     authentication: {}
@@ -224,22 +184,14 @@ resources:
     _type: request
   - _id: req_ff18efec680f437da2b697cee4e2755f
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1642703134679
+    modified: 1642850803914
     created: 1642703110366
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}/paths"
     name: /api/origins/[slug]/paths
     description: ""
     method: GET
     body: {}
-    parameters:
-      - id: pair_04c4d392871f4afda31a5ff9d623454b
-        name: from
-        value: 2021-01-29:19:11:44
-        description: ""
-      - id: pair_55b461a77d2847ee8c9886e14d644cc8
-        name: to
-        value: 2022-01-05:19:11:44
-        description: ""
+    parameters: []
     headers: []
     authentication: {}
     metaSortKey: -1639683121148.4414
@@ -253,22 +205,14 @@ resources:
     _type: request
   - _id: req_88b0144153494024a8343c0ceaffe700
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1642703131957
+    modified: 1642850783035
     created: 1642703114221
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}/routes"
     name: /api/origins/[slug]/routes
     description: ""
     method: GET
     body: {}
-    parameters:
-      - id: pair_04c4d392871f4afda31a5ff9d623454b
-        name: from
-        value: 2021-01-29:19:11:44
-        description: ""
-      - id: pair_55b461a77d2847ee8c9886e14d644cc8
-        name: to
-        value: 2022-01-05:19:11:44
-        description: ""
+    parameters: []
     headers: []
     authentication: {}
     metaSortKey: -1639683120613.7012
@@ -282,7 +226,7 @@ resources:
     _type: request
   - _id: req_2fbc603143504112858ed5e10976e264
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1642703858589
+    modified: 1643140048932
     created: 1642703116784
     url: "{{ _.url }}/api/origins/{{ _.originSlug }}/routes"
     name: /api/origins/[slug]/routes
@@ -290,16 +234,15 @@ resources:
     method: PUT
     body:
       mimeType: application/json
-      text: "[]"
-    parameters:
-      - id: pair_04c4d392871f4afda31a5ff9d623454b
-        name: from
-        value: 2021-01-29:19:11:44
-        description: ""
-      - id: pair_55b461a77d2847ee8c9886e14d644cc8
-        name: to
-        value: 2022-01-05:19:11:44
-        description: ""
+      text: |-
+        [
+          "/blogs/<id>",
+          "/posts/<id>",
+          "/users/<slug>/metrics/<slug>",
+          "^/lolö/<slug>/.*/[^a-z]$/<id slug>",
+          "^/lolö/<slug>/.*/[^a-z]$%!#%^#&%%&^/((/=)(=?_>>>>']]]\\'/<id"
+        ]
+    parameters: []
     headers:
       - name: Content-Type
         value: application/json
@@ -316,7 +259,7 @@ resources:
     _type: request
   - _id: req_0e743e6d79f44a8f94781b4b22c8333f
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1642703791531
+    modified: 1642850820746
     created: 1640728892375
     url: "{{ _.url }}/api/v1/middleware"
     name: /api/v1/middleware
@@ -332,11 +275,7 @@ resources:
           "timeMillis": 20,
           "statusCode": 200
         }
-    parameters:
-      - id: pair_4be7f0a6ab6c4841a414532007ccda44
-        name: foo
-        value: bar
-        description: ""
+    parameters: []
     headers:
       - name: Content-Type
         value: application/json
@@ -357,18 +296,14 @@ resources:
     _type: request
   - _id: req_175b1d01095e409d8ccbaa1dda863c7a
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641843298650
+    modified: 1642850817889
     created: 1641843281926
     url: "{{ _.url }}/api/healthz"
     name: /api/healthz
     description: ""
     method: GET
     body: {}
-    parameters:
-      - id: pair_4be7f0a6ab6c4841a414532007ccda44
-        name: foo
-        value: bar
-        description: ""
+    parameters: []
     headers: []
     authentication: {}
     metaSortKey: -1639683119009.4805
@@ -393,18 +328,27 @@ resources:
     _type: environment
   - _id: jar_de000d18f5904aff9a14bda8d33ad992
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1641665180526
+    modified: 1643136069685
     created: 1640728892348
     name: Default Jar
     cookies:
-      - id: 023156a5-a13f-44c3-80c4-1d79b4045165
-        key: next-auth.session-token
+      - key: next-auth.session-token
         value: "{{ _.sessionCookie }}"
-        domain: localhost
         expires: null
+        domain: localhost
         path: /
-        secure: false
         httpOnly: true
+        creation: 2022-01-24T21:28:48.370Z
+        id: "08951035458176904"
+      - key: __Secure-next-auth.session-token
+        value: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..3LUXoN0TNbbBKK-p.1aFwiBxIAD15fIK-MJXO3Buj1O84GscxLylGHgBGtGr5PZSM5Hd31zA9A4_WstT8U02nk7ouT8_Qbkjpg-IVrJvta9Fmr51I5xvp0yojMwPjAxLjAPlPBrycRLOuOKb14JrUPE8oHS5UI3zPKxoVZ98KqmCFGddBbX7B0d8Plt0UBrC8_KXJlfFqIQuMDMNP5qqiRnO8CQXFcgyKo3Ak7K4NBr9GVlbDIXKtpbk.dt0P-NAb_b7X6RjvzclUNg
+        expires: null
+        domain: localhost
+        path: /
+        secure: true
+        httpOnly: true
+        creation: 2022-01-24T21:28:48.370Z
+        id: "7138336183078158"
     _type: cookie_jar
   - _id: spc_0990a12999064bc58d8eb29ac21586ec
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
@@ -416,17 +360,19 @@ resources:
     _type: api_spec
   - _id: env_3b986c752a0e4f40a30a9e80c68a8d09
     parentId: env_32ce5cfd6d7243678bb30f5a859267ed
-    modified: 1642703204697
+    modified: 1643136051649
     created: 1640728892342
     name: local
     data:
       url: http://localhost:3000
+      domain: localhost
       originSlug: api-example-com
-      sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..fqCeUbRY4x1Inip6.r65dky9jpb9QPmIqkJf071kREtFCOf3JKpFiz_I02GzIvbboZf8sMiFbXx2kaH9ReJKPw2OwSt4uGahUuXiF_vUIZt0ewTg8Ct54ZTkyYnT0vCAmloCssJrRTX52nxSIkPrlwYYfkwEkLdYSN8eqiWSQev_YoiO6pLqUyhhc-ehRlL1q0BX1sNQW4xZ-2yxrysJGVrfuHro3RyYzakDyDMnjm1_cAnm8gU-_TdPEYi1qsUjGLt-yUzSrZrDl4qAC4YDEEr-MhBXjR5fD7jTrWjJWkzTm.oy2IvcNszIjy-YHOM0JS0g
+      sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..JTdH66b4tHY_7neH.Kxbr_0v7eFvRseqoOWNOcO0ks2kU74RI-2uhXUpafiqjKx_7EsikcuWcn2VZrqoQEC1cHpg5XoYvYbb7SughlJzmcAzGB7m25n5EG1r7q7b6I4To2Yx2FAA0wpUrHvRr8WlW01xH58A9IgJzlnzTHnvKg3HqtyGeDSkTPN3uf1iBUQPz1XdrJ2kOqdIHe72_MgDx38syl11v2at9aqyvevUkfl2gLJx4aU2l2A8.JESj4epFUjJSAsJUd1PyTA
       apiKey: 0648c69d-4b42-4642-b125-0959619837cf
     dataPropertyOrder:
       "&":
         - url
+        - domain
         - originSlug
         - sessionCookie
         - apiKey
