@@ -16,9 +16,16 @@ interface RoutesResponse {
 
 type RoutesPutBody = Route[];
 
-// URL encode all non-valid URL characters, keep `<param>` style parameter indicating groups intact.
+// Remove all characters from the inputted route that are not valid in URL paths.
+// In addition to added safety, this avoids us storing invalid escape sequences in our DB column.
+// Keep `<param>` style parameter indicating groups intact.
+// We cannot use url escaping here, since then we would end up double escaping the
+// inputs when they are submitted again.
+// URL path characters from: https://stackoverflow.com/a/4669755/9835872
 const encodeRoute = (route: string): string => {
-  return encodeURI(route).replace(/%3C([a-z_-]+)%3E/g, '<$1>');
+  return route
+    .replace(/<(?![a-z_-]+>)|(?<!<[a-z_-]+)>/g, '')
+    .replace(/[^A-Za-z0-9/._~!$&'()*+,;=:@%<>-]/g, '');
 };
 
 // Transform a route string from: '/api/blogs/<param>' into a regex pattern: '^/api/blogs/[^/]+$'
