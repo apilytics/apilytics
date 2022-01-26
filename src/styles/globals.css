@@ -95,6 +95,10 @@
     min-height: 2.5rem !important;
   }
 
+  input::placeholder {
+    @apply text-base-content;
+  }
+
   .step:not(.step-primary)::before,
   .step:not(.step-primary)::after {
     background-color: #404040 !important;
