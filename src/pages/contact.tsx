@@ -67,7 +67,14 @@ const Contact: NextPage = () => {
   );
 
   return (
-    <MainTemplate title="Contact">
+    <MainTemplate
+      headProps={{
+        title: 'Contact',
+        description:
+          "Get in touch by sending us a message or contacting us by email. We'll get back to you as soon as possible.",
+        indexable: true,
+      }}
+    >
       <div className="card rounded-lg p-4 shadow bg-base-100">
         <Form
           title="Send us a message"
@@ -92,9 +99,9 @@ const Contact: NextPage = () => {
             onChange={handleChange}
             required
           />
-          <CTASection />
         </Form>
       </div>
+      <CTASection />
     </MainTemplate>
   );
 };

@@ -16,7 +16,7 @@ export const Form: React.FC<FormProps> = ({
   children,
   ...props
 }) => (
-  <form onSubmit={onSubmit} className={clsx('mt-4 text-left', className)} {...props}>
+  <form onSubmit={onSubmit} className={clsx('text-left', className)} {...props}>
     {title && <h5 className="text-white">{title}</h5>}
     {subTitle && <p className="text-sm">{subTitle}</p>}
     {children}

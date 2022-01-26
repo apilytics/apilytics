@@ -59,7 +59,12 @@ export const INDEXABLE_DOCS_ROUTES = Object.values(DOCS_ROUTES);
 
 export const INDEXABLE_BLOG_ROUTES = Object.values(BLOG_ROUTES);
 
-export const MISC_INDEXABLE_ROUTES = [staticRoutes.demo];
+export const MISC_INDEXABLE_ROUTES = [
+  staticRoutes.demo,
+  staticRoutes.login,
+  staticRoutes.register,
+  staticRoutes.contact,
+];
 
 export const INDEXABLE_ROUTES = [
   staticRoutes.root,

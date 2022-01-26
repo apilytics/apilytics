@@ -29,7 +29,6 @@ const OriginDynamicRoutes: NextPage = () => {
   const [submittedText, setSubmittedText] = useState('');
   const [selectedRoute, setSelectedRoute] = useState<DynamicRouteWithMatches | null>(null);
   const { handleOpenModal, handleCloseModal } = useModal();
-  const title = `Dynamic routes for ${origin?.name}`;
   const plausible = usePlausible();
 
   const updateOrigins = async ({
@@ -144,10 +143,10 @@ const OriginDynamicRoutes: NextPage = () => {
   );
 
   return (
-    <MainTemplate title={title}>
+    <MainTemplate headProps={{ title: 'Dynamic routes' }}>
       <div className="card rounded-lg p-4 shadow bg-base-100">
         <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
-        <h5 className="text-white">{title}</h5>
+        <h5 className="text-white">Dynamic routes for {origin?.name}</h5>
         <div className="mt-2 flex flex-col items-start">
           {routes.map((route) => (
             <p key={route.route}>

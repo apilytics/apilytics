@@ -15,7 +15,7 @@ const Origins: NextPage = () => {
   const { origins } = useAccount();
 
   return (
-    <MainTemplate title="Origin">
+    <MainTemplate headProps={{ title: 'Origin' }}>
       <div className="divide-y divide-base-content">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-4">
           <h5 className="text-white">Origins</h5>

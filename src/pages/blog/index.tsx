@@ -10,9 +10,12 @@ import type { BlogPageProps } from 'types';
 
 const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
   <MainTemplate
-    indexable
-    title="Blog"
-    description="Stay updated about Apilytics by following our blog. Follow our journey and learn about our new and upcoming features."
+    headProps={{
+      title: 'Blog',
+      description:
+        'Stay updated about Apilytics by following our blog. Follow our journey and learn about our new and upcoming features.',
+      indexable: true,
+    }}
   >
     <h4 className="text-white">Apilytics Blog</h4>
     <p>Hi there! 👋 You can read about our journey in this blog.</p>

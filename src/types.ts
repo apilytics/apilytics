@@ -70,7 +70,15 @@ export interface HeaderProps {
   loading?: boolean;
 }
 
-export type LayoutProps = HeadProps & HeaderProps;
+export interface FooterProps {
+  maxWidth?: string;
+}
+
+export type LayoutProps = {
+  headProps: HeadProps;
+  headerProps?: HeaderProps;
+  footerProps?: FooterProps;
+};
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean | 'mobile';
@@ -83,6 +91,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 export interface MainTemplateProps extends LayoutProps {
+  maxWidth?: string;
   dense?: boolean;
 }
 

@@ -20,7 +20,6 @@ import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
 
 const OriginSettings: NextPage = () => {
   const { origin, setOrigin } = useOrigin();
-  const title = `Settings for ${origin?.name}`;
   const { name: _name, apiKey = '', slug = '' } = origin ?? {};
   const [name, setName] = useState(_name);
   const [error, setError] = useState('');
@@ -96,11 +95,11 @@ const OriginSettings: NextPage = () => {
   );
 
   return (
-    <MainTemplate title={title}>
+    <MainTemplate headProps={{ title: 'Settings' }}>
       <div className="card rounded-lg p-4 shadow bg-base-100">
         <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
         <Form
-          title={title}
+          title={`Settings for ${origin?.name}`}
           onSubmit={handleSubmit}
           error={error}
           loading={loading}

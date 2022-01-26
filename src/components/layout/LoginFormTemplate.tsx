@@ -13,6 +13,7 @@ import type { FormProps, PlausibleEvents } from 'types';
 
 interface Props extends Pick<FormProps, 'subTitle' | 'contentAfter'> {
   title: string;
+  description: string;
   formTitle: string;
   plausibleEvent: keyof PlausibleEvents;
   initialError?: string;
@@ -21,6 +22,7 @@ interface Props extends Pick<FormProps, 'subTitle' | 'contentAfter'> {
 
 export const LoginFormTemplate: React.FC<Props> = ({
   title,
+  description,
   formTitle,
   subTitle,
   contentAfter,
@@ -33,6 +35,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
   const [submitted, setSubmitted] = useState(false);
   const plausible = usePlausible();
   const [error, setError] = useState(initialError || '');
+  const headProps = { title, description, indexable: true };
 
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
@@ -66,7 +69,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
 
   if (submitted) {
     return (
-      <MainTemplate title={title}>
+      <MainTemplate headProps={headProps}>
         <h4 className="text-white">
           Thanks! We sent you a <span className="text-primary">magic</span> link to your email that
           you can log in with.
@@ -84,7 +87,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
   }
 
   return (
-    <MainTemplate title={title}>
+    <MainTemplate headProps={headProps}>
       <div className="card rounded-lg p-4 shadow bg-base-100">
         <Form
           title={formTitle}

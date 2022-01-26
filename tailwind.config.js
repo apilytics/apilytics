@@ -38,14 +38,8 @@ module.exports = {
         'fade-in-top': 'fade-in-top 1s ease-out forwards',
         spinner: 'spinner 1.5s linear infinite',
       },
-      width: {
-        128: '32rem',
-      },
-      maxHeight: {
-        128: '32rem',
-      },
-      minWidth: {
-        40: '10rem',
+      maxWidth: {
+        64: '16rem',
       },
     },
     fontFamily: {

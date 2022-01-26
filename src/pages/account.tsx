@@ -7,13 +7,11 @@ import { BackButton } from 'components/shared/BackButton';
 import { withAuth } from 'hocs/withAuth';
 import { staticRoutes } from 'utils/router';
 
-const title = 'Account settings';
-
 const Account: NextPage = () => (
-  <MainTemplate title={title}>
+  <MainTemplate headProps={{ title: 'Account settings' }}>
     <div className="card rounded-lg p-4 shadow bg-base-100">
       <BackButton linkTo={staticRoutes.origins} text="Origins" />
-      <AccountForm title={title} />
+      <AccountForm title="Account settings" />
     </div>
   </MainTemplate>
 );

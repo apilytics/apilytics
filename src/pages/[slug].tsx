@@ -22,7 +22,7 @@ interface Props extends MDXPageProps {
 }
 
 const Content: NextPage<Props> = ({ source, data }) => (
-  <MainTemplate {...data}>
+  <MainTemplate headProps={data}>
     <div className="card rounded-lg shadow p-4 bg-base-100 text-white">
       <MDX source={source} />
     </div>

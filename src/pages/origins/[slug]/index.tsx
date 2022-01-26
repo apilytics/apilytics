@@ -8,8 +8,8 @@ import { DashboardOptions } from 'components/dashboard/DashboardOptions';
 import { EndpointRequests } from 'components/dashboard/EndpointRequests';
 import { EndpointResponseTimes } from 'components/dashboard/EndpointResponseTimes';
 import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
+import { Layout } from 'components/layout/Layout';
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
-import { MainTemplate } from 'components/layout/MainTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -32,6 +32,7 @@ const Origin: NextPage = () => {
   const { handleOpenModal, handleCloseModal } = useModal();
   const slug = origin?.slug || '';
   const apiKey = origin?.apiKey || '';
+  const maxWidth = 'max-w-6xl';
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -56,38 +57,44 @@ const Origin: NextPage = () => {
   }
 
   return (
-    <MainTemplate maxWidth="max-w-6xl" dense title={origin.name}>
-      <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
-      <RequestsTimeFrame
-        timeFrame={timeFrame}
-        origin={origin}
-        metrics={metrics}
-        loading={loading}
-      />
-      <div className="grow flex flex-col lg:flex-row gap-4 mt-4">
-        <EndpointRequests metrics={metrics} loading={loading} />
-        <EndpointResponseTimes metrics={metrics} loading={loading} />
+    <Layout
+      headProps={{ title: origin.name }}
+      headerProps={{ maxWidth }}
+      footerProps={{ maxWidth }}
+    >
+      <div className="container py-4 max-w-6xl grow flex flex-col">
+        <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
+        <RequestsTimeFrame
+          timeFrame={timeFrame}
+          origin={origin}
+          metrics={metrics}
+          loading={loading}
+        />
+        <div className="grow flex flex-col lg:flex-row gap-4 mt-4">
+          <EndpointRequests metrics={metrics} loading={loading} />
+          <EndpointResponseTimes metrics={metrics} loading={loading} />
+        </div>
+        <p className="mt-4 text-center">
+          Help us improve this dashboard by{' '}
+          <Link href={staticRoutes.contact}>
+            <a>giving us feedback</a>
+          </Link>
+          .
+        </p>
+        <Modal name={MODAL_NAMES.apiKey}>
+          <div className="flex justify-between items-center p-2">
+            <h6 className="px-2 text-white">Almost ready!</h6>
+            <ModalCloseButton onClick={handleCloseModal} />
+          </div>
+          <div className="px-4">
+            <p>Finish configuration by setting up your API key.</p>
+          </div>
+          <div className="p-4">
+            <ApiKeyField value={apiKey} />
+          </div>
+        </Modal>
       </div>
-      <p className="mt-4 text-center">
-        Help us improve this dashboard by{' '}
-        <Link href={staticRoutes.contact}>
-          <a>giving us feedback</a>
-        </Link>
-        .
-      </p>
-      <Modal name={MODAL_NAMES.apiKey}>
-        <div className="flex justify-between items-center p-2">
-          <h6 className="px-2 text-white">Almost ready!</h6>
-          <ModalCloseButton onClick={handleCloseModal} />
-        </div>
-        <div className="px-4">
-          <p>Finish configuration by setting up your API key.</p>
-        </div>
-        <div className="p-4">
-          <ApiKeyField value={apiKey} />
-        </div>
-      </Modal>
-    </MainTemplate>
+    </Layout>
   );
 };
 

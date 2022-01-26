@@ -32,11 +32,11 @@ export const withAuth = <T extends Record<string, unknown>>(
     }
 
     if (!accountComplete) {
-      const title = 'Welcome 👋';
+      const headProps = { title: 'Welcome 👋' };
 
       if (!welcomePassed) {
         return (
-          <MainTemplate title={title}>
+          <MainTemplate headProps={headProps}>
             <h4 className="text-white">Welcome 👋</h4>
             <p>
               Thank you for signing up to Apilytics beta, we're glad to have you here! We're still
@@ -59,7 +59,7 @@ export const withAuth = <T extends Record<string, unknown>>(
       }
 
       return (
-        <MainTemplate title={title}>
+        <MainTemplate headProps={headProps}>
           <AccountForm title="Finish up your account to complete sign up" isSignUp />
         </MainTemplate>
       );
