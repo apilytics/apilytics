@@ -148,11 +148,15 @@ const OriginDynamicRoutes: NextPage = () => {
         <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
         <h5 className="text-white">Dynamic routes for {origin?.name}</h5>
         <div className="mt-2 flex flex-col items-start">
-          {routes.map((route) => (
-            <p key={route.route}>
-              <a onClick={handleRouteClick(route)}>{route.route}</a> ({route.matching_paths})
-            </p>
-          ))}
+          {routes.length ? (
+            routes.map((route) => (
+              <p key={route.route}>
+                <a onClick={handleRouteClick(route)}>{route.route}</a> ({route.matching_paths})
+              </p>
+            ))
+          ) : (
+            <p className="text-white">No routes. Add your first dynamic route below.</p>
+          )}
           <p className="text-sm mt-4">
             All routes matching these patterns will be grouped into single endpoints by their HTTP
             methods.
