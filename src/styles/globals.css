@@ -89,7 +89,8 @@
   }
 
   .btn,
-  .select {
+  .select,
+  .input {
     height: auto !important;
     min-height: 2.5rem !important;
   }
