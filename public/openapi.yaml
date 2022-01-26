@@ -59,7 +59,7 @@ paths:
                   description: Size of the user's HTTP request's body in bytes.
                   example: 1024
                 responseSize:
-                    type: integer
+                  type: integer
                   description: Size of the body of the sent HTTP response in bytes.
                   example: 2048
                 userAgent:
