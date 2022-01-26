@@ -11,7 +11,7 @@ const OG_IMAGE = `${FRONTEND_URL}/og-image.png`;
 export const Head: React.FC<HeadProps> = ({ indexable, title, description, loading }) => {
   const { asPath } = useRouter();
   const ogUrl = `${FRONTEND_URL}${asPath === staticRoutes.root ? '' : asPath}`;
-  const _title = `Apilytics | ${title}`;
+  const _title = `${title} | Apilytics`;
   const _description = description ?? DEFAULT_SEO_DESCRIPTION;
 
   if (process.env.NODE_ENV !== 'production' && !loading) {
