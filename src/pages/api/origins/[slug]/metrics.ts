@@ -100,11 +100,11 @@ SELECT
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
   LEFT JOIN LATERAL (
-    SELECT origin_routes.route
-    FROM origin_routes
-    WHERE origin_routes.origin_id = ${originId}
-      AND metrics.path ~ origin_routes.pattern
-    ORDER BY LENGTH(origin_routes.pattern) DESC
+    SELECT dynamic_routes.route
+    FROM dynamic_routes
+    WHERE dynamic_routes.origin_id = ${originId}
+      AND metrics.path ~ dynamic_routes.pattern
+    ORDER BY LENGTH(dynamic_routes.pattern) DESC
     LIMIT 1
   ) AS matched_routes ON TRUE
 WHERE origins.id = ${originId}

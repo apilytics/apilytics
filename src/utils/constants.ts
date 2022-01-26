@@ -191,12 +191,12 @@ export const MOCK_METRICS: MockMetric[] = [
   },
 ];
 
-interface MockOriginRoute {
+interface MockDynamicRoute {
   route: string;
   pattern: string;
 }
 
-export const MOCK_ORIGIN_ROUTES: MockOriginRoute[] = [
+export const MOCK_DYNAMIC_ROUTES: MockDynamicRoute[] = [
   { route: '/blogs/<id>', pattern: '^/blogs/[^/]+$' },
   { route: '/posts/<id>', pattern: '^/posts/[^/]+$' },
   { route: '/users/<slug>', pattern: '^/users/[^/]+$' },
