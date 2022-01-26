@@ -25,12 +25,15 @@ export const DashboardOptions: React.FC<Props> = ({
 }) => {
   const plausible = usePlausible();
   const { pathname } = useRouter();
+  const isDemo = pathname === staticRoutes.demo;
 
   return (
-    <div className="flex flex-wrap items-center mb-4 gap-4">
-      <div className="grow">
-        <BackButton linkTo={staticRoutes.origins} text="Origins" />
-      </div>
+    <div className="flex justify-end flex-wrap items-center mb-4 gap-4">
+      {!isDemo && (
+        <div className="grow">
+          <BackButton linkTo={staticRoutes.origins} text="Origins" />
+        </div>
+      )}
       <Select
         value={timeFrame}
         onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}
@@ -42,7 +45,7 @@ export const DashboardOptions: React.FC<Props> = ({
           </option>
         ))}
       </Select>
-      {pathname !== staticRoutes.demo && <OriginMenu slug={slug} />}
+      {!isDemo && <OriginMenu slug={slug} />}
     </div>
   );
 };
