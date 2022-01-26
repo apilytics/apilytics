@@ -88,7 +88,7 @@ GROUP BY time;`;
   const endpointDataPromise: Promise<EndpointData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
-  CASE WHEN origin_routes.route IS NULL THEN metrics.path ELSE origin_routes.route END AS endpoint,
+  CASE WHEN matched_routes.route IS NULL THEN metrics.path ELSE matched_routes.route END AS endpoint,
   metrics.method,
   ARRAY_AGG(DISTINCT(metrics.status_code)) AS status_codes,
   ROUND(AVG(metrics.time_millis)) AS avg_response_time,
@@ -99,7 +99,14 @@ SELECT
   PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS p99
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-  LEFT JOIN origin_routes ON metrics.origin_id = origin_routes.origin_id AND metrics.path ~ origin_routes.pattern
+  LEFT JOIN LATERAL (
+    SELECT origin_routes.route
+    FROM origin_routes
+    WHERE origin_routes.origin_id = ${originId}
+      AND metrics.path ~ origin_routes.pattern
+    ORDER BY LENGTH(origin_routes.pattern) DESC
+    LIMIT 1
+  ) AS matched_routes ON TRUE
 WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
