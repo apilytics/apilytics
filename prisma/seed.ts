@@ -47,7 +47,7 @@ const main = async (): Promise<void> => {
     data: {
       id: USER_ID,
       name: 'Test User',
-      email: 'testuser@test.test',
+      email: 'dev@apilytics.io', // Real email, so we can receive login emails in preview.
       origins: {
         create: [
           {
