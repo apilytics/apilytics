@@ -18,8 +18,10 @@ export const MethodAndEndpointTick: React.FC<Props> = ({ payload, x, y }) => {
 
   return (
     <foreignObject x={x} y={y - 13} width="500" height="30">
-      <span className={`text-method-${method.toLowerCase()}`}>{method}</span>{' '}
-      <a className="text-white">{endpoint}</a>
+      <a className="unstyled text-white hover:text-primary">
+        <span className={`text-method-${method.toLowerCase()} cursor-pointer`}>{method}</span>{' '}
+        <span className="link">{endpoint}</span>
+      </a>
     </foreignObject>
   );
 };
