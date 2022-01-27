@@ -30,7 +30,8 @@ FROM dynamic_routes
     AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
       = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
 WHERE dynamic_routes.origin_id = ${originId}
-GROUP BY dynamic_routes.route;`;
+GROUP BY dynamic_routes.route
+ORDER BY dynamic_routes.route;`;
 
   return result;
 };
