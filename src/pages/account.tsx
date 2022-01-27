@@ -8,7 +8,7 @@ import { withAuth } from 'hocs/withAuth';
 import { staticRoutes } from 'utils/router';
 
 const Account: NextPage = () => (
-  <MainTemplate headProps={{ title: 'Account settings' }}>
+  <MainTemplate headProps={{ title: 'Account' }}>
     <div className="card rounded-lg p-4 shadow bg-base-100">
       <BackButton linkTo={staticRoutes.origins} text="Origins" />
       <AccountForm title="Account settings" />

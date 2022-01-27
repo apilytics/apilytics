@@ -18,7 +18,7 @@ const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
       indexable: true,
     }}
   >
-    <h4 className="text-white">Apilytics Blog</h4>
+    <h4 className="text-white">Apilytics blog</h4>
     <p>
       Hi there! 👋 You can read about our journey in this blog.
       <br />

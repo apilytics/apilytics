@@ -52,13 +52,13 @@ const NewOrigin: NextPage = () => {
   };
 
   return (
-    <MainTemplate headProps={{ title: 'Add new origin' }}>
+    <MainTemplate headProps={{ title: 'New origin' }}>
       <div className="card rounded-lg p-4 shadow bg-base-100">
         <BackButton linkTo={staticRoutes.origins} text="Origins" />
         <Form title="Add new origin" onSubmit={handleSubmit} error={error} loading={loading}>
           <Input
             name="name"
-            label="Origin Name"
+            label="Origin name"
             helperText='E.g. "example.api.com" or "Internal REST API"'
             value={name}
             onChange={({ target }): void => setName(target.value)}

@@ -11,7 +11,7 @@ import type { FooterProps } from 'types';
 
 const FEATURE_LINKS = [
   {
-    text: 'Ease of Use',
+    text: 'Ease of use',
     href: staticRoutes.easeOfUse,
   },
   {
@@ -19,11 +19,11 @@ const FEATURE_LINKS = [
     href: staticRoutes.lightweight,
   },
   {
-    text: 'Privacy Friendly',
+    text: 'Privacy friendly',
     href: staticRoutes.privacyFriendly,
   },
   {
-    text: 'Open Source',
+    text: 'Open source',
     href: staticRoutes.openSource,
   },
 ];
@@ -79,7 +79,7 @@ const COMPANY_LINKS = [
     href: staticRoutes.contact,
   },
   {
-    text: 'Privacy Policy',
+    text: 'Privacy policy',
     href: staticRoutes.privacyPolicy,
   },
 ];
@@ -112,11 +112,11 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
           <p className="text-xs">
             Built by{' '}
             <ExternalLink href="https://github.com/blomqma">
-              <a onClick={handleClick('@blomqma')}>@blomqma</a>
+              <a onClick={handleClick('@blomqma')}>blomqma</a>
             </ExternalLink>{' '}
             and{' '}
             <ExternalLink href="https://github.com/ruohola">
-              <a onClick={handleClick('@blomqma')}>@ruohola</a>
+              <a onClick={handleClick('@ruohola')}>ruohola</a>
             </ExternalLink>
           </p>
         </div>
@@ -125,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             <h6 className="footer-title text-sm">Features</h6>
             <ul>
               {FEATURE_LINKS.map(({ text, href }) => (
-                <p key={text}>
+                <p key={text} className="whitespace-nowrap">
                   <Link href={href}>
                     <a onClick={handleClick(text)}>{text}</a>
                   </Link>
@@ -137,7 +137,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             <h6 className="footer-title text-sm">Resources</h6>
             <ul>
               {RESOURCE_LINKS.map(({ text, href, component: Component }) => (
-                <p key={text}>
+                <p key={text} className="whitespace-nowrap">
                   <Component href={href}>
                     <a onClick={handleClick(text)}>{text}</a>
                   </Component>
@@ -149,7 +149,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             <h6 className="footer-title text-sm">Community</h6>
             <ul>
               {COMMUNITY_LINKS.map(({ text, href, component: Component }) => (
-                <p key={text}>
+                <p key={text} className="whitespace-nowrap">
                   <Component href={href}>
                     <a onClick={handleClick(text)}>{text}</a>
                   </Component>
@@ -161,7 +161,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             <h6 className="footer-title text-sm">Company</h6>
             <ul>
               {COMPANY_LINKS.map(({ text, href }) => (
-                <p key={text}>
+                <p key={text} className="whitespace-nowrap">
                   <Link href={href}>
                     <a onClick={handleClick(text)}>{text}</a>
                   </Link>
