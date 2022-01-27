@@ -95,7 +95,7 @@ const OriginSettings: NextPage = () => {
   );
 
   return (
-    <MainTemplate headProps={{ title: 'Settings' }}>
+    <MainTemplate headProps={{ title: 'Origin settings' }}>
       <div className="card rounded-lg p-4 shadow bg-base-100">
         <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
         <Form
@@ -108,7 +108,7 @@ const OriginSettings: NextPage = () => {
         >
           <Input
             name="name"
-            label="Origin Name"
+            label="Origin name"
             helperText='E.g. "example.api.com" or "Internal REST API"'
             value={name}
             onChange={({ target }): void => setName(target.value)}

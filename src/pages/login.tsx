@@ -31,7 +31,7 @@ const Login: NextPage<LoginPageProps> = ({ csrfToken }) => {
 
   return (
     <LoginFormTemplate
-      title="Login"
+      title="Log in"
       description="Log in to your account to view your metrics and start analyzing your APIs. We will send a magic link to your email address."
       formTitle="Log in using your email"
       initialError={initialError}

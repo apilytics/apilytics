@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote';
 import React from 'react';
@@ -15,6 +16,7 @@ const components = {
   ExternalLink,
   EmailLink,
   SwaggerUI,
+  Date: ({ date }: { date: string }): string => dayjs(date).format('LL'),
 };
 
 const scope = {

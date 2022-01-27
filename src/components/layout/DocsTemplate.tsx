@@ -59,7 +59,7 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
               linkTo={nextDoc.path}
               endIcon={ArrowSmRightIcon}
               fullWidth="mobile"
-              className="btn-secondary btn-outline mt-8 mx-auto"
+              className="btn-link mt-8 mx-auto"
             >
               {nextDoc.name}
             </Button>

@@ -17,7 +17,7 @@ export const withAuth = <T extends Record<string, unknown>>(
 ): NextPage<T> => {
   const WithAuth: NextPage<T> = (pageProps: T) => {
     const [welcomePassed, setWelcomePassed] = useState(false);
-    const { status, user, accountComplete } = useAccount();
+    const { status, loading, accountComplete } = useAccount();
     const redirect = status === 'unauthenticated';
 
     // Redirect unauthenticated users to login.
@@ -27,7 +27,7 @@ export const withAuth = <T extends Record<string, unknown>>(
       }
     }, [redirect]);
 
-    if (redirect || !user) {
+    if (redirect || loading) {
       return <LoadingTemplate />;
     }
 

@@ -150,6 +150,8 @@ export interface Snippet {
 export interface AccountContextType {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
   status: 'authenticated' | 'unauthenticated' | 'loading';
   accountComplete: boolean;
   origins: Origin[];

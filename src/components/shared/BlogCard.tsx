@@ -18,13 +18,9 @@ export const BlogCard: React.FC<Props> = ({ slug, title, excerpt, author, author
           <h5 className="text-white">{title}</h5>
           <p>{excerpt}</p>
         </div>
-        <div className="flex flex-col sm:flex-row p-2 text-sm">
-          <span>
-            Written by <ExternalLink href={authorLink}>{author}</ExternalLink>
-          </span>
-          <span className="mx-2 hidden sm:block">·</span>
-          <span>{dayjs(date).format('LL')}</span>
-        </div>
+        <p className="text-sm text-base-content px-2">
+          <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
+        </p>
       </div>
     </a>
   </Link>

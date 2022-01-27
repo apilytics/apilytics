@@ -54,6 +54,7 @@ export const EmailListForm: React.FC = () => {
           <input
             name="email"
             type="email"
+            id="email-input"
             placeholder="Your email"
             value={email}
             onChange={({ target }): void => setEmail(target.value)}

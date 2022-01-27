@@ -28,16 +28,12 @@ export const BlogTemplate: React.FC<BlogPageProps> = ({
         <div className="card rounded-lg shadow p-4 bg-base-100 break-words items-start text-white">
           <BackButton text="All blogs" linkTo={staticRoutes.blog} />
           <h3>{title}</h3>
-          <div className="flex flex-col sm:flex-row p-2 text-sm text-base-content">
-            <span>
-              Written by <ExternalLink href={authorLink}>{author}</ExternalLink>
-            </span>
-            <span className="mx-2 hidden sm:block">·</span>
-            <span>{dayjs(date).format('LL')}</span>
-          </div>
+          <p className="text-sm text-base-content">
+            <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
+          </p>
           <MDX source={source} />
-          <p className="mt-4 text-base-content text-sm">
-            Written by <ExternalLink href={authorLink}>{author}</ExternalLink>
+          <p className="text-sm text-base-content mt-4">
+            <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
           </p>
         </div>
         <CTASection />

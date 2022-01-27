@@ -16,6 +16,7 @@ export const BLOG_ROUTES = {
   blog: '/blog',
   1: '/blog/problem-with-api-monitoring',
   2: '/blog/announcing-apilytics-api',
+  3: '/blog/monitoring-dynamic-api-routes',
 };
 
 const COMMUNITY_ROUTES = {
@@ -42,6 +43,7 @@ export const staticRoutes = {
   lightweight: '/lightweight',
   openSource: '/open-source',
   easeOfUse: '/ease-of-use',
+  changelog: '/changelog',
   ...DOCS_ROUTES,
   ...BLOG_ROUTES,
   ...COMMUNITY_ROUTES,
@@ -53,6 +55,7 @@ export const INDEXABLE_CONTENT_ROUTES = [
   staticRoutes.lightweight,
   staticRoutes.openSource,
   staticRoutes.easeOfUse,
+  staticRoutes.changelog,
 ];
 
 export const INDEXABLE_DOCS_ROUTES = Object.values(DOCS_ROUTES);

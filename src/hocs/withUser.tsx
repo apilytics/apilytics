@@ -10,19 +10,23 @@ export const withUser = <T extends Record<string, unknown>>(
 ): NextPage<T> => {
   const WithUser: NextPage<T> = (pageProps: T) => {
     const [error, setError] = useState(false);
-    const { setUser } = useAccount();
+    const { setUser, setLoading } = useAccount();
 
     useEffect(() => {
       (async (): Promise<void> => {
+        setLoading(true);
+
         try {
           const res = await fetch(staticApiRoutes.user);
-          const { data } = await res.json();
+          const { data = null } = await res.json();
           setUser(data);
         } catch {
           setError(true);
+        } finally {
+          setLoading(false);
         }
       })();
-    }, [setUser]);
+    }, [setLoading, setUser]);
 
     if (error) {
       return <ErrorTemplate />;

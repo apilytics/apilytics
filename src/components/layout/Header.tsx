@@ -28,7 +28,7 @@ const WHY_ITEMS = [
   {
     icon: ChartBarIcon,
     href: staticRoutes.easeOfUse,
-    title: 'Ease of Use',
+    title: 'Ease of use',
     description:
       'Ease of use is one of the main reasons why you should choose Apilytics over other API monitoring solutions.',
   },
@@ -42,13 +42,13 @@ const WHY_ITEMS = [
   {
     icon: ShieldCheckIcon,
     href: staticRoutes.privacyFriendly,
-    title: 'Privacy Friendly',
+    title: 'Privacy friendly',
     description: 'Apilytics is a privacy friendly monitoring service for your APIs.',
   },
   {
     icon: GlobeAltIcon,
     href: staticRoutes.openSource,
-    title: 'Open Source',
+    title: 'Open source',
     description: 'Monitor your APIs with the power of open source using Apilytics.',
   },
 ];
@@ -81,7 +81,7 @@ const COMMUNITY_ITEMS = [
     component: ExternalLink,
     icon: MapIcon,
     href: staticRoutes.roadmap,
-    title: 'Public Roadmap',
+    title: 'Public roadmap',
     description: 'Check out our plans for the future and submit your own feature requests.',
   },
 ];

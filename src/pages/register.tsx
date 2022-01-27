@@ -9,7 +9,7 @@ import { withNoAuth } from 'hocs/withNoAuth';
 import { staticRoutes } from 'utils/router';
 import type { LoginPageProps } from 'types';
 
-const SUBTITLE_ITEMS = ['No credit card required.', 'Cancel any time.', '100% free during beta.'];
+const SUBTITLE_ITEMS = ['No credit card required', 'Cancel any time', '100% free during beta'];
 
 const Register: NextPage<LoginPageProps> = ({ csrfToken }) => {
   const renderSubTitle = (

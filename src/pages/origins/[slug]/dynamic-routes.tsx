@@ -72,26 +72,38 @@ const OriginDynamicRoutes: NextPage = () => {
     }
   };
 
+  const validateRoute = (route: string): boolean | void => {
+    if (route.match(/^\/.*<[a-z_-]+>.*$/)) {
+      return true;
+    } else {
+      setError('Route must be a relative path with at least one dynamic style placeholder.');
+    }
+  };
+
   const handleSubmitAddRoute = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const payload = routes.map(({ route }) => route);
-    payload.push(newRouteValue);
-    console.log('payload', payload);
-    updateOrigins({ payload, event: 'add-dynamic-route' });
+
+    if (validateRoute(newRouteValue)) {
+      const payload = routes.map(({ route }) => route);
+      payload.push(newRouteValue);
+      updateOrigins({ payload, event: 'add-dynamic-route' });
+    }
   };
 
   const handleSubmitUpdateRoute = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    const payload = routes.map(({ route }) => {
-      if (route == selectedRoute?.route) {
-        return updateRouteValue;
-      }
+    if (validateRoute(updateRouteValue)) {
+      const payload = routes.map(({ route }) => {
+        if (route == selectedRoute?.route) {
+          return updateRouteValue;
+        }
 
-      return route;
-    });
+        return route;
+      });
 
-    updateOrigins({ payload, event: 'update-dynamic-route' });
+      updateOrigins({ payload, event: 'update-dynamic-route' });
+    }
   };
 
   const handleConfirmDelete = (): void => {
