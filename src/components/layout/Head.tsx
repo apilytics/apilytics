@@ -36,13 +36,17 @@ export const Head: React.FC<HeadProps> = ({ indexable, title, description, loadi
     }
 
     if (_title?.length > 60) {
-      throw Error(`Title shouldn't be between more than 60 characters for ${path}.`);
+      throw Error(
+        `Title shouldn't be between more than 60 characters for ${path} (${_title} currently).`,
+      );
     }
 
     // The actual minimum length for descriptions is said to be 60 characters but we want
     // to maximize the odds of the search engines indexing our custom descriptions.
     if (_description?.length < 100 || _description?.length > 160) {
-      throw Error(`Description should be between 100 and 160 characters for ${path}.`);
+      throw Error(
+        `Description should be between 100 and 160 characters for ${path} (${_description.length} currently).`,
+      );
     }
   }
 

@@ -28,7 +28,7 @@ const FEATURE_LINKS = [
   },
 ];
 
-const COMMUNITY_LINKS = [
+const RESOURCE_LINKS = [
   {
     text: 'Blog',
     href: staticRoutes.blog,
@@ -39,6 +39,19 @@ const COMMUNITY_LINKS = [
     href: staticRoutes.docs,
     component: Link,
   },
+  {
+    text: 'Changelog',
+    href: staticRoutes.changelog,
+    component: Link,
+  },
+  {
+    text: 'Roadmap',
+    href: staticRoutes.roadmap,
+    component: Link,
+  },
+];
+
+const COMMUNITY_LINKS = [
   {
     text: 'GitHub',
     href: staticRoutes.github,
@@ -116,6 +129,18 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
                   <Link href={href}>
                     <a onClick={handleClick(text)}>{text}</a>
                   </Link>
+                </p>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h6 className="footer-title text-sm">Resources</h6>
+            <ul>
+              {RESOURCE_LINKS.map(({ text, href, component: Component }) => (
+                <p key={text}>
+                  <Component href={href}>
+                    <a onClick={handleClick(text)}>{text}</a>
+                  </Component>
                 </p>
               ))}
             </ul>
