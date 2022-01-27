@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 
@@ -18,7 +19,11 @@ const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
     }}
   >
     <h4 className="text-white">Apilytics Blog</h4>
-    <p>Hi there! 👋 You can read about our journey in this blog.</p>
+    <p>
+      Hi there! 👋 You can read about our journey in this blog.
+      <br />
+      Join our <Link href="#email-input">email list</Link> to receive updates in your email.
+    </p>
     <div className="py-4 flex flex-col gap-2">
       {blogsData.map((blog) => (
         <BlogCard {...blog} key={blog.title} />
