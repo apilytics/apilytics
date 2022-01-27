@@ -28,9 +28,9 @@ export const DashboardOptions: React.FC<Props> = ({
   const isDemo = pathname === staticRoutes.demo;
 
   return (
-    <div className="flex justify-end flex-wrap items-center mb-4 gap-4">
+    <div className="flex justify-between sm:justify-end flex-wrap items-center mb-4 gap-4">
       {!isDemo && (
-        <div className="grow">
+        <div className="grow hidden sm:block">
           <BackButton linkTo={staticRoutes.origins} text="Origins" />
         </div>
       )}

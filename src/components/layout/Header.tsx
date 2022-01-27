@@ -265,17 +265,21 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, lo
     </div>
   );
 
+  const renderDocsButton = (
+    <Button className="btn-ghost hidden sm:block" linkTo={staticRoutes.docs}>
+      Docs
+    </Button>
+  );
+
   const renderLogoutButton = !accountComplete && (
-    <Button linkTo={staticRoutes.logout} className="btn-primary btn-outline">
+    <Button linkTo={staticRoutes.logout} className="btn-primary btn-outline hidden sm:block">
       Log out
     </Button>
   );
 
   const renderButtonsForAuthenticated = !loading && user && (
     <div className="flex gap-2">
-      <Button className="btn-ghost" linkTo={staticRoutes.docs}>
-        Docs
-      </Button>
+      {renderDocsButton}
       {renderLogoutButton}
       {renderAccountMenu}
     </div>

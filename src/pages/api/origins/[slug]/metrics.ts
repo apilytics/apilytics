@@ -91,12 +91,27 @@ SELECT
   CASE WHEN matched_routes.route IS NULL THEN metrics.path ELSE matched_routes.route END AS endpoint,
   metrics.method,
   ARRAY_AGG(DISTINCT(metrics.status_code)) AS status_codes,
+
   ROUND(AVG(metrics.time_millis)) AS avg_response_time,
-  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS p50,
-  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS p75,
-  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS p90,
-  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS p95,
-  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS p99
+  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p50,
+  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p75,
+  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p90,
+  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p95,
+  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p99,
+
+  ROUND(AVG(metrics.request_size)) AS avg_request_size,
+  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p50,
+  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p75,
+  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p90,
+  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p95,
+  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p99,
+
+  ROUND(AVG(metrics.response_size)) AS avg_response_size,
+  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p50,
+  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p75,
+  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p90,
+  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p95,
+  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p99
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
   LEFT JOIN LATERAL (

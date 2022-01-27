@@ -110,7 +110,7 @@
 }
 
 .card {
-  @apply overflow-visible;
+  @apply overflow-visible; /* Allow drop downs to show outside card elements. */
 }
 
 /* https://github.com/swagger-api/swagger-ui/blob/master/src/style/_variables.scss#L46-L53 */

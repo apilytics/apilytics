@@ -22,6 +22,8 @@ const TEST_METRICS = Array(365 * 24)
           method,
           statusCode: status_codes[Math.floor(Math.random() * status_codes.length)],
           timeMillis: Math.floor(Math.random() * 100) + 20,
+          requestSize: Math.floor(Math.random() * 100) + 20,
+          responseSize: Math.floor(Math.random() * 100) + 20,
           createdAt: new Date(Date.now() - i * 60 * 60 * 1000),
           originId: ORIGIN_ID,
         };

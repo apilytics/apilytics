@@ -38,6 +38,9 @@ module.exports = {
         'fade-in-top': 'fade-in-top 1s ease-out forwards',
         spinner: 'spinner 1.5s linear infinite',
       },
+      minWidth: {
+        96: '24rem',
+      },
       maxWidth: {
         64: '16rem',
       },

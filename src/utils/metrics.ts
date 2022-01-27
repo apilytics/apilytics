@@ -73,6 +73,8 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
       .reduce((prev, curr) => prev + curr.requests, 0);
 
     const avg_response_time = Number((Math.floor(Math.random() * 200) + 20).toFixed());
+    const avg_request_size = Number((Math.floor(Math.random() * 200) + 20).toFixed());
+    const avg_response_size = Number((Math.floor(Math.random() * 200) + 20).toFixed());
 
     const endpoint =
       MOCK_DYNAMIC_ROUTES.find(({ pattern }) => new RegExp(pattern).test(path))?.route ?? path;
@@ -83,11 +85,23 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
       method,
       status_codes,
       avg_response_time,
-      p50: avg_response_time,
-      p75: Number((avg_response_time + avg_response_time * 0.25).toFixed()),
-      p90: Number((avg_response_time + avg_response_time * 0.4).toFixed()),
-      p95: Number((avg_response_time + avg_response_time * 0.45).toFixed()),
-      p99: Number((avg_response_time + avg_response_time * 0.49).toFixed()),
+      response_time_p50: avg_response_time,
+      response_time_p75: Number((avg_response_time + avg_response_time * 0.25).toFixed()),
+      response_time_p90: Number((avg_response_time + avg_response_time * 0.4).toFixed()),
+      response_time_p95: Number((avg_response_time + avg_response_time * 0.45).toFixed()),
+      response_time_p99: Number((avg_response_time + avg_response_time * 0.49).toFixed()),
+      avg_request_size,
+      request_size_p50: avg_request_size,
+      request_size_p75: Number((avg_request_size + avg_request_size * 0.25).toFixed()),
+      request_size_p90: Number((avg_request_size + avg_request_size * 0.4).toFixed()),
+      request_size_p95: Number((avg_request_size + avg_request_size * 0.45).toFixed()),
+      request_size_p99: Number((avg_request_size + avg_request_size * 0.49).toFixed()),
+      avg_response_size,
+      response_size_p50: avg_request_size,
+      response_size_p75: Number((avg_response_size + avg_response_size * 0.25).toFixed()),
+      response_size_p90: Number((avg_response_size + avg_response_size * 0.4).toFixed()),
+      response_size_p95: Number((avg_response_size + avg_response_size * 0.45).toFixed()),
+      response_size_p99: Number((avg_response_size + avg_response_size * 0.49).toFixed()),
     };
   });
 

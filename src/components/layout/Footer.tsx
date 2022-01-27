@@ -106,7 +106,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
               objectFit="contain"
               alt="Logo"
             />
-            <h6 className="footer-title text-sm ml-2">Apilytics</h6>
+            <h6 className="ml-2">Apilytics</h6>
           </div>
           <p className="py-2 max-w-64">{DESCRIPTION}</p>
           <p className="text-xs">
