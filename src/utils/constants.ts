@@ -197,9 +197,9 @@ interface MockDynamicRoute {
 }
 
 export const MOCK_DYNAMIC_ROUTES: MockDynamicRoute[] = [
-  { route: '/blogs/<id>', pattern: '^/blogs/[^/]+$' },
-  { route: '/posts/<id>', pattern: '^/posts/[^/]+$' },
-  { route: '/users/<slug>', pattern: '^/users/[^/]+$' },
+  { route: '/blogs/<id>', pattern: '/blogs/%' },
+  { route: '/posts/<id>', pattern: '/posts/%' },
+  { route: '/users/<slug>', pattern: '/users/%' },
 ];
 
 export const MOCK_ORIGIN = {
