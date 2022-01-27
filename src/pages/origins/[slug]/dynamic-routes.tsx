@@ -76,9 +76,7 @@ const OriginDynamicRoutes: NextPage = () => {
     if (route.match(/^\/.*<[a-z_-]+>.*$/)) {
       return true;
     } else {
-      setError(
-        'Route must be a relative path with at least one dynamic placeholder inside "<>" tags.',
-      );
+      setError('Route must be a relative path with at least one dynamic style placeholder.');
     }
   };
 
