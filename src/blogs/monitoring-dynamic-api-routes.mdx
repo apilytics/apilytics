@@ -1,0 +1,40 @@
+---
+title: Monitoring Dynamic API Routes
+description: Apilytics now supports dynamic API routes, meaning that you can easil combiny any amount of dynamic URLs from your APIs easily.
+slug: monitoring-dynamic-api-routes
+author: Markus Blomqvist
+authorLink: https://twitter.com/blomqma
+excerpt: When it comes to monitoring endpoint specific data from your applications, the data becomes noisy as the amount of endpoints grows.
+date: '2022-01-27'
+---
+
+When it comes to monitoring endpoint specific data from your applications, your data can easily become noisy as the amount of your endpoints gets bigger.
+This is no longer the case with Apilytics as we are rolling out our support for dynamic API routes!
+
+The dynamic routes allow you to define the patterns that your dynamic URLs are using and our dashboard then visualizes all of your matching routes as a single endpoint based on that.
+
+<br />
+
+![Dynamic API routes](/blog-images/monitoring-dynamic-api-routes/dynamic-routes.png)
+
+<br />
+
+Our configured dynamic routes will then show in the dashboard like this:
+
+<br />
+
+![Endpoints](/blog-images/monitoring-dynamic-api-routes/endpoints.png)
+
+<br />
+
+Now all requests directed to e.g. `/blogs/123`, `/blogs/456`, `/users/johndoe` and `/users/janedoe` will be included in these endpoints in our visualization.
+The dynamic routes also also 100% backwards-compatible and your existing data can be combined into dynamic routes as you wish.
+You can also later modify or delete the dynamic routes to split up of your data.
+
+<br />
+
+That's it! Hope this will help you with monitoring dynamic routes.
+
+<br />
+
+With 💙 from Apilytics team

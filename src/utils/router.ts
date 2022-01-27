@@ -16,6 +16,7 @@ export const BLOG_ROUTES = {
   blog: '/blog',
   1: '/blog/problem-with-api-monitoring',
   2: '/blog/announcing-apilytics-api',
+  3: '/blog/monitoring-dynamic-api-routes',
 };
 
 const COMMUNITY_ROUTES = {
