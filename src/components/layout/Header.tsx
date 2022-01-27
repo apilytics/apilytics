@@ -96,7 +96,7 @@ const MENU_ITEMS = [
     href: staticRoutes.newOrigin,
   },
   {
-    name: 'Account',
+    name: 'Account settings',
     href: staticRoutes.account,
   },
   {
@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, lo
     <div className="flex gap-2">
       <div className="dropdown dropdown-hover dropdown-end sm:hidden">
         <div tabIndex={0} className="btn btn-ghost">
-          <DotsVerticalIcon className="sm:ml-2 w-5 h-5" />
+          <DotsVerticalIcon className="w-5 h-5" />
         </div>
         <ul
           tabIndex={0}

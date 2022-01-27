@@ -23,7 +23,10 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
   });
 
   return (
-    <Layout maxWidth="max-w-full" title={`Docs: ${name}`} description={description} indexable>
+    <Layout
+      headProps={{ title: name, description, indexable: true }}
+      headerProps={{ maxWidth: 'max-w-full' }}
+    >
       <ul className="menu p-4 w-50 h-full absolute border-r border-1 border-base-content invisible xl:visible text-primary">
         {docsData
           ?.filter(({ subOrder }) => !subOrder)

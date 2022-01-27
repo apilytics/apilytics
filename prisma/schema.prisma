@@ -62,13 +62,13 @@ model Origin {
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  metrics      Metric[]
-  originRoutes OriginRoute[]
+  metrics       Metric[]
+  dynamicRoutes DynamicRoute[]
 
   @@map("origins")
 }
 
-model OriginRoute {
+model DynamicRoute {
   id      String @id @default(uuid()) @db.Uuid
   route   String
   pattern String
@@ -78,7 +78,7 @@ model OriginRoute {
 
   @@unique([route, originId])
   @@unique([pattern, originId])
-  @@map("origin_routes")
+  @@map("dynamic_routes")
 }
 
 model Metric {

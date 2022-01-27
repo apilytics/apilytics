@@ -88,9 +88,15 @@
     @apply text-white !important;
   }
 
-  .btn {
+  .btn,
+  .select,
+  .input {
     height: auto !important;
     min-height: 2.5rem !important;
+  }
+
+  input::placeholder {
+    @apply text-base-content;
   }
 
   .step:not(.step-primary)::before,
@@ -105,14 +111,6 @@
 
 .card {
   @apply overflow-visible;
-}
-
-.recharts-bar-rectangle {
-  cursor: pointer;
-}
-
-.recharts-bar-rectangle:hover > path {
-  fill: rgba(82, 157, 255, 0.1); /* `primary` color with 10% opacity. */
 }
 
 /* https://github.com/swagger-api/swagger-ui/blob/master/src/style/_variables.scss#L46-L53 */
@@ -141,7 +139,7 @@
 }
 
 .text-method-options {
-  color: #0d5aa7;
+  color: #42bbd7;
 }
 
 #swagger-ui .scheme-container {

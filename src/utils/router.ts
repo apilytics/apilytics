@@ -59,7 +59,12 @@ export const INDEXABLE_DOCS_ROUTES = Object.values(DOCS_ROUTES);
 
 export const INDEXABLE_BLOG_ROUTES = Object.values(BLOG_ROUTES);
 
-export const MISC_INDEXABLE_ROUTES = [staticRoutes.demo];
+export const MISC_INDEXABLE_ROUTES = [
+  staticRoutes.demo,
+  staticRoutes.login,
+  staticRoutes.register,
+  staticRoutes.contact,
+];
 
 export const INDEXABLE_ROUTES = [
   staticRoutes.root,
@@ -74,6 +79,7 @@ type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;
 export const dynamicRoutes: DynamicRoutes = {
   origin: ({ slug }) => `/origins/${slug}`,
   originSettings: ({ slug }) => `/origins/${slug}/settings`,
+  originDynamicRoutes: ({ slug }) => `/origins/${slug}/dynamic-routes`,
   blog: ({ slug }) => `/blog/${slug}`,
 };
 
@@ -89,4 +95,5 @@ export const staticApiRoutes = {
 export const dynamicApiRoutes: DynamicRoutes = {
   origin: ({ slug }) => `/api/origins/${slug}`,
   originMetrics: ({ slug, from, to }) => `/api/origins/${slug}/metrics?from=${from}&to=${to}`,
+  dynamicRoutes: ({ slug }) => `/api/origins/${slug}/dynamic-routes`,
 };

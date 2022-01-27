@@ -3,13 +3,16 @@ import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { AccountForm } from 'components/shared/AccountForm';
+import { BackButton } from 'components/shared/BackButton';
 import { withAuth } from 'hocs/withAuth';
-
-const title = 'Account settings';
+import { staticRoutes } from 'utils/router';
 
 const Account: NextPage = () => (
-  <MainTemplate title={title}>
-    <AccountForm title={title} />
+  <MainTemplate headProps={{ title: 'Account settings' }}>
+    <div className="card rounded-lg p-4 shadow bg-base-100">
+      <BackButton linkTo={staticRoutes.origins} text="Origins" />
+      <AccountForm title="Account settings" />
+    </div>
   </MainTemplate>
 );
 

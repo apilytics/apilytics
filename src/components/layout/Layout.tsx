@@ -6,20 +6,18 @@ import { Header } from 'components/layout/Header';
 import type { LayoutProps } from 'types';
 
 export const Layout: React.FC<LayoutProps> = ({
-  indexable,
-  title,
-  description,
-  maxWidth,
-  loading,
+  headProps,
+  headerProps,
+  footerProps,
   children,
 }) => (
   <>
-    <Head indexable={indexable} title={title} description={description} loading={loading} />
+    <Head {...headProps} />
     <div className="min-h-screen flex flex-col bg-base-200">
       <div id="main" className="grow flex flex-col">
-        <Header maxWidth={maxWidth} loading={loading} />
+        <Header {...headerProps} />
         <div className="grow flex flex-col relative">{children}</div>
-        <Footer />
+        <Footer {...footerProps} />
       </div>
     </div>
   </>

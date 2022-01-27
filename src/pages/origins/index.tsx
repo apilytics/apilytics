@@ -1,12 +1,11 @@
-import { CogIcon, PlusIcon } from '@heroicons/react/solid';
+import { PlusIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import Router from 'next/router';
 import React from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
-import { IconButton } from 'components/shared/IconButton';
+import { OriginMenu } from 'components/shared/OriginMenu';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigins } from 'hocs/withOrigins';
 import { useAccount } from 'hooks/useAccount';
@@ -16,7 +15,7 @@ const Origins: NextPage = () => {
   const { origins } = useAccount();
 
   return (
-    <MainTemplate title="Origin">
+    <MainTemplate headProps={{ title: 'Origin' }}>
       <div className="divide-y divide-base-content">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-4">
           <h5 className="text-white">Origins</h5>
@@ -36,14 +35,7 @@ const Origins: NextPage = () => {
                   <div className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2" key={name}>
                     <div className="flex justify-between items-center">
                       <h5>{name}</h5>
-                      <IconButton
-                        icon={CogIcon}
-                        tooltip="Go to origin settings."
-                        tooltipProps={{ className: 'tooltip-left' }}
-                        onClick={(): Promise<boolean> =>
-                          Router.push(dynamicRoutes.originSettings({ slug }))
-                        }
-                      />
+                      <OriginMenu slug={slug} />
                     </div>
                   </div>
                 </a>

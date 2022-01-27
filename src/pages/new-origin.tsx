@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
+import { BackButton } from 'components/shared/BackButton';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { withAuth } from 'hocs/withAuth';
 import { usePlausible } from 'hooks/usePlausible';
 import { UNEXPECTED_ERROR } from 'utils/constants';
-import { dynamicRoutes, staticApiRoutes } from 'utils/router';
+import { dynamicRoutes, staticApiRoutes, staticRoutes } from 'utils/router';
 
 const NewOrigin: NextPage = () => {
-  const title = 'Add new origin';
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,17 +52,20 @@ const NewOrigin: NextPage = () => {
   };
 
   return (
-    <MainTemplate title={title}>
-      <Form title={title} onSubmit={handleSubmit} error={error} loading={loading}>
-        <Input
-          name="name"
-          label="Origin Name"
-          helperText='E.g. "example.api.com" or "Internal REST API"'
-          value={name}
-          onChange={({ target }): void => setName(target.value)}
-          required
-        />
-      </Form>
+    <MainTemplate headProps={{ title: 'Add new origin' }}>
+      <div className="card rounded-lg p-4 shadow bg-base-100">
+        <BackButton linkTo={staticRoutes.origins} text="Origins" />
+        <Form title="Add new origin" onSubmit={handleSubmit} error={error} loading={loading}>
+          <Input
+            name="name"
+            label="Origin Name"
+            helperText='E.g. "example.api.com" or "Internal REST API"'
+            value={name}
+            onChange={({ target }): void => setName(target.value)}
+            required
+          />
+        </Form>
+      </div>
     </MainTemplate>
   );
 };

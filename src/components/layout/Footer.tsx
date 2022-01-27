@@ -1,13 +1,15 @@
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 import { ExternalLink } from 'components/shared/ExternalLink';
 import { usePlausible } from 'hooks/usePlausible';
-import { DESCRIPTION } from 'utils/constants';
+import { DEFAULT_MAX_WIDTH, DESCRIPTION } from 'utils/constants';
 import { staticRoutes } from 'utils/router';
+import type { FooterProps } from 'types';
 
-const WHY_LINKS = [
+const FEATURE_LINKS = [
   {
     text: 'Ease of Use',
     href: staticRoutes.easeOfUse,
@@ -69,15 +71,20 @@ const COMPANY_LINKS = [
   },
 ];
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) => {
   const plausible = usePlausible();
   const handleClick = (value: string) => (): void => plausible('footer-link-click', { value });
 
   return (
     <footer className="footer footer-center bg-base-100">
-      <div className="container text-left max-w-3xl py-4 md:py-8 flex flex-col md:flex-row items-start">
-        <div className="max-w-sm md:pr-12">
-          <div className="flex">
+      <div
+        className={clsx(
+          'container text-left py-4 md:py-8 flex flex-col md:flex-row items-start gap-4 md:gap-12',
+          maxWidth,
+        )}
+      >
+        <div className="grow">
+          <div className="flex items-center">
             <Image
               src="/logo.svg"
               layout="fixed"
@@ -86,9 +93,9 @@ export const Footer: React.FC = () => {
               objectFit="contain"
               alt="Logo"
             />
-            <h6 className="ml-2">Apilytics</h6>
+            <h6 className="footer-title text-sm ml-2">Apilytics</h6>
           </div>
-          <p className="py-2">{DESCRIPTION}</p>
+          <p className="py-2 max-w-64">{DESCRIPTION}</p>
           <p className="text-xs">
             Built by{' '}
             <ExternalLink href="https://github.com/blomqma">
@@ -100,11 +107,11 @@ export const Footer: React.FC = () => {
             </ExternalLink>
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-12">
           <div>
-            <h6 className="footer-title text-sm text-white">Why Apilytics?</h6>
+            <h6 className="footer-title text-sm">Features</h6>
             <ul>
-              {WHY_LINKS.map(({ text, href }) => (
+              {FEATURE_LINKS.map(({ text, href }) => (
                 <p key={text}>
                   <Link href={href}>
                     <a onClick={handleClick(text)}>{text}</a>
@@ -114,7 +121,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
           <div>
-            <h6 className="footer-title text-sm text-white">Community</h6>
+            <h6 className="footer-title text-sm">Community</h6>
             <ul>
               {COMMUNITY_LINKS.map(({ text, href, component: Component }) => (
                 <p key={text}>
@@ -126,7 +133,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
           <div>
-            <h6 className="footer-title text-sm text-white">Company</h6>
+            <h6 className="footer-title text-sm">Company</h6>
             <ul>
               {COMPANY_LINKS.map(({ text, href }) => (
                 <p key={text}>

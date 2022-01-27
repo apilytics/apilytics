@@ -9,10 +9,11 @@ import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { useModal } from 'hooks/useModal';
+import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES, UNKNOWN_STATUS_CODE } from 'utils/constants';
 import { formatRequests } from 'utils/metrics';
-import { staticRoutes } from 'utils/router';
+import { dynamicRoutes, staticRoutes } from 'utils/router';
 import type { EndpointData } from 'types';
 
 interface Props {
@@ -37,6 +38,8 @@ export const EndpointMetrics: React.FC<Props> = ({
   const plausible = usePlausible();
   const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
   const { handleOpenModal, handleCloseModal } = useModal();
+  const { origin } = useOrigin();
+  const slug = origin?.slug || '';
 
   const data = _data.map((d) => ({ ...d, methodAndEndpoint: `${d.method} ${d.endpoint}` }));
   const truncatedData = data.slice(0, 12);
@@ -45,7 +48,7 @@ export const EndpointMetrics: React.FC<Props> = ({
   const height = getHeight(data.length);
   const truncatedHeight = getHeight(truncatedData.length);
 
-  const handleBarClick = (data: EndpointData): void => {
+  const handleLabelClick = (data: EndpointData): void => {
     setSelectedEndpoint(data);
     handleOpenModal(MODAL_NAMES.requestDetails);
     plausible('endpoint-click');
@@ -66,15 +69,15 @@ export const EndpointMetrics: React.FC<Props> = ({
     }
   };
 
-  const renderNoRequests = !data.length && (
+  const renderNoMetrics = !data.length && (
     <div className="flex justify-center items-center py-20">
-      <p>No requests 🤷</p>
+      <p>No metrics 🤷</p>
     </div>
   );
 
   const renderTitle = <p className="text-white font-bold px-2">{title}</p>;
 
-  const renderRequestsModal = (
+  const renderMetricsModal = (
     <Modal name={modalName} mobileFullscreen>
       <div className="flex justify-between items-center p-2">
         {renderTitle}
@@ -86,7 +89,7 @@ export const EndpointMetrics: React.FC<Props> = ({
             height={height}
             data={data}
             dataKey={dataKey}
-            onBarClick={handleBarClick}
+            onLabelClick={handleLabelClick}
             renderLabels={renderLabels}
             label={label}
           />
@@ -120,7 +123,7 @@ export const EndpointMetrics: React.FC<Props> = ({
             </p>
             <ModalCloseButton onClick={handleCloseEndpointDetails} />
           </div>
-          <div className="p-4">
+          <div className="p-4 pt-0">
             <ul className="list-none">
               <li>
                 Requests: <span className="font-bold text-white">{formatRequests(requests)}</span>
@@ -137,7 +140,13 @@ export const EndpointMetrics: React.FC<Props> = ({
                     .join(', ')}
                 </span>
               </li>
-              <p className="flex items-center">Thresholds:</p>
+            </ul>
+            <p className="text-sm mt-4">
+              Combine your endpoints with{' '}
+              <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>dynamic routes</Link>.
+            </p>
+            <p className="text-white mt-4">Thresholds:</p>
+            <ul className="list-none">
               <li>
                 p50: <span className="font-bold text-white">{p50}ms</span>
               </li>
@@ -154,7 +163,7 @@ export const EndpointMetrics: React.FC<Props> = ({
                 p99: <span className="font-bold text-white">{p99}ms</span>
               </li>
             </ul>
-            <p className="text-sm mt-2">
+            <p className="text-sm mt-4">
               See our <Link href={`${staticRoutes.dashboard}#endpoint-response-times`}>docs</Link>{' '}
               for thresholds.
             </p>
@@ -164,33 +173,35 @@ export const EndpointMetrics: React.FC<Props> = ({
     }
   };
 
-  const renderRequests = (
+  const renderMetrics = (
     <>
       <div className="grow flex">
         <EndpointBarChart
           height={truncatedHeight}
           data={truncatedData}
           dataKey={dataKey}
-          onBarClick={handleBarClick}
+          onLabelClick={handleLabelClick}
           renderLabels={renderLabels}
           label={label}
         />
       </div>
-      <Button
-        onClick={handleShowAllClick}
-        className="btn-sm btn-ghost self-start"
-        endIcon={ArrowsExpandIcon}
-      >
-        Show all ({formatRequests(data.length)})
-      </Button>
+      <div className="flex">
+        <Button
+          onClick={handleShowAllClick}
+          className="btn-sm btn-ghost"
+          endIcon={ArrowsExpandIcon}
+        >
+          Show All ({formatRequests(data.length)})
+        </Button>
+      </div>
     </>
   );
 
   return (
     <DashboardCardContainer loading={loading} grow>
       {renderTitle}
-      {renderNoRequests || renderRequests}
-      {renderRequestsModal}
+      {renderNoMetrics || renderMetrics}
+      {renderMetricsModal}
       {renderEndpointDetailsModal()}
     </DashboardCardContainer>
   );

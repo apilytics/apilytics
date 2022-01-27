@@ -10,7 +10,7 @@ import {
 } from 'utils/router';
 
 // This should be manually updated whenever we want Google to re-index the sitemap.
-const MODIFIED = '2022-01-24';
+const MODIFIED = '2022-01-27';
 
 type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 

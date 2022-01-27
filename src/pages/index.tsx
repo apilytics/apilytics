@@ -21,10 +21,12 @@ interface Props extends Record<string, unknown> {
 
 const Home: NextPage<Props> = ({ snippets }) => (
   <Layout
-    title="API analytics made easy"
-    description={DEFAULT_SEO_DESCRIPTION}
-    indexable
-    maxWidth="max-w-8xl"
+    headProps={{
+      title: 'API analytics made easy',
+      description: DEFAULT_SEO_DESCRIPTION,
+      indexable: true,
+    }}
+    headerProps={{ maxWidth: 'max-w-8xl' }}
   >
     <TopSection />
     <Features />

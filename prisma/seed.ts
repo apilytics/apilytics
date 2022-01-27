@@ -1,6 +1,6 @@
 // Ignore: `ts-node` won't find these without relative imports.
 import prisma from '../src/prisma/client'; // eslint-disable-line no-restricted-imports
-import { MOCK_METRICS, MOCK_ORIGIN_ROUTES } from '../src/utils/constants'; // eslint-disable-line no-restricted-imports
+import { MOCK_DYNAMIC_ROUTES, MOCK_METRICS } from '../src/utils/constants'; // eslint-disable-line no-restricted-imports
 
 const USER_ID = 'ckyw15hbi000409l805yyhhfo';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
@@ -29,7 +29,7 @@ const TEST_METRICS = Array(365 * 24)
   )
   .flat();
 
-const TEST_ORIGIN_ROUTES = MOCK_ORIGIN_ROUTES.map(({ route, pattern }) => ({
+const TEST_DYNAMIC_ROUTES = MOCK_DYNAMIC_ROUTES.map(({ route, pattern }) => ({
   originId: ORIGIN_ID,
   route,
   pattern,
@@ -47,7 +47,7 @@ const main = async (): Promise<void> => {
     data: {
       id: USER_ID,
       name: 'Test User',
-      email: 'testuser@test.test',
+      email: 'dev@apilytics.io', // Real email, so we can receive login emails in preview.
       origins: {
         create: [
           {
@@ -63,7 +63,7 @@ const main = async (): Promise<void> => {
 
   await Promise.all([
     prisma.metric.createMany({ data: TEST_METRICS }),
-    prisma.originRoute.createMany({ data: TEST_ORIGIN_ROUTES }),
+    prisma.dynamicRoute.createMany({ data: TEST_DYNAMIC_ROUTES }),
   ]);
 };
 

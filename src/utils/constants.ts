@@ -191,15 +191,15 @@ export const MOCK_METRICS: MockMetric[] = [
   },
 ];
 
-interface MockOriginRoute {
+interface MockDynamicRoute {
   route: string;
   pattern: string;
 }
 
-export const MOCK_ORIGIN_ROUTES: MockOriginRoute[] = [
-  { route: '/blogs/<id>', pattern: '^/blogs/[^/]+$' },
-  { route: '/posts/<id>', pattern: '^/posts/[^/]+$' },
-  { route: '/users/<slug>', pattern: '^/users/[^/]+$' },
+export const MOCK_DYNAMIC_ROUTES: MockDynamicRoute[] = [
+  { route: '/blogs/<id>', pattern: '/blogs/%' },
+  { route: '/posts/<id>', pattern: '/posts/%' },
+  { route: '/users/<slug>', pattern: '/users/%' },
 ];
 
 export const MOCK_ORIGIN = {
@@ -218,6 +218,8 @@ export const MODAL_NAMES = {
   requests: 'requests',
   responseTimes: 'response-times',
   requestDetails: 'request-details',
+  dynamicRoute: 'dynamic-route',
+  deleteDynamicRoute: 'delete-dynamic-route',
 };
 
 export const DEFAULT_MAX_WIDTH = 'max-w-3xl';

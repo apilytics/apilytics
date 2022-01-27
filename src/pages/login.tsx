@@ -32,11 +32,12 @@ const Login: NextPage<LoginPageProps> = ({ csrfToken }) => {
   return (
     <LoginFormTemplate
       title="Login"
+      description="Log in to your account to view your metrics and start analyzing your APIs. We will send a magic link to your email address."
       formTitle="Log in using your email"
       initialError={initialError}
       plausibleEvent="login"
       csrfToken={csrfToken}
-      secondaryContent={renderRegisterLink}
+      contentAfter={renderRegisterLink}
     />
   );
 };

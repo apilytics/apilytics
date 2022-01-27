@@ -67,31 +67,40 @@ const Contact: NextPage = () => {
   );
 
   return (
-    <MainTemplate title="Contact">
-      <Form
-        title="Send us a message"
-        subTitle={renderSubTitle}
-        onSubmit={handleSubmit}
-        error={error}
-        loading={loading}
-        submittedText={submittedText}
-      >
-        <Input
-          type="email"
-          name="email"
-          value={formValues.email}
-          onChange={handleChange}
-          label="Your email"
-          required
-        />
-        <TextArea
-          name="message"
-          label="Your message"
-          value={formValues.message}
-          onChange={handleChange}
-          required
-        />
-      </Form>
+    <MainTemplate
+      headProps={{
+        title: 'Contact',
+        description:
+          "Get in touch by sending us a message or contacting us by email. We'll get back to you as soon as possible.",
+        indexable: true,
+      }}
+    >
+      <div className="card rounded-lg p-4 shadow bg-base-100">
+        <Form
+          title="Send us a message"
+          subTitle={renderSubTitle}
+          onSubmit={handleSubmit}
+          error={error}
+          loading={loading}
+          submittedText={submittedText}
+        >
+          <Input
+            type="email"
+            name="email"
+            value={formValues.email}
+            onChange={handleChange}
+            label="Your email"
+            required
+          />
+          <TextArea
+            name="message"
+            label="Your message"
+            value={formValues.message}
+            onChange={handleChange}
+            required
+          />
+        </Form>
+      </div>
       <CTASection />
     </MainTemplate>
   );
