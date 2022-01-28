@@ -4,6 +4,7 @@ import type { NextPage } from 'next';
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
 import { EndpointRequests } from 'components/dashboard/EndpointRequests';
 import { EndpointResponseTimes } from 'components/dashboard/EndpointResponseTimes';
+import { ErrorsTimeFrame } from 'components/dashboard/ErrorsTimeFrame';
 import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
 import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
@@ -37,12 +38,7 @@ const Demo: NextPage = () => {
     >
       <div className="container py-4 max-w-6xl grow flex flex-col">
         <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
-        <RequestsTimeFrame
-          timeFrame={timeFrame}
-          origin={origin}
-          metrics={metrics}
-          loading={loading}
-        />
+        <RequestsTimeFrame timeFrame={timeFrame} metrics={metrics} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 grow">
           <EndpointRequests
             metrics={metrics}
@@ -54,6 +50,9 @@ const Demo: NextPage = () => {
             loading={loading}
             key={Math.random()} // Prevent label list from not showing on first render.
           />
+        </div>
+        <div className="mt-4">
+          <ErrorsTimeFrame timeFrame={timeFrame} metrics={metrics} />
         </div>
         <div className="py-4 sm:py-8">
           <div className="flex flex-col sm:flex-row gap-8">

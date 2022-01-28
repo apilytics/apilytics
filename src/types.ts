@@ -67,7 +67,6 @@ export interface HeadProps {
 
 export interface HeaderProps {
   maxWidth?: string;
-  loading?: boolean;
 }
 
 export interface FooterProps {
@@ -177,6 +176,7 @@ export type ApiHandler<T = unknown> = (
 
 export interface TimeFrameData {
   requests: number;
+  errors: number;
   time: string;
 }
 
@@ -211,6 +211,8 @@ export interface EndpointData {
 export interface OriginMetrics {
   totalRequests: number;
   totalRequestsGrowth: number;
+  totalErrors: number;
+  totalErrorsGrowth: number;
   timeFrameData: TimeFrameData[];
   endpointData: EndpointData[];
 }

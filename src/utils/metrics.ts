@@ -45,17 +45,22 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
     requestsMultiplier = 24 * 7;
   }
 
+  const errorsMultiplier = requestsMultiplier * 0.1;
   const dataPoints = getDataPointsBetweenTimeFrame(timeFrame);
 
   const _timeFramePoints = dataPoints.flatMap((time) =>
     MOCK_METRICS.map(({ path, method }) => {
-      // 1 - 5 requests for each endpoint per each data point.
       const requests = Number(
         ((Math.floor(Math.random() * 5) + 1) * requestsMultiplier * dataPoints.length).toFixed(),
       );
 
+      const errors = Number(
+        ((Math.floor(Math.random() * 5) + 1) * errorsMultiplier * dataPoints.length).toFixed(),
+      );
+
       return {
         requests,
+        errors,
         path,
         method,
         time,
@@ -63,9 +68,16 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
     }),
   );
 
-  const timeFrameData = _timeFramePoints.map(({ requests, time }) => ({ requests, time }));
+  const timeFrameData = _timeFramePoints.map(({ requests, errors, time }) => ({
+    requests,
+    errors,
+    time,
+  }));
+
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
   const totalRequestsGrowth = Number(Math.random().toFixed(2));
+  const totalErrors = timeFrameData.reduce((prev, curr) => prev + curr.errors, 0);
+  const totalErrorsGrowth = Number(Math.random().toFixed(2));
 
   const endpointData = MOCK_METRICS.map(({ path, method, status_codes }) => {
     const requests = _timeFramePoints
@@ -108,12 +120,14 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
   return {
     totalRequests,
     totalRequestsGrowth,
+    totalErrors,
+    totalErrorsGrowth,
     timeFrameData,
     endpointData,
   };
 };
 
-export const formatRequests = (requests: number): string => {
+export const formatCount = (requests: number): string => {
   if (requests > 1_000_000) {
     return `${(requests / 1_000_000).toFixed(1)}m`;
   }

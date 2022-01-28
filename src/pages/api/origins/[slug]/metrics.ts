@@ -1,3 +1,5 @@
+import type { PrismaPromise } from '@prisma/client';
+
 import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
@@ -46,9 +48,40 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     scope = 'week';
   }
 
+  const getGeneralDataPromise = ({
+    fromDate,
+    toDate,
+  }: {
+    fromDate: Date;
+    toDate: Date;
+  }): PrismaPromise<{ total_requests: number; total_errors: number }[]> => {
+    return prisma.$queryRaw`
+SELECT
+  COUNT(*) AS total_requests,
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
+    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
+      THEN 1 ELSE 0 END) AS total_errors
+FROM metrics
+  LEFT JOIN origins ON metrics.origin_id = origins.id
+WHERE origins.id = ${originId}
+  AND origins.user_id = ${userId}
+  AND metrics.created_at >= ${fromDate}
+  AND metrics.created_at <= ${toDate}`;
+  };
+
+  const generalDataPromise = getGeneralDataPromise({ fromDate, toDate });
+
+  const previousGeneralDataPromise = getGeneralDataPromise({
+    fromDate: new Date(fromTime - (toTime - fromTime)),
+    toDate: fromDate,
+  });
+
   const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
+    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
+      THEN 1 ELSE 0 END) AS errors,
   DATE_TRUNC(${scope}, metrics.created_at) AS time
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
@@ -57,33 +90,6 @@ WHERE origins.id = ${originId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
 GROUP BY time;`;
-
-  // Get number of requests during the last specified time frame.
-  const lastTotalRequestsPromise = prisma.metric.count({
-    where: {
-      origin: {
-        userId,
-      },
-      originId,
-      createdAt: {
-        gte: new Date(fromTime - (toTime - fromTime)),
-        lte: fromDate,
-      },
-    },
-  });
-
-  const totalRequestsPromise = prisma.metric.count({
-    where: {
-      origin: {
-        userId,
-      },
-      originId,
-      createdAt: {
-        gte: fromDate,
-        lte: toDate,
-      },
-    },
-  });
 
   const endpointDataPromise: Promise<EndpointData[]> = prisma.$queryRaw`
 SELECT
@@ -130,18 +136,25 @@ WHERE origins.id = ${originId}
   AND metrics.created_at <= ${toDate}
 GROUP BY metrics.method, endpoint;`;
 
-  const [timeFrameData, lastTotalRequests, totalRequests, endpointData] = await Promise.all([
+  const [generalData, previousGeneralData, timeFrameData, endpointData] = await Promise.all([
+    generalDataPromise,
+    previousGeneralDataPromise,
     timeFrameDataPromise,
-    lastTotalRequestsPromise,
-    totalRequestsPromise,
     endpointDataPromise,
   ]);
 
-  const totalRequestsGrowth = Number((totalRequests / lastTotalRequests).toFixed(2));
+  const { total_requests: totalRequests, total_errors: totalErrors } = generalData[0];
+  const { total_requests: previousTotalRequests, total_errors: previousTotalErrors } =
+    previousGeneralData[0];
+
+  const totalRequestsGrowth = Number((totalRequests / previousTotalRequests).toFixed(2));
+  const totalErrorsGrowth = Number((totalErrors / previousTotalErrors).toFixed(2));
 
   const data = {
     totalRequests,
     totalRequestsGrowth,
+    totalErrors,
+    totalErrorsGrowth,
     timeFrameData,
     endpointData,
   };

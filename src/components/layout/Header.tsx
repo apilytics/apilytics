@@ -109,7 +109,7 @@ const MENU_ITEMS = [
   },
 ];
 
-export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, loading }) => {
+export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) => {
   const plausible = usePlausible();
   const { user, accountComplete } = useAccount();
   const maxWidthForNotAuthenticated = maxWidth !== DEFAULT_MAX_WIDTH ? maxWidth : 'max-w-5xl';
@@ -120,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, lo
   const handleLoginClick = (): void => plausible('login-click', eventOptions);
   const handleRegisterClick = (): void => plausible('register-click', eventOptions);
 
-  const renderLogo = !loading && (
+  const renderLogo = (
     <div className="flex flex-row items-center">
       <Link href={staticRoutes.root}>
         <a onClick={handleLogoClick}>
@@ -190,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, lo
     </div>
   );
 
-  const renderLinksForNotAuthenticated = !loading && !user && (
+  const renderLinksForNotAuthenticated = !user && (
     <div className="hidden lg:flex">
       {renderWhyDropdown}
       {renderCommunityDropdown}
@@ -200,7 +200,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, lo
     </div>
   );
 
-  const renderButtonsForNotAuthenticated = !loading && !user && (
+  const renderButtonsForNotAuthenticated = !user && (
     <div className="flex gap-2">
       <div className="dropdown dropdown-hover dropdown-end sm:hidden">
         <div tabIndex={0} className="btn btn-ghost">
@@ -277,7 +277,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH, lo
     </Button>
   );
 
-  const renderButtonsForAuthenticated = !loading && user && (
+  const renderButtonsForAuthenticated = user && (
     <div className="flex gap-2">
       {renderDocsButton}
       {renderLogoutButton}

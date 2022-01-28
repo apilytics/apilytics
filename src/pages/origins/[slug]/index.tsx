@@ -7,7 +7,9 @@ import type { NextPage } from 'next';
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
 import { EndpointRequests } from 'components/dashboard/EndpointRequests';
 import { EndpointResponseTimes } from 'components/dashboard/EndpointResponseTimes';
+import { ErrorsTimeFrame } from 'components/dashboard/ErrorsTimeFrame';
 import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
+import { ErrorTemplate } from 'components/layout/ErrorTemplate';
 import { Layout } from 'components/layout/Layout';
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
@@ -28,6 +30,7 @@ const Origin: NextPage = () => {
   const { showApiKey } = router.query;
   const { origin, metrics, setMetrics } = useOrigin();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const { handleOpenModal, handleCloseModal } = useModal();
   const slug = origin?.slug || '';
@@ -38,10 +41,16 @@ const Origin: NextPage = () => {
     (async (): Promise<void> => {
       const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
       const to = dayjs().format(REQUEST_TIME_FORMAT);
-      const res = await fetch(dynamicApiRoutes.originMetrics({ slug, from, to }));
-      const { data } = await res.json();
-      setMetrics(data);
-      setLoading(false);
+
+      try {
+        const res = await fetch(dynamicApiRoutes.originMetrics({ slug, from, to }));
+        const { data } = await res.json();
+        setMetrics(data);
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [setMetrics, slug, timeFrame]);
 
@@ -52,8 +61,13 @@ const Origin: NextPage = () => {
     }
   }, [handleOpenModal, router, showApiKey, slug]);
 
+  // Show loading screen on initial render but not when changing the time frame.
   if (loading || !origin || !metrics) {
     return <LoadingTemplate />;
+  }
+
+  if (error) {
+    return <ErrorTemplate />;
   }
 
   return (
@@ -64,15 +78,13 @@ const Origin: NextPage = () => {
     >
       <div className="container py-4 max-w-6xl grow flex flex-col">
         <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
-        <RequestsTimeFrame
-          timeFrame={timeFrame}
-          origin={origin}
-          metrics={metrics}
-          loading={loading}
-        />
+        <RequestsTimeFrame timeFrame={timeFrame} metrics={metrics} />
         <div className="grow flex flex-col lg:flex-row gap-4 mt-4">
           <EndpointRequests metrics={metrics} loading={loading} />
           <EndpointResponseTimes metrics={metrics} loading={loading} />
+        </div>
+        <div className="mt-4">
+          <ErrorsTimeFrame timeFrame={timeFrame} metrics={metrics} />
         </div>
         <p className="mt-4 text-center">
           Help us improve this dashboard by{' '}

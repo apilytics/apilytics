@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const DashboardOptions: React.FC<Props> = ({
-  origin: { slug },
+  origin: { name, slug },
   timeFrame,
   setTimeFrame,
 }) => {
@@ -28,12 +28,11 @@ export const DashboardOptions: React.FC<Props> = ({
   const isDemo = pathname === staticRoutes.demo;
 
   return (
-    <div className="flex justify-between sm:justify-end flex-wrap items-center mb-4 gap-4">
+    <div className="flex flex-wrap items-center gap-4 mb-4">
       {!isDemo && (
-        <div className="grow hidden sm:block">
-          <BackButton linkTo={staticRoutes.origins} text="Origins" />
-        </div>
+        <BackButton linkTo={staticRoutes.origins} text="Origins" className="hidden sm:flex" />
       )}
+      <h6 className="text-white sm:text-right grow">{name}</h6>
       <Select
         value={timeFrame}
         onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}

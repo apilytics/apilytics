@@ -5,6 +5,7 @@
 :root {
   --primary: #529dff;
   --base-content: #8a8a8a;
+  --error: #ff5724;
 
   /* DaisyUI overrides */
   --rounded-box: 0.5rem;
@@ -88,13 +89,6 @@
     @apply text-white !important;
   }
 
-  .btn,
-  .select,
-  .input {
-    height: auto !important;
-    min-height: 2.5rem !important;
-  }
-
   input::placeholder {
     @apply text-base-content;
   }
@@ -168,4 +162,11 @@
 /* Fix issue of recharts wrapper not resizing correctly when changing screen size: https://stackoverflow.com/a/69200646/10504286 */
 .recharts-wrapper {
   position: absolute !important;
+}
+
+.btn:not(.btn-sm),
+.select:not(.select-sm),
+.input:not(.select-sm) {
+  min-height: 2.5rem;
+  height: unset;
 }

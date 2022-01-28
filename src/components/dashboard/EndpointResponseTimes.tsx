@@ -14,14 +14,13 @@ interface Props {
   loading: boolean;
 }
 
-export const EndpointResponseTimes: React.FC<Props> = ({ metrics: { endpointData }, loading }) => {
+export const EndpointResponseTimes: React.FC<Props> = ({ metrics: { endpointData } }) => {
   const data = [...endpointData.sort((a, b) => b.avg_response_time - a.avg_response_time)];
 
   return (
     <EndpointMetrics
-      loading={loading}
-      title="Response times ⚡"
       label="Response times"
+      expandButtonLabel="Show all response times"
       modalName={MODAL_NAMES.responseTimes}
       renderLabels={renderLabels}
       data={data}
