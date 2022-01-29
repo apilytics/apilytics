@@ -141,6 +141,9 @@ export const EndpointMetrics: React.FC<Props> = ({
               <EndpointMetricStats title="Request sizes" unit="kB" {...requestSizes} />
               <EndpointMetricStats title="Response sizes" unit="kB" {...responseSizes} />
               <p className="text-sm mt-4">
+                See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
+                metrics.
+                <br />
                 Combine this endpoint with your other endpoints with our{' '}
                 <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>dynamic routes</Link>.
               </p>

@@ -86,8 +86,9 @@ const Origin: NextPage = () => {
         <div className="mt-4">
           <ErrorsTimeFrame timeFrame={timeFrame} metrics={metrics} />
         </div>
-        <p className="mt-4 text-center">
-          Help us improve this dashboard by{' '}
+        <p className="mt-4">
+          See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
+          metrics. Help us improve this dashboard by{' '}
           <Link href={staticRoutes.contact}>
             <a>giving us feedback</a>
           </Link>

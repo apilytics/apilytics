@@ -19,15 +19,15 @@ The dashboard is quite self-explanatory, but the visualization is divided into t
 
 <br />
 
-#### [Time frame ⌛](#time-frame) {#time-frame}
+#### [Requests time frame ⌛](#requests-time-frame) {#requests-time-frame}
 
 <br />
 
-![Time frame](/mock-ups/time-frame.png)
+![Requests time frame](/mock-ups/requests-time-frame.png)
 
 <br />
 
-The time frame allows you to visualize the API requests to your origin over a specified time frame.
+The requests time frame allows you to visualize the API requests to your origin over a specified time frame.
 In addition to the total amount of requests and the historical view, you can also see the growth from the previous time frame that you've selected.
 So if you've for instance selected 24 hours as the time frame, the growth will be calculated from the previous 24 hours that is not shown on the graph.
 
@@ -60,6 +60,20 @@ except that the endpoints have been sorted by the average response times that it
 
 The percentile thresholds tell you the exact thresholds under which a certain percentage of the requests to the endpoint have responded.
 So for instance the `p75` threshold means that 75% of the requests made to the endpoint have a response time under the specified value for the given `p75` value.
+
+<br />
+
+#### [Errors time frame ⌛](#time-frame) {#time-frame}
+
+<br />
+
+![Errors time frame](/mock-ups/errors-time-frame.png)
+
+<br />
+
+The errors time frame allows you to visualize the errors that have occured in your API over a specified time frame.
+You can monitor the total amount of the errors over the time frame as well as the growth from the previous time frame.
+So if you've for instance selected 24 hours as the time frame, the growth will be calculated from the previous 24 hours that is not shown on the graph.
 
 <br />
 
