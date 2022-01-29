@@ -16,7 +16,6 @@ import Link from 'next/link';
 import React from 'react';
 
 import { Button } from 'components/shared/Button';
-import { ExternalLink } from 'components/shared/ExternalLink';
 import { useAccount } from 'hooks/useAccount';
 import { usePlausible } from 'hooks/usePlausible';
 import { DEFAULT_MAX_WIDTH, EVENT_LOCATIONS } from 'utils/constants';
@@ -55,14 +54,14 @@ const WHY_ITEMS = [
 
 const COMMUNITY_ITEMS = [
   {
-    component: Link,
+    external: false,
     icon: RssIcon,
     href: staticRoutes.blog,
     title: 'Blog',
     description: 'Read our blog to learn about the latest updates and features.',
   },
   {
-    component: Link,
+    external: false,
     icon: DocumentSearchIcon,
     href: staticRoutes.docs,
     title: 'Docs',
@@ -70,7 +69,7 @@ const COMMUNITY_ITEMS = [
       'Documentation for using Apilytics. In-depth guides and tutorials for different tools and technologies.',
   },
   {
-    component: ExternalLink,
+    external: true,
     icon: CodeIcon,
     href: staticRoutes.github,
     title: 'Github',
@@ -78,7 +77,7 @@ const COMMUNITY_ITEMS = [
       'Our Github organizations gives you access to our open source work as well as our Github community.',
   },
   {
-    component: ExternalLink,
+    external: true,
     icon: MapIcon,
     href: staticRoutes.roadmap,
     title: 'Public roadmap',
@@ -174,16 +173,19 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
         tabIndex={0}
         className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-96 text-primary"
       >
-        {COMMUNITY_ITEMS.map(({ component: Component, icon: Icon, href, title, description }) => (
+        {COMMUNITY_ITEMS.map(({ external, icon: Icon, href, title, description }) => (
           <li key={title}>
-            <Component href={href} className="unstyled">
-              <a className="unstyled flex flex-col">
+            <Link href={href}>
+              <a
+                className="unstyled flex flex-col"
+                {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
+              >
                 <p className="self-start flex items-center">
                   <Icon className="w-5 h-5 mr-2" /> {title}
                 </p>
                 <p className="text-sm text-base-content">{description}</p>
               </a>
-            </Component>
+            </Link>
           </li>
         ))}
       </ul>
