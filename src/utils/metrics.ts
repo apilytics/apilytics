@@ -79,8 +79,8 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
   const totalErrors = timeFrameData.reduce((prev, curr) => prev + curr.errors, 0);
   const totalErrorsGrowth = Number(Math.random().toFixed(2));
 
-  const endpointData = MOCK_METRICS.map(({ path, method, status_codes }) => {
-    const requests = _timeFramePoints
+  const endpointData = MOCK_METRICS.map(({ path, method, statusCodes }) => {
+    const totalRequests = _timeFramePoints
       .filter((data) => data.path === path && data.method === method)
       .reduce((prev, curr) => prev + curr.requests, 0);
 
@@ -91,29 +91,41 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
     const endpoint =
       MOCK_DYNAMIC_ROUTES.find(({ pattern }) => new RegExp(pattern).test(path))?.route ?? path;
 
+    const responseTimes = {
+      avg: avg_response_time,
+      p50: avg_response_time,
+      p75: Number((avg_response_time + avg_response_time * 0.25).toFixed()),
+      p90: Number((avg_response_time + avg_response_time * 0.4).toFixed()),
+      p95: Number((avg_response_time + avg_response_time * 0.45).toFixed()),
+      p99: Number((avg_response_time + avg_response_time * 0.49).toFixed()),
+    };
+
+    const requestSizes = {
+      avg: avg_request_size,
+      p50: avg_request_size,
+      p75: Number((avg_request_size + avg_request_size * 0.25).toFixed()),
+      p90: Number((avg_request_size + avg_request_size * 0.4).toFixed()),
+      p95: Number((avg_request_size + avg_request_size * 0.45).toFixed()),
+      p99: Number((avg_request_size + avg_request_size * 0.49).toFixed()),
+    };
+
+    const responseSizes = {
+      avg: avg_response_size,
+      p50: avg_response_size,
+      p75: Number((avg_response_size + avg_response_size * 0.25).toFixed()),
+      p90: Number((avg_response_size + avg_response_size * 0.4).toFixed()),
+      p95: Number((avg_response_size + avg_response_size * 0.45).toFixed()),
+      p99: Number((avg_response_size + avg_response_size * 0.49).toFixed()),
+    };
+
     return {
-      requests,
+      totalRequests,
       endpoint,
       method,
-      status_codes,
-      avg_response_time,
-      response_time_p50: avg_response_time,
-      response_time_p75: Number((avg_response_time + avg_response_time * 0.25).toFixed()),
-      response_time_p90: Number((avg_response_time + avg_response_time * 0.4).toFixed()),
-      response_time_p95: Number((avg_response_time + avg_response_time * 0.45).toFixed()),
-      response_time_p99: Number((avg_response_time + avg_response_time * 0.49).toFixed()),
-      avg_request_size,
-      request_size_p50: avg_request_size,
-      request_size_p75: Number((avg_request_size + avg_request_size * 0.25).toFixed()),
-      request_size_p90: Number((avg_request_size + avg_request_size * 0.4).toFixed()),
-      request_size_p95: Number((avg_request_size + avg_request_size * 0.45).toFixed()),
-      request_size_p99: Number((avg_request_size + avg_request_size * 0.49).toFixed()),
-      avg_response_size,
-      response_size_p50: avg_request_size,
-      response_size_p75: Number((avg_response_size + avg_response_size * 0.25).toFixed()),
-      response_size_p90: Number((avg_response_size + avg_response_size * 0.4).toFixed()),
-      response_size_p95: Number((avg_response_size + avg_response_size * 0.45).toFixed()),
-      response_size_p99: Number((avg_response_size + avg_response_size * 0.49).toFixed()),
+      statusCodes,
+      responseTimes,
+      requestSizes,
+      responseSizes,
     };
   });
 
@@ -127,14 +139,14 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
   };
 };
 
-export const formatCount = (requests: number): string => {
-  if (requests > 1_000_000) {
-    return `${(requests / 1_000_000).toFixed(1)}m`;
+export const formatCount = (count: number): string => {
+  if (count > 1_000_000) {
+    return `${(count / 1_000_000).toFixed(1)}m`;
   }
 
-  if (requests > 1_000) {
-    return `${(requests / 1_000).toFixed(1)}k`;
+  if (count > 1_000) {
+    return `${(count / 1_000).toFixed(1)}k`;
   }
 
-  return `${requests}`;
+  return `${count}`;
 };

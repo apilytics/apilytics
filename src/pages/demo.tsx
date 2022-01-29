@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 

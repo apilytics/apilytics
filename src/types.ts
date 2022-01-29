@@ -180,32 +180,23 @@ export interface TimeFrameData {
   time: string;
 }
 
+export interface MetricStats {
+  avg: number;
+  p50: number;
+  p75: number;
+  p90: number;
+  p95: number;
+  p99: number;
+}
+
 export interface EndpointData {
-  requests: number;
+  totalRequests: number;
   endpoint: string;
   method: Metric['method'];
-  status_codes: Metric['statusCode'][];
-  // Response times.
-  avg_response_time: number;
-  response_time_p50: number;
-  response_time_p75: number;
-  response_time_p90: number;
-  response_time_p95: number;
-  response_time_p99: number;
-  // Request sizes.
-  avg_request_size: number;
-  request_size_p50: number;
-  request_size_p75: number;
-  request_size_p90: number;
-  request_size_p95: number;
-  request_size_p99: number;
-  // Response sizes.
-  avg_response_size: number;
-  response_size_p50: number;
-  response_size_p75: number;
-  response_size_p90: number;
-  response_size_p95: number;
-  response_size_p99: number;
+  statusCodes: Metric['statusCode'][];
+  responseTimes: MetricStats;
+  requestSizes: MetricStats;
+  responseSizes: MetricStats;
 }
 
 export interface OriginMetrics {
@@ -219,5 +210,5 @@ export interface OriginMetrics {
 
 export interface DynamicRouteWithMatches {
   route: string;
-  matching_paths: number;
+  matchingPaths: number;
 }

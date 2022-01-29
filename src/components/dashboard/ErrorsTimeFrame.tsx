@@ -26,7 +26,7 @@ export const ErrorsTimeFrame: React.FC<Props> = ({
         </p>
         {isFinite(totalErrorsGrowth) && (
           <p>
-            Growth from previous {TIME_FRAME_OPTIONS[timeFrame].split('Last')[1].toLowerCase()}):{' '}
+            Growth from previous {TIME_FRAME_OPTIONS[timeFrame].split('Last')[1].toLowerCase()}:{' '}
             <span className={positiveGrowth ? 'text-error' : 'text-success'}>
               {positiveGrowth ? '+' : ''}
               {(totalErrorsGrowth * 100).toFixed()}%
@@ -39,7 +39,7 @@ export const ErrorsTimeFrame: React.FC<Props> = ({
           timeFrame={timeFrame}
           timeFrameData={timeFrameData}
           dataKey="errors"
-          stopColor="var(--error)"
+          color="var(--error)"
         />
       </div>
     </DashboardCard>

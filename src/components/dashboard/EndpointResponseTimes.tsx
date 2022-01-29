@@ -15,16 +15,16 @@ interface Props {
 }
 
 export const EndpointResponseTimes: React.FC<Props> = ({ metrics: { endpointData } }) => {
-  const data = [...endpointData.sort((a, b) => b.avg_response_time - a.avg_response_time)];
+  const data = [...endpointData.sort((a, b) => b.responseTimes.avg - a.responseTimes.avg)];
 
   return (
     <EndpointMetrics
       label="Response times"
-      expandButtonLabel="Show all response times"
+      expandButtonLabel="All response times"
       modalName={MODAL_NAMES.responseTimes}
       renderLabels={renderLabels}
       data={data}
-      dataKey="avg_response_time"
+      dataKey="responseTimes.avg"
     />
   );
 };

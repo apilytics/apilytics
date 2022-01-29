@@ -14,6 +14,34 @@ interface GetResponse {
   data: OriginMetrics;
 }
 
+interface RawGeneralData {
+  total_requests: number;
+  total_errors: number;
+}
+
+interface RawEndpointData extends Pick<EndpointData, 'endpoint' | 'method'> {
+  total_requests: number;
+  status_codes: number[];
+  response_time_avg: number;
+  response_time_p50: number;
+  response_time_p75: number;
+  response_time_p90: number;
+  response_time_p95: number;
+  response_time_p99: number;
+  request_size_avg: number;
+  request_size_p50: number;
+  request_size_p75: number;
+  request_size_p90: number;
+  request_size_p95: number;
+  request_size_p99: number;
+  response_size_avg: number;
+  response_size_p50: number;
+  response_size_p75: number;
+  response_size_p90: number;
+  response_size_p95: number;
+  response_size_p99: number;
+}
+
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
@@ -54,7 +82,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   }: {
     fromDate: Date;
     toDate: Date;
-  }): PrismaPromise<{ total_requests: number; total_errors: number }[]> => {
+  }): PrismaPromise<RawGeneralData[]> => {
     return prisma.$queryRaw`
 SELECT
   COUNT(*) AS total_requests,
@@ -91,33 +119,34 @@ WHERE origins.id = ${originId}
   AND metrics.created_at <= ${toDate}
 GROUP BY time;`;
 
-  const endpointDataPromise: Promise<EndpointData[]> = prisma.$queryRaw`
+  const endpointDataPromise: Promise<RawEndpointData[]> = prisma.$queryRaw`
 SELECT
-  COUNT(*) AS requests,
+  COUNT(*) AS total_requests,
   CASE WHEN matched_routes.route IS NULL THEN metrics.path ELSE matched_routes.route END AS endpoint,
   metrics.method,
   ARRAY_AGG(DISTINCT(metrics.status_code)) AS status_codes,
 
-  ROUND(AVG(metrics.time_millis)) AS avg_response_time,
+  ROUND(AVG(metrics.time_millis)) AS response_time_avg,
   PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p50,
   PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p75,
   PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p90,
   PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p95,
   PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p99,
 
-  ROUND(AVG(metrics.request_size)) AS avg_request_size,
+  ROUND(AVG(metrics.request_size)) AS request_size_avg,
   PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p50,
   PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p75,
   PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p90,
   PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p95,
   PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.request_size) AS request_size_p99,
 
-  ROUND(AVG(metrics.response_size)) AS avg_response_size,
+  ROUND(AVG(metrics.response_size)) AS response_size_avg,
   PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p50,
   PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p75,
   PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p90,
   PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p95,
   PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS response_size_p99
+
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
   LEFT JOIN LATERAL (
@@ -130,13 +159,15 @@ FROM metrics
     ORDER BY LENGTH(dynamic_routes.pattern) DESC
     LIMIT 1
   ) AS matched_routes ON TRUE
+
 WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
+
 GROUP BY metrics.method, endpoint;`;
 
-  const [generalData, previousGeneralData, timeFrameData, endpointData] = await Promise.all([
+  const [generalData, previousGeneralData, timeFrameData, _endpointData] = await Promise.all([
     generalDataPromise,
     previousGeneralDataPromise,
     timeFrameDataPromise,
@@ -149,6 +180,39 @@ GROUP BY metrics.method, endpoint;`;
 
   const totalRequestsGrowth = Number((totalRequests / previousTotalRequests).toFixed(2));
   const totalErrorsGrowth = Number((totalErrors / previousTotalErrors).toFixed(2));
+
+  const endpointData: EndpointData[] = _endpointData.map(
+    ({ total_requests, endpoint, method, status_codes, ...data }) => ({
+      totalRequests: total_requests,
+      endpoint,
+      method,
+      statusCodes: status_codes,
+      responseTimes: {
+        avg: data.response_time_avg,
+        p50: data.response_time_p50,
+        p75: data.response_time_p75,
+        p90: data.response_time_p90,
+        p95: data.response_time_p95,
+        p99: data.response_time_p99,
+      },
+      requestSizes: {
+        avg: data.request_size_avg,
+        p50: data.request_size_p50,
+        p75: data.request_size_p75,
+        p90: data.request_size_p90,
+        p95: data.request_size_p95,
+        p99: data.request_size_p99,
+      },
+      responseSizes: {
+        avg: data.response_size_avg,
+        p50: data.response_size_p50,
+        p75: data.response_size_p75,
+        p90: data.response_size_p90,
+        p95: data.response_size_p95,
+        p99: data.response_size_p99,
+      },
+    }),
+  );
 
   const data = {
     totalRequests,

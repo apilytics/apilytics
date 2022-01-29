@@ -5,6 +5,7 @@ import type { ContentType } from 'recharts/types/component/Label';
 
 import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { EndpointBarChart } from 'components/dashboard/EndpointBarChart';
+import { EndpointMetricStats } from 'components/dashboard/EndpointMetricStats';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -101,26 +102,11 @@ export const EndpointMetrics: React.FC<Props> = ({
       const {
         endpoint,
         method,
-        requests,
-        status_codes,
-        avg_response_time,
-        response_time_p50,
-        response_time_p75,
-        response_time_p90,
-        response_time_p95,
-        response_time_p99,
-        avg_request_size,
-        request_size_p50,
-        request_size_p75,
-        request_size_p90,
-        request_size_p95,
-        request_size_p99,
-        avg_response_size,
-        response_size_p50,
-        response_size_p75,
-        response_size_p90,
-        response_size_p95,
-        response_size_p99,
+        totalRequests,
+        statusCodes,
+        responseTimes,
+        requestSizes,
+        responseSizes,
       } = selectedEndpoint;
 
       return (
@@ -141,83 +127,20 @@ export const EndpointMetrics: React.FC<Props> = ({
               </p>
               <p>
                 Total requests:{' '}
-                <span className="font-bold text-white">{formatCount(requests)}</span>
+                <span className="font-bold text-white">{formatCount(totalRequests)}</span>
               </p>
               <p>
                 Status codes:{' '}
                 <span className="font-bold text-white">
-                  {status_codes
+                  {statusCodes
                     .map((code) => (code === UNKNOWN_STATUS_CODE ? 'unknown' : code))
                     .join(', ')}
                 </span>
               </p>
-              <h6 className="text-white mt-4">Response times:</h6>
-              <p>
-                Average: <span className="font-bold text-white">{avg_response_time}ms</span>
-              </p>
-              <ul className="list-none">
-                <li>
-                  p50: <span className="font-bold text-white">{response_time_p50}ms</span>
-                </li>
-                <li>
-                  p75: <span className="font-bold text-white">{response_time_p75}ms</span>
-                </li>
-                <li>
-                  p90: <span className="font-bold text-white">{response_time_p90}ms</span>
-                </li>
-                <li>
-                  p95: <span className="font-bold text-white">{response_time_p95}ms</span>
-                </li>
-                <li>
-                  p99: <span className="font-bold text-white">{response_time_p99}ms</span>
-                </li>
-              </ul>
-              <h6 className="text-white mt-4">Request sizes:</h6>
-              <p>
-                Average: <span className="font-bold text-white">{avg_request_size}kB</span>
-              </p>
-              <ul className="list-none">
-                <li>
-                  p50: <span className="font-bold text-white">{request_size_p50}kB</span>
-                </li>
-                <li>
-                  p75: <span className="font-bold text-white">{request_size_p75}kB</span>
-                </li>
-                <li>
-                  p90: <span className="font-bold text-white">{request_size_p90}kB</span>
-                </li>
-                <li>
-                  p95: <span className="font-bold text-white">{request_size_p95}kB</span>
-                </li>
-                <li>
-                  p99: <span className="font-bold text-white">{request_size_p99}kB</span>
-                </li>
-              </ul>
-              <h6 className="text-white mt-4">Response sizes:</h6>
-              <p>
-                Average: <span className="font-bold text-white">{avg_response_size}kB</span>
-              </p>
-              <ul className="list-none">
-                <li>
-                  p50: <span className="font-bold text-white">{response_size_p50}kB</span>
-                </li>
-                <li>
-                  p75: <span className="font-bold text-white">{response_size_p75}kB</span>
-                </li>
-                <li>
-                  p90: <span className="font-bold text-white">{response_size_p90}kB</span>
-                </li>
-                <li>
-                  p95: <span className="font-bold text-white">{response_size_p95}kB</span>
-                </li>
-                <li>
-                  p99: <span className="font-bold text-white">{response_size_p99}kB</span>
-                </li>
-              </ul>
+              <EndpointMetricStats title="Response times" unit="ms" {...responseTimes} />
+              <EndpointMetricStats title="Request sizes" unit="kB" {...requestSizes} />
+              <EndpointMetricStats title="Response sizes" unit="kB" {...responseSizes} />
               <p className="text-sm mt-4">
-                Learn what the p-values mean from our docs for{' '}
-                <Link href={`${staticRoutes.dashboard}#endpoint-response-times`}>thresholds</Link>.
-                <br />
                 Combine this endpoint with your other endpoints with our{' '}
                 <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>dynamic routes</Link>.
               </p>

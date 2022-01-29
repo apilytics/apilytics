@@ -23,14 +23,14 @@ interface Props {
   timeFrame: TimeFrame;
   timeFrameData: TimeFrameData[];
   dataKey: string;
-  stopColor: string;
+  color: string;
 }
 
 export const TimeFrameAreaChart: React.FC<Props> = ({
   timeFrame,
   timeFrameData,
   dataKey,
-  stopColor,
+  color,
 }) => {
   const scope = getTimeFrameScope(timeFrame);
 
@@ -141,7 +141,7 @@ export const TimeFrameAreaChart: React.FC<Props> = ({
               Errors: <span className="font-bold">{formatCount(errors)}</span>
             </li>
             <li>
-              Error rate: <span className="font-bold">{(errors / requests).toFixed(2)}</span>
+              Error rate: <span className="font-bold">{(errors / requests || 0).toFixed(2)}</span>
             </li>
           </ul>
         </div>
@@ -156,8 +156,8 @@ export const TimeFrameAreaChart: React.FC<Props> = ({
       <AreaChart data={data}>
         <defs>
           <linearGradient id={`${dataKey}-fill-color`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="50%" stopColor={stopColor} stopOpacity={0.15} />
-            <stop offset="100%" stopColor={stopColor} stopOpacity={0} />
+            <stop offset="50%" stopColor={color} stopOpacity={0.15} />
+            <stop offset="100%" stopColor={color} stopOpacity={0} />
           </linearGradient>
         </defs>
         <XAxis
@@ -176,7 +176,12 @@ export const TimeFrameAreaChart: React.FC<Props> = ({
           stroke="var(--base-content)"
           padding={{ top: 20, bottom: 20 }}
         />
-        <Area type="monotone" dataKey={dataKey} fill={`url(#${dataKey}-fill-color)`} />
+        <Area
+          type="monotone"
+          dataKey={dataKey}
+          stroke={color}
+          fill={`url(#${dataKey}-fill-color)`}
+        />
         <Tooltip content={renderTooltipContent} />
       </AreaChart>
     </ResponsiveContainer>

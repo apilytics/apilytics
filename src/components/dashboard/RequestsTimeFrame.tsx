@@ -39,7 +39,7 @@ export const RequestsTimeFrame: React.FC<Props> = ({
           timeFrame={timeFrame}
           timeFrameData={timeFrameData}
           dataKey="requests"
-          stopColor="var(--primary)"
+          color="var(--primary)"
         />
       </div>
     </DashboardCard>

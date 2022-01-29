@@ -23,7 +23,7 @@ const getRoutes = async (originId: string): Promise<DynamicRouteWithMatches[]> =
   const result: DynamicRouteWithMatches[] = await prisma.$queryRaw`
 SELECT
   dynamic_routes.route,
-  COUNT(DISTINCT metrics.path) AS matching_paths
+  COUNT(DISTINCT metrics.path) AS "matchingPaths"
 FROM dynamic_routes
   LEFT JOIN metrics ON metrics.origin_id = dynamic_routes.origin_id
     AND metrics.path LIKE dynamic_routes.pattern

@@ -163,7 +163,7 @@ const OriginDynamicRoutes: NextPage = () => {
           {routes.length ? (
             routes.map((route) => (
               <p key={route.route}>
-                <a onClick={handleRouteClick(route)}>{route.route}</a> ({route.matching_paths})
+                <a onClick={handleRouteClick(route)}>{route.route}</a> ({route.matchingPaths})
               </p>
             ))
           ) : (
@@ -189,7 +189,7 @@ const OriginDynamicRoutes: NextPage = () => {
         <div className="flex justify-between items-center p-2">
           <p className="font-bold px-2">
             <p className="text-white">
-              {selectedRoute?.route} ({selectedRoute?.matching_paths})
+              {selectedRoute?.route} ({selectedRoute?.matchingPaths})
             </p>
           </p>
           <ModalCloseButton onClick={handleCloseModal} />

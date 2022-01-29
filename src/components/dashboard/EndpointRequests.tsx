@@ -16,16 +16,16 @@ interface Props {
 }
 
 export const EndpointRequests: React.FC<Props> = ({ metrics: { endpointData } }) => {
-  const data = [...endpointData.sort((a, b) => b.requests - a.requests)];
+  const data = [...endpointData.sort((a, b) => b.totalRequests - a.totalRequests)];
 
   return (
     <EndpointMetrics
       label="Requests"
-      expandButtonLabel="Show all requests"
+      expandButtonLabel="All requests"
       modalName={MODAL_NAMES.requests}
       renderLabels={renderLabels}
       data={data}
-      dataKey="requests"
+      dataKey="totalRequests"
     />
   );
 };
