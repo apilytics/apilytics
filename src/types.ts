@@ -45,6 +45,7 @@ export type PlausibleEvents = {
   'register-click': PlausibleProps;
   'live-demo-click': PlausibleProps;
   'setup-snippet-click': PlausibleProps;
+  'setup-framework-select': PlausibleProps;
   'pricing-slider-click': PlausibleProps;
   'email-list-subscribe': PlausibleProps;
   'time-frame-selector-click': PlausibleProps;
