@@ -3,8 +3,9 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import type { ContentType } from 'recharts/types/component/Label';
 
-import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
+import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { EndpointBarChart } from 'components/dashboard/EndpointBarChart';
+import { EndpointMetricStats } from 'components/dashboard/EndpointMetricStats';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -12,14 +13,14 @@ import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES, UNKNOWN_STATUS_CODE } from 'utils/constants';
-import { formatRequests } from 'utils/metrics';
+import { formatCount } from 'utils/metrics';
 import { dynamicRoutes, staticRoutes } from 'utils/router';
 import type { EndpointData } from 'types';
 
 interface Props {
-  title: string;
   label: string;
-  loading: boolean;
+  emptyLabel: string;
+  expandButtonLabel: string;
   modalName: string;
   data: EndpointData[];
   dataKey: string;
@@ -27,10 +28,10 @@ interface Props {
 }
 
 export const EndpointMetrics: React.FC<Props> = ({
-  title,
   label,
+  emptyLabel,
+  expandButtonLabel,
   modalName,
-  loading,
   data: _data,
   dataKey,
   renderLabels,
@@ -42,7 +43,7 @@ export const EndpointMetrics: React.FC<Props> = ({
   const slug = origin?.slug || '';
 
   const data = _data.map((d) => ({ ...d, methodAndEndpoint: `${d.method} ${d.endpoint}` }));
-  const truncatedData = data.slice(0, 12);
+  const truncatedData = data.slice(0, 10);
 
   const getHeight = (dataLength: number): number => 100 + dataLength * 35;
   const height = getHeight(data.length);
@@ -70,32 +71,31 @@ export const EndpointMetrics: React.FC<Props> = ({
   };
 
   const renderNoMetrics = !data.length && (
-    <div className="flex justify-center items-center py-20">
-      <p>No metrics 🤷</p>
+    <div className="flex flex-col justify-center items-center py-40">
+      <p>{emptyLabel}</p>
     </div>
   );
 
-  const renderTitle = <p className="text-white font-bold px-2">{title}</p>;
-
   const renderMetricsModal = (
     <Modal name={modalName} mobileFullscreen>
-      <div className="flex justify-between items-center p-2">
-        {renderTitle}
-        <ModalCloseButton onClick={handleCloseModal} />
-      </div>
-      <div className="overflow-y-auto px-4">
-        <div className="grow flex">
-          <EndpointBarChart
-            height={height}
-            data={data}
-            dataKey={dataKey}
-            onLabelClick={handleLabelClick}
-            renderLabels={renderLabels}
-            label={label}
-          />
+      <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
+        <div className="flex justify-end p-2">
+          <ModalCloseButton onClick={handleCloseModal} />
         </div>
+        <div className="overflow-y-auto px-4">
+          <div className="grow flex">
+            <EndpointBarChart
+              height={height}
+              data={data}
+              dataKey={dataKey}
+              onLabelClick={handleLabelClick}
+              renderLabels={renderLabels}
+              label={label}
+            />
+          </div>
+        </div>
+        <div className="p-6" />
       </div>
-      <div className="p-6" />
     </Modal>
   );
 
@@ -104,69 +104,52 @@ export const EndpointMetrics: React.FC<Props> = ({
       const {
         endpoint,
         method,
-        requests,
-        avg_response_time,
-        status_codes,
-        p50,
-        p75,
-        p90,
-        p95,
-        p99,
+        totalRequests,
+        statusCodes,
+        responseTimes,
+        requestSizes,
+        responseSizes,
       } = selectedEndpoint;
 
       return (
-        <Modal name={MODAL_NAMES.requestDetails} onClose={handleCloseEndpointDetails}>
-          <div className="flex justify-between items-center p-2">
-            <p className="font-bold px-2">
-              <span className={`text-method-${method.toLowerCase()}`}>{method}</span>{' '}
-              <span className="text-white">{endpoint}</span>
-            </p>
-            <ModalCloseButton onClick={handleCloseEndpointDetails} />
-          </div>
-          <div className="p-4 pt-0">
-            <ul className="list-none">
-              <li>
-                Requests: <span className="font-bold text-white">{formatRequests(requests)}</span>
-              </li>
-              <li>
-                Avg. response time:{' '}
-                <span className="font-bold text-white">{avg_response_time}ms</span>
-              </li>
-              <li>
+        <Modal
+          name={MODAL_NAMES.requestDetails}
+          onClose={handleCloseEndpointDetails}
+          mobileFullscreen
+        >
+          <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
+            <div className="flex justify-between items-center p-2">
+              <h5 className="px-2 text-white">Endpoint details</h5>
+              <ModalCloseButton onClick={handleCloseEndpointDetails} />
+            </div>
+            <div className="p-4 pt-0">
+              <p>
+                Endpoint: <span className={`text-method-${method.toLowerCase()}`}>{method}</span>{' '}
+                <span className="text-white">{endpoint}</span>
+              </p>
+              <p>
+                Total requests:{' '}
+                <span className="font-bold text-white">{formatCount(totalRequests)}</span>
+              </p>
+              <p>
                 Status codes:{' '}
                 <span className="font-bold text-white">
-                  {status_codes
+                  {statusCodes
                     .map((code) => (code === UNKNOWN_STATUS_CODE ? 'unknown' : code))
                     .join(', ')}
                 </span>
-              </li>
-            </ul>
-            <p className="text-sm mt-4">
-              Combine your endpoints with{' '}
-              <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>dynamic routes</Link>.
-            </p>
-            <p className="text-white mt-4">Thresholds:</p>
-            <ul className="list-none">
-              <li>
-                p50: <span className="font-bold text-white">{p50}ms</span>
-              </li>
-              <li>
-                p75: <span className="font-bold text-white">{p75}ms</span>
-              </li>
-              <li>
-                p90: <span className="font-bold text-white">{p90}ms</span>
-              </li>
-              <li>
-                p95: <span className="font-bold text-white">{p95}ms</span>
-              </li>
-              <li>
-                p99: <span className="font-bold text-white">{p99}ms</span>
-              </li>
-            </ul>
-            <p className="text-sm mt-4">
-              See our <Link href={`${staticRoutes.dashboard}#endpoint-response-times`}>docs</Link>{' '}
-              for thresholds.
-            </p>
+              </p>
+              <EndpointMetricStats title="Response times" unit="ms" {...responseTimes} />
+              <EndpointMetricStats title="Request sizes" unit="kB" {...requestSizes} />
+              <EndpointMetricStats title="Response sizes" unit="kB" {...responseSizes} />
+              <p className="text-sm mt-4">
+                See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
+                metrics.
+                <br />
+                Combine this endpoint with your other endpoints with our{' '}
+                <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>dynamic routes</Link>.
+              </p>
+            </div>
           </div>
         </Modal>
       );
@@ -190,19 +173,19 @@ export const EndpointMetrics: React.FC<Props> = ({
           onClick={handleShowAllClick}
           className="btn-sm btn-ghost"
           endIcon={ArrowsExpandIcon}
+          fullWidth="mobile"
         >
-          Show All ({formatRequests(data.length)})
+          {expandButtonLabel} ({formatCount(data.length)})
         </Button>
       </div>
     </>
   );
 
   return (
-    <DashboardCardContainer loading={loading} grow>
-      {renderTitle}
+    <DashboardCard>
       {renderNoMetrics || renderMetrics}
       {renderMetricsModal}
       {renderEndpointDetailsModal()}
-    </DashboardCardContainer>
+    </DashboardCard>
   );
 };

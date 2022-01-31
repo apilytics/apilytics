@@ -14,14 +14,16 @@ const TEST_METRICS = Array(365 * 24)
     Array(Math.floor(Math.random() * 20) + 1)
       .fill(null)
       .map(() => {
-        const { path, method, status_codes } =
+        const { path, method, statusCodes } =
           MOCK_METRICS[Math.floor(Math.random() * MOCK_METRICS.length)];
 
         return {
           path,
           method,
-          statusCode: status_codes[Math.floor(Math.random() * status_codes.length)],
+          statusCode: statusCodes[Math.floor(Math.random() * statusCodes.length)],
           timeMillis: Math.floor(Math.random() * 100) + 20,
+          requestSize: Math.floor(Math.random() * 100) + 20,
+          responseSize: Math.floor(Math.random() * 100) + 20,
           createdAt: new Date(Date.now() - i * 60 * 60 * 1000),
           originId: ORIGIN_ID,
         };

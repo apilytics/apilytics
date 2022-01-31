@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const DashboardOptions: React.FC<Props> = ({
-  origin: { slug },
+  origin: { name, slug },
   timeFrame,
   setTimeFrame,
 }) => {
@@ -28,24 +28,29 @@ export const DashboardOptions: React.FC<Props> = ({
   const isDemo = pathname === staticRoutes.demo;
 
   return (
-    <div className="flex justify-end flex-wrap items-center mb-4 gap-4">
+    <>
       {!isDemo && (
-        <div className="grow">
-          <BackButton linkTo={staticRoutes.origins} text="Origins" />
-        </div>
+        <BackButton
+          linkTo={staticRoutes.origins}
+          text="Origins"
+          className="btn-sm hidden sm:flex"
+        />
       )}
-      <Select
-        value={timeFrame}
-        onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}
-        onClick={(): void => plausible('time-frame-selector-click')}
-      >
-        {Object.entries(TIME_FRAME_OPTIONS).map(([value, label]) => (
-          <option value={value} key={label}>
-            {label}
-          </option>
-        ))}
-      </Select>
-      {!isDemo && <OriginMenu slug={slug} />}
-    </div>
+      <div className="flex flex-wrap items-center gap-4 mb-4">
+        <h6 className="text-white grow">{name}</h6>
+        <Select
+          value={timeFrame}
+          onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}
+          onClick={(): void => plausible('time-frame-selector-click')}
+        >
+          {Object.entries(TIME_FRAME_OPTIONS).map(([value, label]) => (
+            <option value={value} key={label}>
+              {label}
+            </option>
+          ))}
+        </Select>
+        {!isDemo && <OriginMenu slug={slug} />}
+      </div>
+    </>
   );
 };

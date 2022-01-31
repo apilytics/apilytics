@@ -60,16 +60,14 @@ const _Modal: React.FC<Props> = ({ name, mobileFullscreen, onClose, children }) 
       className="fixed inset-0 z-50 backdrop-blur backdrop-filter flex justify-center items-center"
       onClick={handleBackdropClick}
     >
-      <div className={clsx('mx-auto w-96', mobileFullscreen && 'h-full sm:h-auto')}>
-        <div
-          className={clsx(
-            'card card-bordered rounded-lg bg-base-100 flex flex-col max-h-full animate-fade-in-top',
-            mobileFullscreen ? 'h-full max-h-full sm:h-auto sm:max-h-96' : 'h-auto',
-          )}
-          ref={modalRef}
-        >
-          {children}
-        </div>
+      <div
+        className={clsx(
+          'card card-bordered rounded-lg bg-base-100 max-h-full',
+          mobileFullscreen && 'h-full sm:h-auto',
+        )}
+        ref={modalRef}
+      >
+        {children}
       </div>
     </div>
   );

@@ -129,15 +129,16 @@ const OriginSettings: NextPage = () => {
             </div>
             <div className="p-4">
               <p className="text-white">
-                Are you sure you want to delete this origin? All data associated with it will be
-                lost forever.
+                Are you sure you want to delete this origin?
+                <br />
+                All data associated with it will be lost forever.
               </p>
             </div>
             <div className="p-2 grid grid-cols-2 gap-2">
               <Button className="btn-error btn-outline" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
+              <Button className="btn-outline btn-primary" onClick={handleConfirmDelete} autoFocus>
                 Confirm
               </Button>
             </div>

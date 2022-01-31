@@ -11,25 +11,25 @@ interface Props {
   metrics: OriginMetrics;
 }
 
-export const RequestsTimeFrame: React.FC<Props> = ({
+export const ErrorsTimeFrame: React.FC<Props> = ({
   timeFrame,
-  metrics: { totalRequests, totalRequestsGrowth, timeFrameData },
+  metrics: { totalErrors, totalErrorsGrowth, timeFrameData },
 }) => {
-  const positiveGrowth = totalRequestsGrowth >= 0;
+  const positiveGrowth = totalErrorsGrowth >= 0;
 
   return (
     <DashboardCard>
       <div className="flex flex-wrap px-2 gap-4">
-        <p className="text-white">Requests from {TIME_FRAME_OPTIONS[timeFrame].toLowerCase()}</p>
+        <p className="text-white">Errors from {TIME_FRAME_OPTIONS[timeFrame].toLowerCase()}</p>
         <p>
-          Total requests: <span className="text-white">{formatCount(totalRequests)}</span>
+          Total errors: <span className="text-white">{formatCount(totalErrors)}</span>
         </p>
-        {isFinite(totalRequestsGrowth) && (
+        {isFinite(totalErrorsGrowth) && (
           <p>
             Growth from previous {TIME_FRAME_OPTIONS[timeFrame].split('Last')[1].toLowerCase()}:{' '}
-            <span className={positiveGrowth ? 'text-success' : 'text-error'}>
+            <span className={positiveGrowth ? 'text-error' : 'text-success'}>
               {positiveGrowth ? '+' : ''}
-              {(totalRequestsGrowth * 100).toFixed()}%
+              {(totalErrorsGrowth * 100).toFixed()}%
             </span>
           </p>
         )}
@@ -38,8 +38,8 @@ export const RequestsTimeFrame: React.FC<Props> = ({
         <TimeFrameAreaChart
           timeFrame={timeFrame}
           timeFrameData={timeFrameData}
-          dataKey="requests"
-          color="var(--primary)"
+          dataKey="errors"
+          color="var(--error)"
         />
       </div>
     </DashboardCard>

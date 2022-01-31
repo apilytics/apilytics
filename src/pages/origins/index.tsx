@@ -32,9 +32,12 @@ const Origins: NextPage = () => {
             origins.map(({ name, slug }) => (
               <Link href={dynamicRoutes.origin({ slug })} key={name}>
                 <a className="unstyled">
-                  <div className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2" key={name}>
+                  <div
+                    className="bg-base-100 hover:bg-gray-700 card rounded-lg px-4 py-2"
+                    key={name}
+                  >
                     <div className="flex justify-between items-center">
-                      <h5>{name}</h5>
+                      <h6>{name}</h6>
                       <OriginMenu slug={slug} />
                     </div>
                   </div>

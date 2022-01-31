@@ -40,154 +40,154 @@ export const UNEXPECTED_ERROR = 'Unexpected error.';
 interface MockMetric {
   path: string;
   method: string;
-  status_codes: number[];
+  statusCodes: number[];
 }
 
 export const MOCK_METRICS: MockMetric[] = [
   {
     path: '/profile',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/profile',
     method: 'PUT',
-    status_codes: [200, 400],
+    statusCodes: [200, 400],
   },
   {
     path: '/profile',
     method: 'DELETE',
-    status_codes: [204],
+    statusCodes: [204],
   },
   {
     path: '/profile',
     method: 'OPTIONS',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/users',
     method: 'GET',
-    status_codes: [200, 401],
+    statusCodes: [200, 401],
   },
   {
     path: '/users/johndoe',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/users/johndoe',
     method: 'PUT',
-    status_codes: [200, 403],
+    statusCodes: [200, 403],
   },
   {
     path: '/users/johndoe',
     method: 'PATCH',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/users/janedoe',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/users/janedoe',
     method: 'PUT',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/posts',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/posts',
     method: 'POST',
-    status_codes: [204],
+    statusCodes: [204],
   },
   {
     path: '/posts/123',
     method: 'GET',
-    status_codes: [404],
+    statusCodes: [404],
   },
   {
     path: '/posts/123',
     method: 'PUT',
-    status_codes: [404],
+    statusCodes: [404],
   },
   {
     path: '/posts/456',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/posts/789',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/posts/789',
     method: 'PUT',
-    status_codes: [401, 403],
+    statusCodes: [401, 403],
   },
   {
     path: '/posts/789',
     method: 'PATCH',
-    status_codes: [403],
+    statusCodes: [403],
   },
   {
     path: '/login',
     method: 'POST',
-    status_codes: [200, 500],
+    statusCodes: [200, 500],
   },
   {
     path: '/login',
     method: 'OPTIONS',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/logout',
     method: 'POST',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/contact',
     method: 'POST',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/blogs',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/blogs',
     method: 'POST',
-    status_codes: [201],
+    statusCodes: [201],
   },
   {
     path: '/blogs/123',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/blogs/123',
     method: 'PATCH',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/blogs/456',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
   {
     path: '/blogs/456',
     method: 'DELETE',
-    status_codes: [204],
+    statusCodes: [204],
   },
   {
     path: '/blogs/789',
     method: 'GET',
-    status_codes: [200],
+    statusCodes: [200],
   },
 ];
 

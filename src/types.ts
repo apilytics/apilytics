@@ -45,6 +45,7 @@ export type PlausibleEvents = {
   'register-click': PlausibleProps;
   'live-demo-click': PlausibleProps;
   'setup-snippet-click': PlausibleProps;
+  'setup-framework-select': PlausibleProps;
   'pricing-slider-click': PlausibleProps;
   'email-list-subscribe': PlausibleProps;
   'time-frame-selector-click': PlausibleProps;
@@ -67,7 +68,6 @@ export interface HeadProps {
 
 export interface HeaderProps {
   maxWidth?: string;
-  loading?: boolean;
 }
 
 export interface FooterProps {
@@ -177,15 +177,11 @@ export type ApiHandler<T = unknown> = (
 
 export interface TimeFrameData {
   requests: number;
+  errors: number;
   time: string;
 }
-
-export interface EndpointData {
-  requests: number;
-  endpoint: string;
-  method: Metric['method'];
-  status_codes: Metric['statusCode'][];
-  avg_response_time: number;
+interface MetricStats {
+  avg: number;
   p50: number;
   p75: number;
   p90: number;
@@ -193,14 +189,35 @@ export interface EndpointData {
   p99: number;
 }
 
+export interface NullableMetricStats {
+  avg: number | null;
+  p50: number | null;
+  p75: number | null;
+  p90: number | null;
+  p95: number | null;
+  p99: number | null;
+}
+
+export interface EndpointData {
+  totalRequests: number;
+  endpoint: string;
+  method: Metric['method'];
+  statusCodes: Metric['statusCode'][];
+  responseTimes: MetricStats;
+  requestSizes: NullableMetricStats;
+  responseSizes: NullableMetricStats;
+}
+
 export interface OriginMetrics {
   totalRequests: number;
   totalRequestsGrowth: number;
+  totalErrors: number;
+  totalErrorsGrowth: number;
   timeFrameData: TimeFrameData[];
   endpointData: EndpointData[];
 }
 
 export interface DynamicRouteWithMatches {
   route: string;
-  matching_paths: number;
+  matchingPaths: number;
 }

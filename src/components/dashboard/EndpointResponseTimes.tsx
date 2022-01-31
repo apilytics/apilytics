@@ -14,18 +14,18 @@ interface Props {
   loading: boolean;
 }
 
-export const EndpointResponseTimes: React.FC<Props> = ({ metrics: { endpointData }, loading }) => {
-  const data = [...endpointData.sort((a, b) => b.avg_response_time - a.avg_response_time)];
+export const EndpointResponseTimes: React.FC<Props> = ({ metrics: { endpointData } }) => {
+  const data = [...endpointData.sort((a, b) => b.responseTimes.avg - a.responseTimes.avg)];
 
   return (
     <EndpointMetrics
-      loading={loading}
-      title="Response times ⚡"
       label="Response times"
+      emptyLabel="No response times available."
+      expandButtonLabel="All response times"
       modalName={MODAL_NAMES.responseTimes}
       renderLabels={renderLabels}
       data={data}
-      dataKey="avg_response_time"
+      dataKey="responseTimes.avg"
     />
   );
 };

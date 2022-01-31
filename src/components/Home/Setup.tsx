@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import { MDXRemote } from 'next-mdx-remote';
 import React, { useState } from 'react';
 
+import { MDX } from 'components/shared/MDX';
 import { usePlausible } from 'hooks/usePlausible';
 import type { Snippet } from 'types';
 
@@ -58,7 +58,7 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
               ))}
             </div>
             <div className="p-4">
-              <MDXRemote {...source} />
+              <MDX source={source} />
             </div>
           </div>
         </div>

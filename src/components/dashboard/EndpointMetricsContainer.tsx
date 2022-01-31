@@ -1,7 +1,7 @@
 import { ArrowsExpandIcon } from '@heroicons/react/solid';
 import React from 'react';
 
-import { DashboardCardContainer } from 'components/dashboard/DashboardCardContainer';
+import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -9,7 +9,6 @@ import { useModal } from 'hooks/useModal';
 
 interface Props {
   title: string;
-  loading: boolean;
   noRequests?: boolean;
   renderBarChart: (expanded: boolean) => JSX.Element;
   modalName: string;
@@ -17,7 +16,6 @@ interface Props {
 
 export const EndpointMetricsContainer: React.FC<Props> = ({
   title,
-  loading,
   noRequests,
   renderBarChart,
   modalName,
@@ -59,10 +57,10 @@ export const EndpointMetricsContainer: React.FC<Props> = ({
   );
 
   return (
-    <DashboardCardContainer loading={loading} grow>
+    <DashboardCard>
       {renderTitle}
       {renderNoRequests || renderRequests}
       {renderModal}
-    </DashboardCardContainer>
+    </DashboardCard>
   );
 };

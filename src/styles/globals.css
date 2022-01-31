@@ -5,6 +5,7 @@
 :root {
   --primary: #529dff;
   --base-content: #8a8a8a;
+  --error: #ff5724;
 
   /* DaisyUI overrides */
   --rounded-box: 0.5rem;
@@ -88,13 +89,6 @@
     @apply text-white !important;
   }
 
-  .btn,
-  .select,
-  .input {
-    height: auto !important;
-    min-height: 2.5rem !important;
-  }
-
   input::placeholder {
     @apply text-base-content;
   }
@@ -110,7 +104,7 @@
 }
 
 .card {
-  @apply overflow-visible;
+  @apply overflow-visible; /* Allow drop downs to show outside card elements. */
 }
 
 /* https://github.com/swagger-api/swagger-ui/blob/master/src/style/_variables.scss#L46-L53 */
@@ -163,4 +157,16 @@
 #swagger-ui input,
 #swagger-ui select {
   @apply bg-base-100;
+}
+
+/* Fix issue of recharts wrapper not resizing correctly when changing screen size: https://stackoverflow.com/a/69200646/10504286 */
+.recharts-wrapper {
+  position: absolute !important;
+}
+
+.btn:not(.btn-sm),
+.select:not(.select-sm),
+.input:not(.select-sm) {
+  min-height: 2.5rem;
+  height: unset;
 }
