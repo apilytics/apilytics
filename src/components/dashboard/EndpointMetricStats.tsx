@@ -1,8 +1,8 @@
 import React from 'react';
 
-import type { MetricStats } from 'types';
+import type { NullableMetricStats } from 'types';
 
-interface Props extends MetricStats {
+interface Props extends NullableMetricStats {
   title: string;
   unit: 'ms' | 'kB';
 }
@@ -16,52 +16,22 @@ export const EndpointMetricStats: React.FC<Props> = ({
   p90,
   p95,
   p99,
-}) => (
-  <>
-    <h6 className="text-white mt-4">{title}:</h6>
-    <p>
-      Average:{' '}
-      <span className="font-bold text-white">
-        {avg}
-        {unit}
-      </span>
-    </p>
-    <ul className="list-none">
-      <li>
-        p50:{' '}
-        <span className="font-bold text-white">
-          {p50}
-          {unit}
-        </span>
-      </li>
-      <li>
-        p75:{' '}
-        <span className="font-bold text-white">
-          {p75}
-          {unit}
-        </span>
-      </li>
-      <li>
-        p90:{' '}
-        <span className="font-bold text-white">
-          {p90}
-          {unit}
-        </span>
-      </li>
-      <li>
-        p95:{' '}
-        <span className="font-bold text-white">
-          {p95}
-          {unit}
-        </span>
-      </li>
-      <li>
-        p99:{' '}
-        <span className="font-bold text-white">
-          {p99}
-          {unit}
-        </span>
-      </li>
-    </ul>
-  </>
-);
+}) => {
+  const renderValue = (val: number | null): JSX.Element => (
+    <span className="font-bold text-white">{val === null ? 'unknown' : `${val}${unit}`}</span>
+  );
+
+  return (
+    <>
+      <h6 className="text-white mt-4">{title}:</h6>
+      <p>Average: {renderValue(avg)}</p>
+      <ul className="list-none">
+        <li>p50: {renderValue(p50)}</li>
+        <li>p75: {renderValue(p75)}</li>
+        <li>p90: {renderValue(p90)}</li>
+        <li>p95: {renderValue(p95)}</li>
+        <li>p99: {renderValue(p99)}</li>
+      </ul>
+    </>
+  );
+};

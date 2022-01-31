@@ -19,6 +19,7 @@ import type { EndpointData } from 'types';
 
 interface Props {
   label: string;
+  emptyLabel: string;
   expandButtonLabel: string;
   modalName: string;
   data: EndpointData[];
@@ -28,6 +29,7 @@ interface Props {
 
 export const EndpointMetrics: React.FC<Props> = ({
   label,
+  emptyLabel,
   expandButtonLabel,
   modalName,
   data: _data,
@@ -69,8 +71,8 @@ export const EndpointMetrics: React.FC<Props> = ({
   };
 
   const renderNoMetrics = !data.length && (
-    <div className="flex justify-center items-center py-20">
-      <p>No metrics 🤷</p>
+    <div className="flex flex-col justify-center items-center py-40">
+      <p>{emptyLabel}</p>
     </div>
   );
 

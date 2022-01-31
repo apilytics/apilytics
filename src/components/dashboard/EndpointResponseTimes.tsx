@@ -20,6 +20,7 @@ export const EndpointResponseTimes: React.FC<Props> = ({ metrics: { endpointData
   return (
     <EndpointMetrics
       label="Response times"
+      emptyLabel="No response times available."
       expandButtonLabel="All response times"
       modalName={MODAL_NAMES.responseTimes}
       renderLabels={renderLabels}

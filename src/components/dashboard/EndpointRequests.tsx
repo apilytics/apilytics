@@ -21,6 +21,7 @@ export const EndpointRequests: React.FC<Props> = ({ metrics: { endpointData } })
   return (
     <EndpointMetrics
       label="Requests"
+      emptyLabel="No requests available."
       expandButtonLabel="All requests"
       modalName={MODAL_NAMES.requests}
       renderLabels={renderLabels}

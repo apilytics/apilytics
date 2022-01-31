@@ -148,5 +148,5 @@ export const formatCount = (count: number): string => {
     return `${(count / 1_000).toFixed(1)}k`;
   }
 
-  return `${count}`;
+  return `${count ?? 0}`;
 };

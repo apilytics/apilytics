@@ -180,8 +180,7 @@ export interface TimeFrameData {
   errors: number;
   time: string;
 }
-
-export interface MetricStats {
+interface MetricStats {
   avg: number;
   p50: number;
   p75: number;
@@ -190,14 +189,23 @@ export interface MetricStats {
   p99: number;
 }
 
+export interface NullableMetricStats {
+  avg: number | null;
+  p50: number | null;
+  p75: number | null;
+  p90: number | null;
+  p95: number | null;
+  p99: number | null;
+}
+
 export interface EndpointData {
   totalRequests: number;
   endpoint: string;
   method: Metric['method'];
   statusCodes: Metric['statusCode'][];
   responseTimes: MetricStats;
-  requestSizes: MetricStats;
-  responseSizes: MetricStats;
+  requestSizes: NullableMetricStats;
+  responseSizes: NullableMetricStats;
 }
 
 export interface OriginMetrics {
