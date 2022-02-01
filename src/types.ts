@@ -111,6 +111,7 @@ export interface DocsFrontMatter {
   path: string;
   order: number;
   subOrder?: number;
+  updatedAt: string;
 }
 
 export interface BlogsFrontMatter {

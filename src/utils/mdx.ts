@@ -54,7 +54,7 @@ export const getDocsData = (): Record<string, unknown>[] =>
       const fullPath = join(DOCS_PATH, path);
       const source = readFileSync(fullPath);
       const { data } = matter(source);
-      const properties = ['name', 'description', 'order'];
+      const properties = ['name', 'description', 'order', 'updatedAt'];
       validateMandatoryFrontMatterKeys(data, properties, path);
       return data;
     })

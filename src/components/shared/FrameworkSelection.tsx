@@ -1,10 +1,10 @@
+import Link from 'next/link';
 import React, { useState } from 'react';
 import type { ChangeEvent } from 'react';
 
 import { Select } from 'components/shared/Select';
 import { usePlausible } from 'hooks/usePlausible';
 import { staticRoutes } from 'utils/router';
-import Link from 'next/link';
 
 const FRAMEWORKS = ['Ruby on Rails', 'Laravel', '.NET', 'Spring', 'Flask', 'Other'];
 
