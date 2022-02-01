@@ -24,7 +24,7 @@ const Blogs: NextPage<BlogPageProps> = ({ blogsData }) => (
       <br />
       Join our <Link href="#email-input">email list</Link> to receive updates in your email.
     </p>
-    <div className="py-4 flex flex-col gap-2">
+    <div className="py-4 flex flex-col gap-4">
       {blogsData.map((blog) => (
         <BlogCard {...blog} key={blog.title} />
       ))}

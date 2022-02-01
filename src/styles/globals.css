@@ -67,7 +67,6 @@
   pre {
     @apply rounded-lg;
     @apply w-full;
-    @apply overflow-hidden;
   }
 
   code {

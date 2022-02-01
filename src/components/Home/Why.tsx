@@ -17,7 +17,7 @@ const REASONS = [
     content: "We know what metrics API developers are interested in and we've got you covered.",
   },
   {
-    title: 'Automation',
+    title: 'Full automation',
     content: "Choose how to receive your data & get alerted. We'll take care of the rest.",
   },
   {
@@ -25,7 +25,7 @@ const REASONS = [
     content: 'Your privacy matters. Your data is stored within EU with 100% GDPR compliance.',
   },
   {
-    title: 'Transparency',
+    title: 'Flexible pricing',
     content: 'Pay only for the data you use. No surprise fees. Cancel any time.',
   },
 ];

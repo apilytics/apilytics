@@ -51,11 +51,12 @@ export const Features: React.FC = () => (
     <h1 className="text-white">
       It's time to stop being <span className="text-primary">blind</span> about your
       <br />
-      <span className="text-secondary">API metrics</span>
+      <span className="text-secondary">application metrics</span>
     </h1>
     <h5 className="mt-8">
-      Analyze real-time metrics from your APIs through an intuitive dashboard. Integrate to your
-      backend with a simple to setup middleware.
+      Analyze real-time metrics from your APIs through an intuitive dashboard. Simple middleware
+      configuration and no installable host-agents. Works in any environment with no performance
+      overhead to your application.
     </h5>
     <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
       {FEATURES.map(({ icon: Icon, title, content, comingSoon }) => (

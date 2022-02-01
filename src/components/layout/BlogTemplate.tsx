@@ -36,16 +36,20 @@ export const BlogTemplate: React.FC<BlogPageProps> = ({
             <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
           </p>
         </div>
-        <CTASection />
         <div
-          className={clsx('grid gap-2', previousBlog && nextBlog ? 'grid-cols-2' : 'grid-cols-1')}
+          className={clsx(
+            'grid gap-4 mt-4',
+            previousBlog && nextBlog ? 'grid-cols-2' : 'grid-cols-1',
+          )}
         >
           {previousBlog && (
             <BlogCard
               {...previousBlog}
               title={
                 <>
-                  <span className="text-primary">Previous:</span> {previousBlog.title}
+                  <span className="text-primary">Previous blog:</span>
+                  <br />
+                  {previousBlog.title}
                 </>
               }
             />
@@ -55,12 +59,15 @@ export const BlogTemplate: React.FC<BlogPageProps> = ({
               {...nextBlog}
               title={
                 <>
-                  <span className="text-primary">Next:</span> {nextBlog.title}
+                  <span className="text-primary">Next blog:</span>
+                  <br />
+                  {nextBlog.title}
                 </>
               }
             />
           )}
         </div>
+        <CTASection />
       </div>
     </Layout>
   );
