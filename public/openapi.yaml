@@ -60,7 +60,7 @@ paths:
                   example: 1024
                 responseSize:
                   type: integer
-                  description: Size of the body of the sent HTTP response in bytes.
+                  description: Size of the sent HTTP response's body in bytes.
                   example: 2048
                 userAgent:
                   type: string
