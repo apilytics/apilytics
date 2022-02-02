@@ -89,7 +89,10 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
     const avg_response_size = Number((Math.floor(Math.random() * 200) + 20).toFixed());
 
     const endpoint =
-      MOCK_DYNAMIC_ROUTES.find(({ pattern }) => new RegExp(pattern).test(path))?.route ?? path;
+      MOCK_DYNAMIC_ROUTES.find(({ pattern }) =>
+        // Convert the SQL wildcard string into a regex for easy comparison.
+        new RegExp(`^${pattern.replace(/%/g, '[^/]+')}$`).test(path),
+      )?.route ?? path;
 
     const responseTimes = {
       avg: avg_response_time,
