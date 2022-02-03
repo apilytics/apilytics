@@ -58,8 +58,21 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  const { path, query, method, statusCode, timeMillis, requestSize, responseSize, userAgent } =
-    req.body as PostBody;
+  const {
+    path,
+    query,
+    method,
+    statusCode,
+    timeMillis,
+    requestSize: _requestSize,
+    responseSize,
+    userAgent,
+  } = req.body as PostBody;
+
+  const requestSize =
+    _requestSize === undefined && responseSize !== undefined && method.toUpperCase() === 'GET'
+      ? 0
+      : _requestSize;
 
   const queryParams = query ? Object.fromEntries(new URLSearchParams(query)) : undefined;
 
