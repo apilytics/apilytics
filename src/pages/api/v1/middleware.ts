@@ -1,3 +1,4 @@
+import uaParser from 'ua-parser-js';
 import type { Metric } from '@prisma/client';
 
 import { makeMethodsHandler } from 'lib-server/apiHelpers';
@@ -66,7 +67,7 @@ const handlePost: ApiHandler = async (req, res) => {
     timeMillis,
     requestSize: _requestSize,
     responseSize,
-    userAgent,
+    userAgent: rawUserAgent,
   } = req.body as PostBody;
 
   const requestSize =
@@ -81,6 +82,8 @@ const handlePost: ApiHandler = async (req, res) => {
       ? req.headers['apilytics-version']
       : undefined;
 
+  const userAgent = rawUserAgent !== undefined ? uaParser(rawUserAgent) : undefined;
+
   try {
     await prisma.metric.create({
       data: {
@@ -92,6 +95,7 @@ const handlePost: ApiHandler = async (req, res) => {
         timeMillis,
         requestSize,
         responseSize,
+        // @ts-ignore: Should be assignable just fine.
         userAgent,
         apilyticsVersion,
       },
