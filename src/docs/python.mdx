@@ -46,7 +46,8 @@ import os
 APILYTICS_API_KEY = os.getenv("APILYTICS_API_KEY")
 
 MIDDLEWARE = [
-    "apilytics.django.ApilyticsDjangoMiddleware",
+    "apilytics.django.ApilyticsMiddleware",  # Ideally the first middleware in the list.
+    # ...
 ]
 ```
 
@@ -59,11 +60,13 @@ MIDDLEWARE = [
 
 import os
 
+from apilytics.fastapi import ApilyticsMiddleware
 from fastapi import FastAPI
-from apilytics.fastapi import ApilyticsFastAPIMiddleware
 
 app = FastAPI()
-app.add_middleware(ApilyticsFastAPIMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))
+
+# Ideally the first middleware you add.
+app.add_middleware(ApilyticsMiddleware, api_key=os.getenv("APILYTICS_API_KEY"))
 ```
 
 <br />
