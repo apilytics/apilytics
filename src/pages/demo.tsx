@@ -1,30 +1,36 @@
 import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
-import { EndpointRequests } from 'components/dashboard/EndpointRequests';
-import { EndpointResponseTimes } from 'components/dashboard/EndpointResponseTimes';
-import { ErrorsTimeFrame } from 'components/dashboard/ErrorsTimeFrame';
-import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
+import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
+import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
 import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
 import { EmailListForm } from 'components/shared/EmailListForm';
 import { withNoAuth } from 'hocs/withNoAuth';
+import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
-import { EVENT_LOCATIONS, MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
+import { EVENT_LOCATIONS, MOCK_ORIGIN } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
-import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
   const plausible = usePlausible();
-  const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
+  const { timeFrame, selectedEndpoint } = useOrigin();
   const origin = MOCK_ORIGIN;
-  const metrics = useMemo(() => getMockMetrics(timeFrame), [timeFrame]);
-  const loading = !origin || !metrics;
   const eventOptions = { location: EVENT_LOCATIONS.PAGE_BOTTOM };
   const maxWidth = 'max-w-6xl';
+
+  const { totalRequests, totalErrors, timeFrameData, endpointData } = useMemo(
+    () =>
+      getMockMetrics({
+        timeFrame,
+        method: selectedEndpoint?.method,
+        endpoint: selectedEndpoint?.endpoint,
+      }),
+    [selectedEndpoint?.endpoint, selectedEndpoint?.method, timeFrame],
+  );
 
   return (
     <Layout
@@ -38,22 +44,14 @@ const Demo: NextPage = () => {
       footerProps={{ maxWidth }}
     >
       <div className="container py-4 max-w-6xl grow flex flex-col">
-        <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
-        <RequestsTimeFrame timeFrame={timeFrame} metrics={metrics} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 grow">
-          <EndpointRequests
-            metrics={metrics}
-            loading={loading}
-            key={Math.random()} // Prevent label list from not showing on first render.
-          />
-          <EndpointResponseTimes
-            metrics={metrics}
-            loading={loading}
-            key={Math.random()} // Prevent label list from not showing on first render.
-          />
-        </div>
+        <DashboardOptions origin={origin} />
+        <TimeFrameMetrics
+          totalRequests={totalRequests}
+          totalErrors={totalErrors}
+          data={timeFrameData}
+        />
         <div className="mt-4">
-          <ErrorsTimeFrame timeFrame={timeFrame} metrics={metrics} />
+          <EndpointMetrics data={endpointData} />
         </div>
         <p className="mt-4">
           See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these

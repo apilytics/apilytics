@@ -34,7 +34,15 @@ export const getDataPointsBetweenTimeFrame = (timeFrame: TimeFrame): string[] =>
 };
 
 // Load mock data from JSON files and monkey patch dynamic time frame data on it.
-export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
+export const getMockMetrics = ({
+  timeFrame,
+  method,
+  endpoint,
+}: {
+  timeFrame: TimeFrame;
+  method?: string;
+  endpoint?: string;
+}): OriginMetrics => {
   let requestsMultiplier = 24;
 
   if (timeFrame <= DAY) {
@@ -47,9 +55,16 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
 
   const errorsMultiplier = requestsMultiplier * 0.1;
   const dataPoints = getDataPointsBetweenTimeFrame(timeFrame);
+  let metrics = MOCK_METRICS;
+
+  console.log(method, endpoint);
+
+  if (method && endpoint) {
+    metrics = metrics.filter((metric) => metric.method === method && metric.path === endpoint);
+  }
 
   const _timeFramePoints = dataPoints.flatMap((time) =>
-    MOCK_METRICS.map(({ path, method }) => {
+    metrics.map(({ path, method }) => {
       const requests = Number(
         ((Math.floor(Math.random() * 5) + 1) * requestsMultiplier * dataPoints.length).toFixed(),
       );
@@ -75,11 +90,9 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
   }));
 
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
-  const totalRequestsGrowth = Number(Math.random().toFixed(2));
   const totalErrors = timeFrameData.reduce((prev, curr) => prev + curr.errors, 0);
-  const totalErrorsGrowth = Number(Math.random().toFixed(2));
 
-  const endpointData = MOCK_METRICS.map(({ path, method, statusCodes }) => {
+  const endpointData = metrics.map(({ path, method, statusCodes }) => {
     const totalRequests = _timeFramePoints
       .filter((data) => data.path === path && data.method === method)
       .reduce((prev, curr) => prev + curr.requests, 0);
@@ -93,6 +106,8 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
         // Convert the SQL wildcard string into a regex for easy comparison.
         new RegExp(`^${pattern.replace(/%/g, '[^/]+')}$`).test(path),
       )?.route ?? path;
+
+    const methodAndEndpoint = `${method} ${endpoint}`;
 
     const responseTimes = {
       avg: avg_response_time,
@@ -125,6 +140,7 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
       totalRequests,
       endpoint,
       method,
+      methodAndEndpoint,
       statusCodes,
       responseTimes,
       requestSizes,
@@ -132,13 +148,24 @@ export const getMockMetrics = (timeFrame: TimeFrame): OriginMetrics => {
     };
   });
 
+  const uniqueStatusCodesWithCounts: Record<number, number> = {};
+  const allStatusCodes = metrics.flatMap(({ statusCodes }) => statusCodes);
+
+  allStatusCodes.forEach((statusCode) => {
+    uniqueStatusCodesWithCounts[statusCode] = (uniqueStatusCodesWithCounts[statusCode] || 0) + 1;
+  });
+
+  const statusCodeData = Object.entries(uniqueStatusCodesWithCounts).map(([statusCode, count]) => ({
+    statusCode: Number(statusCode),
+    count: count * requestsMultiplier,
+  }));
+
   return {
     totalRequests,
-    totalRequestsGrowth,
     totalErrors,
-    totalErrorsGrowth,
     timeFrameData,
     endpointData,
+    statusCodeData,
   };
 };
 

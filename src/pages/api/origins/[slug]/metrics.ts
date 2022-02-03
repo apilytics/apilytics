@@ -1,11 +1,9 @@
-import type { PrismaPromise } from '@prisma/client';
-
 import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
-import type { ApiHandler, EndpointData, OriginMetrics, TimeFrameData } from 'types';
+import type { ApiHandler, EndpointData, OriginMetrics, StatusCodeData, TimeFrameData } from 'types';
 
 const DAY_MILLIS = 24 * 60 * 60 * 1000;
 const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
@@ -14,14 +12,12 @@ interface GetResponse {
   data: OriginMetrics;
 }
 
-interface RawGeneralData {
-  total_requests: number;
-  total_errors: number;
+interface GeneralData {
+  totalRequests: number;
+  totalErrors: number;
 }
 
-interface RawEndpointData extends Pick<EndpointData, 'endpoint' | 'method'> {
-  total_requests: number;
-  status_codes: number[];
+interface RawEndpointData extends Pick<EndpointData, 'totalRequests' | 'endpoint' | 'method'> {
   response_time_avg: number;
   response_time_p50: number;
   response_time_p75: number;
@@ -45,11 +41,7 @@ interface RawEndpointData extends Pick<EndpointData, 'endpoint' | 'method'> {
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
-  const { from, to } = req.query;
-
-  if (typeof from !== 'string' || typeof to !== 'string') {
-    throw new Error('Invalid time frame specified.');
-  }
+  const { from, to, method: _method, endpoint: _endpoint } = req.query as Record<string, string>;
 
   const origin = await prisma.origin.findFirst({
     where: { slug, userId },
@@ -66,6 +58,21 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const fromTime = fromDate.getTime();
   const toTime = toDate.getTime();
   const timeFrame = toTime - fromTime;
+  const method = decodeURIComponent(_method) || '%';
+  let endpoint = decodeURIComponent(_endpoint);
+
+  // Check if the provided endpoint is a dynamic route.
+  if (endpoint) {
+    const dynamicRoute = await prisma.dynamicRoute.findFirst({
+      where: { originId, route: endpoint },
+    });
+
+    if (dynamicRoute) {
+      endpoint = dynamicRoute.pattern;
+    }
+  } else {
+    endpoint = '%';
+  }
 
   // The scope indicates which time unit the metrics are grouped by.
   let scope = 'day';
@@ -76,33 +83,20 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     scope = 'week';
   }
 
-  const getGeneralDataPromise = ({
-    fromDate,
-    toDate,
-  }: {
-    fromDate: Date;
-    toDate: Date;
-  }): PrismaPromise<RawGeneralData[]> => {
-    return prisma.$queryRaw`
+  const generalDataPromise: Promise<GeneralData[]> = prisma.$queryRaw`
 SELECT
-  COUNT(*) AS total_requests,
+  COUNT(*) AS "totalRequests",
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
-    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
-      THEN 1 ELSE 0 END) AS total_errors
+  OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
+    THEN 1 ELSE 0 END) AS "totalErrors"
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}`;
-  };
-
-  const generalDataPromise = getGeneralDataPromise({ fromDate, toDate });
-
-  const previousGeneralDataPromise = getGeneralDataPromise({
-    fromDate: new Date(fromTime - (toTime - fromTime)),
-    toDate: fromDate,
-  });
+  AND metrics.created_at >= ${from}
+  AND metrics.created_at <= ${to}
+  AND metrics.method LIKE ${method}
+  AND metrics.path LIKE ${endpoint}`;
 
   const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
 SELECT
@@ -117,14 +111,15 @@ WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
+  AND metrics.method LIKE ${method}
+  AND metrics.path LIKE ${endpoint}
 GROUP BY time;`;
 
   const endpointDataPromise: Promise<RawEndpointData[]> = prisma.$queryRaw`
 SELECT
-  COUNT(*) AS total_requests,
+  COUNT(*) AS "totalRequests",
   CASE WHEN matched_routes.route IS NULL THEN metrics.path ELSE matched_routes.route END AS endpoint,
   metrics.method,
-  ARRAY_AGG(DISTINCT(metrics.status_code)) AS status_codes,
 
   ROUND(AVG(metrics.time_millis)) AS response_time_avg,
   PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS response_time_p50,
@@ -159,34 +154,43 @@ FROM metrics
     ORDER BY LENGTH(dynamic_routes.pattern) DESC
     LIMIT 1
   ) AS matched_routes ON TRUE
-
 WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
-
+  AND metrics.method LIKE ${method}
+  AND metrics.path LIKE ${endpoint}
 GROUP BY metrics.method, endpoint;`;
 
-  const [generalData, previousGeneralData, timeFrameData, _endpointData] = await Promise.all([
+  const statusCodeDataPromise: Promise<StatusCodeData[]> = prisma.$queryRaw`
+SELECT
+  metrics.status_code,
+  COUNT(*)
+FROM metrics
+  LEFT JOIN origins ON metrics.origin_id = origins.id
+WHERE origins.id = ${originId}
+  AND origins.user_id = ${userId}
+  AND metrics.created_at >= ${fromDate}
+  AND metrics.created_at <= ${toDate}
+  AND metrics.method LIKE ${method}
+  AND metrics.path LIKE ${endpoint}
+GROUP BY metrics.status_code;`;
+
+  const [generalData, timeFrameData, _endpointData, statusCodeData] = await Promise.all([
     generalDataPromise,
-    previousGeneralDataPromise,
     timeFrameDataPromise,
     endpointDataPromise,
+    statusCodeDataPromise,
   ]);
 
-  const { total_requests: totalRequests, total_errors: totalErrors } = generalData[0];
-  const { total_requests: previousTotalRequests, total_errors: previousTotalErrors } =
-    previousGeneralData[0];
-
-  const totalRequestsGrowth = Number((totalRequests / previousTotalRequests).toFixed(2));
-  const totalErrorsGrowth = Number((totalErrors / previousTotalErrors).toFixed(2));
+  const { totalRequests, totalErrors } = generalData[0];
 
   const endpointData: EndpointData[] = _endpointData.map(
-    ({ total_requests, endpoint, method, status_codes, ...data }) => ({
-      totalRequests: total_requests,
+    ({ totalRequests, endpoint, method, ...data }) => ({
+      totalRequests,
       endpoint,
       method,
-      statusCodes: status_codes,
+      methodAndEndpoint: `${method} ${endpoint}`,
       responseTimes: {
         avg: data.response_time_avg,
         p50: data.response_time_p50,
@@ -216,11 +220,10 @@ GROUP BY metrics.method, endpoint;`;
 
   const data = {
     totalRequests,
-    totalRequestsGrowth,
     totalErrors,
-    totalErrorsGrowth,
     timeFrameData,
     endpointData,
+    statusCodeData,
   };
 
   sendOk(res, { data });

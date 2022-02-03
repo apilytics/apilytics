@@ -4,6 +4,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'rec
 import type { TooltipProps } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
+import { useOrigin } from 'hooks/useOrigin';
 import {
   DAY,
   MONTH_DAYS,
@@ -13,30 +14,25 @@ import {
   YEAR_DAYS,
 } from 'utils/constants';
 import { formatCount, getDataPointsBetweenTimeFrame, getTimeFrameScope } from 'utils/metrics';
-import type { TimeFrame, TimeFrameData } from 'types';
+import type { TimeFrameData } from 'types';
 
 const HOUR_FORMAT = 'h A';
 const DAY_AND_MONTH_FORMAT = 'ddd, D MMM';
 const MONTH_FORMAT = 'MMMM';
 
 interface Props {
-  timeFrame: TimeFrame;
-  timeFrameData: TimeFrameData[];
+  data: TimeFrameData[];
   dataKey: string;
   color: string;
 }
 
-export const TimeFrameAreaChart: React.FC<Props> = ({
-  timeFrame,
-  timeFrameData,
-  dataKey,
-  color,
-}) => {
+export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, color }) => {
+  const { timeFrame } = useOrigin();
   const scope = getTimeFrameScope(timeFrame);
 
   // Make sure the data contains points in time for the whole specified time frame.
   const data: TimeFrameData[] = getDataPointsBetweenTimeFrame(timeFrame).map((time) => {
-    const data = timeFrameData.find((data) => dayjs(data.time).startOf(scope).format() === time);
+    const data = _data.find((data) => dayjs(data.time).startOf(scope).format() === time);
 
     return {
       requests: data?.requests || 0,

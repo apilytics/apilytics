@@ -50,8 +50,7 @@ export type PlausibleEvents = {
   'email-list-subscribe': PlausibleProps;
   'time-frame-selector-click': PlausibleProps;
   'endpoint-click': PlausibleProps;
-  'show-all-requests-click': PlausibleProps;
-  'show-all-response-times-click': PlausibleProps;
+  'show-all-endpoints-click': PlausibleProps;
   'copy-api-key': PlausibleProps;
   'footer-link-click': PlausibleProps;
   'add-dynamic-route': PlausibleProps;
@@ -163,6 +162,10 @@ export interface OriginContextType {
   setOrigin: Dispatch<SetStateAction<Origin | null>>;
   metrics: OriginMetrics | null;
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
+  timeFrame: TimeFrame;
+  setTimeFrame: Dispatch<SetStateAction<TimeFrame>>;
+  selectedEndpoint: EndpointData | null;
+  setSelectedEndpoint: Dispatch<SetStateAction<EndpointData | null>>;
 }
 
 export interface ModalContextType {
@@ -181,6 +184,12 @@ export interface TimeFrameData {
   errors: number;
   time: string;
 }
+
+export interface StatusCodeData {
+  statusCode: number;
+  count: number;
+}
+
 interface MetricStats {
   avg: number;
   p50: number;
@@ -203,7 +212,7 @@ export interface EndpointData {
   totalRequests: number;
   endpoint: string;
   method: Metric['method'];
-  statusCodes: Metric['statusCode'][];
+  methodAndEndpoint: string;
   responseTimes: MetricStats;
   requestSizes: NullableMetricStats;
   responseSizes: NullableMetricStats;
@@ -211,11 +220,10 @@ export interface EndpointData {
 
 export interface OriginMetrics {
   totalRequests: number;
-  totalRequestsGrowth: number;
   totalErrors: number;
-  totalErrorsGrowth: number;
   timeFrameData: TimeFrameData[];
   endpointData: EndpointData[];
+  statusCodeData: StatusCodeData[];
 }
 
 export interface DynamicRouteWithMatches {
