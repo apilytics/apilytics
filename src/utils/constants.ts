@@ -17,6 +17,8 @@ export const METHODS = [
   'TRACE',
 ] as const;
 
+export const METHODS_WITHOUT_BODY = ['GET', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'];
+
 export type Method = typeof METHODS[number];
 
 export const DAY = 1;

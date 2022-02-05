@@ -10,7 +10,7 @@ import {
 } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isInconsistentColumnData } from 'prisma/errors';
-import { UNKNOWN_STATUS_CODE } from 'utils/constants';
+import { METHODS_WITHOUT_BODY, UNKNOWN_STATUS_CODE } from 'utils/constants';
 import type { ApiHandler } from 'types';
 
 type RequiredFields = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
@@ -71,7 +71,9 @@ const handlePost: ApiHandler = async (req, res) => {
   } = req.body as PostBody;
 
   const requestSize =
-    _requestSize === undefined && responseSize !== undefined && method.toUpperCase() === 'GET'
+    _requestSize === undefined &&
+    responseSize !== undefined &&
+    METHODS_WITHOUT_BODY.includes(method.toUpperCase())
       ? 0
       : _requestSize;
 
