@@ -127,7 +127,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
   AND metrics.created_at <= ${fromDate}
   AND metrics.method LIKE ${method}
@@ -168,7 +167,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -188,7 +186,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -227,7 +224,6 @@ FROM metrics
   ) AS matched_routes ON TRUE
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -248,7 +244,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -269,7 +264,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -290,7 +284,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -311,7 +304,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
