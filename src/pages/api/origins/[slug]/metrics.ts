@@ -121,9 +121,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 SELECT
   COUNT(*) AS "totalRequests",
 
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
-    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
-      THEN 1 ELSE 0 END) AS "totalErrors"
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
 
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
@@ -143,9 +141,7 @@ WHERE origins.id = ${originId}
 SELECT
   COUNT(*) AS "totalRequests",
 
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
-    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
-      THEN 1 ELSE 0 END) AS "totalErrors",
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors",
 
   ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
   PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP50",
@@ -186,10 +182,7 @@ WHERE origins.id = ${originId}
 SELECT
   COUNT(*) AS requests,
   DATE_TRUNC(${scope}, metrics.created_at) AS time,
-
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
-    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
-      THEN 1 ELSE 0 END) AS errors
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS errors
 
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
