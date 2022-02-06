@@ -1,6 +1,12 @@
 // Ignore: `ts-node` won't find these without relative imports.
 import prisma from '../src/prisma/client'; // eslint-disable-line no-restricted-imports
-import { MOCK_DYNAMIC_ROUTES, MOCK_METRICS } from '../src/utils/constants'; // eslint-disable-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
+import {
+  METHODS,
+  MOCK_DYNAMIC_ROUTES,
+  MOCK_PATHS,
+  MOCK_STATUS_CODES,
+} from '../src/utils/constants';
 
 const USER_ID = 'ckyw15hbi000409l805yyhhfo';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
@@ -14,17 +20,22 @@ const TEST_METRICS = Array(365 * 24)
     Array(Math.floor(Math.random() * 20) + 1)
       .fill(null)
       .map(() => {
-        const { path, method, statusCodes } =
-          MOCK_METRICS[Math.floor(Math.random() * MOCK_METRICS.length)];
+        const path = MOCK_PATHS[Math.floor(Math.random() * MOCK_PATHS.length)];
+        const method = METHODS[Math.floor(Math.random() * METHODS.length)];
+        const statusCode = MOCK_STATUS_CODES[Math.floor(Math.random() * MOCK_STATUS_CODES.length)];
+        const timeMillis = Math.floor(Math.random() * 100) + 20;
+        const requestSize = Math.floor(Math.random() * 100) + 20;
+        const responseSize = Math.floor(Math.random() * 100) + 20;
+        const createdAt = new Date(Date.now() - i * 60 * 60 * 1000);
 
         return {
           path,
           method,
-          statusCode: statusCodes[Math.floor(Math.random() * statusCodes.length)],
-          timeMillis: Math.floor(Math.random() * 100) + 20,
-          requestSize: Math.floor(Math.random() * 100) + 20,
-          responseSize: Math.floor(Math.random() * 100) + 20,
-          createdAt: new Date(Date.now() - i * 60 * 60 * 1000),
+          statusCode,
+          timeMillis,
+          requestSize,
+          responseSize,
+          createdAt,
           originId: ORIGIN_ID,
         };
       }),

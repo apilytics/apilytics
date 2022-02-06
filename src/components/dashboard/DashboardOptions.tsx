@@ -20,8 +20,18 @@ interface Props {
 export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug } }) => {
   const plausible = usePlausible();
   const { pathname } = useRouter();
-  const { timeFrame, setTimeFrame, selectedEndpoint, setSelectedEndpoint } = useOrigin();
   const isDemo = pathname === staticRoutes.demo;
+
+  const {
+    timeFrame,
+    setTimeFrame,
+    selectedMethod,
+    setSelectedMethod,
+    selectedEndpoint,
+    setSelectedEndpoint,
+    selectedStatusCode,
+    setSelectedStatusCode,
+  } = useOrigin();
 
   return (
     <>
@@ -34,12 +44,25 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug } }) =>
       )}
       <div className="flex flex-wrap items-center gap-4 mt-2 mb-4">
         <h6 className="text-white grow">{name}</h6>
-        {selectedEndpoint && (
-          <Button onClick={(): void => setSelectedEndpoint(null)} endIcon={XIcon}>
-            <span className={`text-method-${selectedEndpoint.method.toLowerCase()} mr-2`}>
-              {selectedEndpoint.method}
+        {selectedMethod && (
+          <Button onClick={(): void => setSelectedMethod(undefined)} endIcon={XIcon}>
+            <span className={`text-method-${selectedMethod.toLowerCase()} mr-2`}>
+              {selectedMethod}
             </span>
-            {selectedEndpoint.endpoint}
+          </Button>
+        )}
+        {selectedEndpoint && (
+          <Button onClick={(): void => setSelectedEndpoint(undefined)} endIcon={XIcon}>
+            {selectedEndpoint}
+          </Button>
+        )}
+        {selectedStatusCode && (
+          <Button
+            onClick={(): void => setSelectedStatusCode(undefined)}
+            endIcon={XIcon}
+            className={`text-${selectedStatusCode.toString().charAt(0)}xx`}
+          >
+            {selectedStatusCode}
           </Button>
         )}
         <Select

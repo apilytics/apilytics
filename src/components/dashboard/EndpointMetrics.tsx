@@ -2,9 +2,10 @@ import { ArrowsExpandIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
+import { BarValue } from 'components/dashboard/BarValue';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
-import { EndpointBarChart } from 'components/dashboard/EndpointBarChart';
-import { EndpointValue } from 'components/dashboard/EndpointValue';
+import { MethodAndEndpointTick } from 'components/dashboard/MethodAndEndpointTick';
+import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -26,11 +27,11 @@ interface Props {
 
 export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const plausible = usePlausible();
-  const { timeFrame, setSelectedEndpoint } = useOrigin();
+  const { timeFrame, setSelectedMethod, setSelectedEndpoint } = useOrigin();
   const [metricType, setMetricType] = useState(METRIC_TYPES.requests);
   const [activeTab, setActiveTab] = useState(METRIC_TYPES.requests);
   const requestsData = [..._data.sort((a, b) => b.totalRequests - a.totalRequests)];
-  const responseTimesData = [..._data.sort((a, b) => b.responseTimes.avg - a.responseTimes.avg)];
+  const responseTimeData = [..._data.sort((a, b) => b.responseTimeAvg - a.responseTimeAvg)];
   const { handleOpenModal, handleCloseModal } = useModal();
 
   const attributes = {
@@ -40,19 +41,17 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
       dataKey: 'totalRequests',
       label: 'Requests',
       emptyLabel: 'No requests available.',
-      modalName: MODAL_NAMES.requests,
     },
     responseTimes: {
-      data: responseTimesData,
+      data: responseTimeData,
       formatter: (value?: string | number): string => `${value}ms`,
-      dataKey: 'responseTimes.avg',
+      dataKey: 'responseTimeAvg',
       label: 'Response times',
       emptyLabel: 'No response times available.',
-      modalName: MODAL_NAMES.responseTimes,
     },
   };
 
-  const { data, dataKey, label, emptyLabel, formatter, modalName } =
+  const { data, dataKey, label, emptyLabel, formatter } =
     attributes[metricType as keyof typeof attributes];
 
   const {
@@ -69,12 +68,13 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const truncatedHeight = getHeight(truncatedData.length);
 
   const handleLabelClick = (data: EndpointData): void => {
-    setSelectedEndpoint(data);
+    setSelectedMethod(data.method);
+    setSelectedEndpoint(data.endpoint);
     plausible('endpoint-click');
   };
 
   const handleShowAllClick = (): void => {
-    handleOpenModal(modalName);
+    handleOpenModal(MODAL_NAMES.endpoints);
     plausible('show-all-endpoints-click');
   };
 
@@ -87,13 +87,16 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const renderMetrics = (
     <>
       <div className="grow flex">
-        <EndpointBarChart
+        <VerticalBarChart
           height={truncatedHeight}
           data={truncatedData}
           dataKey={dataKey}
+          secondaryDataKey="methodAndEndpoint"
+          tick={<MethodAndEndpointTick />}
           onLabelClick={handleLabelClick}
-          renderLabels={<EndpointValue formatter={formatter} />}
-          label={label}
+          renderLabels={<BarValue formatter={formatter} />}
+          label="Endpoints"
+          secondaryLabel={label}
         />
       </div>
       <div className="flex">
@@ -135,7 +138,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
         </div>
       </div>
       <div className="mt-4">{renderNoMetrics || renderMetrics}</div>
-      <Modal name={modalName} mobileFullscreen>
+      <Modal name={MODAL_NAMES.endpoints} mobileFullscreen>
         <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
             <p className="text-white pl-4">
@@ -165,13 +168,16 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
           </div>
           <div className="overflow-y-auto px-4">
             <div className="grow flex">
-              <EndpointBarChart
+              <VerticalBarChart
                 height={height}
                 data={modalData}
                 dataKey={modalDataKey}
+                secondaryDataKey="methodAndEndpoint"
+                tick={<MethodAndEndpointTick />}
                 onLabelClick={handleLabelClick}
-                renderLabels={<EndpointValue formatter={modalFormatter} />}
-                label={modalLabel}
+                renderLabels={<BarValue formatter={modalFormatter} />}
+                label="Endpoints"
+                secondaryLabel={modalLabel}
               />
             </div>
           </div>

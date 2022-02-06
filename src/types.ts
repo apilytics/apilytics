@@ -56,6 +56,7 @@ export type PlausibleEvents = {
   'add-dynamic-route': PlausibleProps;
   'update-dynamic-route': PlausibleProps;
   'delete-dynamic-route': PlausibleProps;
+  'show-all-status-codes-click': PlausibleProps;
 };
 
 export interface HeadProps {
@@ -164,8 +165,12 @@ export interface OriginContextType {
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
   timeFrame: TimeFrame;
   setTimeFrame: Dispatch<SetStateAction<TimeFrame>>;
-  selectedEndpoint: EndpointData | null;
-  setSelectedEndpoint: Dispatch<SetStateAction<EndpointData | null>>;
+  selectedMethod: string | undefined;
+  setSelectedMethod: Dispatch<SetStateAction<string | undefined>>;
+  selectedEndpoint: string | undefined;
+  setSelectedEndpoint: Dispatch<SetStateAction<string | undefined>>;
+  selectedStatusCode: string | undefined;
+  setSelectedStatusCode: Dispatch<SetStateAction<string | undefined>>;
 }
 
 export interface ModalContextType {
@@ -190,22 +195,11 @@ export interface StatusCodeData {
   count: number;
 }
 
-interface MetricStats {
-  avg: number;
-  p50: number;
-  p75: number;
-  p90: number;
-  p95: number;
-  p99: number;
-}
-
-export interface NullableMetricStats {
-  avg: number | null;
-  p50: number | null;
-  p75: number | null;
-  p90: number | null;
-  p95: number | null;
-  p99: number | null;
+export interface PercentileData {
+  key: string;
+  responseTime: number;
+  requestSize: number;
+  responseSize: number;
 }
 
 export interface EndpointData {
@@ -213,9 +207,7 @@ export interface EndpointData {
   endpoint: string;
   method: Metric['method'];
   methodAndEndpoint: string;
-  responseTimes: MetricStats;
-  requestSizes: NullableMetricStats;
-  responseSizes: NullableMetricStats;
+  responseTimeAvg: number;
 }
 
 export interface OriginMetrics {
@@ -223,6 +215,7 @@ export interface OriginMetrics {
   totalErrors: number;
   timeFrameData: TimeFrameData[];
   endpointData: EndpointData[];
+  percentileData: PercentileData[];
   statusCodeData: StatusCodeData[];
 }
 

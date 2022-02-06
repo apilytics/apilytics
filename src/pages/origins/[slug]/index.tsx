@@ -6,6 +6,8 @@ import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
 import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
+import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
+import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
 import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
 import { ErrorTemplate } from 'components/layout/ErrorTemplate';
 import { Layout } from 'components/layout/Layout';
@@ -16,6 +18,7 @@ import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
+import { useDashboardQuery } from 'hooks/useDashboardQuery';
 import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { MODAL_NAMES } from 'utils/constants';
@@ -24,25 +27,34 @@ import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
 const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
 
 const Origin: NextPage = () => {
+  const {
+    origin,
+    metrics,
+    setMetrics,
+    timeFrame,
+    selectedMethod: method = '',
+    selectedEndpoint: endpoint = '',
+    selectedStatusCode: statusCode = '',
+  } = useOrigin();
+
   const router = useRouter();
   const { showApiKey } = router.query;
-  const { origin, metrics, setMetrics, timeFrame, selectedEndpoint } = useOrigin();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { handleOpenModal, handleCloseModal } = useModal();
   const slug = origin?.slug || '';
   const apiKey = origin?.apiKey || '';
   const maxWidth = 'max-w-6xl';
+  useDashboardQuery(dynamicRoutes.origin({ slug }));
 
   useEffect(() => {
     (async (): Promise<void> => {
       const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
       const to = dayjs().format(REQUEST_TIME_FORMAT);
-      const { method = '', endpoint = '' } = selectedEndpoint || {};
 
       try {
         const res = await fetch(
-          dynamicApiRoutes.originMetrics({ slug, from, to, method, endpoint }),
+          dynamicApiRoutes.originMetrics({ slug, from, to, method, endpoint, statusCode }),
         );
 
         const { data } = await res.json();
@@ -58,7 +70,7 @@ const Origin: NextPage = () => {
         setLoading(false);
       }
     })();
-  }, [setMetrics, slug, timeFrame, selectedEndpoint]);
+  }, [endpoint, method, setMetrics, slug, statusCode, timeFrame]);
 
   useEffect(() => {
     if (showApiKey) {
@@ -79,7 +91,14 @@ const Origin: NextPage = () => {
     return <ErrorTemplate />;
   }
 
-  const { totalRequests, totalErrors, timeFrameData, endpointData } = metrics;
+  const {
+    totalRequests,
+    totalErrors,
+    timeFrameData,
+    endpointData,
+    percentileData,
+    statusCodeData,
+  } = metrics;
 
   return (
     <Layout
@@ -96,6 +115,12 @@ const Origin: NextPage = () => {
         />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} />
+        </div>
+        <div className="mt-4">
+          <PercentileMetrics data={percentileData} />
+        </div>
+        <div className="mt-4">
+          <StatusCodeMetrics data={statusCodeData} />
         </div>
         <p className="mt-4">
           See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these

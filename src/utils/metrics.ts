@@ -1,8 +1,16 @@
 import dayjs from 'dayjs';
 import type { OpUnitType } from 'dayjs';
 
-import { DAY, MOCK_DYNAMIC_ROUTES, MOCK_METRICS, THREE_MONTHS_DAYS } from 'utils/constants';
-import type { OriginMetrics, TimeFrame } from 'types';
+import {
+  DAY,
+  METHODS,
+  MOCK_DYNAMIC_ROUTES,
+  MOCK_PATHS,
+  MOCK_STATUS_CODES,
+  PERCENTILE_DATA_KEYS,
+  THREE_MONTHS_DAYS,
+} from 'utils/constants';
+import type { EndpointData, OriginMetrics, TimeFrame } from 'types';
 
 export const getTimeFrameScope = (timeFrame: TimeFrame): OpUnitType => {
   let scope: OpUnitType = 'day';
@@ -33,15 +41,28 @@ export const getDataPointsBetweenTimeFrame = (timeFrame: TimeFrame): string[] =>
   return dates;
 };
 
-// Load mock data from JSON files and monkey patch dynamic time frame data on it.
+// Return a dynamic route from mock data or the provided static path if a dynamic route is not found.
+const getEndpointFromPath = (path: string): string =>
+  MOCK_DYNAMIC_ROUTES.find(({ pattern }) =>
+    new RegExp(`^${pattern.replace(/%/g, '[^/]+')}$`).test(path),
+  )?.route ?? path;
+
+const initialMockMetrics = MOCK_PATHS.map((path) => ({
+  path,
+  method: METHODS[Math.floor(Math.random() * METHODS.length)],
+  statusCode: MOCK_STATUS_CODES[Math.floor(Math.random() * MOCK_STATUS_CODES.length)],
+}));
+
 export const getMockMetrics = ({
   timeFrame,
   method,
   endpoint,
+  statusCode,
 }: {
   timeFrame: TimeFrame;
   method?: string;
   endpoint?: string;
+  statusCode?: string;
 }): OriginMetrics => {
   let requestsMultiplier = 24;
 
@@ -55,16 +76,22 @@ export const getMockMetrics = ({
 
   const errorsMultiplier = requestsMultiplier * 0.1;
   const dataPoints = getDataPointsBetweenTimeFrame(timeFrame);
-  let metrics = MOCK_METRICS;
 
-  console.log(method, endpoint);
+  let mockMetrics = initialMockMetrics;
 
   if (method && endpoint) {
-    metrics = metrics.filter((metric) => metric.method === method && metric.path === endpoint);
+    mockMetrics = mockMetrics.filter((metric) => {
+      const _endpoint = getEndpointFromPath(metric.path);
+      return metric.method === method && _endpoint === endpoint;
+    });
+  }
+
+  if (statusCode) {
+    mockMetrics = mockMetrics.filter((metric) => String(metric.statusCode) === statusCode);
   }
 
   const _timeFramePoints = dataPoints.flatMap((time) =>
-    metrics.map(({ path, method }) => {
+    mockMetrics.map(({ path, method }) => {
       const requests = Number(
         ((Math.floor(Math.random() * 5) + 1) * requestsMultiplier * dataPoints.length).toFixed(),
       );
@@ -92,64 +119,85 @@ export const getMockMetrics = ({
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
   const totalErrors = timeFrameData.reduce((prev, curr) => prev + curr.errors, 0);
 
-  const endpointData = metrics.map(({ path, method, statusCodes }) => {
+  const allEndpoints: EndpointData[] = mockMetrics.map(({ path, method }) => {
     const totalRequests = _timeFramePoints
       .filter((data) => data.path === path && data.method === method)
       .reduce((prev, curr) => prev + curr.requests, 0);
 
-    const avg_response_time = Number((Math.floor(Math.random() * 200) + 20).toFixed());
-    const avg_request_size = Number((Math.floor(Math.random() * 200) + 20).toFixed());
-    const avg_response_size = Number((Math.floor(Math.random() * 200) + 20).toFixed());
-
-    const endpoint =
-      MOCK_DYNAMIC_ROUTES.find(({ pattern }) =>
-        // Convert the SQL wildcard string into a regex for easy comparison.
-        new RegExp(`^${pattern.replace(/%/g, '[^/]+')}$`).test(path),
-      )?.route ?? path;
-
+    const endpoint = getEndpointFromPath(path);
     const methodAndEndpoint = `${method} ${endpoint}`;
-
-    const responseTimes = {
-      avg: avg_response_time,
-      p50: avg_response_time,
-      p75: Number((avg_response_time + avg_response_time * 0.25).toFixed()),
-      p90: Number((avg_response_time + avg_response_time * 0.4).toFixed()),
-      p95: Number((avg_response_time + avg_response_time * 0.45).toFixed()),
-      p99: Number((avg_response_time + avg_response_time * 0.49).toFixed()),
-    };
-
-    const requestSizes = {
-      avg: avg_request_size,
-      p50: avg_request_size,
-      p75: Number((avg_request_size + avg_request_size * 0.25).toFixed()),
-      p90: Number((avg_request_size + avg_request_size * 0.4).toFixed()),
-      p95: Number((avg_request_size + avg_request_size * 0.45).toFixed()),
-      p99: Number((avg_request_size + avg_request_size * 0.49).toFixed()),
-    };
-
-    const responseSizes = {
-      avg: avg_response_size,
-      p50: avg_response_size,
-      p75: Number((avg_response_size + avg_response_size * 0.25).toFixed()),
-      p90: Number((avg_response_size + avg_response_size * 0.4).toFixed()),
-      p95: Number((avg_response_size + avg_response_size * 0.45).toFixed()),
-      p99: Number((avg_response_size + avg_response_size * 0.49).toFixed()),
-    };
+    const responseTimeAvg = Number((Math.floor(Math.random() * 200) + 20).toFixed());
 
     return {
       totalRequests,
       endpoint,
       method,
       methodAndEndpoint,
-      statusCodes,
-      responseTimes,
-      requestSizes,
-      responseSizes,
+      responseTimeAvg,
     };
   });
 
+  const uniqueEndpoints: Record<string, EndpointData> = {};
+
+  allEndpoints.forEach((endpoint) => {
+    const { totalRequests = 0 } = uniqueEndpoints[endpoint.methodAndEndpoint] || {};
+
+    uniqueEndpoints[endpoint.methodAndEndpoint] = {
+      ...endpoint,
+      totalRequests: totalRequests + endpoint.totalRequests,
+    };
+  });
+
+  const endpointData = Object.values(uniqueEndpoints);
+
+  const responseTimeAvg = timeFrameData.length
+    ? Number((Math.floor(Math.random() * 200) + 20).toFixed())
+    : 0;
+
+  const requestSizeAvg = timeFrameData.length
+    ? Number((Math.floor(Math.random() * 200) + 20).toFixed())
+    : 0;
+
+  const responseSizeAvg = timeFrameData.length
+    ? Number((Math.floor(Math.random() * 200) + 20).toFixed())
+    : 0;
+
+  const responseTimeData = {
+    avg: responseTimeAvg,
+    p50: responseTimeAvg,
+    p75: Number((responseTimeAvg + responseTimeAvg * 0.25).toFixed()),
+    p90: Number((responseTimeAvg + responseTimeAvg * 0.4).toFixed()),
+    p95: Number((responseTimeAvg + responseTimeAvg * 0.45).toFixed()),
+    p99: Number((responseTimeAvg + responseTimeAvg * 0.49).toFixed()),
+  };
+
+  const requestSizeData = {
+    avg: requestSizeAvg,
+    p50: requestSizeAvg,
+    p75: Number((requestSizeAvg + requestSizeAvg * 0.25).toFixed()),
+    p90: Number((requestSizeAvg + requestSizeAvg * 0.4).toFixed()),
+    p95: Number((requestSizeAvg + requestSizeAvg * 0.45).toFixed()),
+    p99: Number((requestSizeAvg + requestSizeAvg * 0.49).toFixed()),
+  };
+
+  const responseSizeData = {
+    avg: responseSizeAvg,
+    p50: responseSizeAvg,
+    p75: Number((responseSizeAvg + responseSizeAvg * 0.25).toFixed()),
+    p90: Number((responseSizeAvg + responseSizeAvg * 0.4).toFixed()),
+    p95: Number((responseSizeAvg + responseSizeAvg * 0.45).toFixed()),
+    p99: Number((responseSizeAvg + responseSizeAvg * 0.49).toFixed()),
+  };
+
+  const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
+    key,
+    responseTime: responseTimeData[key as keyof typeof responseTimeData],
+    requestSize: requestSizeData[key as keyof typeof requestSizeData],
+    responseSize: responseSizeData[key as keyof typeof responseSizeData],
+  }));
+
   const uniqueStatusCodesWithCounts: Record<number, number> = {};
-  const allStatusCodes = metrics.flatMap(({ statusCodes }) => statusCodes);
+  const allStatusCodes = mockMetrics.flatMap(({ statusCode }) => statusCode);
 
   allStatusCodes.forEach((statusCode) => {
     uniqueStatusCodesWithCounts[statusCode] = (uniqueStatusCodesWithCounts[statusCode] || 0) + 1;
@@ -165,6 +213,7 @@ export const getMockMetrics = ({
     totalErrors,
     timeFrameData,
     endpointData,
+    percentileData,
     statusCodeData,
   };
 };

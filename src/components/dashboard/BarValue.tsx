@@ -6,9 +6,11 @@ interface Props {
   formatter: (value?: string | number) => string;
 }
 
-export const EndpointValue: React.FC<
-  Props & Omit<SVGProps<SVGTextElement>, 'viewBox'> & LabelProps
-> = ({ y, value, formatter }) => (
+export const BarValue: React.FC<Props & Omit<SVGProps<SVGTextElement>, 'viewBox'> & LabelProps> = ({
+  y,
+  value,
+  formatter,
+}) => (
   <g>
     <text
       x="100%"

@@ -4,11 +4,14 @@ import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
 import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
+import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
+import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
 import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
 import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
 import { EmailListForm } from 'components/shared/EmailListForm';
 import { withNoAuth } from 'hocs/withNoAuth';
+import { useDashboardQuery } from 'hooks/useDashboardQuery';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { EVENT_LOCATIONS, MOCK_ORIGIN } from 'utils/constants';
@@ -16,20 +19,35 @@ import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
 
 const Demo: NextPage = () => {
+  useDashboardQuery();
   const plausible = usePlausible();
-  const { timeFrame, selectedEndpoint } = useOrigin();
   const origin = MOCK_ORIGIN;
   const eventOptions = { location: EVENT_LOCATIONS.PAGE_BOTTOM };
   const maxWidth = 'max-w-6xl';
 
-  const { totalRequests, totalErrors, timeFrameData, endpointData } = useMemo(
+  const {
+    timeFrame,
+    selectedMethod: method,
+    selectedEndpoint: endpoint,
+    selectedStatusCode: statusCode,
+  } = useOrigin();
+
+  const {
+    totalRequests,
+    totalErrors,
+    timeFrameData,
+    endpointData,
+    percentileData,
+    statusCodeData,
+  } = useMemo(
     () =>
       getMockMetrics({
         timeFrame,
-        method: selectedEndpoint?.method,
-        endpoint: selectedEndpoint?.endpoint,
+        method,
+        endpoint,
+        statusCode,
       }),
-    [selectedEndpoint?.endpoint, selectedEndpoint?.method, timeFrame],
+    [endpoint, method, statusCode, timeFrame],
   );
 
   return (
@@ -51,7 +69,13 @@ const Demo: NextPage = () => {
           data={timeFrameData}
         />
         <div className="mt-4">
-          <EndpointMetrics data={endpointData} />
+          <EndpointMetrics data={endpointData} key={Math.random()} />
+        </div>
+        <div className="mt-4">
+          <PercentileMetrics data={percentileData} key={Math.random()} />
+        </div>
+        <div className="mt-4">
+          <StatusCodeMetrics data={statusCodeData} key={Math.random()} />
         </div>
         <p className="mt-4">
           See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
