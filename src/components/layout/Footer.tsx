@@ -19,7 +19,7 @@ const FEATURE_LINKS = [
     href: staticRoutes.lightweight,
   },
   {
-    text: 'Privacy friendly',
+    text: 'Privacy-friendly',
     href: staticRoutes.privacyFriendly,
   },
   {

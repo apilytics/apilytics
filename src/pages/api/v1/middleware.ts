@@ -10,7 +10,8 @@ import {
 } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isInconsistentColumnData } from 'prisma/errors';
-import { UNKNOWN_STATUS_CODE } from 'utils/constants';
+import { METHODS_WITHOUT_BODY, UNKNOWN_STATUS_CODE } from 'utils/constants';
+import { tryTwice } from 'utils/functools';
 import type { ApiHandler } from 'types';
 
 type RequiredFields = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
@@ -36,7 +37,7 @@ const handlePost: ApiHandler = async (req, res) => {
   let origin;
 
   try {
-    origin = await prisma.origin.findUnique({ where: { apiKey } });
+    origin = await tryTwice(prisma.origin.findUnique, { where: { apiKey } });
   } catch (e) {
     if (!isInconsistentColumnData(e)) {
       console.error('origin.findUnique error, req path:', req.url);
@@ -71,7 +72,9 @@ const handlePost: ApiHandler = async (req, res) => {
   } = req.body as PostBody;
 
   const requestSize =
-    _requestSize === undefined && responseSize !== undefined && method.toUpperCase() === 'GET'
+    _requestSize === undefined &&
+    responseSize !== undefined &&
+    METHODS_WITHOUT_BODY.includes(method.toUpperCase())
       ? 0
       : _requestSize;
 
@@ -85,7 +88,7 @@ const handlePost: ApiHandler = async (req, res) => {
   const userAgent = rawUserAgent !== undefined ? uaParser(rawUserAgent) : undefined;
 
   try {
-    await prisma.metric.create({
+    await tryTwice(prisma.metric.create, {
       data: {
         originId: origin.id,
         path,

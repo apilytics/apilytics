@@ -52,9 +52,9 @@ export const CTASection: React.FC = () => {
           text="Apilytics middlewares are super lightweight, fast and they will cause no performance impact on your APIs whatsoever."
         />
         <FeatureCard
-          title="Privacy friendly"
+          title="Privacy-friendly"
           href={staticRoutes.privacyFriendly}
-          text="Our privacy friendly approach lets you be in control of your data, making Apilytics a great fit for anyone aware of their privacy. Our open source middlewares allow you to see exactly what data leaves your servers."
+          text="Our privacy-friendly approach lets you be in control of your data, making Apilytics a great fit for anyone aware of their privacy. Our open source middlewares allow you to see exactly what data leaves your servers."
         />
         <FeatureCard
           title="Open source"

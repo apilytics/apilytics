@@ -41,8 +41,8 @@ const WHY_ITEMS = [
   {
     icon: ShieldCheckIcon,
     href: staticRoutes.privacyFriendly,
-    title: 'Privacy friendly',
-    description: 'Apilytics is a privacy friendly monitoring service for your APIs.',
+    title: 'Privacy-friendly',
+    description: 'Apilytics is a privacy-friendly monitoring service for your APIs.',
   },
   {
     icon: GlobeAltIcon,
