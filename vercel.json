@@ -1,5 +1,8 @@
 {
   "functions": {
+    "src/pages/api/origins/[slug]/metrics.ts": {
+      "memory": 256
+    },
     "src/pages/**": {
       "memory": 192
     }
