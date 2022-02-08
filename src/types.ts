@@ -184,6 +184,15 @@ export type ApiHandler<T = unknown> = (
   res: NextApiResponse<T>,
 ) => Promise<void>;
 
+export interface GeneralData {
+  totalRequests: number;
+  totalRequestsGrowth: number;
+  totalErrors: number;
+  totalErrorsGrowth: number;
+  errorRate: number;
+  errorRateGrowth: number;
+}
+
 export interface TimeFrameData {
   requests: number;
   errors: number;
@@ -211,8 +220,7 @@ export interface EndpointData {
 }
 
 export interface OriginMetrics {
-  totalRequests: number;
-  totalErrors: number;
+  generalData: GeneralData;
   timeFrameData: TimeFrameData[];
   endpointData: EndpointData[];
   percentileData: PercentileData[];

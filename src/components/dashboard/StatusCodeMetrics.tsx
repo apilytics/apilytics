@@ -11,7 +11,7 @@ import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
-import { MODAL_NAMES, TIME_FRAME_OPTIONS } from 'utils/constants';
+import { MODAL_NAMES } from 'utils/constants';
 import { formatCount } from 'utils/metrics';
 import type { StatusCodeData } from 'types';
 
@@ -21,7 +21,7 @@ interface Props {
 
 export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
   const plausible = usePlausible();
-  const { timeFrame, setSelectedStatusCode } = useOrigin();
+  const { setSelectedStatusCode } = useOrigin();
   const { handleOpenModal, handleCloseModal } = useModal();
   const data = [..._data.sort((a, b) => b.count - a.count)];
   const truncatedData = data.slice(0, 10);
@@ -61,7 +61,7 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
           tick={<StatusCodeTick />}
           onLabelClick={handleLabelClick}
           renderLabels={renderLabels}
-          label="Status codes"
+          label="Value"
           secondaryLabel="Count"
         />
       </div>
@@ -87,9 +87,7 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
       <Modal name={MODAL_NAMES.statusCodes} mobileFullscreen>
         <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="text-white pl-4">
-              Status codes ({TIME_FRAME_OPTIONS[timeFrame].toLowerCase()})
-            </p>
+            <p className="text-white pl-4">Status codes</p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="overflow-y-auto px-4">
@@ -102,7 +100,7 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
                 tick={<StatusCodeTick />}
                 onLabelClick={handleLabelClick}
                 renderLabels={renderLabels}
-                label="Status codes"
+                label="Value"
                 secondaryLabel="Count"
               />
             </div>

@@ -7,9 +7,9 @@ import type { OriginContextType, OriginMetrics, TimeFrame } from 'types';
 export const OriginContext = createContext<OriginContextType | null>(null);
 
 export const OriginProvider: React.FC = ({ children }) => {
+  const [timeFrame, setTimeFrame] = useState<TimeFrame>(() => WEEK_DAYS);
   const [origin, setOrigin] = useState<Origin | null>(null);
   const [metrics, setMetrics] = useState<OriginMetrics | null>(null);
-  const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const [selectedMethod, setSelectedMethod] = useState<string>();
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>();
   const [selectedStatusCode, setSelectedStatusCode] = useState<string>();

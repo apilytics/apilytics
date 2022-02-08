@@ -118,6 +118,20 @@ export const getMockMetrics = ({
 
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
   const totalErrors = timeFrameData.reduce((prev, curr) => prev + curr.errors, 0);
+  const errorRate = Number((totalErrors / totalRequests).toFixed(2));
+
+  const totalRequestsGrowth = Number(Math.random().toFixed(2));
+  const totalErrorsGrowth = Number(Math.random().toFixed(2));
+  const errorRateGrowth = Number(Math.random().toFixed(2));
+
+  const generalData = {
+    totalRequests,
+    totalRequestsGrowth,
+    totalErrors,
+    totalErrorsGrowth,
+    errorRate,
+    errorRateGrowth,
+  };
 
   const allEndpoints: EndpointData[] = mockMetrics.map(({ path, method }) => {
     const totalRequests = _timeFramePoints
@@ -209,8 +223,7 @@ export const getMockMetrics = ({
   }));
 
   return {
-    totalRequests,
-    totalErrors,
+    generalData,
     timeFrameData,
     endpointData,
     percentileData,

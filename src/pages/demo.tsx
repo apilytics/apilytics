@@ -32,14 +32,7 @@ const Demo: NextPage = () => {
     selectedStatusCode: statusCode,
   } = useOrigin();
 
-  const {
-    totalRequests,
-    totalErrors,
-    timeFrameData,
-    endpointData,
-    percentileData,
-    statusCodeData,
-  } = useMemo(
+  const { generalData, timeFrameData, endpointData, percentileData, statusCodeData } = useMemo(
     () =>
       getMockMetrics({
         timeFrame,
@@ -63,11 +56,7 @@ const Demo: NextPage = () => {
     >
       <div className="container py-4 max-w-6xl grow flex flex-col">
         <DashboardOptions origin={origin} />
-        <TimeFrameMetrics
-          totalRequests={totalRequests}
-          totalErrors={totalErrors}
-          data={timeFrameData}
-        />
+        <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} key={Math.random()} />
         </div>

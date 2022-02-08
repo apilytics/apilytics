@@ -2,6 +2,7 @@ import { XIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
 import React from 'react';
 import type { Origin } from '@prisma/client';
+import type { ChangeEvent } from 'react';
 
 import { BackButton } from 'components/shared/BackButton';
 import { Button } from 'components/shared/Button';
@@ -19,7 +20,7 @@ interface Props {
 
 export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug } }) => {
   const plausible = usePlausible();
-  const { pathname } = useRouter();
+  const { pathname, replace, query } = useRouter();
   const isDemo = pathname === staticRoutes.demo;
 
   const {
@@ -32,6 +33,15 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug } }) =>
     selectedStatusCode,
     setSelectedStatusCode,
   } = useOrigin();
+
+  const handleTimeFrameChange = ({ target }: ChangeEvent<HTMLSelectElement>): void => {
+    const val = Number(target.value) as TimeFrame;
+    setTimeFrame(val);
+
+    replace({ pathname, query: { ...query, timeFrame: TIME_FRAME_OPTIONS[val] } }, undefined, {
+      shallow: true,
+    });
+  };
 
   return (
     <>
@@ -67,7 +77,7 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug } }) =>
         )}
         <Select
           value={timeFrame}
-          onChange={({ target }): void => setTimeFrame(Number(target.value) as TimeFrame)}
+          onChange={handleTimeFrameChange}
           onClick={(): void => plausible('time-frame-selector-click')}
         >
           {Object.entries(TIME_FRAME_OPTIONS).map(([value, label]) => (

@@ -12,6 +12,38 @@ const METRIC_TYPES = {
   responseSizes: 'responseSizes',
 };
 
+const formatMilliseconds = (value?: string | number): string => {
+  if (typeof value === 'number') {
+    if (value > 1_000) {
+      return `${(value / 1_000).toFixed(1)}s`;
+    }
+
+    return `${value ?? 0}`;
+  }
+
+  return '0';
+};
+
+const formatBytes = (value?: string | number): string => {
+  if (typeof value === 'number') {
+    if (value > 1_000_000_000) {
+      return `${(value / 1_000_000_000).toFixed(1)}Gb`;
+    }
+
+    if (value > 1_000_000) {
+      return `${(value / 1_000_000).toFixed(1)}Mb`;
+    }
+
+    if (value > 1_000) {
+      return `${(value / 1_000).toFixed(1)}Kb`;
+    }
+
+    return `${value ?? 0}`;
+  }
+
+  return '0';
+};
+
 interface Props {
   data: PercentileData[];
 }
@@ -21,19 +53,19 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
 
   const attributes = {
     responseTimes: {
-      formatter: (value?: string | number): string => `${value ?? 0}ms`,
+      formatter: formatMilliseconds,
       dataKey: 'responseTime',
       label: 'Response times',
       emptyLabel: 'No response times available.',
     },
     requestSizes: {
-      formatter: (value?: string | number): string => `${value ?? 0}Kb`,
+      formatter: formatBytes,
       dataKey: 'requestSize',
       label: 'Requests sizes',
       emptyLabel: 'No request sizes available.',
     },
     responseSizes: {
-      formatter: (value?: string | number): string => `${value ?? 0}Kb`,
+      formatter: formatBytes,
       dataKey: 'responseSize',
       label: 'Response sizes',
       emptyLabel: 'No response sizes available.',
@@ -59,7 +91,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
       dataKey={dataKey}
       secondaryDataKey="key"
       renderLabels={<BarValue formatter={formatter} />}
-      label="Percentiles"
+      label="Key"
       secondaryLabel={label}
     />
   );
@@ -67,7 +99,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
   return (
     <DashboardCard>
       <div className="flex flex-wrap px-2 gap-4">
-        <p className="text-white mr-auto">Percentiles</p>
+        <p className="text-white mr-auto">Performance metrics</p>
         <div className="tabs">
           <p
             className={clsx(

@@ -12,7 +12,7 @@ import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
-import { MODAL_NAMES, TIME_FRAME_OPTIONS } from 'utils/constants';
+import { MODAL_NAMES } from 'utils/constants';
 import { formatCount } from 'utils/metrics';
 import type { EndpointData } from 'types';
 
@@ -27,7 +27,7 @@ interface Props {
 
 export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const plausible = usePlausible();
-  const { timeFrame, setSelectedMethod, setSelectedEndpoint } = useOrigin();
+  const { setSelectedMethod, setSelectedEndpoint } = useOrigin();
   const [metricType, setMetricType] = useState(METRIC_TYPES.requests);
   const [activeTab, setActiveTab] = useState(METRIC_TYPES.requests);
   const requestsData = [..._data.sort((a, b) => b.totalRequests - a.totalRequests)];
@@ -95,7 +95,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
           tick={<MethodAndEndpointTick />}
           onLabelClick={handleLabelClick}
           renderLabels={<BarValue formatter={formatter} />}
-          label="Endpoints"
+          label="Name"
           secondaryLabel={label}
         />
       </div>
@@ -115,7 +115,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   return (
     <DashboardCard>
       <div className="flex flex-wrap px-2 gap-4">
-        <p className="text-white mr-auto">Top endpoints</p>
+        <p className="text-white mr-auto">Endpoints</p>
         <div className="tabs">
           <p
             className={clsx(
@@ -141,9 +141,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
       <Modal name={MODAL_NAMES.endpoints} mobileFullscreen>
         <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="text-white pl-4">
-              Top endpoints ({TIME_FRAME_OPTIONS[timeFrame].toLowerCase()})
-            </p>
+            <p className="text-white pl-4">Endpoints</p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="tabs px-6 my-2">
@@ -176,7 +174,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
                 tick={<MethodAndEndpointTick />}
                 onLabelClick={handleLabelClick}
                 renderLabels={<BarValue formatter={modalFormatter} />}
-                label="Endpoints"
+                label="Name"
                 secondaryLabel={modalLabel}
               />
             </div>

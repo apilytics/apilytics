@@ -45,6 +45,7 @@ const Origin: NextPage = () => {
   const slug = origin?.slug || '';
   const apiKey = origin?.apiKey || '';
   const maxWidth = 'max-w-6xl';
+
   useDashboardQuery(dynamicRoutes.origin({ slug }));
 
   useEffect(() => {
@@ -75,7 +76,6 @@ const Origin: NextPage = () => {
   useEffect(() => {
     if (showApiKey) {
       handleOpenModal(MODAL_NAMES.apiKey);
-      router.replace(dynamicRoutes.origin({ slug }), undefined, { shallow: true });
     }
   }, [handleOpenModal, router, showApiKey, slug]);
 
@@ -91,14 +91,7 @@ const Origin: NextPage = () => {
     return <ErrorTemplate />;
   }
 
-  const {
-    totalRequests,
-    totalErrors,
-    timeFrameData,
-    endpointData,
-    percentileData,
-    statusCodeData,
-  } = metrics;
+  const { generalData, timeFrameData, endpointData, percentileData, statusCodeData } = metrics;
 
   return (
     <Layout
@@ -108,11 +101,7 @@ const Origin: NextPage = () => {
     >
       <div className="container py-4 max-w-6xl grow flex flex-col">
         <DashboardOptions origin={origin} />
-        <TimeFrameMetrics
-          totalRequests={totalRequests}
-          totalErrors={totalErrors}
-          data={timeFrameData}
-        />
+        <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} />
         </div>

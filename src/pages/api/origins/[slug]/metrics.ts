@@ -15,7 +15,9 @@ interface GetResponse {
 
 interface GeneralData {
   totalRequests: number;
+  totalRequestsGrowth: number;
   totalErrors: number;
+  totalErrorsGrowth: number;
 }
 
 interface RawGeneralData extends GeneralData {
@@ -94,9 +96,28 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     scope = 'week';
   }
 
+  const prevGeneralDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
+SELECT
+  COUNT(metrics) AS "totalRequests",
+
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
+    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
+      THEN 1 ELSE 0 END) AS "totalErrors"
+
+FROM metrics
+  LEFT JOIN origins ON metrics.origin_id = origins.id
+
+WHERE origins.id = ${originId}
+  AND origins.user_id = ${userId}
+  AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
+  AND metrics.created_at <= ${fromDate}
+  AND metrics.method LIKE ${method}
+  AND metrics.path LIKE ${endpoint}
+  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode};`;
+
   const generalDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
 SELECT
-  COUNT(*) AS "totalRequests",
+  COUNT(metrics) AS "totalRequests",
 
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
     OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
@@ -125,6 +146,7 @@ SELECT
 
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
+
 WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
@@ -136,12 +158,15 @@ WHERE origins.id = ${originId}
   const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
+  DATE_TRUNC(${scope}, metrics.created_at) AS time,
+
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
     OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
-      THEN 1 ELSE 0 END) AS errors,
-  DATE_TRUNC(${scope}, metrics.created_at) AS time
+      THEN 1 ELSE 0 END) AS errors
+
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
+
 WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
@@ -149,17 +174,24 @@ WHERE origins.id = ${originId}
   AND metrics.method LIKE ${method}
   AND metrics.path LIKE ${endpoint}
   AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
+
 GROUP BY time;`;
 
   const endpointDataPromise: Promise<EndpointData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS "totalRequests",
-  CASE WHEN matched_routes.route IS NULL THEN metrics.path ELSE matched_routes.route END AS endpoint,
   metrics.method,
   CONCAT(metrics.method, ' ', metrics.path) AS "methodAndEndpoint",
-  ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg"
+  ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
+
+  CASE
+    WHEN matched_routes.route IS NULL
+    THEN metrics.path
+    ELSE matched_routes.route END AS endpoint
+
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
+
   LEFT JOIN LATERAL (
     SELECT dynamic_routes.route
     FROM dynamic_routes
@@ -170,6 +202,7 @@ FROM metrics
     ORDER BY LENGTH(dynamic_routes.pattern) DESC
     LIMIT 1
   ) AS matched_routes ON TRUE
+
 WHERE origins.id = ${originId}
   AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
@@ -177,6 +210,7 @@ WHERE origins.id = ${originId}
   AND metrics.method LIKE ${method}
   AND metrics.path LIKE ${endpoint}
   AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
+
 GROUP BY metrics.method, metrics.path, endpoint;`;
 
   const statusCodeDataPromise: Promise<StatusCodeData[]> = prisma.$queryRaw`
@@ -194,14 +228,33 @@ WHERE origins.id = ${originId}
   AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
 GROUP BY metrics.status_code;`;
 
-  const [generalData, timeFrameData, endpointData, statusCodeData] = await Promise.all([
-    generalDataPromise,
-    timeFrameDataPromise,
-    endpointDataPromise,
-    statusCodeDataPromise,
-  ]);
+  const [prevGeneralData, _generalData, timeFrameData, endpointData, statusCodeData] =
+    await Promise.all([
+      prevGeneralDataPromise,
+      generalDataPromise,
+      timeFrameDataPromise,
+      endpointDataPromise,
+      statusCodeDataPromise,
+    ]);
 
-  const { totalRequests, totalErrors, ...g } = generalData[0];
+  const { totalRequests: prevTotalRequests, totalErrors: prevTotalErrors } = prevGeneralData[0];
+  const { totalRequests, totalErrors, ...g } = _generalData[0];
+
+  const totalRequestsGrowth = Number((totalRequests / prevTotalRequests).toFixed(2));
+  const totalErrorsGrowth = Number((totalErrors / prevTotalErrors).toFixed(2));
+
+  const prevErrorRate = Number((prevTotalErrors / prevTotalRequests).toFixed(2));
+  const errorRate = Number((totalErrors / totalRequests).toFixed(2));
+  const errorRateGrowth = Number((errorRate / prevErrorRate).toFixed(2));
+
+  const generalData = {
+    totalRequests,
+    totalRequestsGrowth,
+    totalErrors,
+    totalErrorsGrowth,
+    errorRate,
+    errorRateGrowth,
+  };
 
   const responseTimes = {
     avg: g.responseTimeAvg,
@@ -238,8 +291,7 @@ GROUP BY metrics.status_code;`;
   }));
 
   const data = {
-    totalRequests,
-    totalErrors,
+    generalData,
     timeFrameData,
     endpointData,
     percentileData,
