@@ -316,6 +316,12 @@ WHERE origins.id = ${originId}
 
 GROUP BY metrics.device;`;
 
+  const versionDataPromise = prisma.metric.findFirst({
+    where: { originId },
+    orderBy: { createdAt: 'desc' },
+    select: { apilyticsVersion: true },
+  });
+
   const [
     prevGeneralData,
     _generalData,
@@ -325,6 +331,7 @@ GROUP BY metrics.device;`;
     browserData,
     osData,
     deviceData,
+    versionData,
   ] = await Promise.all([
     prevGeneralDataPromise,
     generalDataPromise,
@@ -334,6 +341,7 @@ GROUP BY metrics.device;`;
     browserDataPromise,
     osDataPromise,
     deviceDataPromise,
+    versionDataPromise,
   ]);
 
   const { totalRequests: prevTotalRequests, totalErrors: prevTotalErrors } = prevGeneralData[0];
@@ -395,6 +403,15 @@ GROUP BY metrics.device;`;
     deviceData,
   };
 
+  const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
+  const apilyticsPackage =
+    !!identifier && !!version
+      ? {
+          identifier,
+          version,
+        }
+      : undefined;
+
   const data = {
     generalData,
     timeFrameData,
@@ -402,6 +419,7 @@ GROUP BY metrics.device;`;
     percentileData,
     statusCodeData,
     userAgentData,
+    apilyticsPackage,
   };
 
   sendOk(res, { data });

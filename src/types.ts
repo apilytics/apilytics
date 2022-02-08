@@ -254,6 +254,11 @@ export interface EndpointData {
   responseTimeAvg: number;
 }
 
+export interface ApilyticsPackage {
+  identifier: string;
+  version: string;
+}
+
 export interface OriginMetrics {
   generalData: GeneralData;
   timeFrameData: TimeFrameData[];
@@ -261,6 +266,7 @@ export interface OriginMetrics {
   percentileData: PercentileData[];
   statusCodeData: StatusCodeData[];
   userAgentData: UserAgentData;
+  apilyticsPackage?: ApilyticsPackage;
 }
 
 export interface DynamicRouteWithMatches {
