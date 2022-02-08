@@ -67,6 +67,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 
   const origin = await prisma.origin.findFirst({
     where: { slug, userId },
+    select: { id: true },
   });
 
   if (!origin) {
