@@ -13,6 +13,9 @@ export const OriginProvider: React.FC = ({ children }) => {
   const [selectedMethod, setSelectedMethod] = useState<string>();
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>();
   const [selectedStatusCode, setSelectedStatusCode] = useState<string>();
+  const [selectedBrowser, setSelectedBrowser] = useState<string>();
+  const [selectedOs, setSelectedOs] = useState<string>();
+  const [selectedDevice, setSelectedDevice] = useState<string>();
 
   const value = {
     origin,
@@ -27,6 +30,12 @@ export const OriginProvider: React.FC = ({ children }) => {
     setSelectedEndpoint,
     selectedStatusCode,
     setSelectedStatusCode,
+    selectedBrowser,
+    setSelectedBrowser,
+    selectedOs,
+    setSelectedOs,
+    selectedDevice,
+    setSelectedDevice,
   };
 
   return <OriginContext.Provider value={value}>{children}</OriginContext.Provider>;

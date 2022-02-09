@@ -32,6 +32,12 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug } }) =>
     setSelectedEndpoint,
     selectedStatusCode,
     setSelectedStatusCode,
+    selectedBrowser,
+    setSelectedBrowser,
+    selectedOs,
+    setSelectedOs,
+    selectedDevice,
+    setSelectedDevice,
   } = useOrigin();
 
   const handleTimeFrameChange = ({ target }: ChangeEvent<HTMLSelectElement>): void => {
@@ -56,9 +62,7 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug } }) =>
         <h6 className="text-white grow">{name}</h6>
         {selectedMethod && (
           <Button onClick={(): void => setSelectedMethod(undefined)} endIcon={XIcon}>
-            <span className={`text-method-${selectedMethod.toLowerCase()} mr-2`}>
-              {selectedMethod}
-            </span>
+            <span className={`text-method-${selectedMethod.toLowerCase()}`}>{selectedMethod}</span>
           </Button>
         )}
         {selectedEndpoint && (
@@ -67,12 +71,23 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug } }) =>
           </Button>
         )}
         {selectedStatusCode && (
-          <Button
-            onClick={(): void => setSelectedStatusCode(undefined)}
-            endIcon={XIcon}
-            className={`text-${selectedStatusCode.toString().charAt(0)}xx`}
-          >
+          <Button onClick={(): void => setSelectedStatusCode(undefined)} endIcon={XIcon}>
             {selectedStatusCode}
+          </Button>
+        )}
+        {selectedBrowser && (
+          <Button onClick={(): void => setSelectedBrowser(undefined)} endIcon={XIcon}>
+            {selectedBrowser}
+          </Button>
+        )}
+        {selectedOs && (
+          <Button onClick={(): void => setSelectedOs(undefined)} endIcon={XIcon}>
+            {selectedOs}
+          </Button>
+        )}
+        {selectedDevice && (
+          <Button onClick={(): void => setSelectedDevice(undefined)} endIcon={XIcon}>
+            {selectedDevice}
           </Button>
         )}
         <Select

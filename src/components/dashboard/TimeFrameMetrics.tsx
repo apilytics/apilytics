@@ -75,7 +75,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
           </div>
           <div className="text-white">
             <p>Error rate</p>
-            <span className="text-lg font-bold ml-1">{formatCount(errorRate)}</span>
+            <span className="text-lg font-bold ml-1">{formatCount(errorRate, 2)}</span>
             {isFinite(errorRateGrowth) && (
               <span
                 className={clsx('ml-2', positiveErrorRateGrowth ? 'text-success' : 'text-error')}

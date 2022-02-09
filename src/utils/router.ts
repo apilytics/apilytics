@@ -78,7 +78,7 @@ export const INDEXABLE_ROUTES = [
   ...MISC_INDEXABLE_ROUTES,
 ];
 
-type DynamicRoutes = Record<string, (args: Record<string, string | number>) => string>;
+type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;
 
 export const dynamicRoutes: DynamicRoutes = {
   origin: ({ slug }) => `/origins/${slug}`,
@@ -98,7 +98,7 @@ export const staticApiRoutes = {
 
 export const dynamicApiRoutes: DynamicRoutes = {
   origin: ({ slug }) => `/api/origins/${slug}`,
-  originMetrics: ({ slug, from, to, method, endpoint, statusCode }) =>
-    `/api/origins/${slug}/metrics?from=${from}&to=${to}&method=${method}&endpoint=${endpoint}&statusCode=${statusCode}`,
+  originMetrics: ({ slug, ...params }) =>
+    `/api/origins/${slug}/metrics?${new URLSearchParams(params)}`,
   dynamicRoutes: ({ slug }) => `/api/origins/${slug}/dynamic-routes`,
 };

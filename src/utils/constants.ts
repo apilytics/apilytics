@@ -15,11 +15,9 @@ export const METHODS = [
   'OPTIONS',
   'CONNECT',
   'TRACE',
-] as const;
+];
 
 export const METHODS_WITHOUT_BODY = ['GET', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'];
-
-export type Method = typeof METHODS[number];
 
 export const DAY = 1;
 export const WEEK_DAYS = 7;
@@ -58,8 +56,17 @@ export const MOCK_PATHS = [
   '/blogs/789',
 ];
 
-export const MOCK_STATUS_CODES = [200, 201, 202, 204, 400, 401, 403, 404, 500];
+export const MOCK_BROWSERS = ['Chrome', 'Firefox', 'Safari', 'Edge', 'Internet Explorer', 'Opera'];
 
+export const MOCK_OPERATING_SYSTEMS = [
+  'Android',
+  'BlackBerry',
+  'Chrome OS',
+  'iOS',
+  'Linux',
+  'Mac OS',
+  'Windows',
+];
 interface MockDynamicRoute {
   route: string;
   pattern: string;
@@ -86,6 +93,7 @@ export const MODAL_NAMES = {
   apiKey: 'api-key',
   endpoints: 'endpoints',
   statusCodes: 'status-codes',
+  userAgents: 'user-agents',
   dynamicRoute: 'dynamic-route',
   deleteDynamicRoute: 'delete-dynamic-route',
 };
@@ -105,3 +113,5 @@ export enum EVENT_LOCATIONS {
 }
 
 export const PERCENTILE_DATA_KEYS = ['avg', 'p50', 'p75', 'p90', 'p95', 'p99'];
+
+export const DEVICES = ['console', 'mobile', 'tablet', 'smarttv', 'wearable', 'embedded'];

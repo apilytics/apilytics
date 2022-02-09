@@ -134,26 +134,6 @@
   color: #42bbd7;
 }
 
-.text-1xx {
-  color: #49cc90;
-}
-
-.text-2xx {
-  color: #4caf50;
-}
-
-.text-3xx {
-  color: #fca130;
-}
-
-.text-4xx {
-  color: #f44336;
-}
-
-.text-5xx {
-  color: #e53935;
-}
-
 #swagger-ui .scheme-container {
   background: unset;
   @apply shadow-none;

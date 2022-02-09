@@ -9,6 +9,7 @@ import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
 import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
 import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
 import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
+import { UserAgentMetrics } from 'components/dashboard/UserAgentMetrics';
 import { ErrorTemplate } from 'components/layout/ErrorTemplate';
 import { Layout } from 'components/layout/Layout';
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
@@ -35,6 +36,9 @@ const Origin: NextPage = () => {
     selectedMethod: method = '',
     selectedEndpoint: endpoint = '',
     selectedStatusCode: statusCode = '',
+    selectedBrowser: browser = '',
+    selectedOs: os = '',
+    selectedDevice: device = '',
   } = useOrigin();
 
   const router = useRouter();
@@ -55,7 +59,17 @@ const Origin: NextPage = () => {
 
       try {
         const res = await fetch(
-          dynamicApiRoutes.originMetrics({ slug, from, to, method, endpoint, statusCode }),
+          dynamicApiRoutes.originMetrics({
+            slug,
+            from,
+            to,
+            method,
+            endpoint,
+            statusCode,
+            browser,
+            os,
+            device,
+          }),
         );
 
         const { data } = await res.json();
@@ -71,7 +85,7 @@ const Origin: NextPage = () => {
         setLoading(false);
       }
     })();
-  }, [endpoint, method, setMetrics, slug, statusCode, timeFrame]);
+  }, [endpoint, method, setMetrics, slug, statusCode, timeFrame, browser, os, device]);
 
   useEffect(() => {
     if (showApiKey) {
@@ -91,7 +105,14 @@ const Origin: NextPage = () => {
     return <ErrorTemplate />;
   }
 
-  const { generalData, timeFrameData, endpointData, percentileData, statusCodeData } = metrics;
+  const {
+    generalData,
+    timeFrameData,
+    endpointData,
+    percentileData,
+    statusCodeData,
+    userAgentData,
+  } = metrics;
 
   return (
     <Layout
@@ -108,8 +129,9 @@ const Origin: NextPage = () => {
         <div className="mt-4">
           <PercentileMetrics data={percentileData} />
         </div>
-        <div className="mt-4">
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <StatusCodeMetrics data={statusCodeData} />
+          <UserAgentMetrics data={userAgentData} />
         </div>
         <p className="mt-4">
           See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these

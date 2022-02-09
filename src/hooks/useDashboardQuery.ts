@@ -19,11 +19,18 @@ export const useDashboardQuery = (url?: string): void => {
     setSelectedEndpoint,
     selectedStatusCode,
     setSelectedStatusCode,
+    selectedBrowser,
+    setSelectedBrowser,
+    selectedOs,
+    setSelectedOs,
+    selectedDevice,
+    setSelectedDevice,
   } = useOrigin();
 
   // Initialize filters from existing URL parameters.
   useEffect(() => {
-    const { timeFrame, method, endpoint, statusCode } = _query as ParsedUrlQuery;
+    const { timeFrame, method, endpoint, statusCode, browser, os, device } =
+      _query as ParsedUrlQuery;
 
     if (timeFrame && typeof timeFrame === 'string') {
       const _timeFrame = Object.entries(TIME_FRAME_OPTIONS).find(
@@ -46,6 +53,19 @@ export const useDashboardQuery = (url?: string): void => {
     if (statusCode && typeof statusCode === 'string') {
       setSelectedStatusCode(statusCode);
     }
+
+    if (browser && typeof browser === 'string') {
+      setSelectedBrowser(browser);
+    }
+
+    if (os && typeof os === 'string') {
+      setSelectedOs(os);
+    }
+
+    if (device && typeof device === 'string') {
+      setSelectedDevice(device);
+    }
+
     // Ignore: We only want to run this effect once the query changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_query]);
@@ -70,9 +90,28 @@ export const useDashboardQuery = (url?: string): void => {
       query.statusCode = String(selectedStatusCode);
     }
 
+    if (selectedBrowser) {
+      query.browser = selectedBrowser;
+    }
+
+    if (selectedOs) {
+      query.os = selectedOs;
+    }
+
+    if (selectedDevice) {
+      query.device = selectedDevice;
+    }
+
     replace({ pathname, query }, undefined, { shallow: true });
 
     // Ignore: The `replace` method must be left out to prevent an infinite loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedEndpoint, selectedMethod, selectedStatusCode]);
+  }, [
+    selectedEndpoint,
+    selectedMethod,
+    selectedStatusCode,
+    selectedBrowser,
+    selectedOs,
+    selectedDevice,
+  ]);
 };

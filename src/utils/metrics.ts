@@ -3,13 +3,20 @@ import type { OpUnitType } from 'dayjs';
 
 import {
   DAY,
+  DEVICES,
   METHODS,
+  MOCK_BROWSERS,
   MOCK_DYNAMIC_ROUTES,
+  MOCK_OPERATING_SYSTEMS,
   MOCK_PATHS,
-  MOCK_STATUS_CODES,
   PERCENTILE_DATA_KEYS,
   THREE_MONTHS_DAYS,
 } from 'utils/constants';
+import {
+  getRandomArrayItem,
+  getRandomNumberBetween,
+  getRandomStatusCodeForMethod,
+} from 'utils/helpers';
 import type { EndpointData, OriginMetrics, TimeFrame } from 'types';
 
 export const getTimeFrameScope = (timeFrame: TimeFrame): OpUnitType => {
@@ -47,23 +54,38 @@ const getEndpointFromPath = (path: string): string =>
     new RegExp(`^${pattern.replace(/%/g, '[^/]+')}$`).test(path),
   )?.route ?? path;
 
-const initialMockMetrics = MOCK_PATHS.map((path) => ({
-  path,
-  method: METHODS[Math.floor(Math.random() * METHODS.length)],
-  statusCode: MOCK_STATUS_CODES[Math.floor(Math.random() * MOCK_STATUS_CODES.length)],
-}));
+const initialMockMetrics = MOCK_PATHS.map((path) => {
+  const method = getRandomArrayItem(METHODS);
+
+  return {
+    path,
+    method,
+    statusCode: getRandomStatusCodeForMethod(method),
+    browser: getRandomArrayItem(MOCK_BROWSERS),
+    os: getRandomArrayItem(MOCK_OPERATING_SYSTEMS),
+    device: getRandomArrayItem(DEVICES),
+  };
+});
+
+interface MockMetricsParams {
+  timeFrame: TimeFrame;
+  method?: string;
+  endpoint?: string;
+  statusCode?: string;
+  browser?: string;
+  os?: string;
+  device?: string;
+}
 
 export const getMockMetrics = ({
   timeFrame,
   method,
   endpoint,
   statusCode,
-}: {
-  timeFrame: TimeFrame;
-  method?: string;
-  endpoint?: string;
-  statusCode?: string;
-}): OriginMetrics => {
+  browser,
+  os,
+  device,
+}: MockMetricsParams): OriginMetrics => {
   let requestsMultiplier = 24;
 
   if (timeFrame <= DAY) {
@@ -90,15 +112,22 @@ export const getMockMetrics = ({
     mockMetrics = mockMetrics.filter((metric) => String(metric.statusCode) === statusCode);
   }
 
+  if (browser) {
+    mockMetrics = mockMetrics.filter((metric) => metric.browser === browser);
+  }
+
+  if (os) {
+    mockMetrics = mockMetrics.filter((metric) => metric.os === os);
+  }
+
+  if (device) {
+    mockMetrics = mockMetrics.filter((metric) => metric.device === device);
+  }
+
   const _timeFramePoints = dataPoints.flatMap((time) =>
     mockMetrics.map(({ path, method }) => {
-      const requests = Number(
-        ((Math.floor(Math.random() * 5) + 1) * requestsMultiplier * dataPoints.length).toFixed(),
-      );
-
-      const errors = Number(
-        ((Math.floor(Math.random() * 5) + 1) * errorsMultiplier * dataPoints.length).toFixed(),
-      );
+      const requests = getRandomNumberBetween(1, 5) * requestsMultiplier * dataPoints.length;
+      const errors = getRandomNumberBetween(1, 5) * errorsMultiplier * dataPoints.length;
 
       return {
         requests,
@@ -140,7 +169,7 @@ export const getMockMetrics = ({
 
     const endpoint = getEndpointFromPath(path);
     const methodAndEndpoint = `${method} ${endpoint}`;
-    const responseTimeAvg = Number((Math.floor(Math.random() * 200) + 20).toFixed());
+    const responseTimeAvg = getRandomNumberBetween(20, 200);
 
     return {
       totalRequests,
@@ -164,17 +193,9 @@ export const getMockMetrics = ({
 
   const endpointData = Object.values(uniqueEndpoints);
 
-  const responseTimeAvg = timeFrameData.length
-    ? Number((Math.floor(Math.random() * 200) + 20).toFixed())
-    : 0;
-
-  const requestSizeAvg = timeFrameData.length
-    ? Number((Math.floor(Math.random() * 200) + 20).toFixed())
-    : 0;
-
-  const responseSizeAvg = timeFrameData.length
-    ? Number((Math.floor(Math.random() * 200) + 20).toFixed())
-    : 0;
+  const responseTimeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
+  const requestSizeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
+  const responseSizeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
 
   const responseTimeData = {
     avg: responseTimeAvg,
@@ -219,8 +240,49 @@ export const getMockMetrics = ({
 
   const statusCodeData = Object.entries(uniqueStatusCodesWithCounts).map(([statusCode, count]) => ({
     statusCode: Number(statusCode),
-    count: count * requestsMultiplier,
+    requests: count * requestsMultiplier,
   }));
+
+  const uniqueBrowsersWithCounts: Record<string, number> = {};
+  const uniqueOperatingSystemsWithCounts: Record<string, number> = {};
+  const uniqueDevicesWithCounts: Record<string, number> = {};
+
+  const allBrowsers = mockMetrics.flatMap(({ browser }) => browser);
+  const allOperatingSystems = mockMetrics.flatMap(({ os }) => os);
+  const allDevices = mockMetrics.flatMap(({ device }) => device);
+
+  allBrowsers.forEach((browser) => {
+    uniqueBrowsersWithCounts[browser] = (uniqueBrowsersWithCounts[browser] || 0) + 1;
+  });
+
+  allOperatingSystems.forEach((os) => {
+    uniqueOperatingSystemsWithCounts[os] = (uniqueOperatingSystemsWithCounts[os] || 0) + 1;
+  });
+
+  allDevices.forEach((device) => {
+    uniqueDevicesWithCounts[device] = (uniqueDevicesWithCounts[device] || 0) + 1;
+  });
+
+  const browserData = Object.entries(uniqueBrowsersWithCounts).map(([browser, count]) => ({
+    browser,
+    requests: count * requestsMultiplier,
+  }));
+
+  const osData = Object.entries(uniqueOperatingSystemsWithCounts).map(([os, count]) => ({
+    os,
+    requests: count * requestsMultiplier,
+  }));
+
+  const deviceData = Object.entries(uniqueDevicesWithCounts).map(([device, count]) => ({
+    device,
+    requests: count * requestsMultiplier,
+  }));
+
+  const userAgentData = {
+    browserData,
+    osData,
+    deviceData,
+  };
 
   return {
     generalData,
@@ -228,10 +290,11 @@ export const getMockMetrics = ({
     endpointData,
     percentileData,
     statusCodeData,
+    userAgentData,
   };
 };
 
-export const formatCount = (count: number): string => {
+export const formatCount = (count: number, decimals = 0): string => {
   if (count > 1_000_000) {
     return `${(count / 1_000_000).toFixed(1)}m`;
   }
@@ -240,5 +303,5 @@ export const formatCount = (count: number): string => {
     return `${(count / 1_000).toFixed(1)}k`;
   }
 
-  return `${count ?? 0}`;
+  return `${(count ?? 0).toFixed(decimals)}`;
 };

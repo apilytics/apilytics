@@ -137,7 +137,7 @@ export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, colo
               Errors: <span className="font-bold">{formatCount(errors)}</span>
             </li>
             <li>
-              Error rate: <span className="font-bold">{(errors / requests || 0).toFixed(2)}</span>
+              Error rate: <span className="font-bold">{formatCount(errors / requests, 2)}</span>
             </li>
           </ul>
         </div>

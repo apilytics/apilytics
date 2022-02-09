@@ -13,6 +13,7 @@ import type {
 
 import type {
   DAY,
+  METHODS,
   MONTH_DAYS,
   SIX_MONTHS_DAYS,
   THREE_MONTHS_DAYS,
@@ -56,7 +57,14 @@ export type PlausibleEvents = {
   'add-dynamic-route': PlausibleProps;
   'update-dynamic-route': PlausibleProps;
   'delete-dynamic-route': PlausibleProps;
+  'status-code-click': PlausibleProps;
   'show-all-status-codes-click': PlausibleProps;
+  'browser-click': PlausibleProps;
+  'os-click': PlausibleProps;
+  'device-click': PlausibleProps;
+  'show-all-browsers-click': PlausibleProps;
+  'show-all-operating-systems-click': PlausibleProps;
+  'show-all-devices-click': PlausibleProps;
 };
 
 export interface HeadProps {
@@ -171,6 +179,12 @@ export interface OriginContextType {
   setSelectedEndpoint: Dispatch<SetStateAction<string | undefined>>;
   selectedStatusCode: string | undefined;
   setSelectedStatusCode: Dispatch<SetStateAction<string | undefined>>;
+  selectedBrowser: string | undefined;
+  setSelectedBrowser: Dispatch<SetStateAction<string | undefined>>;
+  selectedOs: string | undefined;
+  setSelectedOs: Dispatch<SetStateAction<string | undefined>>;
+  selectedDevice: string | undefined;
+  setSelectedDevice: Dispatch<SetStateAction<string | undefined>>;
 }
 
 export interface ModalContextType {
@@ -201,7 +215,28 @@ export interface TimeFrameData {
 
 export interface StatusCodeData {
   statusCode: number;
-  count: number;
+  requests: number;
+}
+
+export interface BrowserData {
+  browser: string;
+  requests: number;
+}
+
+export interface OSData {
+  os: string;
+  requests: number;
+}
+
+export interface DeviceData {
+  device: string;
+  requests: number;
+}
+
+export interface UserAgentData {
+  browserData: BrowserData[];
+  osData: OSData[];
+  deviceData: DeviceData[];
 }
 
 export interface PercentileData {
@@ -225,9 +260,12 @@ export interface OriginMetrics {
   endpointData: EndpointData[];
   percentileData: PercentileData[];
   statusCodeData: StatusCodeData[];
+  userAgentData: UserAgentData;
 }
 
 export interface DynamicRouteWithMatches {
   route: string;
   matchingPaths: number;
 }
+
+export type Method = typeof METHODS[number];

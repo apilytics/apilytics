@@ -3,9 +3,16 @@ import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } fr
 import type { ContentType } from 'recharts/types/component/Label';
 
 import { truncateString } from 'utils/helpers';
-import type { EndpointData, PercentileData, StatusCodeData } from 'types';
+import type {
+  BrowserData,
+  DeviceData,
+  EndpointData,
+  OSData,
+  PercentileData,
+  StatusCodeData,
+} from 'types';
 
-type Data = EndpointData & StatusCodeData & PercentileData;
+type Data = EndpointData & StatusCodeData & PercentileData & BrowserData & OSData & DeviceData;
 
 interface Props {
   height: number;
@@ -57,10 +64,11 @@ export const VerticalBarChart: React.FC<Props> = ({
         mirror
         stroke="white"
         tick={tick}
+        width={200}
         padding={{ top: 30, bottom: 20 }}
         tickFormatter={(val: string): string => truncateString(val, 50)}
         // @ts-ignore: `recharts`doesn't have typings for the click handler.
-        onClick={({ index }: { index: number }): void => onLabelClick(data[index])}
+        onClick={({ index }: { index: number }): void => onLabelClick && onLabelClick(data[index])}
       >
         <Label value={label} fill="var(--base-content)" position="insideTopLeft" />
       </YAxis>

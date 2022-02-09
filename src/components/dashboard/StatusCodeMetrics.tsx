@@ -3,7 +3,7 @@ import React from 'react';
 
 import { BarValue } from 'components/dashboard/BarValue';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
-import { StatusCodeTick } from 'components/dashboard/StatusCodeTick';
+import { LinkTick } from 'components/dashboard/LinkTick';
 import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
@@ -23,7 +23,7 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
   const plausible = usePlausible();
   const { setSelectedStatusCode } = useOrigin();
   const { handleOpenModal, handleCloseModal } = useModal();
-  const data = [..._data.sort((a, b) => b.count - a.count)];
+  const data = [..._data.sort((a, b) => b.requests - a.requests)];
   const truncatedData = data.slice(0, 10);
 
   const getHeight = (dataLength: number): number => 100 + dataLength * 35;
@@ -32,7 +32,7 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
 
   const handleLabelClick = (data: StatusCodeData): void => {
     setSelectedStatusCode(String(data.statusCode));
-    plausible('endpoint-click');
+    plausible('status-code-click');
   };
 
   const handleShowAllClick = (): void => {
@@ -56,13 +56,13 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
         <VerticalBarChart
           height={truncatedHeight}
           data={truncatedData}
-          dataKey="count"
+          dataKey="requests"
           secondaryDataKey="statusCode"
-          tick={<StatusCodeTick />}
+          tick={<LinkTick />}
           onLabelClick={handleLabelClick}
           renderLabels={renderLabels}
           label="Value"
-          secondaryLabel="Count"
+          secondaryLabel="Requests"
         />
       </div>
       <div className="flex">
@@ -83,7 +83,7 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
       <div className="flex flex-wrap px-2 gap-4">
         <p className="text-white mr-auto">Status codes</p>
       </div>
-      <div className="mt-4">{renderNoMetrics || renderMetrics}</div>
+      <div className="mt-4 flex flex-col grow">{renderNoMetrics || renderMetrics}</div>
       <Modal name={MODAL_NAMES.statusCodes} mobileFullscreen>
         <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
@@ -95,13 +95,13 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
               <VerticalBarChart
                 height={height}
                 data={data}
-                dataKey="count"
+                dataKey="requests"
                 secondaryDataKey="statusCode"
-                tick={<StatusCodeTick />}
+                tick={<LinkTick />}
                 onLabelClick={handleLabelClick}
                 renderLabels={renderLabels}
                 label="Value"
-                secondaryLabel="Count"
+                secondaryLabel="Requests"
               />
             </div>
           </div>

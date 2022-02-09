@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useMemo } from 'react';
+import React from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
@@ -7,6 +7,7 @@ import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
 import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
 import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
 import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
+import { UserAgentMetrics } from 'components/dashboard/UserAgentMetrics';
 import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
 import { EmailListForm } from 'components/shared/EmailListForm';
@@ -30,18 +31,27 @@ const Demo: NextPage = () => {
     selectedMethod: method,
     selectedEndpoint: endpoint,
     selectedStatusCode: statusCode,
+    selectedBrowser: browser,
+    selectedOs: os,
+    selectedDevice: device,
   } = useOrigin();
 
-  const { generalData, timeFrameData, endpointData, percentileData, statusCodeData } = useMemo(
-    () =>
-      getMockMetrics({
-        timeFrame,
-        method,
-        endpoint,
-        statusCode,
-      }),
-    [endpoint, method, statusCode, timeFrame],
-  );
+  const {
+    generalData,
+    timeFrameData,
+    endpointData,
+    percentileData,
+    statusCodeData,
+    userAgentData,
+  } = getMockMetrics({
+    timeFrame,
+    method,
+    endpoint,
+    statusCode,
+    browser,
+    os,
+    device,
+  });
 
   return (
     <Layout
@@ -58,13 +68,14 @@ const Demo: NextPage = () => {
         <DashboardOptions origin={origin} />
         <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
-          <EndpointMetrics data={endpointData} key={Math.random()} />
+          <EndpointMetrics data={endpointData} />
         </div>
         <div className="mt-4">
-          <PercentileMetrics data={percentileData} key={Math.random()} />
+          <PercentileMetrics data={percentileData} />
         </div>
-        <div className="mt-4">
-          <StatusCodeMetrics data={statusCodeData} key={Math.random()} />
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <StatusCodeMetrics data={statusCodeData} />
+          <UserAgentMetrics data={userAgentData} />
         </div>
         <p className="mt-4">
           See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
