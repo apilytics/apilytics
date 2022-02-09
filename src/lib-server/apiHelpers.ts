@@ -4,8 +4,7 @@ import type { Session } from 'next-auth';
 
 import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
 import { METHODS } from 'utils/constants';
-import type { ApiHandler } from 'types';
-import type { Method } from 'utils/constants';
+import type { ApiHandler, Method } from 'types';
 
 class UnauthorizedApiError extends Error {}
 

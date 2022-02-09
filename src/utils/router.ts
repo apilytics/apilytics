@@ -98,6 +98,7 @@ export const staticApiRoutes = {
 
 export const dynamicApiRoutes: DynamicRoutes = {
   origin: ({ slug }) => `/api/origins/${slug}`,
-  originMetrics: ({ slug, from, to }) => `/api/origins/${slug}/metrics?from=${from}&to=${to}`,
+  originMetrics: ({ slug, ...params }) =>
+    `/api/origins/${slug}/metrics?${new URLSearchParams(params)}`,
   dynamicRoutes: ({ slug }) => `/api/origins/${slug}/dynamic-routes`,
 };

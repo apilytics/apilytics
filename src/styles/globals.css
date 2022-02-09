@@ -106,7 +106,6 @@
   @apply overflow-visible; /* Allow drop downs to show outside card elements. */
 }
 
-/* https://github.com/swagger-api/swagger-ui/blob/master/src/style/_variables.scss#L46-L53 */
 .text-method-post {
   color: #49cc90;
 }
@@ -124,7 +123,7 @@
 }
 
 .text-method-head {
-  color: #9012fe;
+  color: #c07cfc;
 }
 
 .text-method-patch {

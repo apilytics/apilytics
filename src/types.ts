@@ -13,6 +13,7 @@ import type {
 
 import type {
   DAY,
+  METHODS,
   MONTH_DAYS,
   SIX_MONTHS_DAYS,
   THREE_MONTHS_DAYS,
@@ -50,13 +51,20 @@ export type PlausibleEvents = {
   'email-list-subscribe': PlausibleProps;
   'time-frame-selector-click': PlausibleProps;
   'endpoint-click': PlausibleProps;
-  'show-all-requests-click': PlausibleProps;
-  'show-all-response-times-click': PlausibleProps;
+  'show-all-endpoints-click': PlausibleProps;
   'copy-api-key': PlausibleProps;
   'footer-link-click': PlausibleProps;
   'add-dynamic-route': PlausibleProps;
   'update-dynamic-route': PlausibleProps;
   'delete-dynamic-route': PlausibleProps;
+  'status-code-click': PlausibleProps;
+  'show-all-status-codes-click': PlausibleProps;
+  'browser-click': PlausibleProps;
+  'os-click': PlausibleProps;
+  'device-click': PlausibleProps;
+  'show-all-browsers-click': PlausibleProps;
+  'show-all-operating-systems-click': PlausibleProps;
+  'show-all-devices-click': PlausibleProps;
 };
 
 export interface HeadProps {
@@ -163,6 +171,20 @@ export interface OriginContextType {
   setOrigin: Dispatch<SetStateAction<Origin | null>>;
   metrics: OriginMetrics | null;
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
+  timeFrame: TimeFrame;
+  setTimeFrame: Dispatch<SetStateAction<TimeFrame>>;
+  selectedMethod: string | undefined;
+  setSelectedMethod: Dispatch<SetStateAction<string | undefined>>;
+  selectedEndpoint: string | undefined;
+  setSelectedEndpoint: Dispatch<SetStateAction<string | undefined>>;
+  selectedStatusCode: string | undefined;
+  setSelectedStatusCode: Dispatch<SetStateAction<string | undefined>>;
+  selectedBrowser: string | undefined;
+  setSelectedBrowser: Dispatch<SetStateAction<string | undefined>>;
+  selectedOs: string | undefined;
+  setSelectedOs: Dispatch<SetStateAction<string | undefined>>;
+  selectedDevice: string | undefined;
+  setSelectedDevice: Dispatch<SetStateAction<string | undefined>>;
 }
 
 export interface ModalContextType {
@@ -176,49 +198,74 @@ export type ApiHandler<T = unknown> = (
   res: NextApiResponse<T>,
 ) => Promise<void>;
 
+export interface GeneralData {
+  totalRequests: number;
+  totalRequestsGrowth: number;
+  totalErrors: number;
+  totalErrorsGrowth: number;
+  errorRate: number;
+  errorRateGrowth: number;
+}
+
 export interface TimeFrameData {
   requests: number;
   errors: number;
   time: string;
 }
-interface MetricStats {
-  avg: number;
-  p50: number;
-  p75: number;
-  p90: number;
-  p95: number;
-  p99: number;
+
+export interface StatusCodeData {
+  statusCode: number;
+  requests: number;
 }
 
-export interface NullableMetricStats {
-  avg: number | null;
-  p50: number | null;
-  p75: number | null;
-  p90: number | null;
-  p95: number | null;
-  p99: number | null;
+export interface BrowserData {
+  browser: string;
+  requests: number;
+}
+
+export interface OSData {
+  os: string;
+  requests: number;
+}
+
+export interface DeviceData {
+  device: string;
+  requests: number;
+}
+
+export interface UserAgentData {
+  browserData: BrowserData[];
+  osData: OSData[];
+  deviceData: DeviceData[];
+}
+
+export interface PercentileData {
+  key: string;
+  responseTime: number;
+  requestSize: number;
+  responseSize: number;
 }
 
 export interface EndpointData {
   totalRequests: number;
   endpoint: string;
   method: Metric['method'];
-  statusCodes: Metric['statusCode'][];
-  responseTimes: MetricStats;
-  requestSizes: NullableMetricStats;
-  responseSizes: NullableMetricStats;
+  methodAndEndpoint: string;
+  responseTimeAvg: number;
 }
 
 export interface OriginMetrics {
-  totalRequests: number;
-  totalRequestsGrowth: number;
-  totalErrors: number;
-  totalErrorsGrowth: number;
+  generalData: GeneralData;
   timeFrameData: TimeFrameData[];
   endpointData: EndpointData[];
+  percentileData: PercentileData[];
+  statusCodeData: StatusCodeData[];
+  userAgentData: UserAgentData;
 }
 
 export interface DynamicRouteWithMatches {
   route: string;
   matchingPaths: number;
 }
+
+export type Method = typeof METHODS[number];

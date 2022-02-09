@@ -2,26 +2,40 @@ import React from 'react';
 import { Bar, BarChart, Label, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import type { ContentType } from 'recharts/types/component/Label';
 
-import { MethodAndEndpointTick } from 'components/dashboard/MethodAndEndpointTick';
 import { truncateString } from 'utils/helpers';
-import type { EndpointData } from 'types';
+import type {
+  BrowserData,
+  DeviceData,
+  EndpointData,
+  OSData,
+  PercentileData,
+  StatusCodeData,
+} from 'types';
+
+type Data = EndpointData & StatusCodeData & PercentileData & BrowserData & OSData & DeviceData;
 
 interface Props {
   height: number;
-  data: EndpointData[];
+  data: Partial<Data>[];
   dataKey: string;
-  onLabelClick: (data: EndpointData) => void;
+  secondaryDataKey: string;
+  tick?: JSX.Element;
+  onLabelClick?: (data: Data) => void;
   renderLabels: ContentType;
   label: string;
+  secondaryLabel: string;
 }
 
-export const EndpointBarChart: React.FC<Props> = ({
+export const VerticalBarChart: React.FC<Props> = ({
   height,
   data,
   dataKey,
+  secondaryDataKey,
+  tick,
   onLabelClick,
   renderLabels,
   label,
+  secondaryLabel,
 }) => (
   <ResponsiveContainer height={height}>
     <BarChart data={data} layout="vertical" barSize={30}>
@@ -40,22 +54,23 @@ export const EndpointBarChart: React.FC<Props> = ({
         mirror
         domain={[0, (dataMax: number): number => dataMax * 1.2]} // Prevent bars from overlapping labels.
       >
-        <Label value={label} fill="var(--base-content)" position="insideTopRight" />
+        <Label value={secondaryLabel} fill="var(--base-content)" position="insideTopRight" />
       </XAxis>
       <YAxis
-        dataKey="methodAndEndpoint"
+        dataKey={secondaryDataKey}
         type="category"
         tickLine={false}
         axisLine={false}
         mirror
         stroke="white"
-        tick={<MethodAndEndpointTick />}
+        tick={tick}
+        width={200}
         padding={{ top: 30, bottom: 20 }}
         tickFormatter={(val: string): string => truncateString(val, 50)}
         // @ts-ignore: `recharts`doesn't have typings for the click handler.
-        onClick={({ index }: { index: number }): void => onLabelClick(data[index])}
+        onClick={({ index }: { index: number }): void => onLabelClick && onLabelClick(data[index])}
       >
-        <Label value="Endpoints" fill="var(--base-content)" position="insideTopLeft" />
+        <Label value={label} fill="var(--base-content)" position="insideTopLeft" />
       </YAxis>
     </BarChart>
   </ResponsiveContainer>

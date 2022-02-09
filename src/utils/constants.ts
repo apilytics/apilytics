@@ -15,11 +15,9 @@ export const METHODS = [
   'OPTIONS',
   'CONNECT',
   'TRACE',
-] as const;
+];
 
 export const METHODS_WITHOUT_BODY = ['GET', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'];
-
-export type Method = typeof METHODS[number];
 
 export const DAY = 1;
 export const WEEK_DAYS = 7;
@@ -39,160 +37,36 @@ export const TIME_FRAME_OPTIONS = {
 
 export const UNEXPECTED_ERROR = 'Unexpected error.';
 
-interface MockMetric {
-  path: string;
-  method: string;
-  statusCodes: number[];
-}
-
-export const MOCK_METRICS: MockMetric[] = [
-  {
-    path: '/profile',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/profile',
-    method: 'PUT',
-    statusCodes: [200, 400],
-  },
-  {
-    path: '/profile',
-    method: 'DELETE',
-    statusCodes: [204],
-  },
-  {
-    path: '/profile',
-    method: 'OPTIONS',
-    statusCodes: [200],
-  },
-  {
-    path: '/users',
-    method: 'GET',
-    statusCodes: [200, 401],
-  },
-  {
-    path: '/users/johndoe',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/users/johndoe',
-    method: 'PUT',
-    statusCodes: [200, 403],
-  },
-  {
-    path: '/users/johndoe',
-    method: 'PATCH',
-    statusCodes: [200],
-  },
-  {
-    path: '/users/janedoe',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/users/janedoe',
-    method: 'PUT',
-    statusCodes: [200],
-  },
-  {
-    path: '/posts',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/posts',
-    method: 'POST',
-    statusCodes: [204],
-  },
-  {
-    path: '/posts/123',
-    method: 'GET',
-    statusCodes: [404],
-  },
-  {
-    path: '/posts/123',
-    method: 'PUT',
-    statusCodes: [404],
-  },
-  {
-    path: '/posts/456',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/posts/789',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/posts/789',
-    method: 'PUT',
-    statusCodes: [401, 403],
-  },
-  {
-    path: '/posts/789',
-    method: 'PATCH',
-    statusCodes: [403],
-  },
-  {
-    path: '/login',
-    method: 'POST',
-    statusCodes: [200, 500],
-  },
-  {
-    path: '/login',
-    method: 'OPTIONS',
-    statusCodes: [200],
-  },
-  {
-    path: '/logout',
-    method: 'POST',
-    statusCodes: [200],
-  },
-  {
-    path: '/contact',
-    method: 'POST',
-    statusCodes: [200],
-  },
-  {
-    path: '/blogs',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/blogs',
-    method: 'POST',
-    statusCodes: [201],
-  },
-  {
-    path: '/blogs/123',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/blogs/123',
-    method: 'PATCH',
-    statusCodes: [200],
-  },
-  {
-    path: '/blogs/456',
-    method: 'GET',
-    statusCodes: [200],
-  },
-  {
-    path: '/blogs/456',
-    method: 'DELETE',
-    statusCodes: [204],
-  },
-  {
-    path: '/blogs/789',
-    method: 'GET',
-    statusCodes: [200],
-  },
+export const MOCK_PATHS = [
+  '/profile',
+  '/users',
+  '/users/johndoe',
+  '/users/janedoe',
+  '/posts',
+  '/posts/123',
+  '/posts/456',
+  '/posts/789',
+  '/login',
+  '/logout',
+  '/contact',
+  '/blogs',
+  '/blogs',
+  '/blogs/123',
+  '/blogs/456',
+  '/blogs/789',
 ];
 
+export const MOCK_BROWSERS = ['Chrome', 'Firefox', 'Safari', 'Edge', 'Internet Explorer', 'Opera'];
+
+export const MOCK_OPERATING_SYSTEMS = [
+  'Android',
+  'BlackBerry',
+  'Chrome OS',
+  'iOS',
+  'Linux',
+  'Mac OS',
+  'Windows',
+];
 interface MockDynamicRoute {
   route: string;
   pattern: string;
@@ -217,9 +91,9 @@ export const MOCK_ORIGIN = {
 export const MODAL_NAMES = {
   deleteOrigin: 'delete-origin',
   apiKey: 'api-key',
-  requests: 'requests',
-  responseTimes: 'response-times',
-  requestDetails: 'request-details',
+  endpoints: 'endpoints',
+  statusCodes: 'status-codes',
+  userAgents: 'user-agents',
   dynamicRoute: 'dynamic-route',
   deleteDynamicRoute: 'delete-dynamic-route',
 };
@@ -237,3 +111,7 @@ export enum EVENT_LOCATIONS {
   PAGE_BOTTOM = 'page-bottom',
   FOOTER = 'footer',
 }
+
+export const PERCENTILE_DATA_KEYS = ['avg', 'p50', 'p75', 'p90', 'p95', 'p99'];
+
+export const DEVICES = ['console', 'mobile', 'tablet', 'smarttv', 'wearable', 'embedded'];

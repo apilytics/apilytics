@@ -85,7 +85,11 @@ const handlePost: ApiHandler = async (req, res) => {
       ? req.headers['apilytics-version']
       : undefined;
 
-  const userAgent = rawUserAgent !== undefined ? uaParser(rawUserAgent) : undefined;
+  const { browser, os, device } = (rawUserAgent ? uaParser(rawUserAgent) : {}) as {
+    browser: string;
+    os: string;
+    device: string;
+  };
 
   try {
     await tryTwice(prisma.metric.create, {
@@ -98,8 +102,9 @@ const handlePost: ApiHandler = async (req, res) => {
         timeMillis,
         requestSize,
         responseSize,
-        // @ts-ignore: Should be assignable just fine.
-        userAgent,
+        browser,
+        os,
+        device,
         apilyticsVersion,
       },
     });

@@ -5,37 +5,52 @@ import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
-import { EndpointRequests } from 'components/dashboard/EndpointRequests';
-import { EndpointResponseTimes } from 'components/dashboard/EndpointResponseTimes';
-import { ErrorsTimeFrame } from 'components/dashboard/ErrorsTimeFrame';
-import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
+import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
+import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
+import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
+import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
+import { UserAgentMetrics } from 'components/dashboard/UserAgentMetrics';
 import { ErrorTemplate } from 'components/layout/ErrorTemplate';
 import { Layout } from 'components/layout/Layout';
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
+import { NotFoundTemplate } from 'components/layout/NotFoundTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
+import { useDashboardQuery } from 'hooks/useDashboardQuery';
 import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
-import { MODAL_NAMES, WEEK_DAYS } from 'utils/constants';
+import { MODAL_NAMES } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
-import type { TimeFrame } from 'types';
 
 const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
 
 const Origin: NextPage = () => {
+  const {
+    origin,
+    metrics,
+    setMetrics,
+    timeFrame,
+    selectedMethod: method = '',
+    selectedEndpoint: endpoint = '',
+    selectedStatusCode: statusCode = '',
+    selectedBrowser: browser = '',
+    selectedOs: os = '',
+    selectedDevice: device = '',
+  } = useOrigin();
+
   const router = useRouter();
   const { showApiKey } = router.query;
-  const { origin, metrics, setMetrics } = useOrigin();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const { handleOpenModal, handleCloseModal } = useModal();
   const slug = origin?.slug || '';
   const apiKey = origin?.apiKey || '';
   const maxWidth = 'max-w-6xl';
+
+  useDashboardQuery(dynamicRoutes.origin({ slug }));
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -43,32 +58,61 @@ const Origin: NextPage = () => {
       const to = dayjs().format(REQUEST_TIME_FORMAT);
 
       try {
-        const res = await fetch(dynamicApiRoutes.originMetrics({ slug, from, to }));
+        const res = await fetch(
+          dynamicApiRoutes.originMetrics({
+            slug,
+            from,
+            to,
+            method,
+            endpoint,
+            statusCode,
+            browser,
+            os,
+            device,
+          }),
+        );
+
         const { data } = await res.json();
-        setMetrics(data);
+
+        if (res.status === 200) {
+          setMetrics(data);
+        } else {
+          setError(true);
+        }
       } catch {
         setError(true);
       } finally {
         setLoading(false);
       }
     })();
-  }, [setMetrics, slug, timeFrame]);
+  }, [endpoint, method, setMetrics, slug, statusCode, timeFrame, browser, os, device]);
 
   useEffect(() => {
     if (showApiKey) {
       handleOpenModal(MODAL_NAMES.apiKey);
-      router.replace(dynamicRoutes.origin({ slug }), undefined, { shallow: true });
     }
   }, [handleOpenModal, router, showApiKey, slug]);
 
-  // Show loading screen on initial render but not when changing the time frame.
-  if (loading || !origin || !metrics) {
+  if (loading) {
     return <LoadingTemplate />;
+  }
+
+  if (!origin || !metrics) {
+    return <NotFoundTemplate />;
   }
 
   if (error) {
     return <ErrorTemplate />;
   }
+
+  const {
+    generalData,
+    timeFrameData,
+    endpointData,
+    percentileData,
+    statusCodeData,
+    userAgentData,
+  } = metrics;
 
   return (
     <Layout
@@ -77,14 +121,17 @@ const Origin: NextPage = () => {
       footerProps={{ maxWidth }}
     >
       <div className="container py-4 max-w-6xl grow flex flex-col">
-        <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
-        <RequestsTimeFrame timeFrame={timeFrame} metrics={metrics} />
-        <div className="grow flex flex-col lg:flex-row gap-4 mt-4">
-          <EndpointRequests metrics={metrics} loading={loading} />
-          <EndpointResponseTimes metrics={metrics} loading={loading} />
+        <DashboardOptions origin={origin} />
+        <TimeFrameMetrics {...generalData} data={timeFrameData} />
+        <div className="mt-4">
+          <EndpointMetrics data={endpointData} />
         </div>
         <div className="mt-4">
-          <ErrorsTimeFrame timeFrame={timeFrame} metrics={metrics} />
+          <PercentileMetrics data={percentileData} />
+        </div>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <StatusCodeMetrics data={statusCodeData} />
+          <UserAgentMetrics data={userAgentData} />
         </div>
         <p className="mt-4">
           See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these

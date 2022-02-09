@@ -1,6 +1,20 @@
 // Ignore: `ts-node` won't find these without relative imports.
 import prisma from '../src/prisma/client'; // eslint-disable-line no-restricted-imports
-import { MOCK_DYNAMIC_ROUTES, MOCK_METRICS } from '../src/utils/constants'; // eslint-disable-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
+import {
+  DEVICES,
+  METHODS,
+  MOCK_BROWSERS,
+  MOCK_DYNAMIC_ROUTES,
+  MOCK_OPERATING_SYSTEMS,
+  MOCK_PATHS,
+} from '../src/utils/constants';
+// eslint-disable-next-line no-restricted-imports
+import {
+  getRandomArrayItem,
+  getRandomNumberBetween,
+  getRandomStatusCodeForMethod,
+} from '../src/utils/helpers';
 
 const USER_ID = 'ckyw15hbi000409l805yyhhfo';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
@@ -11,20 +25,31 @@ const API_KEY = '0648c69d-4b42-4642-b125-0959619837cf';
 const TEST_METRICS = Array(365 * 24)
   .fill(null)
   .map((_, i) =>
-    Array(Math.floor(Math.random() * 20) + 1)
+    Array(getRandomNumberBetween(1, 20))
       .fill(null)
       .map(() => {
-        const { path, method, statusCodes } =
-          MOCK_METRICS[Math.floor(Math.random() * MOCK_METRICS.length)];
+        const path = getRandomArrayItem(MOCK_PATHS);
+        const method = getRandomArrayItem(METHODS);
+        const statusCode = getRandomStatusCodeForMethod(method);
+        const timeMillis = getRandomNumberBetween(20, 100);
+        const requestSize = getRandomNumberBetween(20, 100);
+        const responseSize = getRandomNumberBetween(20, 100);
+        const browser = getRandomArrayItem(MOCK_BROWSERS);
+        const os = getRandomArrayItem(MOCK_OPERATING_SYSTEMS);
+        const device = getRandomArrayItem(DEVICES);
+        const createdAt = new Date(Date.now() - i * 60 * 60 * 1000);
 
         return {
           path,
           method,
-          statusCode: statusCodes[Math.floor(Math.random() * statusCodes.length)],
-          timeMillis: Math.floor(Math.random() * 100) + 20,
-          requestSize: Math.floor(Math.random() * 100) + 20,
-          responseSize: Math.floor(Math.random() * 100) + 20,
-          createdAt: new Date(Date.now() - i * 60 * 60 * 1000),
+          statusCode,
+          timeMillis,
+          requestSize,
+          responseSize,
+          browser,
+          os,
+          device,
+          createdAt,
           originId: ORIGIN_ID,
         };
       }),

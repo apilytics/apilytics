@@ -1,73 +1,80 @@
 import { ArrowsExpandIcon } from '@heroicons/react/solid';
-import Link from 'next/link';
+import clsx from 'clsx';
 import React, { useState } from 'react';
-import type { ContentType } from 'recharts/types/component/Label';
 
+import { BarValue } from 'components/dashboard/BarValue';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
-import { EndpointBarChart } from 'components/dashboard/EndpointBarChart';
-import { EndpointMetricStats } from 'components/dashboard/EndpointMetricStats';
+import { MethodAndEndpointTick } from 'components/dashboard/MethodAndEndpointTick';
+import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
-import { MODAL_NAMES, UNKNOWN_STATUS_CODE } from 'utils/constants';
+import { MODAL_NAMES } from 'utils/constants';
 import { formatCount } from 'utils/metrics';
-import { dynamicRoutes, staticRoutes } from 'utils/router';
 import type { EndpointData } from 'types';
 
+const METRIC_TYPES = {
+  requests: 'requests',
+  responseTimes: 'responseTimes',
+};
+
 interface Props {
-  label: string;
-  emptyLabel: string;
-  expandButtonLabel: string;
-  modalName: string;
   data: EndpointData[];
-  dataKey: string;
-  renderLabels: ContentType;
 }
 
-export const EndpointMetrics: React.FC<Props> = ({
-  label,
-  emptyLabel,
-  expandButtonLabel,
-  modalName,
-  data: _data,
-  dataKey,
-  renderLabels,
-}) => {
+export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const plausible = usePlausible();
-  const [selectedEndpoint, setSelectedEndpoint] = useState<EndpointData | null>(null);
+  const { setSelectedMethod, setSelectedEndpoint } = useOrigin();
+  const [metricType, setMetricType] = useState(METRIC_TYPES.requests);
+  const [activeTab, setActiveTab] = useState(METRIC_TYPES.requests);
+  const requestsData = [..._data.sort((a, b) => b.totalRequests - a.totalRequests)];
+  const responseTimeData = [..._data.sort((a, b) => b.responseTimeAvg - a.responseTimeAvg)];
   const { handleOpenModal, handleCloseModal } = useModal();
-  const { origin } = useOrigin();
-  const slug = origin?.slug || '';
 
-  const data = _data.map((d) => ({ ...d, methodAndEndpoint: `${d.method} ${d.endpoint}` }));
+  const attributes = {
+    requests: {
+      data: requestsData,
+      formatter: (value?: string | number): string => formatCount(Number(value)),
+      dataKey: 'totalRequests',
+      label: 'Requests',
+      emptyLabel: 'No requests available.',
+    },
+    responseTimes: {
+      data: responseTimeData,
+      formatter: (value?: string | number): string => `${value}ms`,
+      dataKey: 'responseTimeAvg',
+      label: 'Response times',
+      emptyLabel: 'No response times available.',
+    },
+  };
+
+  const { data, dataKey, label, emptyLabel, formatter } =
+    attributes[metricType as keyof typeof attributes];
+
+  const {
+    data: modalData,
+    dataKey: modalDataKey,
+    label: modalLabel,
+    formatter: modalFormatter,
+  } = attributes[activeTab as keyof typeof attributes];
+
   const truncatedData = data.slice(0, 10);
-
   const getHeight = (dataLength: number): number => 100 + dataLength * 35;
   const height = getHeight(data.length);
   const truncatedHeight = getHeight(truncatedData.length);
 
   const handleLabelClick = (data: EndpointData): void => {
-    setSelectedEndpoint(data);
-    handleOpenModal(MODAL_NAMES.requestDetails);
+    setSelectedMethod(data.method);
+    setSelectedEndpoint(data.endpoint);
     plausible('endpoint-click');
   };
 
-  const handleCloseEndpointDetails = (): void => {
-    setSelectedEndpoint(null);
-    handleCloseModal();
-  };
-
   const handleShowAllClick = (): void => {
-    handleOpenModal(modalName);
-
-    if (dataKey === 'requests') {
-      plausible('show-all-requests-click');
-    } else {
-      plausible('show-all-response-times-click');
-    }
+    handleOpenModal(MODAL_NAMES.endpoints);
+    plausible('show-all-endpoints-click');
   };
 
   const renderNoMetrics = !data.length && (
@@ -76,96 +83,19 @@ export const EndpointMetrics: React.FC<Props> = ({
     </div>
   );
 
-  const renderMetricsModal = (
-    <Modal name={modalName} mobileFullscreen>
-      <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
-        <div className="flex justify-end p-2">
-          <ModalCloseButton onClick={handleCloseModal} />
-        </div>
-        <div className="overflow-y-auto px-4">
-          <div className="grow flex">
-            <EndpointBarChart
-              height={height}
-              data={data}
-              dataKey={dataKey}
-              onLabelClick={handleLabelClick}
-              renderLabels={renderLabels}
-              label={label}
-            />
-          </div>
-        </div>
-        <div className="p-6" />
-      </div>
-    </Modal>
-  );
-
-  const renderEndpointDetailsModal = (): JSX.Element | void => {
-    if (selectedEndpoint) {
-      const {
-        endpoint,
-        method,
-        totalRequests,
-        statusCodes,
-        responseTimes,
-        requestSizes,
-        responseSizes,
-      } = selectedEndpoint;
-
-      return (
-        <Modal
-          name={MODAL_NAMES.requestDetails}
-          onClose={handleCloseEndpointDetails}
-          mobileFullscreen
-        >
-          <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
-            <div className="flex justify-between items-center p-2">
-              <h5 className="px-2 text-white">Endpoint details</h5>
-              <ModalCloseButton onClick={handleCloseEndpointDetails} />
-            </div>
-            <div className="p-4 pt-0">
-              <p>
-                Endpoint: <span className={`text-method-${method.toLowerCase()}`}>{method}</span>{' '}
-                <span className="text-white">{endpoint}</span>
-              </p>
-              <p>
-                Total requests:{' '}
-                <span className="font-bold text-white">{formatCount(totalRequests)}</span>
-              </p>
-              <p>
-                Status codes:{' '}
-                <span className="font-bold text-white">
-                  {statusCodes
-                    .map((code) => (code === UNKNOWN_STATUS_CODE ? 'unknown' : code))
-                    .join(', ')}
-                </span>
-              </p>
-              <EndpointMetricStats title="Response times" unit="ms" {...responseTimes} />
-              <EndpointMetricStats title="Request sizes" unit="kB" {...requestSizes} />
-              <EndpointMetricStats title="Response sizes" unit="kB" {...responseSizes} />
-              <p className="text-sm mt-4">
-                See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
-                metrics.
-                <br />
-                Combine this endpoint with your other endpoints with our{' '}
-                <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>dynamic routes</Link>.
-              </p>
-            </div>
-          </div>
-        </Modal>
-      );
-    }
-  };
-
   const renderMetrics = (
     <>
       <div className="grow flex">
-        <EndpointBarChart
+        <VerticalBarChart
           height={truncatedHeight}
           data={truncatedData}
           dataKey={dataKey}
+          secondaryDataKey="methodAndEndpoint"
+          tick={<MethodAndEndpointTick />}
           onLabelClick={handleLabelClick}
-          renderLabels={renderLabels}
-          label={label}
+          renderLabels={<BarValue formatter={formatter} />}
+          label="Name"
+          secondaryLabel={label}
         />
       </div>
       <div className="flex">
@@ -175,7 +105,7 @@ export const EndpointMetrics: React.FC<Props> = ({
           endIcon={ArrowsExpandIcon}
           fullWidth="mobile"
         >
-          {expandButtonLabel} ({formatCount(data.length)})
+          Show all ({formatCount(data.length)})
         </Button>
       </div>
     </>
@@ -183,9 +113,74 @@ export const EndpointMetrics: React.FC<Props> = ({
 
   return (
     <DashboardCard>
-      {renderNoMetrics || renderMetrics}
-      {renderMetricsModal}
-      {renderEndpointDetailsModal()}
+      <div className="flex flex-wrap px-2 gap-4">
+        <p className="text-white mr-auto">Endpoints</p>
+        <div className="tabs">
+          <p
+            className={clsx(
+              'tab tab-bordered',
+              metricType === METRIC_TYPES.requests && 'tab-active',
+            )}
+            onClick={(): void => setMetricType(METRIC_TYPES.requests)}
+          >
+            Requests
+          </p>
+          <p
+            className={clsx(
+              'tab tab-bordered',
+              metricType === METRIC_TYPES.responseTimes && 'tab-active',
+            )}
+            onClick={(): void => setMetricType(METRIC_TYPES.responseTimes)}
+          >
+            Response times
+          </p>
+        </div>
+      </div>
+      <div className="mt-4">{renderNoMetrics || renderMetrics}</div>
+      <Modal name={MODAL_NAMES.endpoints} mobileFullscreen>
+        <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
+          <div className="flex justify-between p-2">
+            <p className="text-white pl-4">Endpoints</p>
+            <ModalCloseButton onClick={handleCloseModal} />
+          </div>
+          <div className="tabs px-6 my-2">
+            <p
+              className={clsx(
+                'tab tab-bordered grow',
+                activeTab === METRIC_TYPES.requests && 'tab-active',
+              )}
+              onClick={(): void => setActiveTab(METRIC_TYPES.requests)}
+            >
+              Requests
+            </p>
+            <p
+              className={clsx(
+                'tab tab-bordered grow',
+                activeTab === METRIC_TYPES.responseTimes && 'tab-active',
+              )}
+              onClick={(): void => setActiveTab(METRIC_TYPES.responseTimes)}
+            >
+              Response times
+            </p>
+          </div>
+          <div className="overflow-y-auto px-4">
+            <div className="grow flex">
+              <VerticalBarChart
+                height={height}
+                data={modalData}
+                dataKey={modalDataKey}
+                secondaryDataKey="methodAndEndpoint"
+                tick={<MethodAndEndpointTick />}
+                onLabelClick={handleLabelClick}
+                renderLabels={<BarValue formatter={modalFormatter} />}
+                label="Name"
+                secondaryLabel={modalLabel}
+              />
+            </div>
+          </div>
+          <div className="p-6" />
+        </div>
+      </Modal>
     </DashboardCard>
   );
 };

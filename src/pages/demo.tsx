@@ -1,30 +1,57 @@
 import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
-import { EndpointRequests } from 'components/dashboard/EndpointRequests';
-import { EndpointResponseTimes } from 'components/dashboard/EndpointResponseTimes';
-import { ErrorsTimeFrame } from 'components/dashboard/ErrorsTimeFrame';
-import { RequestsTimeFrame } from 'components/dashboard/RequestsTimeFrame';
+import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
+import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
+import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
+import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
+import { UserAgentMetrics } from 'components/dashboard/UserAgentMetrics';
 import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
 import { EmailListForm } from 'components/shared/EmailListForm';
 import { withNoAuth } from 'hocs/withNoAuth';
+import { useDashboardQuery } from 'hooks/useDashboardQuery';
+import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
-import { EVENT_LOCATIONS, MOCK_ORIGIN, WEEK_DAYS } from 'utils/constants';
+import { EVENT_LOCATIONS, MOCK_ORIGIN } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
 import { staticRoutes } from 'utils/router';
-import type { TimeFrame } from 'types';
 
 const Demo: NextPage = () => {
+  useDashboardQuery();
   const plausible = usePlausible();
-  const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const origin = MOCK_ORIGIN;
-  const metrics = useMemo(() => getMockMetrics(timeFrame), [timeFrame]);
-  const loading = !origin || !metrics;
   const eventOptions = { location: EVENT_LOCATIONS.PAGE_BOTTOM };
   const maxWidth = 'max-w-6xl';
+
+  const {
+    timeFrame,
+    selectedMethod: method,
+    selectedEndpoint: endpoint,
+    selectedStatusCode: statusCode,
+    selectedBrowser: browser,
+    selectedOs: os,
+    selectedDevice: device,
+  } = useOrigin();
+
+  const {
+    generalData,
+    timeFrameData,
+    endpointData,
+    percentileData,
+    statusCodeData,
+    userAgentData,
+  } = getMockMetrics({
+    timeFrame,
+    method,
+    endpoint,
+    statusCode,
+    browser,
+    os,
+    device,
+  });
 
   return (
     <Layout
@@ -38,22 +65,17 @@ const Demo: NextPage = () => {
       footerProps={{ maxWidth }}
     >
       <div className="container py-4 max-w-6xl grow flex flex-col">
-        <DashboardOptions timeFrame={timeFrame} setTimeFrame={setTimeFrame} origin={origin} />
-        <RequestsTimeFrame timeFrame={timeFrame} metrics={metrics} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 grow">
-          <EndpointRequests
-            metrics={metrics}
-            loading={loading}
-            key={Math.random()} // Prevent label list from not showing on first render.
-          />
-          <EndpointResponseTimes
-            metrics={metrics}
-            loading={loading}
-            key={Math.random()} // Prevent label list from not showing on first render.
-          />
+        <DashboardOptions origin={origin} />
+        <TimeFrameMetrics {...generalData} data={timeFrameData} />
+        <div className="mt-4">
+          <EndpointMetrics data={endpointData} />
         </div>
         <div className="mt-4">
-          <ErrorsTimeFrame timeFrame={timeFrame} metrics={metrics} />
+          <PercentileMetrics data={percentileData} />
+        </div>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <StatusCodeMetrics data={statusCodeData} />
+          <UserAgentMetrics data={userAgentData} />
         </div>
         <p className="mt-4">
           See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
