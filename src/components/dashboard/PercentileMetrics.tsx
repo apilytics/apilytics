@@ -27,15 +27,15 @@ const formatMilliseconds = (value?: string | number): string => {
 const formatBytes = (value?: string | number): string => {
   if (typeof value === 'number') {
     if (value > 1_000_000_000) {
-      return `${(value / 1_000_000_000).toFixed(1)}Gb`;
+      return `${(value / 1_000_000_000).toFixed(1)}GB`;
     }
 
     if (value > 1_000_000) {
-      return `${(value / 1_000_000).toFixed(1)}Mb`;
+      return `${(value / 1_000_000).toFixed(1)}MB`;
     }
 
     if (value > 1_000) {
-      return `${(value / 1_000).toFixed(1)}Kb`;
+      return `${(value / 1_000).toFixed(1)}kB`;
     }
 
     return `${value ?? 0}`;
