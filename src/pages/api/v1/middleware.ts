@@ -85,11 +85,16 @@ const handlePost: ApiHandler = async (req, res) => {
       ? req.headers['apilytics-version']
       : undefined;
 
-  const { browser, os, device } = (rawUserAgent ? uaParser(rawUserAgent) : {}) as {
-    browser: string;
-    os: string;
-    device: string;
-  };
+  let browser;
+  let os;
+  let device;
+
+  if (rawUserAgent) {
+    const ua = uaParser(rawUserAgent);
+    browser = ua.browser.name;
+    os = ua.os.name;
+    device = ua.device.type;
+  }
 
   try {
     await tryTwice(prisma.metric.create, {
