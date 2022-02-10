@@ -60,8 +60,8 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug }, apil
           className="btn-sm hidden sm:flex"
         />
       )}
-      <div className="flex flex-wrap justify-start items-center gap-4 mt-2 mb-4">
-        <h6 className="text-white -mr-2">{name}</h6>
+      <div className="mt-2 mb-4 flex flex-wrap items-center justify-start gap-4">
+        <h6 className="-mr-2 text-white">{name}</h6>
         {!!apilyticsPackage && <VersionInfo apilyticsPackage={apilyticsPackage} />}
         {selectedMethod && (
           <Button onClick={(): void => setSelectedMethod(undefined)} endIcon={XIcon}>

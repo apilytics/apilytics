@@ -53,7 +53,7 @@ const NewOrigin: NextPage = () => {
 
   return (
     <MainTemplate headProps={{ title: 'New origin' }}>
-      <div className="card rounded-lg p-4 shadow bg-base-100">
+      <div className="card rounded-lg bg-base-100 p-4 shadow">
         <BackButton linkTo={staticRoutes.origins} text="Origins" />
         <Form title="Add new origin" onSubmit={handleSubmit} error={error} loading={loading}>
           <Input

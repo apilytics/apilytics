@@ -15,8 +15,8 @@ const Register: NextPage<LoginPageProps> = ({ csrfToken }) => {
   const renderSubTitle = (
     <ul className="mt-4 list-none">
       {SUBTITLE_ITEMS.map((text) => (
-        <li className="flex mt-1" key={text}>
-          <CheckCircleIcon className="w-5 h-5 mr-2 text-success" /> {text}
+        <li className="mt-1 flex" key={text}>
+          <CheckCircleIcon className="mr-2 h-5 w-5 text-success" /> {text}
         </li>
       ))}
     </ul>
@@ -24,7 +24,7 @@ const Register: NextPage<LoginPageProps> = ({ csrfToken }) => {
 
   const renderSteps = (
     <div>
-      <p className="text-sm mt-4">
+      <p className="mt-4 text-sm">
         Already have an account? <Link href={staticRoutes.login}>Log in</Link> instead.
       </p>
       <ul className="steps steps-horizontal mt-8">

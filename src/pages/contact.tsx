@@ -75,7 +75,7 @@ const Contact: NextPage = () => {
         indexable: true,
       }}
     >
-      <div className="card rounded-lg p-4 shadow bg-base-100">
+      <div className="card rounded-lg bg-base-100 p-4 shadow">
         <Form
           title="Send us a message"
           subTitle={renderSubTitle}

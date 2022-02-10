@@ -79,7 +79,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
           again and check your spam folder. <Link href={staticRoutes.contact}>Contact us</Link> if
           the problem still persists.
         </p>
-        <Button className="btn-primary btn-outline mt-4" onClick={(): void => setSubmitted(false)}>
+        <Button className="btn-outline btn-primary mt-4" onClick={(): void => setSubmitted(false)}>
           Send again
         </Button>
       </MainTemplate>
@@ -88,7 +88,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
 
   return (
     <MainTemplate headProps={headProps}>
-      <div className="card rounded-lg p-4 shadow bg-base-100">
+      <div className="card rounded-lg bg-base-100 p-4 shadow">
         <Form
           title={formTitle}
           subTitle={subTitle}

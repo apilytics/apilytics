@@ -78,14 +78,14 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   };
 
   const renderNoMetrics = !data.length && (
-    <div className="flex flex-col justify-center items-center py-40">
+    <div className="flex flex-col items-center justify-center py-40">
       <p>{emptyLabel}</p>
     </div>
   );
 
   const renderMetrics = (
     <>
-      <div className="grow flex">
+      <div className="flex grow">
         <VerticalBarChart
           height={truncatedHeight}
           data={truncatedData}
@@ -101,7 +101,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
       <div className="flex">
         <Button
           onClick={handleShowAllClick}
-          className="btn-sm btn-ghost"
+          className="btn-ghost btn-sm"
           endIcon={ArrowsExpandIcon}
           fullWidth="mobile"
         >
@@ -113,8 +113,8 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
 
   return (
     <DashboardCard>
-      <div className="flex flex-wrap px-2 gap-4">
-        <p className="text-white mr-auto">Endpoints</p>
+      <div className="flex flex-wrap gap-4 px-2">
+        <p className="mr-auto text-white">Endpoints</p>
         <div className="tabs">
           <p
             className={clsx(
@@ -138,12 +138,12 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
       </div>
       <div className="mt-4">{renderNoMetrics || renderMetrics}</div>
       <Modal name={MODAL_NAMES.endpoints} mobileFullscreen>
-        <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
+        <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="text-white pl-4">Endpoints</p>
+            <p className="pl-4 text-white">Endpoints</p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
-          <div className="tabs px-6 my-2">
+          <div className="tabs my-2 px-6">
             <p
               className={clsx(
                 'tab tab-bordered grow',
@@ -164,7 +164,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
             </p>
           </div>
           <div className="overflow-y-auto px-4">
-            <div className="grow flex">
+            <div className="flex grow">
               <VerticalBarChart
                 height={height}
                 data={modalData}

@@ -68,8 +68,8 @@ export const Pricing: React.FC = () => {
         <br />
         No credit card required.
       </h5>
-      <div className="mt-8 card bg-base-100 rounded-lg p-4">
-        <div className="flex flex-col sm:flex-row justify-between">
+      <div className="card mt-8 rounded-lg bg-base-100 p-4">
+        <div className="flex flex-col justify-between sm:flex-row">
           <div className="text-left">
             <h6>Monthly requests</h6>
             <h3 className="font-bold text-primary">{getRequestsDisplay()}</h3>
@@ -89,13 +89,13 @@ export const Pricing: React.FC = () => {
           min={1}
           max={requestOptions.length + 1}
           step={1}
-          className="range range-primary range-lg w-full mt-8 rounded-lg"
+          className="range range-primary range-lg mt-8 w-full rounded-lg"
           onClick={(): void => plausible('pricing-slider-click')}
         />
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mt-8 text-left leading-normal">
+        <div className="mt-8 grid grid-cols-1 gap-4 text-left leading-normal md:grid-cols-3">
           {FEATURES.map((feature) => (
             <p className="flex items-center" key={feature}>
-              <CheckCircleIcon className="h-7 w-7 mr-4 text-success" /> {feature}
+              <CheckCircleIcon className="mr-4 h-7 w-7 text-success" /> {feature}
             </p>
           ))}
         </div>

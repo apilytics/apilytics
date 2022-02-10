@@ -120,7 +120,7 @@ const Origin: NextPage = () => {
       headerProps={{ maxWidth }}
       footerProps={{ maxWidth }}
     >
-      <div className="container py-4 max-w-6xl grow flex flex-col">
+      <div className="container flex max-w-6xl grow flex-col py-4">
         <DashboardOptions origin={origin} apilyticsPackage={metrics.apilyticsPackage} />
         <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
@@ -129,7 +129,7 @@ const Origin: NextPage = () => {
         <div className="mt-4">
           <PercentileMetrics data={percentileData} />
         </div>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <StatusCodeMetrics data={statusCodeData} />
           <UserAgentMetrics data={userAgentData} />
         </div>
@@ -142,7 +142,7 @@ const Origin: NextPage = () => {
           .
         </p>
         <Modal name={MODAL_NAMES.apiKey}>
-          <div className="flex justify-between items-center p-2">
+          <div className="flex items-center justify-between p-2">
             <h6 className="px-2 text-white">Almost ready!</h6>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>

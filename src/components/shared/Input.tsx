@@ -12,7 +12,7 @@ export const Input: React.FC<Props> = ({ label, helperText, ...inputProps }) => 
         {label} {inputProps.required && <span className="text-error">*</span>}
       </span>
     </label>
-    <input className="input input-bordered" {...inputProps} />
+    <input className="input-bordered input" {...inputProps} />
     {helperText && (
       <label className="label">
         <span className="label-text-alt">{helperText}</span>

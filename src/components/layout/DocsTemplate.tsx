@@ -31,7 +31,7 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
       headProps={{ title: name, description, indexable: true }}
       headerProps={{ maxWidth: 'max-w-full' }}
     >
-      <ul className="menu p-4 w-50 h-full absolute border-r border-1 border-base-content invisible xl:visible text-primary">
+      <ul className="w-50 border-1 menu invisible absolute h-full border-r border-base-content p-4 text-primary xl:visible">
         {docsData
           ?.filter(({ subOrder }) => !subOrder)
           .map(({ path, name, order: parentOrder }) => (
@@ -55,11 +55,11 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
             </Fragment>
           ))}
       </ul>
-      <div className="container py-4 lg:pt-16 animate-fade-in-top grow flex flex-col height-full max-w-3xl">
-        <div className="card rounded-lg shadow p-4 bg-base-100 break-words text-white">
+      <div className="height-full container flex max-w-3xl grow animate-fade-in-top flex-col py-4 lg:pt-16">
+        <div className="card break-words rounded-lg bg-base-100 p-4 text-white shadow">
           {previousDoc && <BackButton linkTo={previousDoc.path} text={previousDoc.name} />}
           <MDX source={source} />
-          <div className="flex justify-between flex-wrap items-center mt-4">
+          <div className="mt-4 flex flex-wrap items-center justify-between">
             <p className="text-base-content">Last updated: {dayjs(updatedAt).format('LL')}</p>
             {nextDoc && (
               <Button linkTo={nextDoc.path} endIcon={ArrowSmRightIcon} className="btn-link p-0">

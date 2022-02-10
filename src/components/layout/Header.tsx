@@ -133,26 +133,26 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
           />
         </a>
       </Link>
-      <div className="ml-2 badge badge badge-primary badge-sm badge-outline">Beta</div>
+      <div className="badge badge badge-sm badge-primary badge-outline ml-2">Beta</div>
     </div>
   );
 
   const renderWhyDropdown = (
-    <div className="dropdown dropdown-hover">
+    <div className="dropdown-hover dropdown">
       <div tabIndex={0} className="btn btn-ghost flex">
         Why Apilytics?
-        <ChevronDownIcon className="ml-2 w-5 h-5" />
+        <ChevronDownIcon className="ml-2 h-5 w-5" />
       </div>
       <ul
         tabIndex={0}
-        className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-96 text-primary"
+        className="dropdown-content menu rounded-box w-96 bg-base-200 p-2 text-primary shadow"
       >
         {WHY_ITEMS.map(({ icon: Icon, href, title, description }) => (
           <li key={title}>
             <Link href={href}>
               <a className="unstyled flex flex-col">
-                <p className="self-start flex items-center">
-                  <Icon className="w-5 h-5 mr-2" /> {title}
+                <p className="flex items-center self-start">
+                  <Icon className="mr-2 h-5 w-5" /> {title}
                 </p>
                 <p className="text-sm text-base-content">{description}</p>
               </a>
@@ -164,14 +164,14 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
   );
 
   const renderCommunityDropdown = (
-    <div className="dropdown dropdown-hover">
+    <div className="dropdown-hover dropdown">
       <div tabIndex={0} className="btn btn-ghost flex">
         Community
-        <ChevronDownIcon className="ml-2 w-5 h-5" />
+        <ChevronDownIcon className="ml-2 h-5 w-5" />
       </div>
       <ul
         tabIndex={0}
-        className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-96 text-primary"
+        className="dropdown-content menu rounded-box w-96 bg-base-200 p-2 text-primary shadow"
       >
         {COMMUNITY_ITEMS.map(({ external, icon: Icon, href, title, description }) => (
           <li key={title}>
@@ -180,8 +180,8 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
                 className="unstyled flex flex-col"
                 {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
               >
-                <p className="self-start flex items-center">
-                  <Icon className="w-5 h-5 mr-2" /> {title}
+                <p className="flex items-center self-start">
+                  <Icon className="mr-2 h-5 w-5" /> {title}
                 </p>
                 <p className="text-sm text-base-content">{description}</p>
               </a>
@@ -204,13 +204,13 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
 
   const renderButtonsForNotAuthenticated = !user && (
     <div className="flex gap-2">
-      <div className="dropdown dropdown-hover dropdown-end sm:hidden">
+      <div className="dropdown-end dropdown-hover dropdown sm:hidden">
         <div tabIndex={0} className="btn btn-ghost">
-          <DotsVerticalIcon className="w-5 h-5" />
+          <DotsVerticalIcon className="h-5 w-5" />
         </div>
         <ul
           tabIndex={0}
-          className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-52 text-primary"
+          className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-primary shadow"
         >
           <li onClick={handleRegisterClick}>
             <Link href={staticRoutes.register}>
@@ -247,14 +247,14 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
   );
 
   const renderAccountMenu = accountComplete && (
-    <div className="dropdown dropdown-hover dropdown-end">
+    <div className="dropdown-end dropdown-hover dropdown">
       <div tabIndex={0} className="btn btn-ghost flex">
         <span className="hidden sm:block">{truncateString(user?.name ?? '', 10)}</span>
-        <DotsVerticalIcon className="sm:ml-2 w-5 h-5" />
+        <DotsVerticalIcon className="h-5 w-5 sm:ml-2" />
       </div>
       <ul
         tabIndex={0}
-        className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-52 text-primary"
+        className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-primary shadow"
       >
         {MENU_ITEMS.map(({ name, href }) => (
           <li key={name}>
@@ -274,7 +274,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
   );
 
   const renderLogoutButton = !accountComplete && (
-    <Button linkTo={staticRoutes.logout} className="btn-primary btn-outline hidden sm:block">
+    <Button linkTo={staticRoutes.logout} className="btn-outline btn-primary hidden sm:block">
       Log out
     </Button>
   );
@@ -288,10 +288,10 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
   );
 
   return (
-    <header className="py-2 flex items-center bg-base-100">
+    <header className="flex items-center bg-base-100 py-2">
       <div
         className={clsx(
-          'container flex justify-between items-center animate-fade-in-top relative z-10',
+          'container relative z-10 flex animate-fade-in-top items-center justify-between',
           user ? maxWidth : maxWidthForNotAuthenticated,
         )}
       >

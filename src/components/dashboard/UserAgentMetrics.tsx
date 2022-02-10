@@ -111,7 +111,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
   };
 
   const renderNoMetrics = !data.length && (
-    <div className="flex flex-col justify-center items-center py-40">
+    <div className="flex flex-col items-center justify-center py-40">
       <p>{emptyLabel}</p>
     </div>
   );
@@ -122,7 +122,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
 
   const renderMetrics = (
     <>
-      <div className="grow flex">
+      <div className="flex grow">
         <VerticalBarChart
           height={truncatedHeight}
           data={truncatedData}
@@ -138,7 +138,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
       <div className="flex">
         <Button
           onClick={handleShowAllClick}
-          className="btn-sm btn-ghost"
+          className="btn-ghost btn-sm"
           endIcon={ArrowsExpandIcon}
           fullWidth="mobile"
         >
@@ -150,8 +150,8 @@ export const UserAgentMetrics: React.FC<Props> = ({
 
   return (
     <DashboardCard>
-      <div className="flex flex-wrap px-2 gap-4">
-        <p className="text-white mr-auto">User agents</p>
+      <div className="flex flex-wrap gap-4 px-2">
+        <p className="mr-auto text-white">User agents</p>
         <div className="tabs">
           <p
             className={clsx(
@@ -179,14 +179,14 @@ export const UserAgentMetrics: React.FC<Props> = ({
           </p>
         </div>
       </div>
-      <div className="mt-4 flex flex-col grow">{renderNoMetrics || renderMetrics}</div>
+      <div className="mt-4 flex grow flex-col">{renderNoMetrics || renderMetrics}</div>
       <Modal name={MODAL_NAMES.userAgents} mobileFullscreen>
-        <div className="overflow-y-auto w-screen sm:w-auto sm:min-w-96">
+        <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="text-white pl-4">User agents</p>
+            <p className="pl-4 text-white">User agents</p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
-          <div className="tabs px-6 my-2">
+          <div className="tabs my-2 px-6">
             <p
               className={clsx(
                 'tab tab-bordered grow',
@@ -216,7 +216,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
             </p>
           </div>
           <div className="overflow-y-auto px-4">
-            <div className="grow flex">
+            <div className="flex grow">
               <VerticalBarChart
                 height={height}
                 data={modalData}

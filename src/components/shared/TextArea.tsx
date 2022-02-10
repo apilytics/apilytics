@@ -13,7 +13,7 @@ export const TextArea: React.FC<Props> = ({ label, helperText, className, ...pro
         {label} {props.required && <span className="text-error">*</span>}
       </span>
     </label>
-    <textarea className={clsx('textarea textarea-bordered', className)} {...props} />
+    <textarea className={clsx('textarea-bordered textarea', className)} {...props} />
     {helperText && (
       <label className="label">
         <span className="label-text-alt">{helperText}</span>

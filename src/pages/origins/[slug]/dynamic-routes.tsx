@@ -148,7 +148,7 @@ const OriginDynamicRoutes: NextPage = () => {
   const renderDeleteLink = (
     <p
       onClick={(): void => handleOpenModal(MODAL_NAMES.deleteDynamicRoute)}
-      className="mt-4 text-center link text-error"
+      className="link mt-4 text-center text-error"
     >
       Delete route
     </p>
@@ -156,7 +156,7 @@ const OriginDynamicRoutes: NextPage = () => {
 
   return (
     <MainTemplate headProps={{ title: 'Dynamic routes' }}>
-      <div className="card rounded-lg p-4 shadow bg-base-100">
+      <div className="card rounded-lg bg-base-100 p-4 shadow">
         <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
         <h5 className="text-white">Dynamic routes for {origin?.name}</h5>
         <div className="mt-2 flex flex-col items-start">
@@ -169,7 +169,7 @@ const OriginDynamicRoutes: NextPage = () => {
           ) : (
             <p className="text-white">No routes. Add your first dynamic route below.</p>
           )}
-          <p className="text-sm mt-4">
+          <p className="mt-4 text-sm">
             All routes matching these patterns will be grouped into single endpoints by their HTTP
             methods.
             <br />
@@ -186,8 +186,8 @@ const OriginDynamicRoutes: NextPage = () => {
         />
       </div>
       <Modal name={MODAL_NAMES.dynamicRoute}>
-        <div className="flex justify-between items-center p-2">
-          <p className="font-bold px-2">
+        <div className="flex items-center justify-between p-2">
+          <p className="px-2 font-bold">
             <p className="text-white">
               {selectedRoute?.route} ({selectedRoute?.matchingPaths})
             </p>
@@ -212,8 +212,8 @@ const OriginDynamicRoutes: NextPage = () => {
         <div className="p-4 text-white">
           <p>Are you sure you want to delete this dynamic route?</p>
         </div>
-        <div className="p-2 grid grid-cols-2 gap-2">
-          <Button className="btn-error btn-outline" onClick={handleCloseModal}>
+        <div className="grid grid-cols-2 gap-2 p-2">
+          <Button className="btn-outline btn-error" onClick={handleCloseModal}>
             Cancel
           </Button>
           <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>

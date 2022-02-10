@@ -12,8 +12,8 @@ export const CTASection: React.FC = () => {
   const eventOptions = { location: EVENT_LOCATIONS.PAGE_BOTTOM };
 
   return (
-    <div className="container py-4 sm:py-8 max-w-3xl">
-      <div className="flex flex-col sm:flex-row gap-8">
+    <div className="container max-w-3xl py-4 sm:py-8">
+      <div className="flex flex-col gap-8 sm:flex-row">
         <div className="grow">
           <h3 className="text-white">Would you like to try Apilytics?</h3>
           <h3 className="text-primary">Start a free trial now.</h3>
@@ -30,7 +30,7 @@ export const CTASection: React.FC = () => {
           <Button
             linkTo={staticRoutes.demo}
             onClick={(): void => plausible('live-demo-click', eventOptions)}
-            className="btn-secondary btn-outline"
+            className="btn-outline btn-secondary"
             fullWidth
           >
             Live demo
@@ -40,7 +40,7 @@ export const CTASection: React.FC = () => {
       <div className="mt-8">
         <EmailListForm />
       </div>
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FeatureCard
           title="Ease of use"
           href={staticRoutes.easeOfUse}

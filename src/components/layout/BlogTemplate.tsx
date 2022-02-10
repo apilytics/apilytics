@@ -24,21 +24,21 @@ export const BlogTemplate: React.FC<BlogPageProps> = ({
 
   return (
     <Layout headProps={{ title, description, indexable: true }}>
-      <div className="container py-4 lg:pt-16 animate-fade-in-top grow flex flex-col height-full max-w-3xl">
-        <div className="card rounded-lg shadow p-4 bg-base-100 break-words items-start text-white">
+      <div className="height-full container flex max-w-3xl grow animate-fade-in-top flex-col py-4 lg:pt-16">
+        <div className="card items-start break-words rounded-lg bg-base-100 p-4 text-white shadow">
           <BackButton text="All blogs" linkTo={staticRoutes.blog} />
           <h3>{title}</h3>
           <p className="text-sm text-base-content">
             <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
           </p>
           <MDX source={source} />
-          <p className="text-sm text-base-content mt-4">
+          <p className="mt-4 text-sm text-base-content">
             <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
           </p>
         </div>
         <div
           className={clsx(
-            'grid gap-4 mt-4',
+            'mt-4 grid gap-4',
             previousBlog && nextBlog ? 'grid-cols-2' : 'grid-cols-1',
           )}
         >

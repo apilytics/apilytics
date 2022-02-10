@@ -44,11 +44,11 @@ export const TimeFrameMetrics: React.FC<Props> = ({
 
   return (
     <DashboardCard>
-      <div className="flex items-start flex-wrap px-2 gap-4">
-        <div className="flex flex-wrap gap-6 mr-auto">
+      <div className="flex flex-wrap items-start gap-4 px-2">
+        <div className="mr-auto flex flex-wrap gap-6">
           <div className="text-white">
             <p>Total requests</p>
-            <span className="text-lg font-bold ml-1">{formatCount(totalRequests)}</span>
+            <span className="ml-1 text-lg font-bold">{formatCount(totalRequests)}</span>
             {isFinite(totalRequestsGrowth) && (
               <span
                 className={clsx(
@@ -63,7 +63,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
           </div>
           <div className="text-white">
             <p>Total errors</p>
-            <span className="text-lg font-bold ml-1">{formatCount(totalErrors)}</span>
+            <span className="ml-1 text-lg font-bold">{formatCount(totalErrors)}</span>
             {isFinite(totalErrorsGrowth) && (
               <span
                 className={clsx('ml-2', positiveTotalErrorsGrowth ? 'text-success' : 'text-error')}
@@ -75,7 +75,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
           </div>
           <div className="text-white">
             <p>Error rate</p>
-            <span className="text-lg font-bold ml-1">{formatCount(errorRate, 2)}</span>
+            <span className="ml-1 text-lg font-bold">{formatCount(errorRate, 2)}</span>
             {isFinite(errorRateGrowth) && (
               <span
                 className={clsx('ml-2', positiveErrorRateGrowth ? 'text-success' : 'text-error')}

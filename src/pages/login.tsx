@@ -23,7 +23,7 @@ const Login: NextPage<LoginPageProps> = ({ csrfToken }) => {
   const initialError = ERRORS[query.error as keyof typeof ERRORS];
 
   const renderRegisterLink = (
-    <p className="text-sm mt-4">
+    <p className="mt-4 text-sm">
       Don't have an account yet? Start your free trial by{' '}
       <Link href={staticRoutes.register}>registering a new account</Link>.
     </p>
