@@ -121,7 +121,7 @@ const Origin: NextPage = () => {
       footerProps={{ maxWidth }}
     >
       <div className="container py-4 max-w-6xl grow flex flex-col">
-        <DashboardOptions origin={origin} />
+        <DashboardOptions origin={origin} apilyticsPackage={metrics.apilyticsPackage} />
         <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} />

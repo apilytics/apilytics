@@ -67,6 +67,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 
   const origin = await prisma.origin.findFirst({
     where: { slug, userId },
+    select: { id: true },
   });
 
   if (!origin) {
@@ -121,15 +122,12 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 SELECT
   COUNT(*) AS "totalRequests",
 
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
-    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
-      THEN 1 ELSE 0 END) AS "totalErrors"
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
 
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
   AND metrics.created_at <= ${fromDate}
   AND metrics.method LIKE ${method}
@@ -143,9 +141,7 @@ WHERE origins.id = ${originId}
 SELECT
   COUNT(*) AS "totalRequests",
 
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
-    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
-      THEN 1 ELSE 0 END) AS "totalErrors",
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors",
 
   ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
   PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP50",
@@ -172,7 +168,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -186,16 +181,12 @@ WHERE origins.id = ${originId}
 SELECT
   COUNT(*) AS requests,
   DATE_TRUNC(${scope}, metrics.created_at) AS time,
-
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) LIKE '4%_'
-    OR CAST(metrics.status_code AS TEXT) LIKE '5%_'
-      THEN 1 ELSE 0 END) AS errors
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS errors
 
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -234,7 +225,6 @@ FROM metrics
   ) AS matched_routes ON TRUE
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -255,7 +245,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -276,7 +265,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -297,7 +285,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -318,7 +305,6 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
 
 WHERE origins.id = ${originId}
-  AND origins.user_id = ${userId}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}
   AND metrics.method LIKE ${method}
@@ -330,6 +316,12 @@ WHERE origins.id = ${originId}
 
 GROUP BY metrics.device;`;
 
+  const versionDataPromise = prisma.metric.findFirst({
+    where: { originId },
+    orderBy: { createdAt: 'desc' },
+    select: { apilyticsVersion: true },
+  });
+
   const [
     prevGeneralData,
     _generalData,
@@ -339,6 +331,7 @@ GROUP BY metrics.device;`;
     browserData,
     osData,
     deviceData,
+    versionData,
   ] = await Promise.all([
     prevGeneralDataPromise,
     generalDataPromise,
@@ -348,6 +341,7 @@ GROUP BY metrics.device;`;
     browserDataPromise,
     osDataPromise,
     deviceDataPromise,
+    versionDataPromise,
   ]);
 
   const { totalRequests: prevTotalRequests, totalErrors: prevTotalErrors } = prevGeneralData[0];
@@ -409,6 +403,15 @@ GROUP BY metrics.device;`;
     deviceData,
   };
 
+  const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
+  const apilyticsPackage =
+    !!identifier && !!version
+      ? {
+          identifier,
+          version,
+        }
+      : undefined;
+
   const data = {
     generalData,
     timeFrameData,
@@ -416,6 +419,7 @@ GROUP BY metrics.device;`;
     percentileData,
     statusCodeData,
     userAgentData,
+    apilyticsPackage,
   };
 
   sendOk(res, { data });
