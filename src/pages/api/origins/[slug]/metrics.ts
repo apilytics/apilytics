@@ -1,3 +1,5 @@
+import { Prisma } from '@prisma/client';
+
 import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
@@ -54,16 +56,10 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
-  const {
-    from: _from,
-    to: _to,
-    endpoint: _endpoint,
-    method: _method,
-    statusCode: _statusCode = '',
-    browser: _browser = '',
-    os: _os = '',
-    device: _device = '',
-  } = req.query as Record<string, string>;
+  const { from, to, endpoint, method, statusCode, browser, os, device } = req.query as Record<
+    string,
+    string
+  >;
 
   const origin = await prisma.origin.findFirst({
     where: { slug, userId },
@@ -77,36 +73,25 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 
   const { id: originId } = origin;
 
-  const from = decodeURIComponent(_from);
-  const to = decodeURIComponent(_to);
-
-  let endpoint = decodeURIComponent(_endpoint);
-
-  const method = decodeURIComponent(_method) || '%';
-  const statusCode = decodeURIComponent(_statusCode) || '%';
-  const browser = decodeURIComponent(_browser) || '%';
-  const os = decodeURIComponent(_os) || '%';
-  const device = decodeURIComponent(_device) || '%';
-
   const fromDate = new Date(from);
   const toDate = new Date(to);
   const fromTime = fromDate.getTime();
   const toTime = toDate.getTime();
   const timeFrame = toTime - fromTime;
 
-  // Check if the provided endpoint is a dynamic route.
+  let wherePath: Prisma.Sql;
   if (endpoint) {
     const dynamicRoute = await prisma.dynamicRoute.findFirst({
       where: { originId, route: endpoint },
     });
 
     if (dynamicRoute) {
-      endpoint = dynamicRoute.pattern;
+      wherePath = Prisma.sql`AND metrics.path LIKE ${dynamicRoute.pattern}`;
     } else {
-      endpoint = '%';
+      wherePath = Prisma.sql`AND metrics.path = ${endpoint}`;
     }
   } else {
-    endpoint = '%';
+    wherePath = Prisma.empty;
   }
 
   // The scope indicates which time unit the metrics are grouped by.
@@ -118,24 +103,24 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     scope = 'week';
   }
 
-  const prevGeneralDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
-SELECT
-  COUNT(*) AS "totalRequests",
-
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
-
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
-
+  const whereClause = Prisma.sql`
 WHERE origins.id = ${originId}
   AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
   AND metrics.created_at <= ${fromDate}
-  AND metrics.method LIKE ${method}
-  AND metrics.path LIKE ${endpoint}
-  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
-  AND metrics.browser LIKE ${browser}
-  AND metrics.os LIKE ${os}
-  AND metrics.device LIKE ${device};`;
+  ${wherePath}
+  ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
+  ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
+  ${browser ? Prisma.sql`AND metrics.browser = ${browser}` : Prisma.empty}
+  ${os ? Prisma.sql`AND metrics.os = ${os}` : Prisma.empty}
+  ${device ? Prisma.sql`AND metrics.device = ${device}` : Prisma.empty}`;
+
+  const prevGeneralDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
+SELECT
+  COUNT(*) AS "totalRequests",
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
+FROM metrics
+  LEFT JOIN origins ON metrics.origin_id = origins.id
+${whereClause}`;
 
   const generalDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
 SELECT
@@ -163,39 +148,18 @@ SELECT
   PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP90",
   PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP95",
   PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99"
-
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-
-WHERE origins.id = ${originId}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}
-  AND metrics.method LIKE ${method}
-  AND metrics.path LIKE ${endpoint}
-  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
-  AND metrics.browser LIKE ${browser}
-  AND metrics.os LIKE ${os}
-  AND metrics.device LIKE ${device};`;
+${whereClause}`;
 
   const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
   DATE_TRUNC(${scope}, metrics.created_at) AS time,
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS errors
-
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-
-WHERE origins.id = ${originId}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}
-  AND metrics.method LIKE ${method}
-  AND metrics.path LIKE ${endpoint}
-  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
-  AND metrics.browser LIKE ${browser}
-  AND metrics.os LIKE ${os}
-  AND metrics.device LIKE ${device}
-
+${whereClause}
 GROUP BY time;`;
 
   const endpointDataPromise: Promise<EndpointData[]> = prisma.$queryRaw`
@@ -224,96 +188,43 @@ FROM metrics
     LIMIT 1
   ) AS matched_routes ON TRUE
 
-WHERE origins.id = ${originId}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}
-  AND metrics.method LIKE ${method}
-  AND metrics.path LIKE ${endpoint}
-  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
-  AND metrics.browser LIKE ${browser}
-  AND metrics.os LIKE ${os}
-  AND metrics.device LIKE ${device}
-
+${whereClause}
 GROUP BY metrics.method, metrics.path, endpoint;`;
 
   const statusCodeDataPromise: Promise<StatusCodeData[]> = prisma.$queryRaw`
 SELECT
   metrics.status_code as "statusCode",
   COUNT(metrics.status_code) as requests
-
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-
-WHERE origins.id = ${originId}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}
-  AND metrics.method LIKE ${method}
-  AND metrics.path LIKE ${endpoint}
-  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
-  AND metrics.browser LIKE ${browser}
-  AND metrics.os LIKE ${os}
-  AND metrics.device LIKE ${device}
-
+${whereClause}
 GROUP BY metrics.status_code;`;
 
   const browserDataPromise: Promise<BrowserData[]> = prisma.$queryRaw`
 SELECT
   metrics.browser,
   COUNT(metrics.browser) AS requests
-
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-
-WHERE origins.id = ${originId}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}
-  AND metrics.method LIKE ${method}
-  AND metrics.path LIKE ${endpoint}
-  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
-  AND metrics.browser LIKE ${browser}
-  AND metrics.os LIKE ${os}
-  AND metrics.device LIKE ${device}
-
+${whereClause}
 GROUP BY metrics.browser;`;
 
   const osDataPromise: Promise<OSData[]> = prisma.$queryRaw`
 SELECT
   metrics.os,
   COUNT(metrics.os) AS requests
-
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-
-WHERE origins.id = ${originId}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}
-  AND metrics.method LIKE ${method}
-  AND metrics.path LIKE ${endpoint}
-  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
-  AND metrics.browser LIKE ${browser}
-  AND metrics.os LIKE ${os}
-  AND metrics.device LIKE ${device}
-
+${whereClause}
 GROUP BY metrics.os;`;
 
   const deviceDataPromise: Promise<DeviceData[]> = prisma.$queryRaw`
 SELECT
   metrics.device,
   COUNT(metrics.device) AS requests
-
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-
-WHERE origins.id = ${originId}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}
-  AND metrics.method LIKE ${method}
-  AND metrics.path LIKE ${endpoint}
-  AND CAST(metrics.status_code AS TEXT) LIKE ${statusCode}
-  AND metrics.browser LIKE ${browser}
-  AND metrics.os LIKE ${os}
-  AND metrics.device LIKE ${device}
-
+${whereClause}
 GROUP BY metrics.device;`;
 
   const versionDataPromise = prisma.metric.findFirst({
