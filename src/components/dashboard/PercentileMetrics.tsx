@@ -79,7 +79,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
   const height = getHeight(data.length);
 
   const renderNoMetrics = !data.length && (
-    <div className="flex flex-col justify-center items-center py-40">
+    <div className="flex flex-col items-center justify-center py-40">
       <p>{emptyLabel}</p>
     </div>
   );
@@ -98,8 +98,8 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
 
   return (
     <DashboardCard>
-      <div className="flex flex-wrap px-2 gap-4">
-        <p className="text-white mr-auto">Performance metrics</p>
+      <div className="flex flex-wrap gap-4 px-2">
+        <p className="mr-auto text-white">Performance metrics</p>
         <div className="tabs">
           <p
             className={clsx(

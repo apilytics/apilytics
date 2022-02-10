@@ -31,17 +31,17 @@ const REASONS = [
 ];
 
 export const Why: React.FC = () => (
-  <div className="bg-background bg-no-repeat bg-cover">
+  <div className="bg-background bg-cover bg-no-repeat">
     <div className="bg-filter">
-      <div className="container max-w-3xl py-4 lg:py-16 flex flex-col">
+      <div className="container flex max-w-3xl flex-col py-4 lg:py-16">
         <h1 className="text-white">
           Why choose <span className="text-primary">Apilytics</span>?
         </h1>
-        <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
+        <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
           {REASONS.map(({ title, content }) => (
-            <div className="card bg-base-100 rounded-lg p-4" key={title}>
+            <div className="card rounded-lg bg-base-100 p-4" key={title}>
               <div className="flex items-center">
-                <BadgeCheckIcon className="h-8 w-8 mr-2 text-secondary" />
+                <BadgeCheckIcon className="mr-2 h-8 w-8 text-secondary" />
                 <h6 className="text-white">{title}</h6>
               </div>
               <p className="mt-2 grow">{content}</p>

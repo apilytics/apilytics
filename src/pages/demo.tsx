@@ -64,7 +64,7 @@ const Demo: NextPage = () => {
       headerProps={{ maxWidth }}
       footerProps={{ maxWidth }}
     >
-      <div className="container py-4 max-w-6xl grow flex flex-col">
+      <div className="container flex max-w-6xl grow flex-col py-4">
         <DashboardOptions origin={origin} />
         <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
@@ -73,7 +73,7 @@ const Demo: NextPage = () => {
         <div className="mt-4">
           <PercentileMetrics data={percentileData} />
         </div>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <StatusCodeMetrics data={statusCodeData} />
           <UserAgentMetrics data={userAgentData} />
         </div>
@@ -82,12 +82,12 @@ const Demo: NextPage = () => {
           metrics.
         </p>
         <div className="py-4 sm:py-8">
-          <div className="flex flex-col sm:flex-row gap-8">
+          <div className="flex flex-col gap-8 sm:flex-row">
             <div className="grow">
               <h3 className="text-white">Would you like to see these metrics from your APIs?</h3>
               <h3 className="text-primary">Start a free trial now.</h3>
             </div>
-            <div className="flex flex-col justify-center gap-2 min-w-40">
+            <div className="min-w-40 flex flex-col justify-center gap-2">
               <Button
                 linkTo={staticRoutes.register}
                 onClick={(): void => plausible('register-click', eventOptions)}
@@ -99,7 +99,7 @@ const Demo: NextPage = () => {
               <Button
                 linkTo={staticRoutes.root}
                 onClick={(): void => plausible('live-demo-click', eventOptions)}
-                className="btn-secondary btn-outline"
+                className="btn-outline btn-secondary"
                 fullWidth
               >
                 Learn more

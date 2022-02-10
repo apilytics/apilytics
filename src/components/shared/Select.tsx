@@ -6,7 +6,7 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export const Select: React.FC<Props> = ({ label, className, children, ...props }) => (
-  <select className={clsx('select select-bordered', className)} {...props}>
+  <select className={clsx('select-bordered select', className)} {...props}>
     {!!label && (
       <option disabled selected>
         {label}

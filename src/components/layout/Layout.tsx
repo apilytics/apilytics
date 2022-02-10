@@ -13,10 +13,10 @@ export const Layout: React.FC<LayoutProps> = ({
 }) => (
   <>
     <Head {...headProps} />
-    <div className="min-h-screen flex flex-col bg-base-200">
-      <div id="main" className="grow flex flex-col">
+    <div className="flex min-h-screen flex-col bg-base-200">
+      <div id="main" className="flex grow flex-col">
         <Header {...headerProps} />
-        <div className="grow flex flex-col relative">{children}</div>
+        <div className="relative flex grow flex-col">{children}</div>
         <Footer {...footerProps} />
       </div>
     </div>

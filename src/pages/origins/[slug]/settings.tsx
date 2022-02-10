@@ -88,7 +88,7 @@ const OriginSettings: NextPage = () => {
   const renderDeleteOriginLink = (
     <p
       onClick={(): void => handleOpenModal(MODAL_NAMES.deleteOrigin)}
-      className="mt-4 text-center link text-error"
+      className="link mt-4 text-center text-error"
     >
       Delete origin
     </p>
@@ -96,7 +96,7 @@ const OriginSettings: NextPage = () => {
 
   return (
     <MainTemplate headProps={{ title: 'Origin settings' }}>
-      <div className="card rounded-lg p-4 shadow bg-base-100">
+      <div className="card rounded-lg bg-base-100 p-4 shadow">
         <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
         <Form
           title={`Settings for ${origin?.name}`}
@@ -134,8 +134,8 @@ const OriginSettings: NextPage = () => {
                 All data associated with it will be lost forever.
               </p>
             </div>
-            <div className="p-2 grid grid-cols-2 gap-2">
-              <Button className="btn-error btn-outline" onClick={handleCloseModal}>
+            <div className="grid grid-cols-2 gap-2 p-2">
+              <Button className="btn-outline btn-error" onClick={handleCloseModal}>
                 Cancel
               </Button>
               <Button className="btn-outline btn-primary" onClick={handleConfirmDelete} autoFocus>

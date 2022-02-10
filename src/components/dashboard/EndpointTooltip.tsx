@@ -24,7 +24,7 @@ export const EndpointTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
     const red = ((count_red / requests) * 100).toFixed();
 
     return (
-      <div className="bg-base-100 card shadow rounded-lg p-4">
+      <div className="card rounded-lg bg-base-100 p-4 shadow">
         <ul className="list-none">
           <li>
             Path: <span className="font-bold text-white">{name}</span>

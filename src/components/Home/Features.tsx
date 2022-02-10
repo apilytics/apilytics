@@ -47,7 +47,7 @@ const FEATURES = [
 ];
 
 export const Features: React.FC = () => (
-  <div className="container py-4 lg:py-16 max-w-3xl">
+  <div className="container max-w-3xl py-4 lg:py-16">
     <h1 className="text-white">
       It's time to stop being <span className="text-primary">blind</span> about your
       <br />
@@ -58,11 +58,11 @@ export const Features: React.FC = () => (
       configuration and no installable host-agents. Works in any environment with no performance
       overhead to your application.
     </h5>
-    <div className="mt-16 grid gap-4 grid-cols-1 md:grid-cols-3">
+    <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
       {FEATURES.map(({ icon: Icon, title, content, comingSoon }) => (
-        <div className="card bg-base-100 rounded-lg p-4" key={title}>
+        <div className="card rounded-lg bg-base-100 p-4" key={title}>
           <div className="flex items-center">
-            <Icon className="h-8 w-8 text-primary mr-2" />
+            <Icon className="mr-2 h-8 w-8 text-primary" />
             <h6 className="text-white">{title}</h6>
           </div>
           <p className="mt-2 grow">{content}</p>

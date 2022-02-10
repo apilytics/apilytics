@@ -13,12 +13,12 @@ interface Props extends Omit<BlogsFrontMatter, 'title'> {
 export const BlogCard: React.FC<Props> = ({ slug, title, excerpt, author, authorLink, date }) => (
   <Link href={dynamicRoutes.blog({ slug })}>
     <a className="unstyled">
-      <div className="bg-base-100 hover:bg-gray-700 card rounded-lg p-2 h-full">
-        <div className="flex flex-col p-2 grow">
+      <div className="card h-full rounded-lg bg-base-100 p-2 hover:bg-gray-700">
+        <div className="flex grow flex-col p-2">
           <h5 className="text-white">{title}</h5>
           <p>{excerpt}</p>
         </div>
-        <p className="text-sm text-base-content px-2">
+        <p className="px-2 text-sm text-base-content">
           <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
         </p>
       </div>

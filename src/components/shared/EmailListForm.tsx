@@ -58,12 +58,12 @@ export const EmailListForm: React.FC = () => {
             placeholder="Your email"
             value={email}
             onChange={({ target }): void => setEmail(target.value)}
-            className="input input-primary w-full sm:w-auto"
+            className="input-primary input w-full sm:w-auto"
             required
           />
           <Button
             type="submit"
-            className="btn-primary btn-outline mt-2 sm:mt-0 sm:ml-2"
+            className="btn-outline btn-primary mt-2 sm:mt-0 sm:ml-2"
             fullWidth="mobile"
             loading={loading}
           >

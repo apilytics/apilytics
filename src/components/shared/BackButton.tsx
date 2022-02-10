@@ -12,7 +12,7 @@ interface Props extends ButtonProps {
 export const BackButton: React.FC<Props> = ({ text, className, ...props }) => (
   <Button
     {...props}
-    className={clsx('btn-primary btn-link p-0 self-start', className)}
+    className={clsx('btn-primary btn-link self-start p-0', className)}
     startIcon={ArrowLeftIcon}
   >
     {text}

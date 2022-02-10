@@ -6,7 +6,7 @@ import { LoadingIndicator } from 'components/shared/LoadingIndicator';
 export const LoadingTemplate: React.FC = () => (
   <>
     <Head title="Loading..." loading />
-    <div className="h-screen flex items-center justify-center">
+    <div className="flex h-screen items-center justify-center">
       <LoadingIndicator />
     </div>
   </>

@@ -127,7 +127,7 @@ export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, colo
       }
 
       return (
-        <div className="bg-base-100 card shadow rounded-lg p-4">
+        <div className="card rounded-lg bg-base-100 p-4 shadow">
           <ul className="list-none">
             <li className="text-primary">{dayjs(time).format(format)}</li>
             <li>

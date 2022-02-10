@@ -17,26 +17,26 @@ const Origins: NextPage = () => {
   return (
     <MainTemplate headProps={{ title: 'Origins' }}>
       <div className="divide-y divide-base-content">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-4">
+        <div className="flex flex-col pb-4 sm:flex-row sm:items-center sm:justify-between">
           <h5 className="text-white">Origins</h5>
           <Button
             linkTo={staticRoutes.newOrigin}
             endIcon={PlusIcon}
-            className="btn-primary btn-outline"
+            className="btn-outline btn-primary"
           >
             Add origin
           </Button>
         </div>
-        <div className="py-4 flex flex-col gap-2">
+        <div className="flex flex-col gap-2 py-4">
           {origins.length ? (
             origins.map(({ name, slug }) => (
               <Link href={dynamicRoutes.origin({ slug })} key={name}>
                 <a className="unstyled">
                   <div
-                    className="bg-base-100 hover:bg-gray-700 card rounded-lg px-4 py-2"
+                    className="card rounded-lg bg-base-100 px-4 py-2 hover:bg-gray-700"
                     key={name}
                   >
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <h6>{name}</h6>
                       <OriginMenu slug={slug} />
                     </div>

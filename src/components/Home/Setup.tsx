@@ -26,9 +26,9 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
   const { source } = snippet;
 
   return (
-    <div className="bg-background bg-no-repeat bg-cover">
+    <div className="bg-background bg-cover bg-no-repeat">
       <div className="bg-filter">
-        <div className="container max-w-3xl py-4 lg:py-16 flex flex-col">
+        <div className="container flex max-w-3xl flex-col py-4 lg:py-16">
           <h1 className="text-white">
             Set up in <span className="text-primary">5 minutes</span>
           </h1>
@@ -45,8 +45,8 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
               </li>
             </ul>
           </div>
-          <div className="mt-4 bg-base-100 w-full rounded-lg mockup-code pb-0">
-            <div className="px-4 tabs">
+          <div className="mockup-code mt-4 w-full rounded-lg bg-base-100 pb-0">
+            <div className="tabs px-4">
               {snippets.map(({ name }) => (
                 <p
                   key={name}

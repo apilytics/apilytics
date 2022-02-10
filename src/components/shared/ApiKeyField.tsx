@@ -29,7 +29,7 @@ export const ApiKeyField: React.FC<Props> = ({ value }) => {
         <input
           name="apiKey"
           value={value}
-          className="input input-primary rounded-r-none grow"
+          className="input-primary input grow rounded-r-none"
           readOnly
         />
         <IconButton
@@ -38,7 +38,7 @@ export const ApiKeyField: React.FC<Props> = ({ value }) => {
           icon={ClipboardCopyIcon}
           tooltip="Copy your API key to the clipboard."
           tooltipProps={{ className: 'tooltip-left' }}
-          className="rounded-l-none btn-outline btn-primary border-l-0"
+          className="btn-outline btn-primary rounded-l-none border-l-0"
         />
       </div>
       <label className="label">

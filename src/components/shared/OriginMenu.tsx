@@ -9,13 +9,13 @@ interface Props {
 }
 
 export const OriginMenu: React.FC<Props> = ({ slug }) => (
-  <div className="dropdown dropdown-hover dropdown-end">
+  <div className="dropdown-end dropdown-hover dropdown">
     <div tabIndex={0} className="btn btn-ghost">
-      <DotsVerticalIcon className="w-5 h-5" />
+      <DotsVerticalIcon className="h-5 w-5" />
     </div>
     <ul
       tabIndex={0}
-      className="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-52 text-primary"
+      className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-primary shadow"
     >
       <li>
         <Link href={dynamicRoutes.originSettings({ slug })}>

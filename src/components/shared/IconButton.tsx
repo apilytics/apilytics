@@ -11,6 +11,6 @@ interface Props extends ButtonProps {
 
 export const IconButton: React.FC<Props> = ({ icon: Icon, className, ...props }) => (
   <Button className={clsx('btn-ghost btn-square', className)} {...props}>
-    <Icon className="w-5 h-5" />
+    <Icon className="h-5 w-5" />
   </Button>
 );

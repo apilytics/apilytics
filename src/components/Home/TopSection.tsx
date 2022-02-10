@@ -43,9 +43,9 @@ export const TopSection: React.FC = () => {
   const eventOptions = { location: EVENT_LOCATIONS.PAGE_TOP };
 
   return (
-    <div className="bg-background bg-no-repeat bg-cover">
+    <div className="bg-background bg-cover bg-no-repeat">
       <div className="bg-filter">
-        <div className="container py-4 lg:py-16 grid gap-4 lg:gap-8 grid-cols-1 lg:grid-cols-2">
+        <div className="container grid grid-cols-1 gap-4 py-4 lg:grid-cols-2 lg:gap-8 lg:py-16">
           <div className="text-left">
             <h1 className="text-white">
               <span className="text-primary">API analytics</span>
@@ -54,7 +54,7 @@ export const TopSection: React.FC = () => {
             </h1>
             <h5 className="mt-12 text-white">{DESCRIPTION}</h5>
             <h6 className="mt-12 text-white">Simple integration with any backend</h6>
-            <div className="flex flex-wrap gap-4 mt-8 grayscale">
+            <div className="mt-8 flex flex-wrap gap-4 grayscale">
               {INTEGRATIONS.map(({ name, image }) => (
                 <div key={name}>
                   <Image
@@ -70,7 +70,7 @@ export const TopSection: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:inline-grid mt-8">
+            <div className="mt-8 grid grid-cols-1 gap-4 lg:inline-grid lg:grid-cols-2">
               <Button
                 linkTo={staticRoutes.register}
                 onClick={(): void => plausible('register-click', eventOptions)}
@@ -81,13 +81,13 @@ export const TopSection: React.FC = () => {
               <Button
                 linkTo={staticRoutes.demo}
                 onClick={(): void => plausible('live-demo-click', eventOptions)}
-                className="btn-secondary btn-outline"
+                className="btn-outline btn-secondary"
               >
                 Live demo
               </Button>
             </div>
           </div>
-          <div className="mt-8 lg:mt-0 select-none">
+          <div className="mt-8 select-none lg:mt-0">
             <MockRequestsTimeFrame />
           </div>
         </div>

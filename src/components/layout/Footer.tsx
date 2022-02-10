@@ -92,7 +92,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
     <footer className="footer footer-center bg-base-100">
       <div
         className={clsx(
-          'container text-left py-4 md:py-8 flex flex-col md:flex-row items-start gap-4 md:gap-12',
+          'container flex flex-col items-start gap-4 py-4 text-left md:flex-row md:gap-12 md:py-8',
           maxWidth,
         )}
       >
@@ -108,7 +108,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             />
             <h6 className="ml-2">Apilytics</h6>
           </div>
-          <p className="py-2 max-w-64">{DESCRIPTION}</p>
+          <p className="max-w-64 py-2">{DESCRIPTION}</p>
           <p className="text-xs">
             Built by{' '}
             <ExternalLink href="https://github.com/blomqma" onClick={handleClick('@blomqma')}>
@@ -120,7 +120,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             </ExternalLink>
           </p>
         </div>
-        <div className="flex flex-col md:flex-row gap-4 md:gap-12">
+        <div className="flex flex-col gap-4 md:flex-row md:gap-12">
           <div>
             <h6 className="footer-title text-sm">Features</h6>
             <ul>
