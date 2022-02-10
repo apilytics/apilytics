@@ -14,15 +14,36 @@ import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES } from 'utils/constants';
 import { formatCount } from 'utils/metrics';
-import type { BrowserData, DeviceData, OSData, PlausibleEvents, UserAgentData } from 'types';
+import type {
+  BrowserData,
+  DeviceData,
+  OSData,
+  PlausibleEvents,
+  UserAgentData,
+  ValueOf,
+} from 'types';
 
 type CombinedUserAgentData = BrowserData | OSData | DeviceData;
+
+type ValuesOfUnion<T> = T extends T ? ValueOf<T> : never;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const safeGet = <T extends Record<keyof any, any>>(
+  obj: T,
+  prop: string,
+): ValuesOfUnion<T> | undefined => {
+  if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+    return obj[prop];
+  } else {
+    return undefined;
+  }
+};
 
 const METRIC_TYPES = {
   browsers: 'browsers',
   os: 'os',
   devices: 'devices',
-};
+} as const;
 
 interface Props {
   data: UserAgentData;
@@ -33,8 +54,8 @@ export const UserAgentMetrics: React.FC<Props> = ({
 }) => {
   const plausible = usePlausible();
   const { setSelectedBrowser, setSelectedOs, setSelectedDevice } = useOrigin();
-  const [metricType, setMetricType] = useState(METRIC_TYPES.browsers);
-  const [activeTab, setActiveTab] = useState(METRIC_TYPES.browsers);
+  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.browsers);
+  const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.browsers);
   const { handleOpenModal, handleCloseModal } = useModal();
 
   const sortData = (a: CombinedUserAgentData, b: CombinedUserAgentData): number =>
@@ -58,10 +79,9 @@ export const UserAgentMetrics: React.FC<Props> = ({
     },
   };
 
-  const { data, dataKey, emptyLabel } = attributes[metricType as keyof typeof attributes];
+  const { data, dataKey, emptyLabel } = attributes[metricType];
 
-  const { data: modalData, dataKey: modalDataKey } =
-    attributes[activeTab as keyof typeof attributes];
+  const { data: modalData, dataKey: modalDataKey } = attributes[activeTab];
 
   const truncatedData = data.slice(0, 10);
   const getHeight = (dataLength: number): number => 100 + dataLength * 35;
@@ -79,13 +99,13 @@ export const UserAgentMetrics: React.FC<Props> = ({
       browsers: 'browser',
       os: 'os',
       devices: 'device',
-    };
+    } as const;
 
-    const dispatcher = dispatchers[metricType as keyof typeof dispatchers];
-    const key = keys[metricType as keyof typeof keys];
-    const newState = data[key as keyof typeof data];
+    const key = keys[metricType];
+    const newState = safeGet(data, key);
 
     if (typeof newState === 'string') {
+      const dispatcher = dispatchers[metricType];
       dispatcher(newState);
     }
 
@@ -95,7 +115,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
       device: 'device-click',
     };
 
-    plausible(events[metricType as keyof typeof events]);
+    plausible(events[metricType]);
   };
 
   const handleShowAllClick = (): void => {
@@ -107,7 +127,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
       device: 'show-all-devices-click',
     };
 
-    plausible(events[metricType as keyof typeof events]);
+    plausible(events[metricType]);
   };
 
   const renderNoMetrics = !data.length && (

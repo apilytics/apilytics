@@ -275,3 +275,5 @@ export interface DynamicRouteWithMatches {
 }
 
 export type Method = typeof METHODS[number];
+
+export type ValueOf<T> = T[keyof T];

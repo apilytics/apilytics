@@ -14,12 +14,12 @@ import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES } from 'utils/constants';
 import { formatCount } from 'utils/metrics';
-import type { EndpointData } from 'types';
+import type { EndpointData, ValueOf } from 'types';
 
 const METRIC_TYPES = {
   requests: 'requests',
   responseTimes: 'responseTimes',
-};
+} as const;
 
 interface Props {
   data: EndpointData[];
@@ -28,8 +28,8 @@ interface Props {
 export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const plausible = usePlausible();
   const { setSelectedMethod, setSelectedEndpoint } = useOrigin();
-  const [metricType, setMetricType] = useState(METRIC_TYPES.requests);
-  const [activeTab, setActiveTab] = useState(METRIC_TYPES.requests);
+  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
+  const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
   const requestsData = [..._data.sort((a, b) => b.totalRequests - a.totalRequests)];
   const responseTimeData = [..._data.sort((a, b) => b.responseTimeAvg - a.responseTimeAvg)];
   const { handleOpenModal, handleCloseModal } = useModal();
@@ -51,15 +51,14 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
     },
   };
 
-  const { data, dataKey, label, emptyLabel, formatter } =
-    attributes[metricType as keyof typeof attributes];
+  const { data, dataKey, label, emptyLabel, formatter } = attributes[metricType];
 
   const {
     data: modalData,
     dataKey: modalDataKey,
     label: modalLabel,
     formatter: modalFormatter,
-  } = attributes[activeTab as keyof typeof attributes];
+  } = attributes[activeTab];
 
   const truncatedData = data.slice(0, 10);
   const getHeight = (dataLength: number): number => 100 + dataLength * 35;
