@@ -103,10 +103,8 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     scope = 'week';
   }
 
-  const whereClause = Prisma.sql`
+  const baseWhereClause = Prisma.sql`
 WHERE origins.id = ${originId}
-  AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
-  AND metrics.created_at <= ${fromDate}
   ${wherePath}
   ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
   ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
@@ -114,13 +112,23 @@ WHERE origins.id = ${originId}
   ${os ? Prisma.sql`AND metrics.os = ${os}` : Prisma.empty}
   ${device ? Prisma.sql`AND metrics.device = ${device}` : Prisma.empty}`;
 
+  const whereClause = Prisma.sql`
+${baseWhereClause}
+  AND metrics.created_at >= ${fromDate}
+  AND metrics.created_at <= ${toDate}`;
+
+  const whereClausePreviousPeriod = Prisma.sql`
+${baseWhereClause}
+  AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
+  AND metrics.created_at <= ${fromDate}`;
+
   const prevGeneralDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS "totalRequests",
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
 FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id
-${whereClause}`;
+${whereClausePreviousPeriod}`;
 
   const generalDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
 SELECT
