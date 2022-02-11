@@ -52,6 +52,8 @@ interface RawGeneralData extends GeneralData {
   responseSizeP99: number;
 }
 
+type RawEndpointData = Omit<EndpointData, 'methodAndEndpoint'>;
+
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
@@ -103,6 +105,10 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     scope = 'week';
   }
 
+  const fromClause = Prisma.sql`
+FROM metrics
+  LEFT JOIN origins ON metrics.origin_id = origins.id`;
+
   const baseWhereClause = Prisma.sql`
 WHERE origins.id = ${originId}
   ${wherePath}
@@ -126,8 +132,8 @@ ${baseWhereClause}
 SELECT
   COUNT(*) AS "totalRequests",
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
+
+${fromClause}
 ${whereClausePreviousPeriod}`;
 
   const generalDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
@@ -156,8 +162,8 @@ SELECT
   PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP90",
   PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP95",
   PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99"
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
+
+${fromClause}
 ${whereClause}`;
 
   const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
@@ -165,74 +171,88 @@ SELECT
   COUNT(*) AS requests,
   DATE_TRUNC(${scope}, metrics.created_at) AS time,
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS errors
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
+
+${fromClause}
 ${whereClause}
+
 GROUP BY time;`;
 
-  const endpointDataPromise: Promise<EndpointData[]> = prisma.$queryRaw`
+  // If an endpoint is provided as a filter, return all paths matching that endpoint.
+  // Otherwise return all dynamic routes + other paths through `endpoint`.
+  let endpointSelectClause;
+
+  if (endpoint) {
+    endpointSelectClause = Prisma.sql`metrics.path AS endpoint`;
+  } else {
+    endpointSelectClause = Prisma.sql`
+CASE
+  WHEN matched_routes.route IS NULL
+  THEN metrics.path
+  ELSE matched_routes.route END AS endpoint`;
+  }
+
+  const endpointDataPromise: Promise<RawEndpointData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS "totalRequests",
   metrics.method,
-  CONCAT(metrics.method, ' ', metrics.path) AS "methodAndEndpoint",
   ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
+  ${endpointSelectClause}
 
-  CASE
-    WHEN matched_routes.route IS NULL
-    THEN metrics.path
-    ELSE matched_routes.route END AS endpoint
+${fromClause}
 
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
-
-  LEFT JOIN LATERAL (
-    SELECT dynamic_routes.route
-    FROM dynamic_routes
-    WHERE dynamic_routes.origin_id = ${originId}
-      AND metrics.path LIKE dynamic_routes.pattern
-      AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
-        = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
-    ORDER BY LENGTH(dynamic_routes.pattern) DESC
-    LIMIT 1
-  ) AS matched_routes ON TRUE
+LEFT JOIN LATERAL (
+  SELECT dynamic_routes.route
+  FROM dynamic_routes
+  WHERE dynamic_routes.origin_id = ${originId}
+    AND metrics.path LIKE dynamic_routes.pattern
+    AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
+      = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
+  ORDER BY LENGTH(dynamic_routes.pattern) DESC
+  LIMIT 1
+) AS matched_routes ON TRUE
 
 ${whereClause}
-GROUP BY metrics.method, metrics.path, endpoint;`;
+
+GROUP BY metrics.method, endpoint;`;
 
   const statusCodeDataPromise: Promise<StatusCodeData[]> = prisma.$queryRaw`
 SELECT
   metrics.status_code as "statusCode",
   COUNT(metrics.status_code) as requests
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
+
+${fromClause}
 ${whereClause}
+
 GROUP BY metrics.status_code;`;
 
   const browserDataPromise: Promise<BrowserData[]> = prisma.$queryRaw`
 SELECT
   metrics.browser,
   COUNT(metrics.browser) AS requests
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
+
+${fromClause}
 ${whereClause}
+
 GROUP BY metrics.browser;`;
 
   const osDataPromise: Promise<OSData[]> = prisma.$queryRaw`
 SELECT
   metrics.os,
   COUNT(metrics.os) AS requests
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
+
+${fromClause}
 ${whereClause}
+
 GROUP BY metrics.os;`;
 
   const deviceDataPromise: Promise<DeviceData[]> = prisma.$queryRaw`
 SELECT
   metrics.device,
   COUNT(metrics.device) AS requests
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id
+
+${fromClause}
 ${whereClause}
+
 GROUP BY metrics.device;`;
 
   const versionDataPromise = prisma.metric.findFirst({
@@ -245,7 +265,7 @@ GROUP BY metrics.device;`;
     prevGeneralData,
     _generalData,
     timeFrameData,
-    endpointData,
+    _endpointData,
     statusCodeData,
     browserData,
     osData,
@@ -272,6 +292,11 @@ GROUP BY metrics.device;`;
   const prevErrorRate = Number((prevTotalErrors / prevTotalRequests).toFixed(2));
   const errorRate = Number((totalErrors / totalRequests).toFixed(2));
   const errorRateGrowth = Number((errorRate / prevErrorRate).toFixed(2));
+
+  const endpointData = _endpointData.map((endpoint) => ({
+    ...endpoint,
+    methodAndEndpoint: `${endpoint.method} ${endpoint.endpoint}`,
+  }));
 
   const generalData = {
     totalRequests,
