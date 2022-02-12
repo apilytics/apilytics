@@ -82,6 +82,10 @@ const COMPANY_LINKS = [
     text: 'Privacy policy',
     href: staticRoutes.privacyPolicy,
   },
+  {
+    text: 'Terms',
+    href: staticRoutes.terms,
+  },
 ];
 
 export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) => {

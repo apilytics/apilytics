@@ -39,6 +39,7 @@ export const staticRoutes = {
   account: '/account',
   contact: '/contact',
   privacyPolicy: '/privacy-policy',
+  terms: '/terms',
   about: '/about',
   privacyFriendly: '/privacy-friendly',
   lightweight: '/lightweight',

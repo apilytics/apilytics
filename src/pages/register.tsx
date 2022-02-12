@@ -13,13 +13,18 @@ const SUBTITLE_ITEMS = ['No credit card required', 'Cancel any time', '100% free
 
 const Register: NextPage<LoginPageProps> = ({ csrfToken }) => {
   const renderSubTitle = (
-    <ul className="mt-4 list-none">
-      {SUBTITLE_ITEMS.map((text) => (
-        <li className="mt-1 flex" key={text}>
-          <CheckCircleIcon className="mr-2 h-5 w-5 text-success" /> {text}
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className="mt-4 list-none">
+        {SUBTITLE_ITEMS.map((text) => (
+          <li className="mt-1 flex" key={text}>
+            <CheckCircleIcon className="mr-2 h-5 w-5 text-success" /> {text}
+          </li>
+        ))}
+      </ul>
+      <p className="my-4 text-sm">
+        By signing up you agree to our <Link href={staticRoutes.terms}>terms</Link>.
+      </p>
+    </>
   );
 
   const renderSteps = (
