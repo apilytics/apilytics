@@ -226,9 +226,9 @@ export const getMockMetrics = ({
 
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
     key,
-    responseTime: responseTimeData[key as keyof typeof responseTimeData],
-    requestSize: requestSizeData[key as keyof typeof requestSizeData],
-    responseSize: responseSizeData[key as keyof typeof responseSizeData],
+    responseTime: responseTimeData[key],
+    requestSize: requestSizeData[key],
+    responseSize: responseSizeData[key],
   }));
 
   const uniqueStatusCodesWithCounts: Record<number, number> = {};

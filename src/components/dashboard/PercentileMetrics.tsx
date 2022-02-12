@@ -4,13 +4,13 @@ import React, { useState } from 'react';
 import { BarValue } from 'components/dashboard/BarValue';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
-import type { PercentileData } from 'types';
+import type { PercentileData, ValueOf } from 'types';
 
 const METRIC_TYPES = {
   responseTimes: 'responseTimes',
   requestSizes: 'requestSizes',
   responseSizes: 'responseSizes',
-};
+} as const;
 
 const formatMilliseconds = (value?: string | number): string => {
   if (typeof value === 'number') {
@@ -49,7 +49,9 @@ interface Props {
 }
 
 export const PercentileMetrics: React.FC<Props> = ({ data }) => {
-  const [metricType, setMetricType] = useState(METRIC_TYPES.responseTimes);
+  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(
+    METRIC_TYPES.responseTimes,
+  );
 
   const attributes = {
     responseTimes: {
@@ -72,8 +74,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
     },
   };
 
-  const { dataKey, label, emptyLabel, formatter } =
-    attributes[metricType as keyof typeof attributes];
+  const { dataKey, label, emptyLabel, formatter } = attributes[metricType];
 
   const getHeight = (dataLength: number): number => 100 + dataLength * 35;
   const height = getHeight(data.length);

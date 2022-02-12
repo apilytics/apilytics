@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { TimeFrameAreaChart } from 'components/dashboard/TimeFrameAreaChart';
 import { formatCount } from 'utils/metrics';
-import type { GeneralData, TimeFrameData } from 'types';
+import type { GeneralData, TimeFrameData, ValueOf } from 'types';
 
 const METRIC_TYPES = {
   requests: 'requests',
   errors: 'errors',
-};
+} as const;
 
 interface Props extends GeneralData {
   data: TimeFrameData[];
@@ -24,7 +24,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
   errorRateGrowth,
   data,
 }) => {
-  const [metricType, setMetricType] = useState(METRIC_TYPES.requests);
+  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
   const positiveTotalRequestsGrowth = totalRequestsGrowth >= 0;
   const positiveTotalErrorsGrowth = totalErrorsGrowth <= 0;
   const positiveErrorRateGrowth = errorRateGrowth <= 0;
@@ -40,7 +40,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
     },
   };
 
-  const { dataKey, color } = attributes[metricType as keyof typeof attributes];
+  const { dataKey, color } = attributes[metricType];
 
   return (
     <DashboardCard>

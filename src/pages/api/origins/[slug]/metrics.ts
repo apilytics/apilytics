@@ -336,9 +336,9 @@ GROUP BY metrics.device;`;
 
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
     key,
-    responseTime: responseTimes[key as keyof typeof responseTimes],
-    requestSize: requestSizes[key as keyof typeof requestSizes],
-    responseSize: responseSizes[key as keyof typeof responseSizes],
+    responseTime: responseTimes[key],
+    requestSize: requestSizes[key],
+    responseSize: responseSizes[key],
   }));
 
   const userAgentData = {

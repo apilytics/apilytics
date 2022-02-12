@@ -3,7 +3,8 @@ import type { Method } from 'types';
 export const truncateString = (str: string, maxLength: number): string =>
   str.length > maxLength ? `${str.slice(0, maxLength - 3)}...` : str;
 
-export const getRandomArrayItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+export const getRandomArrayItem = <T>(arr: readonly T[]): T =>
+  arr[Math.floor(Math.random() * arr.length)];
 
 export const getRandomNumberBetween = (min: number, max: number): number =>
   Number((Math.floor(Math.random() * max) + min).toFixed());
@@ -22,7 +23,7 @@ export const getRandomStatusCodeForMethod = (method: Method): number => {
   };
 
   const errorCodes = [400, 401, 403, 404, 500];
-  const statusCodes = options[method as keyof typeof options];
+  const statusCodes = options[method];
   const likelyHoodMultiplier = errorCodes.length * 3;
 
   // Repeat the possible non-error status codes to produce a more realistic distribution.
