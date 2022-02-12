@@ -93,7 +93,6 @@ model Metric {
   timeMillis   Int     @map("time_millis")
   requestSize  BigInt? @map("request_size")
   responseSize BigInt? @map("response_size")
-  userAgent    Json?   @map("user_agent")
   browser      String?
   os           String?
   device       String?
