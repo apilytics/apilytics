@@ -149,4 +149,4 @@ const OriginSettings: NextPage = () => {
   );
 };
 
-export default withOrigin(withAuth(OriginSettings));
+export default withAuth(withOrigin(OriginSettings));

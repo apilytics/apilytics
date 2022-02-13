@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
 import { ErrorTemplate } from 'components/layout/ErrorTemplate';
-import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { NotFoundTemplate } from 'components/layout/NotFoundTemplate';
 import { useOrigin } from 'hooks/useOrigin';
 import { dynamicApiRoutes } from 'utils/router';
@@ -34,15 +33,11 @@ export const withOrigin = <T extends Record<string, unknown>>(
       }
     }, [setOrigin, slug]);
 
-    if (loading) {
-      return <LoadingTemplate />;
-    }
-
     if (error) {
       return <ErrorTemplate />;
     }
 
-    if (!origin) {
+    if (!origin && !loading) {
       return <NotFoundTemplate />;
     }
 

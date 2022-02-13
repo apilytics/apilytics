@@ -1,7 +1,7 @@
 import { ArrowSmRightIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import Router from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { LoadingTemplate } from 'components/layout/LoadingTemplate';
@@ -16,18 +16,19 @@ export const withAuth = <T extends Record<string, unknown>>(
   PageComponent: NextPage<T>,
 ): NextPage<T> => {
   const WithAuth: NextPage<T> = (pageProps: T) => {
+    useSession({
+      required: true,
+      onUnauthenticated: () => {
+        // This is already the default behavior but we want to be explicit.
+        // Either force login or redirect to the login page if the user is not authenticated.
+        signIn();
+      },
+    });
+
+    const { user, accountComplete } = useAccount();
     const [welcomePassed, setWelcomePassed] = useState(false);
-    const { status, loading, accountComplete } = useAccount();
-    const redirect = status === 'unauthenticated';
 
-    // Redirect unauthenticated users to login.
-    useEffect(() => {
-      if (redirect) {
-        Router.replace(staticRoutes.login);
-      }
-    }, [redirect]);
-
-    if (redirect || loading) {
+    if (!user) {
       return <LoadingTemplate />;
     }
 

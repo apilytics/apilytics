@@ -1,18 +1,35 @@
 import { PlusIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
+import { ErrorTemplate } from 'components/layout/ErrorTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
 import { OriginMenu } from 'components/shared/OriginMenu';
 import { withAuth } from 'hocs/withAuth';
-import { withOrigins } from 'hocs/withOrigins';
 import { useAccount } from 'hooks/useAccount';
-import { dynamicRoutes, staticRoutes } from 'utils/router';
+import { dynamicRoutes, staticApiRoutes, staticRoutes } from 'utils/router';
 
 const Origins: NextPage = () => {
-  const { origins } = useAccount();
+  const { origins, setOrigins } = useAccount();
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    (async (): Promise<void> => {
+      try {
+        const res = await fetch(staticApiRoutes.origins);
+        const { data } = await res.json();
+        setOrigins(data);
+      } catch {
+        setError(true);
+      }
+    })();
+  }, [setOrigins]);
+
+  if (error) {
+    return <ErrorTemplate />;
+  }
 
   return (
     <MainTemplate headProps={{ title: 'Origins' }}>
@@ -53,4 +70,4 @@ const Origins: NextPage = () => {
   );
 };
 
-export default withOrigins(withAuth(Origins));
+export default withAuth(Origins);
