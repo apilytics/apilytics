@@ -56,10 +56,12 @@ paths:
                   example: 200
                 requestSize:
                   type: integer
+                  minimum: 0
                   description: Size of the user's HTTP request's body in bytes.
                   example: 1024
                 responseSize:
                   type: integer
+                  minimum: 0
                   description: Size of the sent HTTP response's body in bytes.
                   example: 2048
                 userAgent:
@@ -84,6 +86,7 @@ paths:
                   example: 4294967296
                 timeMillis:
                   type: integer
+                  minimum: 0
                   description: The amount of time in milliseconds it took to respond to the user's request.
                   example: 15
               required:
