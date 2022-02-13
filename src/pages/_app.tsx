@@ -19,9 +19,9 @@ dayjs.extend(localizedFormat);
 
 const FRONTEND_DOMAIN = new URL(FRONTEND_URL).host;
 
-const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX.Element => (
+const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => (
   <PlausibleProvider domain={FRONTEND_DOMAIN} enabled={process.env.VERCEL_ENV === 'production'}>
-    <SessionProvider session={session}>
+    <SessionProvider>
       <AccountProvider>
         <OriginProvider>
           <ModalProvider>
