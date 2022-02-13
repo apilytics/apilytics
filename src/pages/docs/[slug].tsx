@@ -24,6 +24,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getFilePaths(DOCS_PATH)
     .map((path) => path.replace(/\.mdx?$/, ''))
+    .filter((path) => path !== 'index')
     .map((slug) => ({
       params: { slug },
     }));
