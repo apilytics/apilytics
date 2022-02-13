@@ -22,8 +22,13 @@ export const withOrigin = <T extends Record<string, unknown>>(
         (async (): Promise<void> => {
           try {
             const res = await fetch(dynamicApiRoutes.origin({ slug }));
-            const { data } = await res.json();
-            setOrigin(data);
+
+            if (res.status === 200) {
+              const { data } = await res.json();
+              setOrigin(data);
+            } else {
+              setError(true);
+            }
           } catch {
             setError(true);
           } finally {

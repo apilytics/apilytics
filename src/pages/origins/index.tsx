@@ -19,8 +19,13 @@ const Origins: NextPage = () => {
     (async (): Promise<void> => {
       try {
         const res = await fetch(staticApiRoutes.origins);
-        const { data } = await res.json();
-        setOrigins(data);
+
+        if (res.status === 200) {
+          const { data } = await res.json();
+          setOrigins(data);
+        } else {
+          setError(true);
+        }
       } catch {
         setError(true);
       }

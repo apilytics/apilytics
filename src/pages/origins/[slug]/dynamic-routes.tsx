@@ -125,8 +125,13 @@ const OriginDynamicRoutes: NextPage = () => {
     (async (): Promise<void> => {
       try {
         const res = await fetch(dynamicApiRoutes.dynamicRoutes({ slug }));
-        const { data } = await res.json();
-        setRoutes(data);
+
+        if (res.status === 200) {
+          const { data } = await res.json();
+          setRoutes(data);
+        } else {
+          setError(UNEXPECTED_ERROR);
+        }
       } catch {
         setError(UNEXPECTED_ERROR);
       } finally {
