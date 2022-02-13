@@ -157,6 +157,10 @@ export interface Snippet {
 }
 
 export interface AccountContextType {
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  error: boolean;
+  setError: Dispatch<SetStateAction<boolean>>;
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
   accountComplete: boolean;
@@ -164,6 +168,8 @@ export interface AccountContextType {
   setOrigins: Dispatch<SetStateAction<Origin[]>>;
 }
 export interface OriginContextType {
+  slug: string;
+  showApiKey: string;
   origin: Origin | null;
   setOrigin: Dispatch<SetStateAction<Origin | null>>;
   metrics: OriginMetrics | null;

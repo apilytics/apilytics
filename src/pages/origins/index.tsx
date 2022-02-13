@@ -1,6 +1,6 @@
 import { PlusIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import type { NextPage } from 'next';
 
 import { ErrorTemplate } from 'components/layout/ErrorTemplate';
@@ -12,11 +12,12 @@ import { useAccount } from 'hooks/useAccount';
 import { dynamicRoutes, staticApiRoutes, staticRoutes } from 'utils/router';
 
 const Origins: NextPage = () => {
-  const { origins, setOrigins } = useAccount();
-  const [error, setError] = useState(false);
+  const { origins, setOrigins, loading, setLoading, error, setError } = useAccount();
 
   useEffect(() => {
     (async (): Promise<void> => {
+      setLoading(true);
+
       try {
         const res = await fetch(staticApiRoutes.origins);
 
@@ -28,9 +29,18 @@ const Origins: NextPage = () => {
         }
       } catch {
         setError(true);
+      } finally {
+        setLoading(false);
       }
     })();
-  }, [setOrigins]);
+  }, [setError, setLoading, setOrigins]);
+
+  const renderSkeletonRow = (
+    <div className="flex h-14 animate-pulse items-center gap-4 rounded-lg border-2 border-base-content p-4">
+      <div className="h-4 grow rounded-lg bg-base-100" />
+      <div className="h-4 w-4 rounded-lg bg-base-100" />
+    </div>
+  );
 
   if (error) {
     return <ErrorTemplate />;
@@ -50,7 +60,15 @@ const Origins: NextPage = () => {
           </Button>
         </div>
         <div className="flex flex-col gap-2 py-4">
-          {origins.length ? (
+          {loading ? (
+            <>
+              {renderSkeletonRow}
+              {renderSkeletonRow}
+              {renderSkeletonRow}
+              {renderSkeletonRow}
+              {renderSkeletonRow}
+            </>
+          ) : origins.length ? (
             origins.map(({ name, slug }) => (
               <Link href={dynamicRoutes.origin({ slug })} key={name}>
                 <a className="unstyled">

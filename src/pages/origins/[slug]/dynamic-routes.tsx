@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import type { FormEvent } from 'react';
 
-import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { BackButton } from 'components/shared/BackButton';
 import { Button } from 'components/shared/Button';
@@ -19,8 +18,7 @@ import { dynamicApiRoutes, dynamicRoutes } from 'utils/router';
 import type { DynamicRouteWithMatches, PlausibleEvents } from 'types';
 
 const OriginDynamicRoutes: NextPage = () => {
-  const { origin } = useOrigin();
-  const slug = origin?.slug || '';
+  const { slug, origin } = useOrigin();
   const [newRouteValue, setNewRouteValue] = useState('');
   const [updateRouteValue, setUpdateRouteValue] = useState('');
   const [routes, setRoutes] = useState<DynamicRouteWithMatches[]>([]);
@@ -140,10 +138,6 @@ const OriginDynamicRoutes: NextPage = () => {
     })();
   }, [slug]);
 
-  if (loading) {
-    return <LoadingTemplate />;
-  }
-
   const formProps = {
     error,
     submittedText,
@@ -172,7 +166,9 @@ const OriginDynamicRoutes: NextPage = () => {
               </p>
             ))
           ) : (
-            <p className="text-white">No routes. Add your first dynamic route below.</p>
+            <p className="text-white">
+              {loading ? 'Loading routes...' : 'No routes. Add your first dynamic route below.'}
+            </p>
           )}
           <p className="mt-4 text-sm">
             All routes matching these patterns will be grouped into single endpoints by their HTTP

@@ -4,7 +4,6 @@ import { signIn, useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
-import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { AccountForm } from 'components/shared/AccountForm';
 import { Button } from 'components/shared/Button';
@@ -28,11 +27,7 @@ export const withAuth = <T extends Record<string, unknown>>(
     const { user, accountComplete } = useAccount();
     const [welcomePassed, setWelcomePassed] = useState(false);
 
-    if (!user) {
-      return <LoadingTemplate />;
-    }
-
-    if (!accountComplete) {
+    if (user && !accountComplete) {
       const headProps = { title: 'Welcome 👋' };
 
       if (!welcomePassed) {

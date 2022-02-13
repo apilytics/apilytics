@@ -2,7 +2,6 @@ import { signOut } from 'next-auth/react';
 import React, { useEffect } from 'react';
 import type { NextPage } from 'next';
 
-import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
 import { useAccount } from 'hooks/useAccount';
@@ -19,10 +18,6 @@ const Logout: NextPage = () => {
       signOut({ callbackUrl: staticRoutes.logout });
     }
   }, [plausible, user]);
-
-  if (user) {
-    return <LoadingTemplate />;
-  }
 
   return (
     <MainTemplate headProps={{ title: 'Logout' }}>

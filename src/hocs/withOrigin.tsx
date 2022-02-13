@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
@@ -11,31 +10,27 @@ export const withOrigin = <T extends Record<string, unknown>>(
   PageComponent: NextPage<T>,
 ): NextPage<T> => {
   const WithOrigin: NextPage<T> = (pageProps: T) => {
-    const { query } = useRouter();
-    const slug = query.slug;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const { origin, setOrigin } = useOrigin();
+    const { slug, origin, setOrigin } = useOrigin();
 
     useEffect(() => {
-      if (typeof slug === 'string') {
-        (async (): Promise<void> => {
-          try {
-            const res = await fetch(dynamicApiRoutes.origin({ slug }));
+      (async (): Promise<void> => {
+        try {
+          const res = await fetch(dynamicApiRoutes.origin({ slug }));
 
-            if (res.status === 200) {
-              const { data } = await res.json();
-              setOrigin(data);
-            } else {
-              setError(true);
-            }
-          } catch {
+          if (res.status === 200) {
+            const { data } = await res.json();
+            setOrigin(data);
+          } else {
             setError(true);
-          } finally {
-            setLoading(false);
           }
-        })();
-      }
+        } catch {
+          setError(true);
+        } finally {
+          setLoading(false);
+        }
+      })();
     }, [setOrigin, slug]);
 
     if (error) {
