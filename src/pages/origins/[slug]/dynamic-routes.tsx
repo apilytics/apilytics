@@ -225,4 +225,4 @@ const OriginDynamicRoutes: NextPage = () => {
   );
 };
 
-export default withOrigin(withAuth(OriginDynamicRoutes));
+export default withAuth(withOrigin(OriginDynamicRoutes));

@@ -23,7 +23,7 @@ import { useDashboardQuery } from 'hooks/useDashboardQuery';
 import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { MODAL_NAMES } from 'utils/constants';
-import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
+import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 
 const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
 
@@ -46,45 +46,47 @@ const Origin: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { handleOpenModal, handleCloseModal } = useModal();
-  const slug = origin?.slug || '';
+  const { slug } = router.query;
   const apiKey = origin?.apiKey || '';
   const maxWidth = 'max-w-6xl';
 
-  useDashboardQuery(dynamicRoutes.origin({ slug }));
+  useDashboardQuery();
 
   useEffect(() => {
-    (async (): Promise<void> => {
-      const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
-      const to = dayjs().format(REQUEST_TIME_FORMAT);
+    if (typeof slug === 'string') {
+      (async (): Promise<void> => {
+        const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
+        const to = dayjs().format(REQUEST_TIME_FORMAT);
 
-      try {
-        const res = await fetch(
-          dynamicApiRoutes.originMetrics({
-            slug,
-            from,
-            to,
-            method,
-            endpoint,
-            statusCode,
-            browser,
-            os,
-            device,
-          }),
-        );
+        try {
+          const res = await fetch(
+            dynamicApiRoutes.originMetrics({
+              slug,
+              from,
+              to,
+              method,
+              endpoint,
+              statusCode,
+              browser,
+              os,
+              device,
+            }),
+          );
 
-        const { data } = await res.json();
+          const { data } = await res.json();
 
-        if (res.status === 200) {
-          setMetrics(data);
-        } else {
+          if (res.status === 200) {
+            setMetrics(data);
+          } else {
+            setError(true);
+          }
+        } catch {
           setError(true);
+        } finally {
+          setLoading(false);
         }
-      } catch {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    })();
+      })();
+    }
   }, [endpoint, method, setMetrics, slug, statusCode, timeFrame, browser, os, device]);
 
   useEffect(() => {
@@ -158,4 +160,4 @@ const Origin: NextPage = () => {
   );
 };
 
-export default withOrigin(withAuth(Origin));
+export default withAuth(withOrigin(Origin));

@@ -7,9 +7,8 @@ import { useOrigin } from 'hooks/useOrigin';
 import { TIME_FRAME_OPTIONS } from 'utils/constants';
 import type { TimeFrame } from 'types';
 
-export const useDashboardQuery = (url?: string): void => {
-  const { replace, pathname: _pathname, query: _query } = useRouter();
-  const pathname = url ?? _pathname;
+export const useDashboardQuery = (): void => {
+  const { replace, pathname, query: _query } = useRouter();
 
   const {
     setTimeFrame,
@@ -73,6 +72,10 @@ export const useDashboardQuery = (url?: string): void => {
   // Update the current URL parameters with the selected filters on the dashboard.
   useEffect(() => {
     const query: ParsedUrlQuery = {};
+
+    if (_query.slug) {
+      query.slug = _query.slug;
+    }
 
     if (_query.timeFrame) {
       query.timeFrame = _query.timeFrame;
