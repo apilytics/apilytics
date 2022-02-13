@@ -66,6 +66,22 @@ paths:
                   type: string
                   description: Value of the `User-Agent` header from the user's HTTP request.
                   example: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36
+                cpuUsage:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  description: System's CPU load percentage during the request handling.
+                  example: 0.97
+                memoryUsage:
+                  type: integer
+                  minimum: 0
+                  description: System's memory usage during the request handling in bytes.
+                  example: 2147483648
+                memoryTotal:
+                  type: integer
+                  minimum: 0
+                  description: System's total amount of memory in bytes.
+                  example: 4294967296
                 timeMillis:
                   type: integer
                   description: The amount of time in milliseconds it took to respond to the user's request.
