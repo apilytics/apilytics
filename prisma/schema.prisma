@@ -96,6 +96,9 @@ model Metric {
   browser      String?
   os           String?
   device       String?
+  cpuUsage     Float?  @map("cpu_usage")
+  memoryUsage  BigInt? @map("memory_usage")
+  memoryTotal  BigInt? @map("memory_total")
 
   apilyticsVersion String? @map("apilytics_version")
 

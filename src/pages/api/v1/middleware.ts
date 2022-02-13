@@ -23,9 +23,33 @@ type OptionalFields = {
   requestSize?: number;
   responseSize?: number;
   userAgent?: string;
+  cpuUsage?: number;
+  memoryUsage?: number;
+  memoryTotal?: number;
 };
 
 type PostBody = RequiredFields & OptionalFields;
+
+type Limits =
+  | { min: number; max: number }
+  | { min: number; max?: never }
+  | { min?: never; max: number };
+
+function limitValue(value: undefined, limits: Limits): undefined;
+function limitValue(value: number, limits: Limits): number;
+function limitValue(value: number | undefined, limits: Limits): number | undefined;
+function limitValue(value: number | undefined, { min, max }: Limits): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (min !== undefined) {
+    value = Math.max(value, min);
+  }
+  if (max !== undefined) {
+    value = Math.min(value, max);
+  }
+  return value;
+}
 
 const handlePost: ApiHandler = async (req, res) => {
   const apiKey = req.headers['x-api-key'];
@@ -69,6 +93,9 @@ const handlePost: ApiHandler = async (req, res) => {
     requestSize: _requestSize,
     responseSize,
     userAgent: rawUserAgent,
+    cpuUsage,
+    memoryUsage,
+    memoryTotal,
   } = req.body as PostBody;
 
   const requestSize =
@@ -104,12 +131,15 @@ const handlePost: ApiHandler = async (req, res) => {
         queryParams,
         method,
         statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
-        timeMillis,
-        requestSize,
-        responseSize,
+        timeMillis: limitValue(timeMillis, { min: 0 }),
+        requestSize: limitValue(requestSize, { min: 0 }),
+        responseSize: limitValue(responseSize, { min: 0 }),
         browser,
         os,
         device,
+        cpuUsage: limitValue(cpuUsage, { min: 0, max: 1 }),
+        memoryUsage: limitValue(memoryUsage, { min: 0 }),
+        memoryTotal: limitValue(memoryTotal, { min: 0 }),
         apilyticsVersion,
       },
     });
