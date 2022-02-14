@@ -157,11 +157,6 @@
   @apply bg-base-100;
 }
 
-/* Fix issue of recharts wrapper not resizing correctly when changing screen size: https://stackoverflow.com/a/69200646/10504286 */
-.recharts-wrapper {
-  position: absolute !important;
-}
-
 .btn:not(.btn-sm),
 .select:not(.select-sm),
 .input:not(.select-sm) {
