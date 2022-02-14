@@ -232,6 +232,7 @@ SELECT
 
 ${fromClause}
 ${whereClause}
+AND metrics.browser IS NOT NULL
 
 GROUP BY metrics.browser;`;
 
@@ -242,6 +243,7 @@ SELECT
 
 ${fromClause}
 ${whereClause}
+AND metrics.os IS NOT NULL
 
 GROUP BY metrics.os;`;
 
@@ -252,6 +254,7 @@ SELECT
 
 ${fromClause}
 ${whereClause}
+AND metrics.device IS NOT NULL
 
 GROUP BY metrics.device;`;
 
