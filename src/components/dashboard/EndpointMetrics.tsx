@@ -62,7 +62,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
 
   const truncatedData = data.slice(0, 10);
   const getHeight = (dataLength: number): number => 100 + dataLength * 35;
-  const height = getHeight(data.length);
+  const height = getHeight(modalData.length);
   const truncatedHeight = getHeight(truncatedData.length);
 
   const handleLabelClick = (data: EndpointData): void => {

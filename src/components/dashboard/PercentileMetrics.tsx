@@ -15,33 +15,33 @@ const METRIC_TYPES = {
 const formatMilliseconds = (value?: string | number): string => {
   if (typeof value === 'number') {
     if (value > 1_000) {
-      return `${(value / 1_000).toFixed(1)}s`;
+      return `${(value / 1_000).toFixed(1)} s`;
     }
 
-    return `${value ?? 0}`;
+    return `${value ?? 0} ms`;
   }
 
-  return '0';
+  return '0 ms';
 };
 
 const formatBytes = (value?: string | number): string => {
   if (typeof value === 'number') {
     if (value > 1_000_000_000) {
-      return `${(value / 1_000_000_000).toFixed(1)}GB`;
+      return `${(value / 1_000_000_000).toFixed(1)} GB`;
     }
 
     if (value > 1_000_000) {
-      return `${(value / 1_000_000).toFixed(1)}MB`;
+      return `${(value / 1_000_000).toFixed(1)} MB`;
     }
 
     if (value > 1_000) {
-      return `${(value / 1_000).toFixed(1)}kB`;
+      return `${(value / 1_000).toFixed(1)} kB`;
     }
 
-    return `${value ?? 0}`;
+    return `${value ?? 0} b`;
   }
 
-  return '0';
+  return '0 b';
 };
 
 interface Props {
