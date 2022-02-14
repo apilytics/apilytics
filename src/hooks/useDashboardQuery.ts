@@ -7,8 +7,8 @@ import { useOrigin } from 'hooks/useOrigin';
 import { TIME_FRAME_OPTIONS } from 'utils/constants';
 import type { TimeFrame } from 'types';
 
-export const useDashboardQuery = (): void => {
-  const { replace, pathname, query: _query } = useRouter();
+export const useDashboardQuery = (requireSlug?: boolean): void => {
+  const { pathname, query, replace } = useRouter();
 
   const {
     setTimeFrame,
@@ -29,7 +29,7 @@ export const useDashboardQuery = (): void => {
   // Initialize filters from existing URL parameters.
   useEffect(() => {
     const { timeFrame, method, endpoint, statusCode, browser, os, device } =
-      _query as ParsedUrlQuery;
+      query as ParsedUrlQuery;
 
     if (timeFrame && typeof timeFrame === 'string') {
       const _timeFrame = Object.entries(TIME_FRAME_OPTIONS).find(
@@ -67,47 +67,54 @@ export const useDashboardQuery = (): void => {
 
     // Ignore: We only want to run this effect once the query changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [_query]);
+  }, [query]);
 
   // Update the current URL parameters with the selected filters on the dashboard.
   useEffect(() => {
-    const query: ParsedUrlQuery = {};
-
-    if (_query.slug) {
-      query.slug = _query.slug;
-    }
-
-    if (_query.timeFrame) {
-      query.timeFrame = _query.timeFrame;
-    }
-
     if (selectedMethod) {
       query.method = selectedMethod;
+    } else {
+      delete query.method;
     }
 
     if (selectedEndpoint) {
       query.endpoint = selectedEndpoint;
+    } else {
+      delete query.endpoint;
     }
 
     if (selectedStatusCode) {
       query.statusCode = String(selectedStatusCode);
+    } else {
+      delete query.statusCode;
     }
 
     if (selectedBrowser) {
       query.browser = selectedBrowser;
+    } else {
+      delete query.browser;
     }
 
     if (selectedOs) {
       query.os = selectedOs;
+    } else {
+      delete query.os;
     }
 
     if (selectedDevice) {
       query.device = selectedDevice;
+    } else {
+      delete query.device;
     }
 
-    replace({ pathname, query }, undefined, { shallow: true });
+    // Prevent redirection when the query parameters have not yet been loaded.
+    if (requireSlug && !query.slug) {
+      return;
+    } else {
+      replace({ pathname, query });
+    }
 
-    // Ignore: The `replace` method must be left out to prevent an infinite loop.
+    // Ignore: The router object must be left out to prevent an infinite loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedEndpoint,

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { createContext, useState } from 'react';
 import type { Origin } from '@prisma/client';
 
@@ -7,6 +8,13 @@ import type { OriginContextType, OriginMetrics, TimeFrame } from 'types';
 export const OriginContext = createContext<OriginContextType | null>(null);
 
 export const OriginProvider: React.FC = ({ children }) => {
+  const {
+    query: { slug: _slug, showApiKey: _showApiKey },
+  } = useRouter();
+
+  const slug = String(_slug ?? '');
+  const showApiKey = String(_showApiKey ?? '');
+
   const [timeFrame, setTimeFrame] = useState<TimeFrame>(() => WEEK_DAYS);
   const [origin, setOrigin] = useState<Origin | null>(null);
   const [metrics, setMetrics] = useState<OriginMetrics | null>(null);
@@ -18,6 +26,8 @@ export const OriginProvider: React.FC = ({ children }) => {
   const [selectedDevice, setSelectedDevice] = useState<string>();
 
   const value = {
+    slug,
+    showApiKey,
     origin,
     setOrigin,
     metrics,

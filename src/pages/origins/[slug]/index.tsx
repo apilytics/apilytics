@@ -12,9 +12,9 @@ import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
 import { UserAgentMetrics } from 'components/dashboard/UserAgentMetrics';
 import { ErrorTemplate } from 'components/layout/ErrorTemplate';
 import { Layout } from 'components/layout/Layout';
-import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { NotFoundTemplate } from 'components/layout/NotFoundTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
+import { BackButton } from 'components/shared/BackButton';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
@@ -29,6 +29,8 @@ const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
 
 const Origin: NextPage = () => {
   const {
+    slug,
+    showApiKey,
     origin,
     metrics,
     setMetrics,
@@ -41,19 +43,17 @@ const Origin: NextPage = () => {
     selectedDevice: device = '',
   } = useOrigin();
 
-  const router = useRouter();
-  const { showApiKey } = router.query;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { handleOpenModal, handleCloseModal } = useModal();
-  const { slug } = router.query;
+  const { pathname, query, replace } = useRouter();
   const apiKey = origin?.apiKey || '';
   const maxWidth = 'max-w-6xl';
 
-  useDashboardQuery();
+  useDashboardQuery(true);
 
   useEffect(() => {
-    if (typeof slug === 'string') {
+    if (slug) {
       (async (): Promise<void> => {
         const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
         const to = dayjs().format(REQUEST_TIME_FORMAT);
@@ -92,72 +92,150 @@ const Origin: NextPage = () => {
   useEffect(() => {
     if (showApiKey) {
       handleOpenModal(MODAL_NAMES.apiKey);
+      delete query.showApiKey;
+      replace({ pathname, query });
     }
-  }, [handleOpenModal, router, showApiKey, slug]);
+  }, [handleOpenModal, pathname, query, replace, showApiKey]);
 
   if (loading) {
-    return <LoadingTemplate />;
-  }
-
-  if (!origin || !metrics) {
-    return <NotFoundTemplate />;
+    return (
+      <Layout
+        headProps={{ title: 'Loading...' }}
+        headerProps={{ maxWidth }}
+        footerProps={{ maxWidth }}
+      >
+        <div className="container flex max-w-6xl grow flex-col py-4">
+          <BackButton
+            linkTo={staticRoutes.origins}
+            text="Origins"
+            className="btn-sm hidden sm:flex"
+          />
+          <div className="my-4 flex animate-pulse flex-wrap gap-2">
+            <div className="h-4 w-36 rounded-lg bg-base-100" />
+            <div className="ml-auto h-4 w-24 rounded-lg bg-base-100" />
+            <div className="h-4 w-4 rounded-lg bg-base-100" />
+          </div>
+          <div className="flex animate-pulse flex-col rounded-lg border-2 border-base-content">
+            <div className="flex">
+              <div className="flex flex-col gap-2 p-4">
+                <div className="h-4 w-24 rounded-lg bg-base-100" />
+                <div className="h-2 w-16 rounded-lg bg-base-100" />
+              </div>
+              <div className="flex flex-col gap-2 p-4">
+                <div className="h-4 w-24 rounded-lg bg-base-100" />
+                <div className="h-2 w-16 rounded-lg bg-base-100" />
+              </div>
+              <div className="flex flex-col gap-2 p-4">
+                <div className="h-4 w-24 rounded-lg bg-base-100" />
+                <div className="h-2 w-16 rounded-lg bg-base-100" />
+              </div>
+              <div className="ml-auto flex gap-2 p-4">
+                <div className="h-4 w-16 rounded-lg bg-base-100" />
+                <div className="h-4 w-16 rounded-lg bg-base-100" />
+                <div className="h-4 w-16 rounded-lg bg-base-100" />
+              </div>
+            </div>
+            <div className="flex h-96 items-end justify-evenly gap-2 p-4">
+              <div className="h-1/6 w-full rounded-lg bg-base-100" />
+              <div className="h-2/6 w-full rounded-lg bg-base-100" />
+              <div className="h-1/6 w-full rounded-lg bg-base-100" />
+              <div className="h-2/6 w-full rounded-lg bg-base-100" />
+              <div className="h-3/6 w-full rounded-lg bg-base-100" />
+              <div className="h-4/6 w-full rounded-lg bg-base-100" />
+              <div className="h-3/6 w-full rounded-lg bg-base-100" />
+              <div className="h-2/6 w-full rounded-lg bg-base-100" />
+              <div className="h-3/6 w-full rounded-lg bg-base-100" />
+              <div className="h-4/6 w-full rounded-lg bg-base-100" />
+              <div className="h-5/6 w-full rounded-lg bg-base-100" />
+              <div className="h-full w-full rounded-lg bg-base-100" />
+            </div>
+          </div>
+          <div className="mt-4 flex h-96 animate-pulse flex-col rounded-lg border-2 border-base-content">
+            <div className="flex flex-wrap p-4">
+              <div className="mr-auto h-4 w-24 rounded-lg bg-base-100" />
+              <div className="flex flex-wrap gap-2">
+                <div className="h-4 w-14 rounded-lg bg-base-100" />
+                <div className="h-4 w-14 rounded-lg bg-base-100" />
+              </div>
+            </div>
+            <div className="flex grow flex-col justify-evenly gap-2 p-4">
+              <div className="h-full w-full rounded-lg bg-base-100" />
+              <div className="h-full w-5/6 rounded-lg bg-base-100" />
+              <div className="h-full w-4/6 rounded-lg bg-base-100" />
+              <div className="h-full w-3/6 rounded-lg bg-base-100" />
+              <div className="h-full w-2/6 rounded-lg bg-base-100" />
+              <div className="h-full w-1/6 rounded-lg bg-base-100" />
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
   }
 
   if (error) {
     return <ErrorTemplate />;
   }
 
-  const {
-    generalData,
-    timeFrameData,
-    endpointData,
-    percentileData,
-    statusCodeData,
-    userAgentData,
-  } = metrics;
+  if (!origin || !metrics) {
+    return <NotFoundTemplate />;
+  } else {
+    const {
+      generalData,
+      timeFrameData,
+      endpointData,
+      percentileData,
+      statusCodeData,
+      userAgentData,
+    } = metrics;
 
-  return (
-    <Layout
-      headProps={{ title: origin.name }}
-      headerProps={{ maxWidth }}
-      footerProps={{ maxWidth }}
-    >
-      <div className="container flex max-w-6xl grow flex-col py-4">
-        <DashboardOptions origin={origin} apilyticsPackage={metrics.apilyticsPackage} />
-        <TimeFrameMetrics {...generalData} data={timeFrameData} />
-        <div className="mt-4">
-          <EndpointMetrics data={endpointData} />
-        </div>
-        <div className="mt-4">
-          <PercentileMetrics data={percentileData} />
-        </div>
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <StatusCodeMetrics data={statusCodeData} />
-          <UserAgentMetrics data={userAgentData} />
-        </div>
-        <p className="mt-4">
-          See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
-          metrics. Help us improve this dashboard by{' '}
-          <Link href={staticRoutes.contact}>
-            <a>giving us feedback</a>
-          </Link>
-          .
-        </p>
-        <Modal name={MODAL_NAMES.apiKey}>
-          <div className="flex items-center justify-between p-2">
-            <h6 className="px-2 text-white">Almost ready!</h6>
-            <ModalCloseButton onClick={handleCloseModal} />
+    return (
+      <Layout
+        headProps={{ title: origin.name }}
+        headerProps={{ maxWidth }}
+        footerProps={{ maxWidth }}
+      >
+        <div className="container flex max-w-6xl grow flex-col py-4">
+          <BackButton
+            linkTo={staticRoutes.origins}
+            text="Origins"
+            className="btn-sm hidden sm:flex"
+          />
+          <DashboardOptions origin={origin} apilyticsPackage={metrics.apilyticsPackage} />
+          <TimeFrameMetrics {...generalData} data={timeFrameData} />
+          <div className="mt-4">
+            <EndpointMetrics data={endpointData} />
           </div>
-          <div className="px-4">
-            <p>Finish configuration by setting up your API key.</p>
+          <div className="mt-4">
+            <PercentileMetrics data={percentileData} />
           </div>
-          <div className="p-4">
-            <ApiKeyField value={apiKey} />
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <StatusCodeMetrics data={statusCodeData} />
+            <UserAgentMetrics data={userAgentData} />
           </div>
-        </Modal>
-      </div>
-    </Layout>
-  );
+          <p className="mt-4">
+            See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
+            metrics. Help us improve this dashboard by{' '}
+            <Link href={staticRoutes.contact}>
+              <a>giving us feedback</a>
+            </Link>
+            .
+          </p>
+          <Modal name={MODAL_NAMES.apiKey}>
+            <div className="flex items-center justify-between p-2">
+              <h6 className="px-2 text-white">Almost ready!</h6>
+              <ModalCloseButton onClick={handleCloseModal} />
+            </div>
+            <div className="px-4">
+              <p>Finish configuration by setting up your API key.</p>
+            </div>
+            <div className="p-4">
+              <ApiKeyField value={apiKey} />
+            </div>
+          </Modal>
+        </div>
+      </Layout>
+    );
+  }
 };
 
 export default withAuth(withOrigin(Origin));
