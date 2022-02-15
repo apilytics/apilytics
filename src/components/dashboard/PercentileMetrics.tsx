@@ -10,6 +10,9 @@ const METRIC_TYPES = {
   responseTimes: 'responseTimes',
   requestSizes: 'requestSizes',
   responseSizes: 'responseSizes',
+  cpuUsage: 'cpuUsage',
+  memoryUsage: 'memoryUsage',
+  memoryTotal: 'memoryTotal',
 } as const;
 
 const formatMilliseconds = (value?: string | number): string => {
@@ -38,10 +41,10 @@ const formatBytes = (value?: string | number): string => {
       return `${(value / 1_000).toFixed(1)} kB`;
     }
 
-    return `${value ?? 0} b`;
+    return `${value ?? 0} B`;
   }
 
-  return '0 b';
+  return '0 B';
 };
 
 interface Props {
@@ -71,6 +74,24 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
       dataKey: 'responseSize',
       label: 'Response sizes',
       emptyLabel: 'No response sizes available.',
+    },
+    cpuUsage: {
+      formatter: (value?: string | number): string => `${value ?? 0} %`,
+      dataKey: 'cpuUsage',
+      label: 'CPU usage',
+      emptyLabel: 'No CPU usage available.',
+    },
+    memoryUsage: {
+      formatter: formatBytes,
+      dataKey: 'memoryUsage',
+      label: 'Memory usage',
+      emptyLabel: 'No memory usage available.',
+    },
+    memoryTotal: {
+      formatter: formatBytes,
+      dataKey: 'memoryTotal',
+      label: 'Total memory',
+      emptyLabel: 'No total memory available.',
     },
   };
 
@@ -102,33 +123,18 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
       <div className="flex flex-wrap gap-4 px-2">
         <p className="mr-auto text-white">Performance metrics</p>
         <div className="tabs">
-          <p
-            className={clsx(
-              'tab tab-bordered',
-              metricType === METRIC_TYPES.responseTimes && 'tab-active',
-            )}
-            onClick={(): void => setMetricType(METRIC_TYPES.responseTimes)}
-          >
-            Response times
-          </p>
-          <p
-            className={clsx(
-              'tab tab-bordered',
-              metricType === METRIC_TYPES.requestSizes && 'tab-active',
-            )}
-            onClick={(): void => setMetricType(METRIC_TYPES.requestSizes)}
-          >
-            Request sizes
-          </p>
-          <p
-            className={clsx(
-              'tab tab-bordered',
-              metricType === METRIC_TYPES.responseSizes && 'tab-active',
-            )}
-            onClick={(): void => setMetricType(METRIC_TYPES.responseSizes)}
-          >
-            Response sizes
-          </p>
+          {Object.values(METRIC_TYPES).map((type) => (
+            <p
+              className={clsx(
+                'tab tab-bordered',
+                metricType === METRIC_TYPES[type] && 'tab-active',
+              )}
+              onClick={(): void => setMetricType(METRIC_TYPES[type])}
+              key={type}
+            >
+              {attributes[type].label}
+            </p>
+          ))}
         </div>
       </div>
       <div className="mt-4">{renderNoMetrics || renderMetrics}</div>

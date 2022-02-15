@@ -56,6 +56,8 @@ export const MOCK_PATHS = [
   '/blogs/789',
 ];
 
+export const MOCK_TOTAL_MEMORY = 4_000_000_000; // 4 GB.
+
 export const MOCK_BROWSERS = ['Chrome', 'Firefox', 'Safari', 'Edge', 'Internet Explorer', 'Opera'];
 
 export const MOCK_OPERATING_SYSTEMS = [

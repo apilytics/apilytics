@@ -55,6 +55,7 @@ const Origin: NextPage = () => {
   useEffect(() => {
     if (slug) {
       (async (): Promise<void> => {
+        setLoading(true);
         const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
         const to = dayjs().format(REQUEST_TIME_FORMAT);
 
