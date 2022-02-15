@@ -105,11 +105,14 @@ export const getMockMetrics = ({
 
   let mockMetrics = initialMockMetrics;
 
-  if (method && endpoint) {
-    mockMetrics = mockMetrics.filter((metric) => {
-      const _endpoint = getEndpointFromPath(metric.path);
-      return metric.method === method && _endpoint === endpoint;
-    });
+  if (method) {
+    mockMetrics = mockMetrics.filter((metric) => metric.method === method);
+  }
+
+  if (endpoint) {
+    mockMetrics = mockMetrics.filter(
+      (metric) => getEndpointFromPath(endpoint) === getEndpointFromPath(metric.path),
+    );
   }
 
   if (statusCode) {
@@ -151,7 +154,7 @@ export const getMockMetrics = ({
 
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
   const totalErrors = timeFrameData.reduce((prev, curr) => prev + curr.errors, 0);
-  const errorRate = Number((totalErrors / totalRequests).toFixed(2));
+  const errorRate = Number((totalErrors / totalRequests || 0).toFixed(2));
 
   const totalRequestsGrowth = Number(Math.random().toFixed(2));
   const totalErrorsGrowth = Number(Math.random().toFixed(2));
@@ -171,13 +174,13 @@ export const getMockMetrics = ({
       .filter((data) => data.path === path && data.method === method)
       .reduce((prev, curr) => prev + curr.requests, 0);
 
-    const endpoint = getEndpointFromPath(path);
-    const methodAndEndpoint = `${method} ${endpoint}`;
+    const _endpoint = endpoint ? path : getEndpointFromPath(path);
+    const methodAndEndpoint = `${method} ${_endpoint}`;
     const responseTimeAvg = getRandomNumberBetween(20, 200);
 
     return {
       totalRequests,
-      endpoint,
+      endpoint: _endpoint,
       method,
       methodAndEndpoint,
       responseTimeAvg,
