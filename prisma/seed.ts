@@ -56,6 +56,8 @@ const main = async (): Promise<void> => {
     },
   });
 
+  const metricsBatch = [];
+
   // Generate random data for each hour of the past year.
   // Each hour of the year will have 10-20 random data points.
   for (let hourIndex = 0; hourIndex < 365 * 24; hourIndex++) {
@@ -96,7 +98,13 @@ const main = async (): Promise<void> => {
         };
       });
 
-    await prisma.metric.createMany({ data: metricsForHour });
+    // Create metrics in batches of max 10 000 at a time.
+    if (metricsBatch.length === 10_000 || hourIndex === 365 * 24 - 1) {
+      await prisma.metric.createMany({ data: metricsBatch });
+      metricsBatch.splice(0, metricsBatch.length);
+    }
+
+    metricsBatch.push(...metricsForHour);
     const percentage = (hourIndex / (365 * 24)) * 100;
 
     if (percentage % 10 === 0) {
