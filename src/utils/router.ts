@@ -47,6 +47,7 @@ export const staticRoutes = {
   openSource: '/open-source',
   easeOfUse: '/ease-of-use',
   changelog: '/changelog',
+  forStartups: '/for-startups',
   ...DOCS_ROUTES,
   ...BLOG_ROUTES,
   ...COMMUNITY_ROUTES,
@@ -59,6 +60,7 @@ export const INDEXABLE_CONTENT_ROUTES = [
   staticRoutes.openSource,
   staticRoutes.easeOfUse,
   staticRoutes.changelog,
+  staticRoutes.forStartups,
 ];
 
 export const INDEXABLE_DOCS_ROUTES = Object.values(DOCS_ROUTES);
