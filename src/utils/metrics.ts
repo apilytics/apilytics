@@ -9,6 +9,7 @@ import {
   MOCK_DYNAMIC_ROUTES,
   MOCK_OPERATING_SYSTEMS,
   MOCK_PATHS,
+  MOCK_TOTAL_MEMORY,
   PERCENTILE_DATA_KEYS,
   THREE_MONTHS_DAYS,
 } from 'utils/constants';
@@ -64,6 +65,9 @@ const initialMockMetrics = MOCK_PATHS.map((path) => {
     browser: getRandomArrayItem(MOCK_BROWSERS),
     os: getRandomArrayItem(MOCK_OPERATING_SYSTEMS),
     device: getRandomArrayItem(DEVICES),
+    cpuUsage: getRandomNumberBetween(0, 100),
+    memoryUsage: getRandomNumberBetween(0, 100),
+    memoryTotal: MOCK_TOTAL_MEMORY,
   };
 });
 
@@ -101,11 +105,14 @@ export const getMockMetrics = ({
 
   let mockMetrics = initialMockMetrics;
 
-  if (method && endpoint) {
-    mockMetrics = mockMetrics.filter((metric) => {
-      const _endpoint = getEndpointFromPath(metric.path);
-      return metric.method === method && _endpoint === endpoint;
-    });
+  if (method) {
+    mockMetrics = mockMetrics.filter((metric) => metric.method === method);
+  }
+
+  if (endpoint) {
+    mockMetrics = mockMetrics.filter(
+      (metric) => getEndpointFromPath(endpoint) === getEndpointFromPath(metric.path),
+    );
   }
 
   if (statusCode) {
@@ -147,7 +154,7 @@ export const getMockMetrics = ({
 
   const totalRequests = timeFrameData.reduce((prev, curr) => prev + curr.requests, 0);
   const totalErrors = timeFrameData.reduce((prev, curr) => prev + curr.errors, 0);
-  const errorRate = Number((totalErrors / totalRequests).toFixed(2));
+  const errorRate = Number((totalErrors / totalRequests || 0).toFixed(2));
 
   const totalRequestsGrowth = Number(Math.random().toFixed(2));
   const totalErrorsGrowth = Number(Math.random().toFixed(2));
@@ -167,13 +174,13 @@ export const getMockMetrics = ({
       .filter((data) => data.path === path && data.method === method)
       .reduce((prev, curr) => prev + curr.requests, 0);
 
-    const endpoint = getEndpointFromPath(path);
-    const methodAndEndpoint = `${method} ${endpoint}`;
+    const _endpoint = endpoint ? path : getEndpointFromPath(path);
+    const methodAndEndpoint = `${method} ${_endpoint}`;
     const responseTimeAvg = getRandomNumberBetween(20, 200);
 
     return {
       totalRequests,
-      endpoint,
+      endpoint: _endpoint,
       method,
       methodAndEndpoint,
       responseTimeAvg,
@@ -196,6 +203,13 @@ export const getMockMetrics = ({
   const responseTimeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
   const requestSizeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
   const responseSizeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
+  const cpuUsageAvg = timeFrameData.length ? getRandomNumberBetween(0, 100) : 0;
+
+  const memoryUsageAvg = timeFrameData.length
+    ? getRandomNumberBetween(1_000_000, 2_000_000_000)
+    : 0;
+
+  const memoryTotalAvg = timeFrameData.length ? MOCK_TOTAL_MEMORY : 0;
 
   const responseTimeData = {
     avg: responseTimeAvg,
@@ -224,11 +238,41 @@ export const getMockMetrics = ({
     p99: Number((responseSizeAvg + responseSizeAvg * 0.49).toFixed()),
   };
 
+  const cpuUsage = {
+    avg: cpuUsageAvg,
+    p50: cpuUsageAvg,
+    p75: Number((cpuUsageAvg + cpuUsageAvg * 0.25).toFixed()),
+    p90: Number((cpuUsageAvg + cpuUsageAvg * 0.4).toFixed()),
+    p95: Number((cpuUsageAvg + cpuUsageAvg * 0.45).toFixed()),
+    p99: Number((cpuUsageAvg + cpuUsageAvg * 0.49).toFixed()),
+  };
+
+  const memoryUsage = {
+    avg: memoryUsageAvg,
+    p50: memoryUsageAvg,
+    p75: Number((memoryUsageAvg + memoryUsageAvg * 0.25).toFixed()),
+    p90: Number((memoryUsageAvg + memoryUsageAvg * 0.4).toFixed()),
+    p95: Number((memoryUsageAvg + memoryUsageAvg * 0.45).toFixed()),
+    p99: Number((memoryUsageAvg + memoryUsageAvg * 0.49).toFixed()),
+  };
+
+  const memoryTotal = {
+    avg: memoryTotalAvg,
+    p50: memoryTotalAvg,
+    p75: Number((memoryTotalAvg + memoryTotalAvg * 0.25).toFixed()),
+    p90: Number((memoryTotalAvg + memoryTotalAvg * 0.4).toFixed()),
+    p95: Number((memoryTotalAvg + memoryTotalAvg * 0.45).toFixed()),
+    p99: Number((memoryTotalAvg + memoryTotalAvg * 0.49).toFixed()),
+  };
+
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
     key,
     responseTime: responseTimeData[key],
     requestSize: requestSizeData[key],
     responseSize: responseSizeData[key],
+    cpuUsage: cpuUsage[key],
+    memoryUsage: memoryUsage[key],
+    memoryTotal: memoryTotal[key],
   }));
 
   const uniqueStatusCodesWithCounts: Record<number, number> = {};

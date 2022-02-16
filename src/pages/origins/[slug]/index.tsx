@@ -55,6 +55,7 @@ const Origin: NextPage = () => {
   useEffect(() => {
     if (slug) {
       (async (): Promise<void> => {
+        setLoading(true);
         const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
         const to = dayjs().format(REQUEST_TIME_FORMAT);
 
@@ -110,11 +111,15 @@ const Origin: NextPage = () => {
             text="Origins"
             className="btn-sm hidden sm:flex"
           />
-          <div className="my-4 flex animate-pulse flex-wrap gap-2">
-            <div className="h-4 w-36 rounded-lg bg-base-100" />
-            <div className="ml-auto h-4 w-24 rounded-lg bg-base-100" />
-            <div className="h-4 w-4 rounded-lg bg-base-100" />
-          </div>
+          {origin ? (
+            <DashboardOptions origin={origin} />
+          ) : (
+            <div className="my-4 flex animate-pulse flex-wrap gap-2">
+              <div className="h-4 w-36 rounded-lg bg-base-100" />
+              <div className="ml-auto h-4 w-24 rounded-lg bg-base-100" />
+              <div className="h-4 w-4 rounded-lg bg-base-100" />
+            </div>
+          )}
           <div className="flex animate-pulse flex-col rounded-lg border-2 border-base-content">
             <div className="flex">
               <div className="flex flex-col gap-2 p-4">

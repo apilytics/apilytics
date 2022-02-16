@@ -65,16 +65,19 @@ export const UserAgentMetrics: React.FC<Props> = ({
     browsers: {
       data: browserData.sort(sortData),
       dataKey: 'browser',
+      label: 'Browsers',
       emptyLabel: 'No browsers available.',
     },
     os: {
       data: osData.sort(sortData),
       dataKey: 'os',
+      label: 'OS',
       emptyLabel: 'No operating systems available.',
     },
     devices: {
       data: deviceData.sort(sortData),
       dataKey: 'device',
+      label: 'Devices',
       emptyLabel: 'No devices available.',
     },
   };
@@ -173,30 +176,18 @@ export const UserAgentMetrics: React.FC<Props> = ({
       <div className="flex flex-wrap gap-4 px-2">
         <p className="mr-auto text-white">User agents</p>
         <div className="tabs">
-          <p
-            className={clsx(
-              'tab tab-bordered',
-              metricType === METRIC_TYPES.browsers && 'tab-active',
-            )}
-            onClick={(): void => setMetricType(METRIC_TYPES.browsers)}
-          >
-            Browsers
-          </p>
-          <p
-            className={clsx('tab tab-bordered', metricType === METRIC_TYPES.os && 'tab-active')}
-            onClick={(): void => setMetricType(METRIC_TYPES.os)}
-          >
-            OS
-          </p>
-          <p
-            className={clsx(
-              'tab tab-bordered',
-              metricType === METRIC_TYPES.devices && 'tab-active',
-            )}
-            onClick={(): void => setMetricType(METRIC_TYPES.devices)}
-          >
-            Devices
-          </p>
+          {Object.values(METRIC_TYPES).map((type) => (
+            <p
+              className={clsx(
+                'tab tab-bordered',
+                metricType === METRIC_TYPES[type] && 'tab-active',
+              )}
+              onClick={(): void => setMetricType(METRIC_TYPES[type])}
+              key={type}
+            >
+              {attributes[type].label}
+            </p>
+          ))}
         </div>
       </div>
       <div className="mt-4 flex grow flex-col">{renderNoMetrics || renderMetrics}</div>
@@ -207,33 +198,18 @@ export const UserAgentMetrics: React.FC<Props> = ({
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="tabs my-2 px-6">
-            <p
-              className={clsx(
-                'tab tab-bordered grow',
-                activeTab === METRIC_TYPES.browsers && 'tab-active',
-              )}
-              onClick={(): void => setActiveTab(METRIC_TYPES.browsers)}
-            >
-              Browsers
-            </p>
-            <p
-              className={clsx(
-                'tab tab-bordered grow',
-                activeTab === METRIC_TYPES.os && 'tab-active',
-              )}
-              onClick={(): void => setActiveTab(METRIC_TYPES.os)}
-            >
-              OS
-            </p>
-            <p
-              className={clsx(
-                'tab tab-bordered grow',
-                activeTab === METRIC_TYPES.devices && 'tab-active',
-              )}
-              onClick={(): void => setActiveTab(METRIC_TYPES.devices)}
-            >
-              Devices
-            </p>
+            {Object.values(METRIC_TYPES).map((type) => (
+              <p
+                className={clsx(
+                  'tab tab-bordered grow',
+                  activeTab === METRIC_TYPES[type] && 'tab-active',
+                )}
+                onClick={(): void => setActiveTab(METRIC_TYPES[type])}
+                key={type}
+              >
+                {attributes[type].label}
+              </p>
+            ))}
           </div>
           <div className="overflow-y-auto px-4">
             <div className="flex grow">

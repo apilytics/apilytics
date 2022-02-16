@@ -8,6 +8,7 @@ import {
   MOCK_DYNAMIC_ROUTES,
   MOCK_OPERATING_SYSTEMS,
   MOCK_PATHS,
+  MOCK_TOTAL_MEMORY,
 } from '../src/utils/constants';
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -22,42 +23,6 @@ const API_KEY = '0648c69d-4b42-4642-b125-0959619837cf';
 
 const getRandomNumberBetweenOrUndefined = (min: number, max: number): number | undefined =>
   Math.random() < 0.1 ? undefined : getRandomNumberBetween(min, max);
-
-// Generate random data for each hour of the past year.
-// Each hour of the year will have 1-20 random data points with random endpoints, methods and response times.
-const TEST_METRICS = Array(365 * 24)
-  .fill(null)
-  .map((_, i) =>
-    Array(getRandomNumberBetween(1, 20))
-      .fill(null)
-      .map(() => {
-        const path = getRandomArrayItem(MOCK_PATHS);
-        const method = getRandomArrayItem(METHODS);
-        const statusCode = getRandomStatusCodeForMethod(method);
-        const timeMillis = getRandomNumberBetween(20, 100);
-        const requestSize = getRandomNumberBetweenOrUndefined(0, 200_000);
-        const responseSize = getRandomNumberBetweenOrUndefined(100_000, 200_00);
-        const browser = getRandomArrayItem([...MOCK_BROWSERS, null]);
-        const os = getRandomArrayItem([...MOCK_OPERATING_SYSTEMS, null]);
-        const device = getRandomArrayItem([...DEVICES, null]);
-        const createdAt = new Date(Date.now() - i * 60 * 60 * 1000);
-
-        return {
-          path,
-          method,
-          statusCode,
-          timeMillis,
-          requestSize,
-          responseSize,
-          browser,
-          os,
-          device,
-          createdAt,
-          originId: ORIGIN_ID,
-        };
-      }),
-  )
-  .flat();
 
 const TEST_DYNAMIC_ROUTES = MOCK_DYNAMIC_ROUTES.map(({ route, pattern }) => ({
   originId: ORIGIN_ID,
@@ -91,10 +56,63 @@ const main = async (): Promise<void> => {
     },
   });
 
-  await Promise.all([
-    prisma.metric.createMany({ data: TEST_METRICS }),
-    prisma.dynamicRoute.createMany({ data: TEST_DYNAMIC_ROUTES }),
-  ]);
+  const metricsBatch = [];
+
+  // Generate random data for each hour of the past year.
+  // Each hour of the year will have 10-20 random data points.
+  for (let hourIndex = 0; hourIndex < 365 * 24; hourIndex++) {
+    const metricsForHour = Array(getRandomNumberBetween(10, 20))
+      .fill(null)
+      .map(() => {
+        const path = getRandomArrayItem(MOCK_PATHS);
+        const method = getRandomArrayItem(METHODS);
+        const statusCode = getRandomStatusCodeForMethod(method);
+        const timeMillis = getRandomNumberBetween(20, 100);
+        const requestSize = getRandomNumberBetweenOrUndefined(0, 200_000);
+        const responseSize = getRandomNumberBetweenOrUndefined(100_000, 200_00);
+        const browser = getRandomArrayItem([...MOCK_BROWSERS, undefined]);
+        const os = getRandomArrayItem([...MOCK_OPERATING_SYSTEMS, undefined]);
+        const device = getRandomArrayItem([...DEVICES, undefined]);
+        const cpuUsage = getRandomNumberBetweenOrUndefined(0, 100);
+        const memoryUsage = getRandomNumberBetweenOrUndefined(1_000_000, 2_000_000_000); // 100 MB - 2 GB.
+        const memoryTotal = Math.random() < 0.1 ? undefined : MOCK_TOTAL_MEMORY;
+        const randomMinutes = getRandomNumberBetween(0, 60);
+        const randomSeconds = getRandomNumberBetween(0, 60);
+        const createdAt = new Date(Date.now() - hourIndex * randomMinutes * randomSeconds * 1000);
+
+        return {
+          path,
+          method,
+          statusCode,
+          timeMillis,
+          requestSize,
+          responseSize,
+          browser,
+          os,
+          device,
+          createdAt,
+          cpuUsage,
+          memoryTotal,
+          memoryUsage,
+          originId: ORIGIN_ID,
+        };
+      });
+
+    // Create metrics in batches of max 10 000 at a time.
+    if (metricsBatch.length === 10_000 || hourIndex === 365 * 24 - 1) {
+      await prisma.metric.createMany({ data: metricsBatch });
+      metricsBatch.splice(0, metricsBatch.length);
+    }
+
+    metricsBatch.push(...metricsForHour);
+    const percentage = (hourIndex / (365 * 24)) * 100;
+
+    if (percentage % 10 === 0) {
+      console.log(`Creating metrics, ${percentage.toFixed()}% complete.`);
+    }
+  }
+
+  await prisma.dynamicRoute.createMany({ data: TEST_DYNAMIC_ROUTES });
 };
 
 (async (): Promise<void> => {

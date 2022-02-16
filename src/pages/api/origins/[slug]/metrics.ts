@@ -50,6 +50,24 @@ interface RawGeneralData extends GeneralData {
   responseSizeP90: number;
   responseSizeP95: number;
   responseSizeP99: number;
+  cpuUsageAvg: number;
+  cpuUsageP50: number;
+  cpuUsageP75: number;
+  cpuUsageP90: number;
+  cpuUsageP95: number;
+  cpuUsageP99: number;
+  memoryUsageAvg: number;
+  memoryUsageP50: number;
+  memoryUsageP75: number;
+  memoryUsageP90: number;
+  memoryUsageP95: number;
+  memoryUsageP99: number;
+  memoryTotalAvg: number;
+  memoryTotalP50: number;
+  memoryTotalP75: number;
+  memoryTotalP90: number;
+  memoryTotalP95: number;
+  memoryTotalP99: number;
 }
 
 type RawEndpointData = Omit<EndpointData, 'methodAndEndpoint'>;
@@ -161,7 +179,28 @@ SELECT
   PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP75",
   PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP90",
   PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP95",
-  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99"
+  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99",
+
+  ROUND(AVG(metrics.cpu_usage)) AS "cpuUsageAvg",
+  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP50",
+  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP75",
+  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP90",
+  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP95",
+  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP99",
+
+  ROUND(AVG(metrics.memory_usage)) AS "memoryUsageAvg",
+  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP50",
+  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP75",
+  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP90",
+  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP95",
+  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP99",
+
+  ROUND(AVG(metrics.memory_total)) AS "memoryTotalAvg",
+  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP50",
+  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP75",
+  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP90",
+  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP95",
+  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP99"
 
 ${fromClause}
 ${whereClause}`;
@@ -337,11 +376,41 @@ GROUP BY metrics.device;`;
     p99: g.responseSizeP99,
   };
 
+  const cpuUsage = {
+    avg: g.cpuUsageAvg,
+    p50: g.cpuUsageP50,
+    p75: g.cpuUsageP75,
+    p90: g.cpuUsageP90,
+    p95: g.cpuUsageP95,
+    p99: g.cpuUsageP99,
+  };
+
+  const memoryUsage = {
+    avg: g.memoryUsageAvg,
+    p50: g.memoryUsageP50,
+    p75: g.memoryUsageP75,
+    p90: g.memoryUsageP90,
+    p95: g.memoryUsageP95,
+    p99: g.memoryUsageP99,
+  };
+
+  const totalMemory = {
+    avg: g.memoryTotalAvg,
+    p50: g.memoryTotalP50,
+    p75: g.memoryTotalP75,
+    p90: g.memoryTotalP90,
+    p95: g.memoryTotalP95,
+    p99: g.memoryTotalP99,
+  };
+
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
     key,
     responseTime: responseTimes[key],
     requestSize: requestSizes[key],
     responseSize: responseSizes[key],
+    cpuUsage: cpuUsage[key],
+    memoryUsage: memoryUsage[key],
+    memoryTotal: totalMemory[key],
   }));
 
   const userAgentData = {

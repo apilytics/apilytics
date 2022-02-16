@@ -115,24 +115,18 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
       <div className="flex flex-wrap gap-4 px-2">
         <p className="mr-auto text-white">Endpoints</p>
         <div className="tabs">
-          <p
-            className={clsx(
-              'tab tab-bordered',
-              metricType === METRIC_TYPES.requests && 'tab-active',
-            )}
-            onClick={(): void => setMetricType(METRIC_TYPES.requests)}
-          >
-            Requests
-          </p>
-          <p
-            className={clsx(
-              'tab tab-bordered',
-              metricType === METRIC_TYPES.responseTimes && 'tab-active',
-            )}
-            onClick={(): void => setMetricType(METRIC_TYPES.responseTimes)}
-          >
-            Response times
-          </p>
+          {Object.values(METRIC_TYPES).map((type) => (
+            <p
+              className={clsx(
+                'tab tab-bordered',
+                metricType === METRIC_TYPES[type] && 'tab-active',
+              )}
+              onClick={(): void => setMetricType(METRIC_TYPES[type])}
+              key={type}
+            >
+              {attributes[type].label}
+            </p>
+          ))}
         </div>
       </div>
       <div className="mt-4">{renderNoMetrics || renderMetrics}</div>
@@ -143,24 +137,18 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="tabs my-2 px-6">
-            <p
-              className={clsx(
-                'tab tab-bordered grow',
-                activeTab === METRIC_TYPES.requests && 'tab-active',
-              )}
-              onClick={(): void => setActiveTab(METRIC_TYPES.requests)}
-            >
-              Requests
-            </p>
-            <p
-              className={clsx(
-                'tab tab-bordered grow',
-                activeTab === METRIC_TYPES.responseTimes && 'tab-active',
-              )}
-              onClick={(): void => setActiveTab(METRIC_TYPES.responseTimes)}
-            >
-              Response times
-            </p>
+            {Object.values(METRIC_TYPES).map((type) => (
+              <p
+                className={clsx(
+                  'tab tab-bordered grow',
+                  activeTab === METRIC_TYPES[type] && 'tab-active',
+                )}
+                onClick={(): void => setActiveTab(METRIC_TYPES[type])}
+                key={type}
+              >
+                {attributes[type].label}
+              </p>
+            ))}
           </div>
           <div className="overflow-y-auto px-4">
             <div className="flex grow">
