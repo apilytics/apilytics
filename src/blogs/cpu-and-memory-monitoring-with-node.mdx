@@ -1,0 +1,48 @@
+---
+title: Monitoring CPU and memory usage with Node.js
+description: Our latest release adds support for easy CPU and memory monitoring, with no additional configuration.
+slug: cpu-and-memory-monitoring-with-node
+author: Markus Blomqvist
+authorLink: https://twitter.com/blomqma
+excerpt: Our latest release adds support for easy CPU and memory monitoring, with no additional configuration.
+date: '2022-02-16'
+---
+
+It goes without saying CPU and memory monitoring has been around for a long time and most of the monitoring solutions already handle it.
+We recognize that these are crucial metrics for all developers, which is why our <ExternalLink href="https://www.npmjs.com/package/@apilytics/core">latest release</ExternalLink>
+adds support for easy CPU and memory monitoring, with no additional configuration. We also produce these metrics,
+like all of our other metrics, directly from our open source middlewares,
+meaning that you don't need to install any additional software on your host machines.
+
+How are these new metrics shown then? We decided to combine them with the other performance metrics that you can already see in our
+dashboard, so you can see them in a nice format including the average and percentile values for the CPU utilization, memory usage and total available memory.
+
+<br />
+
+![CPU Usage](/blog-images/cpu-and-memory-monitoring-with-node/cpu-usage.png)
+
+The CPU metrics are shown in their own tab as percentages of the utilization at the time of your API requests.
+
+<br />
+
+![Errors time frame](/blog-images/cpu-and-memory-monitoring-with-node/memory-usage.png)
+
+The memory usage is shown similarly to the CPU metrics, except these ones have absolute values.
+
+<br />
+
+![Errors time frame](/blog-images/cpu-and-memory-monitoring-with-node/memory-total.png)
+
+You can also see the total available memory metrics at the time of your API requests.
+
+<br />
+
+In addition to the Node.js support, we are rolling this out also for our <ExternalLink href="https://pypi.org/project/apilytics/">Python packages</ExternalLink>.
+Hopefully this adds up some value on top your current monitoring setup.
+Also, remeber that we're still getting started and our DMs are open!
+
+<br />
+
+Cheers ✌
+
+Apilytics team

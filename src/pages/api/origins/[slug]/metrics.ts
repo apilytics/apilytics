@@ -410,7 +410,7 @@ GROUP BY metrics.device;`;
     responseSize: responseSizes[key],
     cpuUsage: cpuUsage[key],
     memoryUsage: memoryUsage[key],
-    totalMemory: totalMemory[key],
+    memoryTotal: totalMemory[key],
   }));
 
   const userAgentData = {

@@ -247,6 +247,9 @@ export interface PercentileData {
   responseTime: number;
   requestSize: number;
   responseSize: number;
+  cpuUsage: number;
+  memoryUsage: number;
+  memoryTotal: number;
 }
 
 export interface EndpointData {

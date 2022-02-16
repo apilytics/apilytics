@@ -18,6 +18,7 @@ export const BLOG_ROUTES = {
   2: '/blog/announcing-apilytics-api',
   3: '/blog/monitoring-dynamic-api-routes',
   4: '/blog/error-monitoring-with-apilytics',
+  5: '/blog/cpu-and-memory-monitoring-with-node',
 };
 
 const COMMUNITY_ROUTES = {
