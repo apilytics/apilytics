@@ -58,6 +58,8 @@ const main = async (): Promise<void> => {
     },
   });
 
+  console.log('Test user created.');
+
   await prisma.user.create({
     data: {
       id: ADMIN_USER_ID,
@@ -66,6 +68,8 @@ const main = async (): Promise<void> => {
       isAdmin: true,
     },
   });
+
+  console.log('Test admin user created.');
 
   const metricsBatch = [];
 
@@ -123,7 +127,11 @@ const main = async (): Promise<void> => {
     }
   }
 
+  console.log('Metrics created.');
+
   await prisma.dynamicRoute.createMany({ data: TEST_DYNAMIC_ROUTES });
+
+  console.log('Dynamic routes created.');
 };
 
 (async (): Promise<void> => {
