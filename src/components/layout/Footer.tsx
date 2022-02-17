@@ -26,6 +26,10 @@ const FEATURE_LINKS = [
     text: 'Open source',
     href: staticRoutes.openSource,
   },
+  {
+    text: 'For startups',
+    href: staticRoutes.forStartups,
+  },
 ];
 
 const RESOURCE_LINKS = [
