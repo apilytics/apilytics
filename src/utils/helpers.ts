@@ -7,7 +7,7 @@ export const getRandomArrayItem = <T>(arr: readonly T[]): T =>
   arr[Math.floor(Math.random() * arr.length)];
 
 export const getRandomNumberBetween = (min: number, max: number): number =>
-  Number((Math.floor(Math.random() * max) + min).toFixed());
+  Math.floor(Math.random() * max) + min;
 
 export const getRandomStatusCodeForMethod = (method: Method): number => {
   const options = {

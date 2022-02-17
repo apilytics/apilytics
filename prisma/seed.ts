@@ -88,7 +88,7 @@ const main = async (): Promise<void> => {
         const browser = getRandomArrayItem([...MOCK_BROWSERS, undefined]);
         const os = getRandomArrayItem([...MOCK_OPERATING_SYSTEMS, undefined]);
         const device = getRandomArrayItem([...DEVICES, undefined]);
-        const cpuUsage = getRandomNumberBetweenOrUndefined(0, 100);
+        const cpuUsage = Math.random();
         const memoryUsage = getRandomNumberBetweenOrUndefined(1_000_000, 2_000_000_000); // 100 MB - 2 GB.
         const memoryTotal = Math.random() < 0.1 ? undefined : MOCK_TOTAL_MEMORY;
         const randomMinutes = getRandomNumberBetween(0, 60);
