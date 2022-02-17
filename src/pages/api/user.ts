@@ -1,7 +1,6 @@
 import type { User } from '@prisma/client';
 
 import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
-import { withAuthRequired } from 'lib-server/middleware';
 import { sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
@@ -45,6 +44,6 @@ const handlePut: ApiHandler<UserResponse> = async (req, res) => {
   sendOk(res, { data: account });
 };
 
-const handler = withAuthRequired(makeMethodsHandler({ GET: handleGet, PUT: handlePut }));
+const handler = makeMethodsHandler({ GET: handleGet, PUT: handlePut }, true);
 
 export default withApilytics(handler);

@@ -70,6 +70,6 @@ const handlePost: ApiHandler<ContactPostResponse> = async (req, res) => {
   sendOk(res, { message: 'Message has been sent.' });
 };
 
-const handler = makeMethodsHandler({ POST: handlePost });
+const handler = makeMethodsHandler({ POST: handlePost }, false);
 
 export default withApilytics(handler);

@@ -120,22 +120,24 @@ const OriginDynamicRoutes: NextPage = () => {
   };
 
   useEffect(() => {
-    (async (): Promise<void> => {
-      try {
-        const res = await fetch(dynamicApiRoutes.dynamicRoutes({ slug }));
+    if (slug) {
+      (async (): Promise<void> => {
+        try {
+          const res = await fetch(dynamicApiRoutes.dynamicRoutes({ slug }));
 
-        if (res.status === 200) {
-          const { data } = await res.json();
-          setRoutes(data);
-        } else {
+          if (res.status === 200) {
+            const { data } = await res.json();
+            setRoutes(data);
+          } else {
+            setError(UNEXPECTED_ERROR);
+          }
+        } catch {
           setError(UNEXPECTED_ERROR);
+        } finally {
+          setLoading(false);
         }
-      } catch {
-        setError(UNEXPECTED_ERROR);
-      } finally {
-        setLoading(false);
-      }
-    })();
+      })();
+    }
   }, [slug]);
 
   const formProps = {

@@ -4,7 +4,6 @@ import {
   getSlugFromReq,
   makeMethodsHandler,
 } from 'lib-server/apiHelpers';
-import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
@@ -97,6 +96,6 @@ const handlePut: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
   sendOk(res, { data: routes });
 };
 
-const handler = withAuthRequired(makeMethodsHandler({ GET: handleGet, PUT: handlePut }));
+const handler = makeMethodsHandler({ GET: handleGet, PUT: handlePut }, true);
 
 export default withApilytics(handler);

@@ -32,6 +32,6 @@ const handlePost: ApiHandler<EmailListPostResponse> = async (req, res) => {
   sendCreated(res, { message: 'Email added to the list.' });
 };
 
-const handler = makeMethodsHandler({ POST: handlePost });
+const handler = makeMethodsHandler({ POST: handlePost }, false);
 
 export default withApilytics(handler);

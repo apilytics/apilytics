@@ -1,7 +1,6 @@
 import { getSession } from 'next-auth/react';
 import type { Origin } from '@prisma/client';
 import type { NextApiRequest } from 'next';
-import type { Session } from 'next-auth';
 
 import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
 import prisma from 'prisma/client';
@@ -19,14 +18,18 @@ type Handlers = {
 };
 
 export const makeMethodsHandler =
-  (handlers: Handlers): ApiHandler =>
+  (handlers: Handlers, authRequired: boolean): ApiHandler =>
   async (req, res): Promise<void> => {
     const { method } = req;
     if (isMethod(method)) {
-      if (!SAFE_METHODS.includes(method)) {
-        const isAdmin = (await getSession({ req }))?.isAdmin;
+      if (authRequired) {
+        const { userId, isAdmin } = (await getSession({ req })) ?? {};
 
-        if (isAdmin) {
+        if (!userId) {
+          sendUnauthorized(res);
+        }
+
+        if (isAdmin && !SAFE_METHODS.includes(method)) {
           sendUnauthorized(res, 'Only safe methods allowed for admin users.');
           return;
         }
@@ -64,12 +67,8 @@ export const getSlugFromReq = (req: NextApiRequest): string => {
   throw new Error(`Invalid slug param in route: ${slug}`);
 };
 
-export const safeGetSessionUserId = async (
-  req: NextApiRequest,
-): Promise<Session['userId'] | null> => (await getSession({ req }))?.userId ?? null;
-
 export const getSessionUserId = async (req: NextApiRequest): Promise<string> => {
-  const userId = await safeGetSessionUserId(req);
+  const { userId } = (await getSession({ req })) ?? {};
 
   if (!userId) {
     throw new UnauthorizedApiError();
