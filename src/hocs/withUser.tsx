@@ -16,13 +16,8 @@ export const withUser = <T extends Record<string, unknown>>(
       (async (): Promise<void> => {
         try {
           const res = await fetch(staticApiRoutes.user);
-
-          if (res.status === 200) {
-            const { data } = await res.json();
-            setUser(data);
-          } else {
-            setError(true);
-          }
+          const { data } = await res.json();
+          setUser(data);
         } catch {
           setError(true);
         }

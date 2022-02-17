@@ -8,13 +8,13 @@ import type { HeadProps } from 'types';
 
 const OG_IMAGE = `${FRONTEND_URL}/og-image.png`;
 
-export const Head: React.FC<HeadProps> = ({ indexable, title, description, loading }) => {
+export const Head: React.FC<HeadProps> = ({ indexable, title, description, loading, error }) => {
   const { asPath } = useRouter();
   const ogUrl = `${FRONTEND_URL}${asPath === staticRoutes.root ? '' : asPath}`;
   const _title = `${title} | Apilytics`;
   const _description = description ?? DEFAULT_SEO_DESCRIPTION;
 
-  if (process.env.NODE_ENV !== 'production' && !loading) {
+  if (process.env.NODE_ENV !== 'production' && !loading && !error) {
     const path = asPath.split('#')[0].split('?')[0];
 
     if (INDEXABLE_ROUTES.includes(path) && !indexable) {
@@ -62,7 +62,9 @@ export const Head: React.FC<HeadProps> = ({ indexable, title, description, loadi
       <meta name="twitter:title" content={_title} />
       <meta name="twitter:description" content={_description} />
       <meta name="twitter:image" content={OG_IMAGE} />
-      {!indexable && <meta name="robots" content="noindex,noarchive,nosnippet,follow" />}
+      {!indexable && !loading && !error && (
+        <meta name="robots" content="noindex,noarchive,nosnippet,follow" />
+      )}
       <meta
         name="viewport"
         content="width=device-width, user-scalable=no, maximum-scale=1.0, initial-scale=1.0"
