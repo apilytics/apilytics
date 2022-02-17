@@ -72,6 +72,7 @@ export interface HeadProps {
   title: string;
   description?: string;
   loading?: boolean;
+  error?: boolean;
 }
 
 export interface HeaderProps {
