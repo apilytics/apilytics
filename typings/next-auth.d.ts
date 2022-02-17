@@ -5,5 +5,10 @@ declare module 'next-auth' {
   type Session = {
     userId: string;
     expires: ISODateString;
+    isAdmin: boolean;
   };
+
+  interface JWT {
+    isAdmin?: boolean;
+  }
 }

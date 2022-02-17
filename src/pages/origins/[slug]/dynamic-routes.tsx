@@ -49,7 +49,7 @@ const OriginDynamicRoutes: NextPage = () => {
         },
       });
 
-      const { message, data } = await res.json();
+      const { message = UNEXPECTED_ERROR, data } = await res.json();
 
       if (res.status === 200) {
         setRoutes(data);
@@ -61,7 +61,7 @@ const OriginDynamicRoutes: NextPage = () => {
         setSubmittedText('Dynamic routes updated.');
         plausible(event);
       } else {
-        setError(message || UNEXPECTED_ERROR);
+        setError(message);
       }
     } catch {
       setError(UNEXPECTED_ERROR);

@@ -76,7 +76,8 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
       emptyLabel: 'No response sizes available.',
     },
     cpuUsage: {
-      formatter: (value?: string | number): string => `${value ?? 0} %`,
+      formatter: (value?: string | number): string =>
+        `${((Number(value) ?? 0) * 100).toFixed(1)} %`,
       dataKey: 'cpuUsage',
       label: 'CPU usage',
       emptyLabel: 'No CPU usage available.',

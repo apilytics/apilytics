@@ -1,14 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 
-declare global {
-  // Ignore: Must use `var` when declaring globals.
-  /* eslint no-var: off */
-  var prisma: PrismaClient;
-}
-
+// Ignore: We want to avoid creating multiple Prisma clients when hot reloading in development.
+// @ts-ignore
 const prisma = global.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV === 'development') {
+  // Ignore: Same as above.
+  // @ts-ignore
   global.prisma = prisma;
 }
 

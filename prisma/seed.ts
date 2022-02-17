@@ -18,6 +18,7 @@ import {
 } from '../src/utils/helpers';
 
 const USER_ID = 'ckyw15hbi000409l805yyhhfo';
+const ADMIN_USER_ID = 'ckzr8nnbj000009mo8pcb4jhe';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
 const API_KEY = '0648c69d-4b42-4642-b125-0959619837cf';
 
@@ -34,6 +35,7 @@ const main = async (): Promise<void> => {
   // Delete and re-create user to cascade changes to all relations.
   try {
     await prisma.user.delete({ where: { id: USER_ID } });
+    await prisma.user.delete({ where: { id: ADMIN_USER_ID } });
   } catch {
     // User does not exist.
   }
@@ -56,6 +58,19 @@ const main = async (): Promise<void> => {
     },
   });
 
+  console.log('Test user created.');
+
+  await prisma.user.create({
+    data: {
+      id: ADMIN_USER_ID,
+      name: 'Test Admin User',
+      email: 'admin@apilytics.io',
+      isAdmin: true,
+    },
+  });
+
+  console.log('Test admin user created.');
+
   const metricsBatch = [];
 
   // Generate random data for each hour of the past year.
@@ -73,7 +88,7 @@ const main = async (): Promise<void> => {
         const browser = getRandomArrayItem([...MOCK_BROWSERS, undefined]);
         const os = getRandomArrayItem([...MOCK_OPERATING_SYSTEMS, undefined]);
         const device = getRandomArrayItem([...DEVICES, undefined]);
-        const cpuUsage = getRandomNumberBetweenOrUndefined(0, 100);
+        const cpuUsage = Math.random();
         const memoryUsage = getRandomNumberBetweenOrUndefined(1_000_000, 2_000_000_000); // 100 MB - 2 GB.
         const memoryTotal = Math.random() < 0.1 ? undefined : MOCK_TOTAL_MEMORY;
         const randomMinutes = getRandomNumberBetween(0, 60);
@@ -112,7 +127,11 @@ const main = async (): Promise<void> => {
     }
   }
 
+  console.log('Metrics created.');
+
   await prisma.dynamicRoute.createMany({ data: TEST_DYNAMIC_ROUTES });
+
+  console.log('Dynamic routes created.');
 };
 
 (async (): Promise<void> => {

@@ -12,7 +12,15 @@ const handler = NextAuth({
     session: async ({ session, token }) => ({
       userId: token.sub ?? '',
       expires: session.expires,
+      isAdmin: token.isAdmin ?? false,
     }),
+    jwt: async ({ user, token }) => {
+      if (user) {
+        token.isAdmin = user.isAdmin;
+      }
+
+      return token;
+    },
   },
   providers: [
     EmailProvider({
