@@ -1,7 +1,7 @@
 import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
-import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
+import { getOriginForUser, getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
@@ -16,8 +16,9 @@ interface GetResponse {
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
 
-  const data = await prisma.origin.findMany({
-    where: { userId },
+  const data = await getOriginForUser({
+    userId,
+    many: true,
   });
 
   sendOk(res, { data });

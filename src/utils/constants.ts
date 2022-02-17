@@ -18,6 +18,7 @@ export const METHODS = [
 ] as const;
 
 export const METHODS_WITHOUT_BODY = ['GET', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'];
+export const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS', 'TRACE'];
 
 export const DAY = 1;
 export const WEEK_DAYS = 7;

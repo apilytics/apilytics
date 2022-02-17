@@ -28,8 +28,11 @@ export const sendApiKeyMissing = (res: NextApiResponse): void => {
   res.status(401).json({ message: 'Missing X-API-Key header.' });
 };
 
-export const sendUnauthorized = (res: NextApiResponse): void => {
-  res.status(401).json({ message: 'Only allowed for logged in users.' });
+export const sendUnauthorized = (
+  res: NextApiResponse,
+  message = 'Only allowed for logged in users.',
+): void => {
+  res.status(401).json({ message });
 };
 
 export const sendInvalidApiKey = (res: NextApiResponse): void => {

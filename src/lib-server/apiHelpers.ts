@@ -1,9 +1,11 @@
 import { getSession } from 'next-auth/react';
+import type { Origin } from '@prisma/client';
 import type { NextApiRequest } from 'next';
 import type { Session } from 'next-auth';
 
 import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
-import { METHODS } from 'utils/constants';
+import prisma from 'prisma/client';
+import { METHODS, SAFE_METHODS } from 'utils/constants';
 import type { ApiHandler, Method } from 'types';
 
 class UnauthorizedApiError extends Error {}
@@ -21,7 +23,17 @@ export const makeMethodsHandler =
   async (req, res): Promise<void> => {
     const { method } = req;
     if (isMethod(method)) {
+      if (!SAFE_METHODS.includes(method)) {
+        const isAdmin = (await getSession({ req }))?.isAdmin;
+
+        if (isAdmin) {
+          sendUnauthorized(res, 'Only safe methods allowed for admin users.');
+          return;
+        }
+      }
+
       const handler = handlers[method];
+
       if (handler) {
         try {
           await handler(req, res);
@@ -65,3 +77,39 @@ export const getSessionUserId = async (req: NextApiRequest): Promise<string> => 
 
   return userId;
 };
+
+export async function getOriginForUser(params: {
+  userId: string;
+  slug?: never;
+  many: true;
+}): Promise<Origin[]>;
+export async function getOriginForUser(params: {
+  userId: string;
+  slug: string;
+  many?: false;
+}): Promise<Origin | null>;
+export async function getOriginForUser({
+  userId,
+  slug,
+  many = false,
+}: {
+  userId: string;
+  slug?: string;
+  many?: boolean;
+}): Promise<Origin | Origin[] | null> {
+  const user = await prisma.user.findFirst({ where: { id: userId }, select: { isAdmin: true } });
+  const where = user?.isAdmin ? {} : { userId };
+
+  if (many) {
+    return prisma.origin.findMany({
+      where,
+    });
+  } else {
+    return prisma.origin.findFirst({
+      where: {
+        slug,
+        ...where,
+      },
+    });
+  }
+}

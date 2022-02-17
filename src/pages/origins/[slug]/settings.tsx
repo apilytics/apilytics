@@ -71,12 +71,14 @@ const OriginSettings: NextPage = () => {
         method: 'DELETE',
       });
 
+      const { message = UNEXPECTED_ERROR } = await res.json();
+
       if (res.status === 204) {
         setError('');
         plausible('delete-origin');
         Router.push(staticRoutes.origins);
       } else {
-        setError(UNEXPECTED_ERROR);
+        setError(message);
         setLoading(false);
       }
     } catch {
@@ -135,10 +137,10 @@ const OriginSettings: NextPage = () => {
               </p>
             </div>
             <div className="grid grid-cols-2 gap-2 p-2">
-              <Button className="btn-outline btn-error" onClick={handleCloseModal}>
+              <Button className="btn-outline btn-primary" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button className="btn-outline btn-primary" onClick={handleConfirmDelete} autoFocus>
+              <Button className="btn-outline btn-error" onClick={handleConfirmDelete} autoFocus>
                 Confirm
               </Button>
             </div>

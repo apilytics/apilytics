@@ -1,7 +1,12 @@
 import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
-import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
+import {
+  getOriginForUser,
+  getSessionUserId,
+  getSlugFromReq,
+  makeMethodsHandler,
+} from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import {
   sendConflict,
@@ -22,10 +27,7 @@ interface OriginResponse {
 const handleGet: ApiHandler<OriginResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
-
-  const origin = await prisma.origin.findFirst({
-    where: { slug, userId },
-  });
+  const origin = await getOriginForUser({ userId, slug });
 
   if (!origin) {
     sendNotFound(res, 'Origin');
@@ -65,9 +67,7 @@ const handlePut: ApiHandler<OriginResponse> = async (req, res) => {
     throw e;
   }
 
-  const origin = await prisma.origin.findFirst({
-    where: { slug: newSlug, userId },
-  });
+  const origin = await getOriginForUser({ userId, slug: newSlug });
 
   if (!origin) {
     sendNotFound(res, 'Origin');

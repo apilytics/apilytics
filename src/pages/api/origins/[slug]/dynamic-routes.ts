@@ -1,4 +1,9 @@
-import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
+import {
+  getOriginForUser,
+  getSessionUserId,
+  getSlugFromReq,
+  makeMethodsHandler,
+} from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
@@ -39,10 +44,7 @@ ORDER BY dynamic_routes.route;`;
 const handleGet: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
-
-  const origin = await prisma.origin.findFirst({
-    where: { slug, userId },
-  });
+  const origin = await getOriginForUser({ userId, slug });
 
   if (!origin) {
     sendNotFound(res, 'Origin');
@@ -56,10 +58,7 @@ const handleGet: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
 const handlePut: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
-
-  const origin = await prisma.origin.findFirst({
-    where: { slug, userId },
-  });
+  const origin = await getOriginForUser({ userId, slug });
 
   if (!origin) {
     sendNotFound(res, 'Origin');

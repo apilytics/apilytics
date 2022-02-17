@@ -15,6 +15,7 @@ model User {
   emailVerified    DateTime? @map("email_verified")
   usedTechnologies String    @default("") @map("used_technologies")
   intendedUse      String    @default("") @map("intended_use")
+  isAdmin          Boolean   @default(false) @map("is_admin")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

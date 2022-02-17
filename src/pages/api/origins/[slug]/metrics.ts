@@ -1,6 +1,11 @@
 import { Prisma } from '@prisma/client';
 
-import { getSessionUserId, getSlugFromReq, makeMethodsHandler } from 'lib-server/apiHelpers';
+import {
+  getOriginForUser,
+  getSessionUserId,
+  getSlugFromReq,
+  makeMethodsHandler,
+} from 'lib-server/apiHelpers';
 import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
@@ -81,10 +86,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     string
   >;
 
-  const origin = await prisma.origin.findFirst({
-    where: { slug, userId },
-    select: { id: true },
-  });
+  const origin = await getOriginForUser({ userId, slug });
 
   if (!origin) {
     sendNotFound(res, 'Origin');
