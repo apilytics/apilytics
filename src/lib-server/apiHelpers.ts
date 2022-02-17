@@ -27,6 +27,7 @@ export const makeMethodsHandler =
 
         if (!userId) {
           sendUnauthorized(res);
+          return;
         }
 
         if (isAdmin && !SAFE_METHODS.includes(method)) {
