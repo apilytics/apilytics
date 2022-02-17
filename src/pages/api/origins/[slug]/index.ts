@@ -7,7 +7,6 @@ import {
   getSlugFromReq,
   makeMethodsHandler,
 } from 'lib-server/apiHelpers';
-import { withAuthRequired } from 'lib-server/middleware';
 import {
   sendConflict,
   sendInvalidInput,
@@ -93,8 +92,6 @@ const handleDelete: ApiHandler = async (req, res) => {
   sendNoContent(res);
 };
 
-const handler = withAuthRequired(
-  makeMethodsHandler({ GET: handleGet, PUT: handlePut, DELETE: handleDelete }),
-);
+const handler = makeMethodsHandler({ GET: handleGet, PUT: handlePut, DELETE: handleDelete }, true);
 
 export default withApilytics(handler);

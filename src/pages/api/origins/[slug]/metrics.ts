@@ -6,7 +6,6 @@ import {
   getSlugFromReq,
   makeMethodsHandler,
 } from 'lib-server/apiHelpers';
-import { withAuthRequired } from 'lib-server/middleware';
 import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
@@ -443,6 +442,6 @@ GROUP BY metrics.device;`;
   sendOk(res, { data });
 };
 
-const handler = withAuthRequired(makeMethodsHandler({ GET: handleGet }));
+const handler = makeMethodsHandler({ GET: handleGet }, true);
 
 export default withApilytics(handler);

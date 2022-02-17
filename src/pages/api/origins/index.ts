@@ -2,7 +2,6 @@ import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
 import { getOriginForUser, getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
-import { withAuthRequired } from 'lib-server/middleware';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
@@ -55,6 +54,6 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
   sendCreated(res, { data: origin });
 };
 
-const handler = withAuthRequired(makeMethodsHandler({ GET: handleGet, POST: handlePost }));
+const handler = makeMethodsHandler({ GET: handleGet, POST: handlePost }, true);
 
 export default withApilytics(handler);
