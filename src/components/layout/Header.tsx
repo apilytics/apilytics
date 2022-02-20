@@ -249,7 +249,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
   const renderAccountMenu = accountComplete && (
     <div className="dropdown-end dropdown-hover dropdown">
       <div tabIndex={0} className="btn btn-ghost flex">
-        <span className="hidden sm:block">{truncateString(user?.name ?? '', 10)}</span>
+        <span className="hidden sm:block">{truncateString(user?.name ?? '', 20)}</span>
         <DotsVerticalIcon className="h-5 w-5 sm:ml-2" />
       </div>
       <ul

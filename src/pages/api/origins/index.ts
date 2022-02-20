@@ -33,7 +33,7 @@ WHERE
   OR (users.is_admin = TRUE AND users.id = ${userId})
 
 GROUP BY origins.name, origins.slug
-ORDER BY "totalMetrics";`;
+ORDER BY "totalMetrics" DESC;`;
 
   sendOk(res, { data });
 };

@@ -25,8 +25,6 @@ const Origins: NextPage = () => {
         if (res.status === 200) {
           const { data } = await res.json();
           setOrigins(data);
-        } else {
-          setError(true);
         }
       } catch {
         setError(true);

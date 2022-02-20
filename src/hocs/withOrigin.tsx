@@ -22,8 +22,6 @@ export const withOrigin = <T extends Record<string, unknown>>(
           if (res.status === 200) {
             const { data } = await res.json();
             setOrigin(data);
-          } else {
-            setError(true);
           }
         } catch {
           setError(true);

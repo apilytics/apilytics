@@ -74,12 +74,9 @@ const Origin: NextPage = () => {
             }),
           );
 
-          const { data } = await res.json();
-
           if (res.status === 200) {
+            const { data } = await res.json();
             setMetrics(data);
-          } else {
-            setError(true);
           }
         } catch {
           setError(true);
@@ -101,7 +98,7 @@ const Origin: NextPage = () => {
   if (loading) {
     return (
       <Layout
-        headProps={{ title: 'Loading...' }}
+        headProps={{ title: origin?.name ?? 'Loading...' }}
         headerProps={{ maxWidth }}
         footerProps={{ maxWidth }}
       >
