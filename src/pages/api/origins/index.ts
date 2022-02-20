@@ -1,24 +1,39 @@
 import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
-import { getOriginForUser, getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
+import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
-import type { ApiHandler } from 'types';
+import type { ApiHandler, OriginListItem } from 'types';
 
 interface GetResponse {
-  data: Origin[];
+  data: OriginListItem[];
 }
 
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
 
-  const data = await getOriginForUser({
-    userId,
-    many: true,
-  });
+  const data = await prisma.$queryRaw`
+SELECT
+  origins.name,
+  origins.slug,
+  COUNT(metrics) AS "totalMetrics",
+  SUM(
+    CASE WHEN metrics.created_at >= NOW() - INTERVAL '1 DAY' THEN 1 ELSE 0 END
+  ) AS "lastDayMetrics"
+
+FROM origins
+  LEFT JOIN metrics ON origins.id = metrics.origin_id
+  LEFT JOIN users ON TRUE
+
+WHERE
+  origins.user_id = ${userId}
+  OR (users.is_admin = TRUE AND users.id = ${userId})
+
+GROUP BY origins.name, origins.slug
+ORDER BY "totalMetrics";`;
 
   sendOk(res, { data });
 };

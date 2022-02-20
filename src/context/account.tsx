@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react';
-import type { Origin, User } from '@prisma/client';
+import type { User } from '@prisma/client';
 
-import type { AccountContextType } from 'types';
+import type { AccountContextType, OriginListItem } from 'types';
 
 export const AccountContext = createContext<AccountContextType | null>(null);
 
@@ -9,7 +9,7 @@ export const AccountProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [origins, setOrigins] = useState<Origin[]>([]);
+  const [origins, setOrigins] = useState<OriginListItem[]>([]);
   const accountComplete = !!user?.name;
 
   const value = {
