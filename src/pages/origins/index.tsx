@@ -9,6 +9,7 @@ import { Button } from 'components/shared/Button';
 import { OriginMenu } from 'components/shared/OriginMenu';
 import { withAuth } from 'hocs/withAuth';
 import { useAccount } from 'hooks/useAccount';
+import { formatCount } from 'utils/metrics';
 import { dynamicRoutes, staticApiRoutes, staticRoutes } from 'utils/router';
 
 const Origins: NextPage = () => {
@@ -36,9 +37,9 @@ const Origins: NextPage = () => {
   }, [setError, setLoading, setOrigins]);
 
   const renderSkeletonRow = (
-    <div className="flex h-14 animate-pulse items-center gap-4 rounded-lg border-2 border-base-content p-4">
-      <div className="h-4 grow rounded-lg bg-base-100" />
-      <div className="h-4 w-4 rounded-lg bg-base-100" />
+    <div className="flex h-20 animate-pulse items-center gap-4 rounded-lg border-2 border-base-content p-4">
+      <div className="h-8 grow rounded-lg bg-base-100" />
+      <div className="h-8 w-4 rounded-lg bg-base-100" />
     </div>
   );
 
@@ -69,7 +70,7 @@ const Origins: NextPage = () => {
               {renderSkeletonRow}
             </>
           ) : origins.length ? (
-            origins.map(({ name, slug }) => (
+            origins.map(({ name, slug, totalMetrics, lastDayMetrics }) => (
               <Link href={dynamicRoutes.origin({ slug })} key={name}>
                 <a className="unstyled">
                   <div
@@ -77,7 +78,19 @@ const Origins: NextPage = () => {
                     key={name}
                   >
                     <div className="flex items-center justify-between">
-                      <h6>{name}</h6>
+                      <div>
+                        <h6>{name}</h6>
+                        <div className="flex gap-4 text-sm">
+                          <p>
+                            <span className="text-white">{formatCount(lastDayMetrics)}</span>{' '}
+                            requests in last 24h
+                          </p>
+                          <p>
+                            <span className="text-white">{formatCount(totalMetrics)}</span> total
+                            requests
+                          </p>
+                        </div>
+                      </div>
                       <OriginMenu slug={slug} />
                     </div>
                   </div>

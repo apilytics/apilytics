@@ -165,8 +165,8 @@ export interface AccountContextType {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
   accountComplete: boolean;
-  origins: Origin[];
-  setOrigins: Dispatch<SetStateAction<Origin[]>>;
+  origins: OriginListItem[];
+  setOrigins: Dispatch<SetStateAction<OriginListItem[]>>;
 }
 export interface OriginContextType {
   slug: string;
@@ -279,6 +279,13 @@ export interface OriginMetrics {
 export interface DynamicRouteWithMatches {
   route: string;
   matchingPaths: number;
+}
+
+export interface OriginListItem {
+  name: string;
+  slug: string;
+  totalMetrics: number;
+  lastDayMetrics: number;
 }
 
 export type Method = typeof METHODS[number];

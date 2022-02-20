@@ -78,38 +78,14 @@ export const getSessionUserId = async (req: NextApiRequest): Promise<string> => 
   return userId;
 };
 
-export async function getOriginForUser(params: {
-  userId: string;
-  slug?: never;
-  many: true;
-}): Promise<Origin[]>;
-export async function getOriginForUser(params: {
-  userId: string;
-  slug: string;
-  many?: false;
-}): Promise<Origin | null>;
 export async function getOriginForUser({
   userId,
   slug,
-  many = false,
 }: {
   userId: string;
   slug?: string;
-  many?: boolean;
-}): Promise<Origin | Origin[] | null> {
+}): Promise<Origin | null> {
   const user = await prisma.user.findFirst({ where: { id: userId }, select: { isAdmin: true } });
-  const where = user?.isAdmin ? {} : { userId };
-
-  if (many) {
-    return prisma.origin.findMany({
-      where,
-    });
-  } else {
-    return prisma.origin.findFirst({
-      where: {
-        slug,
-        ...where,
-      },
-    });
-  }
+  const where = user?.isAdmin ? { slug } : { userId, slug };
+  return prisma.origin.findFirst({ where });
 }
