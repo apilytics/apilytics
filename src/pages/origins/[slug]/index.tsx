@@ -74,12 +74,9 @@ const Origin: NextPage = () => {
             }),
           );
 
-          const { data } = await res.json();
-
           if (res.status === 200) {
+            const { data } = await res.json();
             setMetrics(data);
-          } else {
-            setError(true);
           }
         } catch {
           setError(true);

@@ -128,8 +128,6 @@ const OriginDynamicRoutes: NextPage = () => {
           if (res.status === 200) {
             const { data } = await res.json();
             setRoutes(data);
-          } else {
-            setError(UNEXPECTED_ERROR);
           }
         } catch {
           setError(UNEXPECTED_ERROR);
