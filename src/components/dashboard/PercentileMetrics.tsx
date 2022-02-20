@@ -29,16 +29,18 @@ const formatMilliseconds = (value?: string | number): string => {
 
 const formatBytes = (value?: string | number): string => {
   if (typeof value === 'number') {
-    if (value > 1_000_000_000) {
-      return `${(value / 1_000_000_000).toFixed(1)} GB`;
+    const base = 1024;
+
+    if (value > base ** 3) {
+      return `${(value / base ** 3).toFixed(1)} GiB`;
     }
 
-    if (value > 1_000_000) {
-      return `${(value / 1_000_000).toFixed(1)} MB`;
+    if (value > base ** 2) {
+      return `${(value / base ** 2).toFixed(1)} MiB`;
     }
 
-    if (value > 1_000) {
-      return `${(value / 1_000).toFixed(1)} kB`;
+    if (value > base) {
+      return `${(value / base).toFixed(1)} KiB`;
     }
 
     return `${value ?? 0} B`;
@@ -76,8 +78,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
       emptyLabel: 'No response sizes available.',
     },
     cpuUsage: {
-      formatter: (value?: string | number): string =>
-        `${((Number(value) ?? 0) * 100).toFixed(1)} %`,
+      formatter: (value?: string | number): string => `${(Number(value ?? 0) * 100).toFixed(1)} %`,
       dataKey: 'cpuUsage',
       label: 'CPU usage',
       emptyLabel: 'No CPU usage available.',
