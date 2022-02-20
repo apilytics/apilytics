@@ -98,7 +98,7 @@ const Origin: NextPage = () => {
   if (loading) {
     return (
       <Layout
-        headProps={{ title: 'Loading...' }}
+        headProps={{ title: origin?.name ?? 'Loading...' }}
         headerProps={{ maxWidth }}
         footerProps={{ maxWidth }}
       >
