@@ -9,17 +9,17 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
-"@apilytics/core@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/@apilytics/core/-/core-1.4.0.tgz#21a73514a73238ff37f712011087ca33e18d128b"
-  integrity sha512-ruGqyoiUSs35ugP+5lyzjUohkEb59zYD84TxL+H1oxOY1CIiJddF5UjJpY4HshwQWcUKjBummmo0jkqRJ+k/Ag==
+"@apilytics/core@1.4.1":
+  version "1.4.1"
+  resolved "https://registry.npmjs.org/@apilytics/core/-/core-1.4.1.tgz#08dfa5f730d0c766ecb37e3185ea9dca3f107f3f"
+  integrity sha512-AOxKji7jY+OEL/C9BJaRViuBs2QVKJMFIJAQ6nD3yVKAiTFNcEOaL+MYGJb7O3foFMEP9FaXLrbzN4/S5+ZDLw==
 
-"@apilytics/next@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/@apilytics/next/-/next-1.4.0.tgz#c38bf47fc6255667011851261d9784e77264ffab"
-  integrity sha512-guJsNydi9xjsGKdAc6Peh9QHdKL+NmvReR9WxrasQf3Q+p9yEA3b887dlncI+2cvb9A8A22dKjm7FCfkEwzZkQ==
+"@apilytics/next@1.4.1":
+  version "1.4.1"
+  resolved "https://registry.npmjs.org/@apilytics/next/-/next-1.4.1.tgz#4dab957f4661644b1f510c35e3d795433683b333"
+  integrity sha512-Y2t9Wi8wya5UupmdkZBLbePOrhp+UJ5Eo8X/3K+/iBG3A1mD9K3Jbtd5LXScvgnQr5Pr4VbTLX2HXRdPuQOXNA==
   dependencies:
-    "@apilytics/core" "1.4.0"
+    "@apilytics/core" "1.4.1"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.7":
   version "7.16.7"
