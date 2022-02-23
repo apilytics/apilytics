@@ -291,3 +291,7 @@ export interface OriginListItem {
 export type Method = typeof METHODS[number];
 
 export type ValueOf<T> = T[keyof T];
+
+export type VerticalBarData = Partial<
+  EndpointData & StatusCodeData & PercentileData & BrowserData & OSData & DeviceData
+>;

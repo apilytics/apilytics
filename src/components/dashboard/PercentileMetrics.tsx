@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-import { BarValue } from 'components/dashboard/BarValue';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
+import { formatMilliseconds } from 'utils/metrics';
 import type { PercentileData, ValueOf } from 'types';
 
 const METRIC_TYPES = {
@@ -15,38 +15,22 @@ const METRIC_TYPES = {
   memoryTotal: 'memoryTotal',
 } as const;
 
-const formatMilliseconds = (value?: string | number): string => {
-  if (typeof value === 'number') {
-    if (value > 1_000) {
-      return `${(value / 1_000).toFixed(1)} s`;
-    }
+const formatBytes = (value = 0): string => {
+  const base = 1024;
 
-    return `${value ?? 0} ms`;
+  if (value > base ** 3) {
+    return `${(value / base ** 3).toFixed(1)} GiB`;
   }
 
-  return '0 ms';
-};
-
-const formatBytes = (value?: string | number): string => {
-  if (typeof value === 'number') {
-    const base = 1024;
-
-    if (value > base ** 3) {
-      return `${(value / base ** 3).toFixed(1)} GiB`;
-    }
-
-    if (value > base ** 2) {
-      return `${(value / base ** 2).toFixed(1)} MiB`;
-    }
-
-    if (value > base) {
-      return `${(value / base).toFixed(1)} KiB`;
-    }
-
-    return `${value ?? 0} B`;
+  if (value > base ** 2) {
+    return `${(value / base ** 2).toFixed(1)} MiB`;
   }
 
-  return '0 B';
+  if (value > base) {
+    return `${(value / base).toFixed(1)} KiB`;
+  }
+
+  return `${value ?? 0} B`;
 };
 
 interface Props {
@@ -60,47 +44,45 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
 
   const attributes = {
     responseTimes: {
-      formatter: formatMilliseconds,
-      dataKey: 'responseTime',
+      renderValue: ({ responseTime }: Partial<PercentileData>) => formatMilliseconds(responseTime),
+      valueKey: 'responseTime',
       label: 'Response times',
       emptyLabel: 'No response times available.',
     },
     requestSizes: {
-      formatter: formatBytes,
-      dataKey: 'requestSize',
+      renderValue: ({ requestSize }: Partial<PercentileData>) => formatBytes(requestSize),
+      valueKey: 'requestSize',
       label: 'Requests sizes',
       emptyLabel: 'No request sizes available.',
     },
     responseSizes: {
-      formatter: formatBytes,
-      dataKey: 'responseSize',
+      renderValue: ({ responseSize }: Partial<PercentileData>) => formatBytes(responseSize),
+      valueKey: 'responseSize',
       label: 'Response sizes',
       emptyLabel: 'No response sizes available.',
     },
     cpuUsage: {
-      formatter: (value?: string | number): string => `${(Number(value ?? 0) * 100).toFixed(1)} %`,
-      dataKey: 'cpuUsage',
+      renderValue: ({ cpuUsage = 0 }: Partial<PercentileData>) =>
+        `${(Number(cpuUsage) * 100).toFixed(1)} %`,
+      valueKey: 'cpuUsage',
       label: 'CPU usage',
       emptyLabel: 'No CPU usage available.',
     },
     memoryUsage: {
-      formatter: formatBytes,
-      dataKey: 'memoryUsage',
+      renderValue: ({ memoryUsage }: Partial<PercentileData>) => formatBytes(memoryUsage),
+      valueKey: 'memoryUsage',
       label: 'Memory usage',
       emptyLabel: 'No memory usage available.',
     },
     memoryTotal: {
-      formatter: formatBytes,
-      dataKey: 'memoryTotal',
+      renderValue: ({ memoryTotal }: Partial<PercentileData>) => formatBytes(memoryTotal),
+      valueKey: 'memoryTotal',
       label: 'Total memory',
       emptyLabel: 'No total memory available.',
     },
-  };
+  } as const;
 
-  const { dataKey, label, emptyLabel, formatter } = attributes[metricType];
-
-  const getHeight = (dataLength: number): number => 100 + dataLength * 35;
-  const height = getHeight(data.length);
+  const { valueKey, label, emptyLabel, renderValue } = attributes[metricType];
 
   const renderNoMetrics = !data.length && (
     <div className="flex flex-col items-center justify-center py-40">
@@ -110,13 +92,12 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
 
   const renderMetrics = (
     <VerticalBarChart
-      height={height}
       data={data}
-      dataKey={dataKey}
-      secondaryDataKey="key"
-      renderLabels={<BarValue formatter={formatter} />}
-      label="Key"
-      secondaryLabel={label}
+      valueKey={valueKey}
+      renderLabel={({ key = '' }: Partial<PercentileData>): string => key}
+      renderValue={renderValue}
+      leftLabel="Name"
+      rightLabel={label}
     />
   );
 

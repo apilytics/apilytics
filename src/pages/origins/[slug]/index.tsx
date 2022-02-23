@@ -36,11 +36,17 @@ const Origin: NextPage = () => {
     setMetrics,
     timeFrame,
     selectedMethod: method = '',
+    setSelectedMethod,
     selectedEndpoint: endpoint = '',
+    setSelectedEndpoint,
     selectedStatusCode: statusCode = '',
+    setSelectedStatusCode,
     selectedBrowser: browser = '',
+    setSelectedBrowser,
     selectedOs: os = '',
+    setSelectedOs,
     selectedDevice: device = '',
+    setSelectedDevice,
   } = useOrigin();
 
   const [loading, setLoading] = useState(true);
@@ -94,6 +100,25 @@ const Origin: NextPage = () => {
       replace({ pathname, query });
     }
   }, [handleOpenModal, pathname, query, replace, showApiKey]);
+
+  // Reset filters when exiting the page.
+  useEffect(() => {
+    return (): void => {
+      setSelectedMethod(undefined);
+      setSelectedEndpoint(undefined);
+      setSelectedStatusCode(undefined);
+      setSelectedBrowser(undefined);
+      setSelectedOs(undefined);
+      setSelectedDevice(undefined);
+    };
+  }, [
+    setSelectedBrowser,
+    setSelectedDevice,
+    setSelectedEndpoint,
+    setSelectedMethod,
+    setSelectedOs,
+    setSelectedStatusCode,
+  ]);
 
   if (loading) {
     return (
