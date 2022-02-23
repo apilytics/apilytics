@@ -203,7 +203,7 @@ export const getMockMetrics = ({
   const responseTimeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
   const requestSizeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
   const responseSizeAvg = timeFrameData.length ? getRandomNumberBetween(20, 200) : 0;
-  const cpuUsageAvg = timeFrameData.length ? getRandomNumberBetween(20, 60) : 0;
+  const cpuUsageAvg = timeFrameData.length ? getRandomNumberBetween(0.2, 0.6) : 0;
 
   const memoryUsageAvg = timeFrameData.length
     ? getRandomNumberBetween(1_000_000, 2_000_000_000)
@@ -241,10 +241,10 @@ export const getMockMetrics = ({
   const cpuUsage = {
     avg: cpuUsageAvg,
     p50: cpuUsageAvg,
-    p75: getRandomNumberBetween(60, 70),
-    p90: getRandomNumberBetween(70, 90),
-    p95: getRandomNumberBetween(80, 90),
-    p99: getRandomNumberBetween(90, 100),
+    p75: getRandomNumberBetween(0.6, 0.7),
+    p90: getRandomNumberBetween(0.7, 0.9),
+    p95: getRandomNumberBetween(0.8, 0.9),
+    p99: getRandomNumberBetween(0.9, 1),
   };
 
   const memoryUsage = {
