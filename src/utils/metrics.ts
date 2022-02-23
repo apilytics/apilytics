@@ -338,7 +338,7 @@ export const getMockMetrics = ({
   };
 };
 
-export const formatCount = (count: number, decimals = 0): string => {
+export const formatCount = (count = 0, decimals = 0): string => {
   if (count > 1_000_000) {
     return `${(count / 1_000_000).toFixed(1)}m`;
   }
@@ -348,4 +348,12 @@ export const formatCount = (count: number, decimals = 0): string => {
   }
 
   return `${(count ?? 0).toFixed(decimals)}`;
+};
+
+export const formatMilliseconds = (value = 0): string => {
+  if (value > 1_000) {
+    return `${(value / 1_000).toFixed(1)} s`;
+  }
+
+  return `${value ?? 0} ms`;
 };

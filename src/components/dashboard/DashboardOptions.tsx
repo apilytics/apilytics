@@ -11,6 +11,7 @@ import { Select } from 'components/shared/Select';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { TIME_FRAME_OPTIONS } from 'utils/constants';
+import { truncateString } from 'utils/helpers';
 import { staticRoutes } from 'utils/router';
 import type { ApilyticsPackage, TimeFrame } from 'types';
 
@@ -59,7 +60,7 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug }, apil
       )}
       {selectedEndpoint && (
         <Button onClick={(): void => setSelectedEndpoint(undefined)} endIcon={XIcon}>
-          {selectedEndpoint}
+          {truncateString(selectedEndpoint, 50)}
         </Button>
       )}
       {selectedStatusCode && (

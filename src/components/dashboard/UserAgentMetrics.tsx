@@ -2,9 +2,7 @@ import { ArrowsExpandIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-import { BarValue } from 'components/dashboard/BarValue';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
-import { LinkTick } from 'components/dashboard/LinkTick';
 import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
@@ -61,37 +59,35 @@ export const UserAgentMetrics: React.FC<Props> = ({
   const sortData = (a: CombinedUserAgentData, b: CombinedUserAgentData): number =>
     b.requests - a.requests;
 
+  const _renderLabel = (label: string): JSX.Element => (
+    <a className="unstyled text-white hover:text-primary">
+      <span className="link">{label}</span>
+    </a>
+  );
+
   const attributes = {
     browsers: {
       data: browserData.sort(sortData),
-      dataKey: 'browser',
+      renderLabel: ({ browser = '' }: Partial<BrowserData>) => _renderLabel(browser),
       label: 'Browsers',
-      emptyLabel: 'No browsers available.',
     },
     os: {
       data: osData.sort(sortData),
-      dataKey: 'os',
+      renderLabel: ({ os = '' }: Partial<OSData>) => _renderLabel(os),
       label: 'OS',
-      emptyLabel: 'No operating systems available.',
     },
     devices: {
       data: deviceData.sort(sortData),
-      dataKey: 'device',
+      renderLabel: ({ device = '' }: Partial<DeviceData>) => _renderLabel(device),
       label: 'Devices',
-      emptyLabel: 'No devices available.',
     },
   };
 
-  const { data, dataKey, emptyLabel } = attributes[metricType];
-
-  const { data: modalData, dataKey: modalDataKey } = attributes[activeTab];
-
+  const { data, renderLabel } = attributes[metricType];
+  const { data: modalData, renderLabel: renderModalLabel } = attributes[activeTab];
   const truncatedData = data.slice(0, 10);
-  const getHeight = (dataLength: number): number => 100 + dataLength * 35;
-  const height = getHeight(modalData.length);
-  const truncatedHeight = getHeight(truncatedData.length);
 
-  const handleLabelClick = (data: CombinedUserAgentData): void => {
+  const handleBarClick = (data: Partial<BrowserData & OSData & DeviceData>): void => {
     const dispatchers = {
       browsers: setSelectedBrowser,
       os: setSelectedOs,
@@ -133,30 +129,23 @@ export const UserAgentMetrics: React.FC<Props> = ({
     plausible(events[metricType]);
   };
 
-  const renderNoMetrics = !data.length && (
-    <div className="flex flex-col items-center justify-center py-40">
-      <p>{emptyLabel}</p>
-    </div>
-  );
+  const renderValue = ({ requests }: Partial<CombinedUserAgentData>): string =>
+    formatCount(requests);
 
-  const renderLabels = (
-    <BarValue formatter={(value?: string | number): string => formatCount(Number(value))} />
-  );
+  const barChartProps = {
+    data: truncatedData,
+    valueKey: 'requests',
+    renderLabel,
+    renderValue,
+    onBarClick: handleBarClick,
+    leftLabel: 'Name',
+    rightLabel: 'Requests',
+  } as const;
 
   const renderMetrics = (
     <>
       <div className="flex grow">
-        <VerticalBarChart
-          height={truncatedHeight}
-          data={truncatedData}
-          dataKey="requests"
-          secondaryDataKey={dataKey}
-          onLabelClick={handleLabelClick}
-          renderLabels={renderLabels}
-          tick={<LinkTick />}
-          label="Name"
-          secondaryLabel="Requests"
-        />
+        <VerticalBarChart {...barChartProps} />
       </div>
       <div className="flex">
         <Button
@@ -190,7 +179,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
           ))}
         </div>
       </div>
-      <div className="mt-4 flex grow flex-col">{renderNoMetrics || renderMetrics}</div>
+      <div className="mt-4 flex grow flex-col">{renderMetrics}</div>
       <Modal name={MODAL_NAMES.userAgents} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
@@ -214,15 +203,9 @@ export const UserAgentMetrics: React.FC<Props> = ({
           <div className="overflow-y-auto px-4">
             <div className="flex grow">
               <VerticalBarChart
-                height={height}
+                {...barChartProps}
                 data={modalData}
-                dataKey="requests"
-                secondaryDataKey={modalDataKey}
-                onLabelClick={handleLabelClick}
-                renderLabels={renderLabels}
-                tick={<LinkTick />}
-                label="Name"
-                secondaryLabel="Requests"
+                renderLabel={renderModalLabel}
               />
             </div>
           </div>

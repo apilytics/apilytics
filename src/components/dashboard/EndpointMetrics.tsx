@@ -2,9 +2,7 @@ import { ArrowsExpandIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-import { BarValue } from 'components/dashboard/BarValue';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
-import { MethodAndEndpointTick } from 'components/dashboard/MethodAndEndpointTick';
 import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
@@ -13,8 +11,8 @@ import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES } from 'utils/constants';
-import { formatCount } from 'utils/metrics';
-import type { EndpointData, ValueOf } from 'types';
+import { formatCount, formatMilliseconds } from 'utils/metrics';
+import type { EndpointData, ValueOf, VerticalBarData } from 'types';
 
 const METRIC_TYPES = {
   requests: 'requests',
@@ -37,35 +35,32 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const attributes = {
     requests: {
       data: requestsData,
-      formatter: (value?: string | number): string => formatCount(Number(value)),
-      dataKey: 'totalRequests',
+      renderValue: ({ totalRequests }: Partial<VerticalBarData>): string =>
+        formatCount(totalRequests),
+      valueKey: 'totalRequests',
       label: 'Requests',
-      emptyLabel: 'No requests available.',
     },
     responseTimes: {
       data: responseTimeData,
-      formatter: (value?: string | number): string => `${value}ms`,
-      dataKey: 'responseTimeAvg',
+      renderValue: ({ responseTimeAvg }: Partial<VerticalBarData>): string =>
+        formatMilliseconds(responseTimeAvg),
+      valueKey: 'responseTimeAvg',
       label: 'Response times',
-      emptyLabel: 'No response times available.',
     },
-  };
+  } as const;
 
-  const { data, dataKey, label, emptyLabel, formatter } = attributes[metricType];
+  const { data, valueKey, label, renderValue } = attributes[metricType];
 
   const {
     data: modalData,
-    dataKey: modalDataKey,
+    valueKey: modalValueKey,
     label: modalLabel,
-    formatter: modalFormatter,
+    renderValue: renderModalValue,
   } = attributes[activeTab];
 
   const truncatedData = data.slice(0, 10);
-  const getHeight = (dataLength: number): number => 100 + dataLength * 35;
-  const height = getHeight(modalData.length);
-  const truncatedHeight = getHeight(truncatedData.length);
 
-  const handleLabelClick = (data: EndpointData): void => {
+  const handleLabelClick = (data: Partial<EndpointData>): void => {
     setSelectedMethod(data.method);
     setSelectedEndpoint(data.endpoint);
     plausible('endpoint-click');
@@ -76,26 +71,27 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
     plausible('show-all-endpoints-click');
   };
 
-  const renderNoMetrics = !data.length && (
-    <div className="flex flex-col items-center justify-center py-40">
-      <p>{emptyLabel}</p>
-    </div>
+  const renderLabel = ({ method, endpoint }: Partial<EndpointData>): JSX.Element => (
+    <a className="unstyled text-white hover:text-primary">
+      <span className={`text-method-${method?.toLowerCase()} cursor-pointer`}>{method}</span>{' '}
+      <span className="link">{endpoint}</span>
+    </a>
   );
+
+  const barChartProps = {
+    data: truncatedData,
+    valueKey: valueKey,
+    renderLabel: renderLabel,
+    renderValue: renderValue,
+    onBarClick: handleLabelClick,
+    leftLabel: 'Name',
+    rightLabel: label,
+  } as const;
 
   const renderMetrics = (
     <>
       <div className="flex grow">
-        <VerticalBarChart
-          height={truncatedHeight}
-          data={truncatedData}
-          dataKey={dataKey}
-          secondaryDataKey="methodAndEndpoint"
-          tick={<MethodAndEndpointTick />}
-          onLabelClick={handleLabelClick}
-          renderLabels={<BarValue formatter={formatter} />}
-          label="Name"
-          secondaryLabel={label}
-        />
+        <VerticalBarChart {...barChartProps} />
       </div>
       <div className="flex">
         <Button
@@ -129,9 +125,9 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
           ))}
         </div>
       </div>
-      <div className="mt-4">{renderNoMetrics || renderMetrics}</div>
+      <div className="mt-4">{renderMetrics}</div>
       <Modal name={MODAL_NAMES.endpoints} mobileFullscreen>
-        <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
+        <div className="w-screen overflow-y-auto sm:w-128 sm:min-w-96">
           <div className="flex justify-between p-2">
             <p className="pl-4 text-white">Endpoints</p>
             <ModalCloseButton onClick={handleCloseModal} />
@@ -153,15 +149,11 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
           <div className="overflow-y-auto px-4">
             <div className="flex grow">
               <VerticalBarChart
-                height={height}
+                {...barChartProps}
                 data={modalData}
-                dataKey={modalDataKey}
-                secondaryDataKey="methodAndEndpoint"
-                tick={<MethodAndEndpointTick />}
-                onLabelClick={handleLabelClick}
-                renderLabels={<BarValue formatter={modalFormatter} />}
-                label="Name"
-                secondaryLabel={modalLabel}
+                valueKey={modalValueKey}
+                renderValue={renderModalValue}
+                rightLabel={modalLabel}
               />
             </div>
           </div>
