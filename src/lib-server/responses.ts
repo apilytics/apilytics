@@ -30,7 +30,7 @@ export const sendApiKeyMissing = (res: NextApiResponse): void => {
 
 export const sendUnauthorized = (
   res: NextApiResponse,
-  message = 'Only allowed for logged in users.',
+  message = 'Only allowed for logged-in users.',
 ): void => {
   res.status(401).json({ message });
 };

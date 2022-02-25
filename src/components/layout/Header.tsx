@@ -74,7 +74,7 @@ const COMMUNITY_ITEMS = [
     href: staticRoutes.github,
     title: 'Github',
     description:
-      'Our Github organizations gives you access to our open source work as well as our Github community.',
+      'Our GitHub organizations gives you access to our open source work as well as our GitHub community.',
   },
   {
     external: true,

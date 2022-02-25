@@ -233,7 +233,7 @@ ${whereClause}
 GROUP BY time;`;
 
   // If an endpoint is provided as a filter, return all paths matching that endpoint.
-  // Otherwise return all dynamic routes + other paths through `endpoint`.
+  // Otherwise, return all dynamic routes + other paths through `endpoint`.
   let endpointSelectClause;
 
   if (endpoint) {

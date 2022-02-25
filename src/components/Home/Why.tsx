@@ -14,7 +14,7 @@ const REASONS = [
   },
   {
     title: 'Meaningful data',
-    content: "We know what metrics API developers are interested in and we've got you covered.",
+    content: "We know what metrics API developers are interested in, and we've got you covered.",
   },
   {
     title: 'Full automation',

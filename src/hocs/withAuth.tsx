@@ -18,7 +18,7 @@ export const withAuth = <T extends Record<string, unknown>>(
     useSession({
       required: true,
       onUnauthenticated: () => {
-        // This is already the default behavior but we want to be explicit.
+        // This is already the default behavior, but we want to be explicit.
         // Either force login or redirect to the login page if the user is not authenticated.
         signIn();
       },
