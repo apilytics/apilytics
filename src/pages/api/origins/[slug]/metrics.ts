@@ -10,16 +10,7 @@ import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
 import { PERCENTILE_DATA_KEYS } from 'utils/constants';
-import type {
-  ApiHandler,
-  BrowserData,
-  DeviceData,
-  EndpointData,
-  OriginMetrics,
-  OSData,
-  StatusCodeData,
-  TimeFrameData,
-} from 'types';
+import type { ApiHandler, EndpointData, OriginMetrics, TimeFrameData } from 'types';
 
 const DAY_MILLIS = 24 * 60 * 60 * 1000;
 const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
@@ -75,6 +66,30 @@ interface RawGeneralData extends GeneralData {
 }
 
 type RawEndpointData = Omit<EndpointData, 'methodAndEndpoint'>;
+
+interface RawMiscData {
+  browser: string | null;
+  os: string | null;
+  device: string | null;
+  statusCode: number | null;
+  requests: number;
+}
+
+const extractFromMiscData = <
+  T extends RawMiscData,
+  K extends Exclude<keyof RawMiscData, 'requests'>,
+>(
+  arr: T[],
+  key: K,
+): ({ [Key in K]: NonNullable<T[Key]> } & { requests: number })[] =>
+  arr
+    .filter(({ [key]: val }) => val !== null)
+    .map(
+      ({ [key]: val, requests }) =>
+        // Assertion is needed because of computed property key type widening:
+        // https://github.com/microsoft/TypeScript/issues/13948
+        ({ [key]: val, requests } as { [Key in K]: NonNullable<T[Key]> } & { requests: number }),
+    );
 
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
@@ -218,7 +233,7 @@ ${whereClause}
 GROUP BY time;`;
 
   // If an endpoint is provided as a filter, return all paths matching that endpoint.
-  // Otherwise return all dynamic routes + other paths through `endpoint`.
+  // Otherwise, return all dynamic routes + other paths through `endpoint`.
   let endpointSelectClause;
 
   if (endpoint) {
@@ -254,49 +269,23 @@ LEFT JOIN LATERAL (
 ${whereClause}
 
 GROUP BY metrics.method, endpoint;`;
-
-  const statusCodeDataPromise: Promise<StatusCodeData[]> = prisma.$queryRaw`
-SELECT
-  metrics.status_code as "statusCode",
-  COUNT(metrics.status_code) as requests
-
-${fromClause}
-${whereClause}
-
-GROUP BY metrics.status_code;`;
-
-  const browserDataPromise: Promise<BrowserData[]> = prisma.$queryRaw`
+  const miscDataPromise: Promise<RawMiscData[]> = prisma.$queryRaw`
 SELECT
   metrics.browser,
-  COUNT(metrics.browser) AS requests
-
-${fromClause}
-${whereClause}
-AND metrics.browser IS NOT NULL
-
-GROUP BY metrics.browser;`;
-
-  const osDataPromise: Promise<OSData[]> = prisma.$queryRaw`
-SELECT
   metrics.os,
-  COUNT(metrics.os) AS requests
-
-${fromClause}
-${whereClause}
-AND metrics.os IS NOT NULL
-
-GROUP BY metrics.os;`;
-
-  const deviceDataPromise: Promise<DeviceData[]> = prisma.$queryRaw`
-SELECT
   metrics.device,
-  COUNT(metrics.device) AS requests
+  metrics.status_code as "statusCode",
+  COUNT(*) AS requests
 
 ${fromClause}
 ${whereClause}
-AND metrics.device IS NOT NULL
 
-GROUP BY metrics.device;`;
+GROUP BY GROUPING SETS (
+  metrics.browser,
+  metrics.os,
+  metrics.device,
+  metrics.status_code
+);`;
 
   const versionDataPromise = prisma.metric.findFirst({
     where: { originId },
@@ -304,27 +293,15 @@ GROUP BY metrics.device;`;
     select: { apilyticsVersion: true },
   });
 
-  const [
-    prevGeneralData,
-    _generalData,
-    timeFrameData,
-    _endpointData,
-    statusCodeData,
-    browserData,
-    osData,
-    deviceData,
-    versionData,
-  ] = await Promise.all([
-    prevGeneralDataPromise,
-    generalDataPromise,
-    timeFrameDataPromise,
-    endpointDataPromise,
-    statusCodeDataPromise,
-    browserDataPromise,
-    osDataPromise,
-    deviceDataPromise,
-    versionDataPromise,
-  ]);
+  const [prevGeneralData, _generalData, timeFrameData, _endpointData, miscData, versionData] =
+    await Promise.all([
+      prevGeneralDataPromise,
+      generalDataPromise,
+      timeFrameDataPromise,
+      endpointDataPromise,
+      miscDataPromise,
+      versionDataPromise,
+    ]);
 
   const { totalRequests: prevTotalRequests, totalErrors: prevTotalErrors } = prevGeneralData[0];
   const { totalRequests, totalErrors, ...g } = _generalData[0];
@@ -415,9 +392,9 @@ GROUP BY metrics.device;`;
   }));
 
   const userAgentData = {
-    browserData,
-    osData,
-    deviceData,
+    browserData: extractFromMiscData(miscData, 'browser'),
+    osData: extractFromMiscData(miscData, 'os'),
+    deviceData: extractFromMiscData(miscData, 'device'),
   };
 
   const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
@@ -434,7 +411,7 @@ GROUP BY metrics.device;`;
     timeFrameData,
     endpointData,
     percentileData,
-    statusCodeData,
+    statusCodeData: extractFromMiscData(miscData, 'statusCode'),
     userAgentData,
     apilyticsPackage,
   };

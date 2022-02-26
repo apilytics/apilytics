@@ -41,7 +41,7 @@ export const Head: React.FC<HeadProps> = ({ indexable, title, description, loadi
       );
     }
 
-    // The actual minimum length for descriptions is said to be 60 characters but we want
+    // The actual minimum length for descriptions is said to be 60 characters, but we want
     // to maximize the odds of the search engines indexing our custom descriptions.
     if (_description?.length < 100 || _description?.length > 160) {
       throw Error(
