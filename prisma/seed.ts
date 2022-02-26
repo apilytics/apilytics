@@ -114,9 +114,9 @@ const main = async (): Promise<void> => {
       });
 
     // Create metrics in batches of max 10 000 at a time.
-    if (metricsBatch.length === 10_000 || hourIndex === 365 * 24 - 1) {
+    if (metricsBatch.length >= 10_000 || hourIndex === 365 * 24 - 1) {
       await prisma.metric.createMany({ data: metricsBatch });
-      metricsBatch.splice(0, metricsBatch.length);
+      metricsBatch.splice(0);
     }
 
     metricsBatch.push(...metricsForHour);
