@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "migrate:dev": "prisma migrate dev && prisma generate",
-    "migrate:deploy": "prisma migrate deploy",
-    "migrate:reset": "prisma migrate reset --force",
+    "migrate:deploy": "DATABASE_URL=\"$MIGRATE_DATABASE_URL\" prisma migrate deploy",
+    "migrate:reset": "DATABASE_URL=\"$MIGRATE_DATABASE_URL\" prisma migrate reset --force",
     "prisma:seed": "prisma db seed",
     "prisma:generate": "prisma generate",
     "dev": "next dev",
