@@ -20,9 +20,24 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  origins Origin[]
+  originUsers OriginUser[]
 
   @@map("users")
+}
+
+model OriginUser {
+  id   String @id @default(uuid())
+  role String @map("role")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId   String @map("user_id")
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  originId String @map("origin_id") @db.Uuid
+  origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
+
+  @@map("origin_users")
 }
 
 model VerificationToken {
@@ -60,13 +75,24 @@ model Origin {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  originUsers   OriginUser[]
   metrics       Metric[]
   dynamicRoutes DynamicRoute[]
+  invites       OriginInvite[]
 
   @@map("origins")
+}
+
+model OriginInvite {
+  id     String @id @default(uuid()) @db.Uuid
+  email  String @unique
+  origin Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  originId String @map("origin_id") @db.Uuid
+  @@map("origin_invites")
 }
 
 model DynamicRoute {
