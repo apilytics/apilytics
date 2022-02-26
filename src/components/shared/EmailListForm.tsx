@@ -6,17 +6,17 @@ import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 
 export const EmailListForm: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [submittedText, setSubmittedText] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState('');
   const plausible = usePlausible();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSubmittedText('');
+    setErrorMessage('');
+    setSuccessMessage('');
 
     try {
       const res = await fetch(staticApiRoutes.emailList, {
@@ -30,15 +30,15 @@ export const EmailListForm: React.FC = () => {
       const { message } = await res.json();
 
       if (res.status === 201) {
-        setError('');
+        setErrorMessage('');
         setEmail('');
-        setSubmittedText(message);
+        setSuccessMessage(message);
         plausible('email-list-subscribe');
       } else {
-        setError(message || UNEXPECTED_ERROR);
+        setErrorMessage(message || UNEXPECTED_ERROR);
       }
     } catch {
-      setError(UNEXPECTED_ERROR);
+      setErrorMessage(UNEXPECTED_ERROR);
     } finally {
       setLoading(false);
     }
@@ -73,14 +73,14 @@ export const EmailListForm: React.FC = () => {
         <label className="label">
           <span className="label-text-alt">No spam. Unsubscribe at any time.</span>
         </label>
-        {error && (
+        {errorMessage && (
           <label className="label">
-            <span className="label-text-alt text-error">{error}</span>
+            <span className="label-text-alt text-error">{errorMessage}</span>
           </label>
         )}
-        {submittedText && (
+        {successMessage && (
           <label className="label">
-            <span className="label-text-alt text-white">{submittedText}</span>
+            <span className="label-text-alt text-white">{successMessage}</span>
           </label>
         )}
       </div>

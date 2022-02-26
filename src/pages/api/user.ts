@@ -4,25 +4,21 @@ import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
-import type { ApiHandler } from 'types';
+import type { ApiHandler, MessageResponse } from 'types';
 
-interface UserResponse {
-  data: User;
-}
-
-const handleGet: ApiHandler<UserResponse> = async (req, res) => {
+const handleGet: ApiHandler<{ data: User }> = async (req, res) => {
   const id = await getSessionUserId(req);
-  const account = await prisma.user.findUnique({ where: { id } });
+  const user = await prisma.user.findUnique({ where: { id } });
 
-  if (!account) {
+  if (!user) {
     sendNotFound(res, 'User');
     return;
   }
 
-  sendOk(res, { data: account });
+  sendOk(res, { data: user });
 };
 
-const handlePut: ApiHandler<UserResponse> = async (req, res) => {
+const handlePut: ApiHandler<{ data: User } & MessageResponse> = async (req, res) => {
   const id = await getSessionUserId(req);
   const { name, email, usedTechnologies, intendedUse } = req.body;
 
@@ -31,17 +27,17 @@ const handlePut: ApiHandler<UserResponse> = async (req, res) => {
     return;
   }
 
-  const account = await prisma.user.update({
+  const user = await prisma.user.update({
     where: { id },
     data: { name, email, usedTechnologies, intendedUse },
   });
 
-  if (!account) {
+  if (!user) {
     sendNotFound(res, 'User');
     return;
   }
 
-  sendOk(res, { data: account });
+  sendOk(res, { data: user, message: 'Account settings saved.' });
 };
 
 const handler = makeMethodsHandler({ GET: handleGet, PUT: handlePut }, true);

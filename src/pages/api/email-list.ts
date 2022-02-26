@@ -3,13 +3,9 @@ import { sendConflict, sendCreated, sendInvalidInput } from 'lib-server/response
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
-import type { ApiHandler } from 'types';
+import type { ApiHandler, MessageResponse } from 'types';
 
-interface EmailListPostResponse {
-  message: string;
-}
-
-const handlePost: ApiHandler<EmailListPostResponse> = async (req, res) => {
+const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
   const { email } = req.body;
 
   if (!email) {

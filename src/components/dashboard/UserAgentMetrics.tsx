@@ -7,9 +7,9 @@ import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
-import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
+import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
 import { formatCount } from 'utils/metrics';
 import type {
@@ -54,7 +54,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
   const { setSelectedBrowser, setSelectedOs, setSelectedDevice } = useOrigin();
   const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.browsers);
   const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.browsers);
-  const { handleOpenModal, handleCloseModal } = useModal();
+  const { handleOpenModal, handleCloseModal } = useUIState();
 
   const sortData = (a: CombinedUserAgentData, b: CombinedUserAgentData): number =>
     b.requests - a.requests;

@@ -1,23 +1,29 @@
 import { ClipboardCopyIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { IconButton } from 'components/shared/IconButton';
 import { usePlausible } from 'hooks/usePlausible';
+import { useUIState } from 'hooks/useUIState';
 import { staticRoutes } from 'utils/router';
 
 interface Props {
   value: string;
+  onClickCallback?: () => void;
 }
 
-export const ApiKeyField: React.FC<Props> = ({ value }) => {
+export const ApiKeyField: React.FC<Props> = ({ value, onClickCallback }) => {
   const plausible = usePlausible();
-  const [isCopied, setIsCopied] = useState(false);
+  const { setSuccessMessage } = useUIState();
 
   const onClick = (): void => {
     navigator.clipboard.writeText(value);
-    setIsCopied(true);
+    setSuccessMessage('API key copied to the clipboard.');
     plausible('copy-api-key');
+
+    if (onClickCallback) {
+      onClickCallback();
+    }
   };
 
   return (
@@ -36,8 +42,6 @@ export const ApiKeyField: React.FC<Props> = ({ value }) => {
           type="button"
           onClick={onClick}
           icon={ClipboardCopyIcon}
-          tooltip="Copy your API key to the clipboard."
-          tooltipProps={{ className: 'tooltip-left' }}
           className="btn-outline btn-primary rounded-l-none border-l-0"
         />
       </div>
@@ -50,11 +54,6 @@ export const ApiKeyField: React.FC<Props> = ({ value }) => {
           for more information.
         </span>
       </label>
-      {isCopied && (
-        <label className="label">
-          <span className="label-text-alt text-white">API key copied to the clipboard.</span>
-        </label>
-      )}
     </div>
   );
 };

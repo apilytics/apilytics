@@ -12,9 +12,9 @@ import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
-import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
+import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
 
@@ -22,21 +22,20 @@ const OriginSettings: NextPage = () => {
   const { origin, setOrigin } = useOrigin();
   const { name: _name, apiKey = '', slug = '' } = origin ?? {};
   const [name, setName] = useState(_name);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [submittedText, setSubmittedText] = useState('');
-  const { handleOpenModal, handleCloseModal } = useModal();
   const plausible = usePlausible();
+
+  const { setLoading, setSuccessMessage, setErrorMessage, handleOpenModal, handleCloseModal } =
+    useUIState();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setSubmittedText('');
-    setError('');
+    setSuccessMessage('');
+    setErrorMessage('');
 
     try {
       const res = await fetch(dynamicApiRoutes.origin({ slug }), {
-        method: 'PUT',
+        method: 'PATCH',
         body: JSON.stringify({ name }),
         headers: {
           'Content-Type': 'application/json',
@@ -47,14 +46,14 @@ const OriginSettings: NextPage = () => {
 
       if (res.status === 200) {
         setOrigin(data);
-        setError('');
-        setSubmittedText('Origin settings saved.');
+        setErrorMessage('');
+        setSuccessMessage(message);
         plausible('update-origin');
       } else {
-        setError(message || UNEXPECTED_ERROR);
+        setErrorMessage(message || UNEXPECTED_ERROR);
       }
     } catch {
-      setError(UNEXPECTED_ERROR);
+      setErrorMessage(UNEXPECTED_ERROR);
     } finally {
       setLoading(false);
     }
@@ -63,26 +62,25 @@ const OriginSettings: NextPage = () => {
   const handleConfirmDelete = async (): Promise<void> => {
     handleCloseModal();
     setLoading(true);
-    setSubmittedText('');
-    setError('');
+    setSuccessMessage('');
+    setErrorMessage('');
 
     try {
       const res = await fetch(dynamicApiRoutes.origin({ slug }), {
         method: 'DELETE',
       });
 
-      const { message = UNEXPECTED_ERROR } = await res.json();
-
       if (res.status === 204) {
-        setError('');
+        setErrorMessage('');
         plausible('delete-origin');
         Router.push(staticRoutes.origins);
       } else {
-        setError(message);
+        const { message = UNEXPECTED_ERROR } = await res.json();
+        setErrorMessage(message);
         setLoading(false);
       }
     } catch {
-      setError(UNEXPECTED_ERROR);
+      setErrorMessage(UNEXPECTED_ERROR);
       setLoading(false);
     }
   };
@@ -97,15 +95,14 @@ const OriginSettings: NextPage = () => {
   );
 
   return (
-    <MainTemplate headProps={{ title: 'Origin settings' }}>
+    <MainTemplate
+      headProps={{ title: origin?.name ? `Settings for ${origin.name}` : 'Loading...' }}
+    >
       <div className="card rounded-lg bg-base-100 p-4 shadow">
         <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
         <Form
           title={`Settings for ${origin?.name}`}
           onSubmit={handleSubmit}
-          error={error}
-          loading={loading}
-          submittedText={submittedText}
           contentAfter={renderDeleteOriginLink}
         >
           <Input

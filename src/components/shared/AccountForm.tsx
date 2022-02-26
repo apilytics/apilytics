@@ -6,6 +6,7 @@ import { Select } from 'components/shared/Select';
 import { TextArea } from 'components/shared/TextArea';
 import { useAccount } from 'hooks/useAccount';
 import { usePlausible } from 'hooks/usePlausible';
+import { useUIState } from 'hooks/useUIState';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 
@@ -16,6 +17,8 @@ interface Props {
 
 export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
   const { user, setUser } = useAccount();
+  const { setLoading, setSuccessMessage, setErrorMessage } = useUIState();
+  const plausible = usePlausible();
 
   const [formValues, setFormValues] = useState({
     name: user?.name || '',
@@ -23,11 +26,6 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
     usedTechnologies: user?.usedTechnologies || '',
     intendedUse: user?.intendedUse || '',
   });
-
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [submittedText, setSubmittedText] = useState('');
-  const plausible = usePlausible();
 
   const handleChange = ({
     target,
@@ -37,8 +35,8 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setSubmittedText('');
-    setError('');
+    setSuccessMessage('');
+    setErrorMessage('');
 
     try {
       const res = await fetch(staticApiRoutes.user, {
@@ -52,28 +50,22 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
       const { data, message } = await res.json();
 
       if (res.status === 200) {
-        setError('');
-        setSubmittedText('Account settings saved.');
+        setErrorMessage('');
+        setSuccessMessage(message);
         plausible('update-account');
         setUser(data);
       } else {
-        setError(message || UNEXPECTED_ERROR);
+        setErrorMessage(message || UNEXPECTED_ERROR);
       }
     } catch {
-      setError(UNEXPECTED_ERROR);
+      setErrorMessage(UNEXPECTED_ERROR);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Form
-      title={title}
-      onSubmit={handleSubmit}
-      error={error}
-      loading={loading}
-      submittedText={submittedText}
-    >
+    <Form title={title} onSubmit={handleSubmit}>
       <Input
         name="name"
         label="Account name"

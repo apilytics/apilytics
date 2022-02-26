@@ -1,7 +1,6 @@
 import { XIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
 import React from 'react';
-import type { Origin } from '@prisma/client';
 import type { ChangeEvent } from 'react';
 
 import { VersionInfo } from 'components/dashboard/VersionInfo';
@@ -13,14 +12,17 @@ import { usePlausible } from 'hooks/usePlausible';
 import { TIME_FRAME_OPTIONS } from 'utils/constants';
 import { truncateString } from 'utils/helpers';
 import { staticRoutes } from 'utils/router';
-import type { ApilyticsPackage, TimeFrame } from 'types';
+import type { ApilyticsPackage, OriginData, TimeFrame } from 'types';
 
 interface Props {
-  origin: Origin;
+  origin: OriginData;
   apilyticsPackage?: ApilyticsPackage;
 }
 
-export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug }, apilyticsPackage }) => {
+export const DashboardOptions: React.FC<Props> = ({
+  origin: { name, slug, userRole },
+  apilyticsPackage,
+}) => {
   const plausible = usePlausible();
   const { pathname, query, replace } = useRouter();
   const isDemo = pathname === staticRoutes.demo;
@@ -51,7 +53,10 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug }, apil
 
   return (
     <div className="mt-2 mb-4 flex flex-wrap items-center justify-start gap-4">
-      <h6 className="-mr-2 text-white">{name}</h6>
+      <h6 className="-mr-2 text-white">
+        {name}
+        <div className="badge badge badge-primary badge-outline ml-2 capitalize">{userRole}</div>
+      </h6>
       {!!apilyticsPackage && <VersionInfo apilyticsPackage={apilyticsPackage} />}
       {selectedMethod && (
         <Button onClick={(): void => setSelectedMethod(undefined)} endIcon={XIcon}>
@@ -95,7 +100,7 @@ export const DashboardOptions: React.FC<Props> = ({ origin: { name, slug }, apil
           </option>
         ))}
       </Select>
-      {!isDemo && <OriginMenu slug={slug} />}
+      {!isDemo && <OriginMenu slug={slug} userRole={userRole} />}
     </div>
   );
 };

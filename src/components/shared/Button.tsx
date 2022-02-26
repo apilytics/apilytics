@@ -7,12 +7,10 @@ import type { ButtonProps } from 'types';
 export const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   loading,
-  tooltip,
   className,
   startIcon: StartIcon,
   endIcon: EndIcon,
   linkTo,
-  tooltipProps,
   children,
   ...props
 }) => {
@@ -31,18 +29,6 @@ export const Button: React.FC<ButtonProps> = ({
       <Link href={linkTo}>
         <a className="unstyled contents">{renderButton}</a>
       </Link>
-    );
-  }
-
-  if (tooltip) {
-    return (
-      <div
-        data-tip={tooltip}
-        {...tooltipProps}
-        className={clsx(tooltip && 'tooltip', tooltipProps?.className)}
-      >
-        {renderButton}
-      </div>
     );
   }
 
