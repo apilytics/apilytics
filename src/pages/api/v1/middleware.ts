@@ -11,7 +11,6 @@ import {
 import prisma from 'prisma/client';
 import { isInconsistentColumnData } from 'prisma/errors';
 import { METHODS_WITHOUT_BODY, UNKNOWN_STATUS_CODE } from 'utils/constants';
-import { tryTwice } from 'utils/functools';
 import type { ApiHandler } from 'types';
 
 type RequiredFields = Pick<Metric, 'path' | 'method' | 'timeMillis'>;
@@ -61,12 +60,9 @@ const handlePost: ApiHandler = async (req, res) => {
   let origin;
 
   try {
-    origin = await tryTwice(prisma.origin.findUnique, { where: { apiKey } });
+    origin = await prisma.origin.findUnique({ where: { apiKey } });
   } catch (e) {
     if (!isInconsistentColumnData(e)) {
-      console.error('origin.findUnique error, req path:', req.url);
-      console.error('origin.findUnique error, req headers:', req.headers);
-      console.error('origin.findUnique error, req body:', req.body);
       throw e;
     }
     // Was not a valid UUID.
@@ -123,32 +119,25 @@ const handlePost: ApiHandler = async (req, res) => {
     device = ua.device.type;
   }
 
-  try {
-    await tryTwice(prisma.metric.create, {
-      data: {
-        originId: origin.id,
-        path,
-        queryParams,
-        method,
-        statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
-        timeMillis: limitValue(timeMillis, { min: 0 }),
-        requestSize: limitValue(requestSize, { min: 0 }),
-        responseSize: limitValue(responseSize, { min: 0 }),
-        browser,
-        os,
-        device,
-        cpuUsage: limitValue(cpuUsage, { min: 0, max: 1 }),
-        memoryUsage: limitValue(memoryUsage, { min: 0 }),
-        memoryTotal: limitValue(memoryTotal, { min: 0 }),
-        apilyticsVersion,
-      },
-    });
-  } catch (e) {
-    console.error('metric.create error, req path:', req.url);
-    console.error('metric.create error, req headers:', req.headers);
-    console.error('metric.create error, req body:', req.body);
-    throw e;
-  }
+  await prisma.metric.create({
+    data: {
+      originId: origin.id,
+      path,
+      queryParams,
+      method,
+      statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
+      timeMillis: limitValue(timeMillis, { min: 0 }),
+      requestSize: limitValue(requestSize, { min: 0 }),
+      responseSize: limitValue(responseSize, { min: 0 }),
+      browser,
+      os,
+      device,
+      cpuUsage: limitValue(cpuUsage, { min: 0, max: 1 }),
+      memoryUsage: limitValue(memoryUsage, { min: 0 }),
+      memoryTotal: limitValue(memoryTotal, { min: 0 }),
+      apilyticsVersion,
+    },
+  });
 
   sendOk(res);
 };
