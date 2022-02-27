@@ -1,5 +1,5 @@
 import uaParser from 'ua-parser-js';
-import type { Metric } from '@prisma/client';
+import type { Metric, Origin } from '@prisma/client';
 
 import { makeMethodsHandler } from 'lib-server/apiHelpers';
 import {
@@ -57,7 +57,7 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  let origin;
+  let origin: Origin | null | undefined;
 
   try {
     origin = await prisma.origin.findUnique({ where: { apiKey } });
@@ -108,9 +108,9 @@ const handlePost: ApiHandler = async (req, res) => {
       ? req.headers['apilytics-version']
       : undefined;
 
-  let browser;
-  let os;
-  let device;
+  let browser: string | undefined;
+  let os: string | undefined;
+  let device: string | undefined;
 
   if (rawUserAgent) {
     const ua = uaParser(rawUserAgent);

@@ -104,7 +104,7 @@ export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, colo
   }: TooltipProps<ValueType, NameType>): JSX.Element | null => {
     if (payload?.length) {
       const { requests, errors, time } = payload[0].payload;
-      let format;
+      let format: string | undefined;
 
       switch (timeFrame) {
         case DAY: {

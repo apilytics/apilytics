@@ -15,7 +15,7 @@ interface GetResponse {
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
 
-  const data = await prisma.$queryRaw`
+  const data: OriginListItem[] = await prisma.$queryRaw`
 SELECT
   origins.name,
   origins.slug,
@@ -51,7 +51,7 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
     return;
   }
 
-  let origin;
+  let origin: Origin | undefined;
   const slug = slugify(name, { lower: true });
 
   try {

@@ -115,7 +115,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const toTime = toDate.getTime();
   const timeFrame = toTime - fromTime;
 
-  let wherePath: Prisma.Sql;
+  let wherePath: Prisma.Sql | undefined;
   if (endpoint) {
     const dynamicRoute = await prisma.dynamicRoute.findFirst({
       where: { originId, route: endpoint },
@@ -234,7 +234,7 @@ GROUP BY time;`;
 
   // If an endpoint is provided as a filter, return all paths matching that endpoint.
   // Otherwise, return all dynamic routes + other paths through `endpoint`.
-  let endpointSelectClause;
+  let endpointSelectClause: Prisma.Sql | undefined;
 
   if (endpoint) {
     endpointSelectClause = Prisma.sql`metrics.path AS endpoint`;
