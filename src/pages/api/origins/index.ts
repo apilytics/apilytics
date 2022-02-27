@@ -22,7 +22,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 SELECT
   origins.name,
   origins.slug,
-  COUNT(metrics) AS "totalMetrics",
+  COUNT(*) AS "totalMetrics",
   SUM(
     CASE WHEN metrics.created_at >= NOW() - INTERVAL '1 DAY' THEN 1 ELSE 0 END
   ) AS "lastDayMetrics"
