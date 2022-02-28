@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
@@ -14,23 +15,22 @@ interface GetResponse {
 
 const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
+  const user = await prisma.user.findFirst({ where: { id: userId }, select: { isAdmin: true } });
+  const whereClause = !user?.isAdmin ? Prisma.sql`WHERE origins.user_id = ${userId}` : Prisma.empty;
 
   const data: OriginListItem[] = await prisma.$queryRaw`
 SELECT
   origins.name,
   origins.slug,
-  COUNT(metrics) AS "totalMetrics",
+  COUNT(*) AS "totalMetrics",
   SUM(
     CASE WHEN metrics.created_at >= NOW() - INTERVAL '1 DAY' THEN 1 ELSE 0 END
   ) AS "lastDayMetrics"
 
 FROM origins
   LEFT JOIN metrics ON origins.id = metrics.origin_id
-  LEFT JOIN users ON TRUE
 
-WHERE
-  origins.user_id = ${userId}
-  OR (users.is_admin = TRUE AND users.id = ${userId})
+${whereClause}
 
 GROUP BY origins.name, origins.slug
 ORDER BY "totalMetrics" DESC;`;

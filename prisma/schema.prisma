@@ -65,6 +65,8 @@ model Origin {
   metrics       Metric[]
   dynamicRoutes DynamicRoute[]
 
+  @@index([slug])
+  @@index([userId])
   @@map("origins")
 }
 
@@ -78,6 +80,7 @@ model DynamicRoute {
 
   @@unique([route, originId])
   @@unique([pattern, originId])
+  @@index([originId])
   @@map("dynamic_routes")
 }
 
@@ -108,6 +111,8 @@ model Metric {
   originId String @map("origin_id") @db.Uuid
   origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
 
+  @@index([createdAt])
+  @@index([originId])
   @@map("metrics")
 }
 
