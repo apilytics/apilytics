@@ -12,22 +12,20 @@ import { usePlausible } from 'hooks/usePlausible';
 import { TIME_FRAME_OPTIONS } from 'utils/constants';
 import { truncateString } from 'utils/helpers';
 import { staticRoutes } from 'utils/router';
-import type { ApilyticsPackage, OriginData, TimeFrame } from 'types';
+import type { ApilyticsPackage, TimeFrame } from 'types';
 
 interface Props {
-  origin: OriginData;
   apilyticsPackage?: ApilyticsPackage;
 }
 
-export const DashboardOptions: React.FC<Props> = ({
-  origin: { name, slug, userRole },
-  apilyticsPackage,
-}) => {
+export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
   const plausible = usePlausible();
   const { pathname, query, replace } = useRouter();
   const isDemo = pathname === staticRoutes.demo;
 
   const {
+    slug,
+    origin,
     timeFrame,
     setTimeFrame,
     selectedMethod,
@@ -43,6 +41,8 @@ export const DashboardOptions: React.FC<Props> = ({
     selectedDevice,
     setSelectedDevice,
   } = useOrigin();
+
+  const { name, userRole, dynamicRouteCount, excludedRouteCount } = origin ?? {};
 
   const handleTimeFrameChange = ({ target }: ChangeEvent<HTMLSelectElement>): void => {
     const val = Number(target.value) as TimeFrame;
@@ -102,7 +102,14 @@ export const DashboardOptions: React.FC<Props> = ({
           </option>
         ))}
       </Select>
-      {!isDemo && <OriginMenu slug={slug} userRole={userRole} />}
+      {!isDemo && (
+        <OriginMenu
+          slug={slug}
+          userRole={userRole}
+          dynamicRouteCount={dynamicRouteCount}
+          excludedRouteCount={excludedRouteCount}
+        />
+      )}
     </div>
   );
 };

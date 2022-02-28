@@ -9,12 +9,14 @@ interface Props extends FormProps {
   label: string;
   value: string;
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  helperText?: JSX.Element;
 }
 
-export const DynamicRouteForm: React.FC<Props> = ({
+export const RouteForm: React.FC<Props> = ({
   label,
   value,
   onInputChange,
+  helperText,
   ...formProps
 }) => (
   <Form {...formProps}>
@@ -22,14 +24,7 @@ export const DynamicRouteForm: React.FC<Props> = ({
       name="route"
       label={label}
       placeholder="/foo/<id>/bar"
-      helperText={
-        <>
-          The route pattern should be in the following kind format:
-          <br />
-          <code>{`/foo/<id>/bar`}</code>, where <code>{`<param>`}</code> placeholders indicate
-          dynamic values.
-        </>
-      }
+      helperText={helperText}
       value={value}
       onChange={onInputChange}
       required

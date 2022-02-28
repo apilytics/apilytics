@@ -58,6 +58,9 @@ export type PlausibleEvents = {
   'add-dynamic-route': PlausibleProps;
   'update-dynamic-route': PlausibleProps;
   'delete-dynamic-route': PlausibleProps;
+  'add-excluded-route': PlausibleProps;
+  'update-excluded-route': PlausibleProps;
+  'delete-excluded-route': PlausibleProps;
   'status-code-click': PlausibleProps;
   'show-all-status-codes-click': PlausibleProps;
   'browser-click': PlausibleProps;
@@ -289,13 +292,15 @@ export interface OriginMetrics {
   apilyticsPackage?: ApilyticsPackage;
 }
 
-export interface DynamicRouteWithMatches {
+export interface RouteData {
   route: string;
   matchingPaths: number;
 }
 
 export interface OriginData extends Origin {
   userRole: ORIGIN_ROLES;
+  dynamicRouteCount: number;
+  excludedRouteCount: number;
 }
 
 export interface OriginListItem {
@@ -304,6 +309,8 @@ export interface OriginListItem {
   totalMetrics: number;
   lastDayMetrics: number;
   userRole: ORIGIN_ROLES;
+  dynamicRouteCount: number;
+  excludedRouteCount: number;
 }
 
 export interface OriginInviteData {

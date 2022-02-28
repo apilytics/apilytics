@@ -116,6 +116,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const timeFrame = toTime - fromTime;
 
   let wherePath: Prisma.Sql | undefined;
+
   if (endpoint) {
     const dynamicRoute = await prisma.dynamicRoute.findFirst({
       where: { originId, route: endpoint },
@@ -144,7 +145,11 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id`;
 
   const baseWhereClause = Prisma.sql`
-WHERE origins.id = ${originId}
+WHERE NOT EXISTS (
+  SELECT 1 FROM excluded_routes
+  WHERE excluded_routes.origin_id = ${originId}
+    AND metrics.path LIKE excluded_routes.pattern
+)
   ${wherePath}
   ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
   ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
@@ -255,20 +260,21 @@ SELECT
 
 ${fromClause}
 
-LEFT JOIN LATERAL (
-  SELECT dynamic_routes.route
-  FROM dynamic_routes
-  WHERE dynamic_routes.origin_id = ${originId}
-    AND metrics.path LIKE dynamic_routes.pattern
-    AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
-      = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
-  ORDER BY LENGTH(dynamic_routes.pattern) DESC
-  LIMIT 1
-) AS matched_routes ON TRUE
+  LEFT JOIN LATERAL (
+    SELECT dynamic_routes.route
+    FROM dynamic_routes
+    WHERE dynamic_routes.origin_id = ${originId}
+      AND metrics.path LIKE dynamic_routes.pattern
+      AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
+        = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
+    ORDER BY LENGTH(dynamic_routes.pattern) DESC
+    LIMIT 1
+  ) AS matched_routes ON TRUE
 
 ${whereClause}
 
 GROUP BY metrics.method, endpoint;`;
+
   const miscDataPromise: Promise<RawMiscData[]> = prisma.$queryRaw`
 SELECT
   metrics.browser,

@@ -105,11 +105,15 @@ export const getOriginForUser = async ({
 
   const origin = await prisma.origin.findFirst({
     where,
-    include: { originUsers: { where: { userId }, select: { role: true } } },
+    include: {
+      originUsers: { where: { userId }, select: { role: true } },
+      dynamicRoutes: true,
+      excludedRoutes: true,
+    },
   });
 
   if (origin) {
-    const { id, name, slug, apiKey, createdAt, updatedAt } = origin;
+    const { id, name, slug, apiKey, createdAt, updatedAt, dynamicRoutes, excludedRoutes } = origin;
 
     return {
       id,
@@ -119,6 +123,9 @@ export const getOriginForUser = async ({
       createdAt,
       updatedAt,
       userRole: origin.originUsers?.[0]?.role as ORIGIN_ROLES,
+      // Cannot select count from these directly in the query.
+      dynamicRouteCount: dynamicRoutes.length,
+      excludedRouteCount: excludedRoutes.length,
     };
   }
 
@@ -175,3 +182,12 @@ export const isEmailValid = (email: string): boolean => /\S@\S/.test(email);
 
 export const hasWritePermissionsForOrigin = (role: string): boolean =>
   [ORIGIN_ROLES.OWNER, ORIGIN_ROLES.ADMIN].includes(role as ORIGIN_ROLES);
+
+// Transform a route string from: '/api/blogs/<param>' into a wildcard pattern: '/api/blogs/%'
+// Escapes % _ and \ so that they are treated as literals.
+export const routeToPattern = (route: string): string => {
+  return route
+    .replace(/[%\\]/g, '\\$&')
+    .replace(/<[a-z_-]+>/g, '%')
+    .replace(/_/g, '\\_');
+};
