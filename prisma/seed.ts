@@ -208,5 +208,7 @@ const main = async (): Promise<void> => {
   } catch (e) {
     console.error(e);
     process.exit(1);
+  } finally {
+    await prisma.$disconnect();
   }
 })();
