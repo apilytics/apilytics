@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
@@ -20,9 +20,15 @@ import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
 
 const OriginSettings: NextPage = () => {
   const { origin, setOrigin } = useOrigin();
-  const { name: _name, apiKey = '', slug = '' } = origin ?? {};
-  const [name, setName] = useState(_name);
+  const { name: initialName, apiKey = '', slug = '' } = origin ?? {};
+  const [name, setName] = useState('');
   const plausible = usePlausible();
+
+  useEffect(() => {
+    if (initialName) {
+      setName(initialName);
+    }
+  }, [initialName]);
 
   const { setLoading, setSuccessMessage, setErrorMessage, handleOpenModal, handleCloseModal } =
     useUIState();
