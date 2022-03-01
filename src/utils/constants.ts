@@ -37,6 +37,13 @@ export const TIME_FRAME_OPTIONS = {
 };
 
 export const UNEXPECTED_ERROR = 'Unexpected error.';
+export const PERMISSION_ERROR = 'You do not have permission to do this action.';
+
+export enum ORIGIN_ROLES {
+  OWNER = 'owner',
+  ADMIN = 'admin',
+  VIEWER = 'viewer',
+}
 
 export const MOCK_PATHS = [
   '/profile',
@@ -89,6 +96,7 @@ export const MOCK_ORIGIN = {
   createdAt: new Date(),
   updatedAt: new Date(),
   userId: 'a58025e5-cd8a-4586-94b9-d38f51aa9e72',
+  userRole: ORIGIN_ROLES.VIEWER,
 };
 
 export const MODAL_NAMES = {
@@ -99,6 +107,13 @@ export const MODAL_NAMES = {
   userAgents: 'user-agents',
   dynamicRoute: 'dynamic-route',
   deleteDynamicRoute: 'delete-dynamic-route',
+  inviteOriginUser: 'invite-origin-user',
+  editOriginUser: 'edit-origin-user',
+  deleteOriginUser: 'delete-origin-user',
+  deleteOriginInvite: 'delete-origin-invite',
+  resendOriginInvite: 'resend-origin-invite',
+  acceptOriginInvite: 'accept-origin-invite',
+  rejectOriginInvite: 'reject-origin-invite',
 };
 
 export const DEFAULT_MAX_WIDTH = 'max-w-3xl';

@@ -1,6 +1,6 @@
 import { ArrowSmRightIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
@@ -15,15 +15,7 @@ export const withAuth = <T extends Record<string, unknown>>(
   PageComponent: NextPage<T>,
 ): NextPage<T> => {
   const WithAuth: NextPage<T> = (pageProps: T) => {
-    useSession({
-      required: true,
-      onUnauthenticated: () => {
-        // This is already the default behavior, but we want to be explicit.
-        // Either force login or redirect to the login page if the user is not authenticated.
-        signIn();
-      },
-    });
-
+    useSession({ required: true });
     const { user, accountComplete } = useAccount();
     const [welcomePassed, setWelcomePassed] = useState(false);
 

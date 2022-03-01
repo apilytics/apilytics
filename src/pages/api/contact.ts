@@ -1,8 +1,8 @@
-import { makeMethodsHandler } from 'lib-server/apiHelpers';
+import { isEmailValid, makeMethodsHandler } from 'lib-server/apiHelpers';
 import { sendInvalidInput, sendOk } from 'lib-server/responses';
 import { AWS_SES } from 'ses';
 import { withApilytics } from 'utils/apilytics';
-import type { ApiHandler } from 'types';
+import type { ApiHandler, MessageResponse } from 'types';
 
 interface EmailParams {
   email: string;
@@ -49,11 +49,7 @@ const sendContactEmail = async ({ email, message }: EmailParams): Promise<void> 
   }
 };
 
-interface ContactPostResponse {
-  message: string;
-}
-
-const handlePost: ApiHandler<ContactPostResponse> = async (req, res) => {
+const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
   const { email, message } = req.body;
 
   if (!email || !message) {
@@ -61,7 +57,7 @@ const handlePost: ApiHandler<ContactPostResponse> = async (req, res) => {
     return;
   }
 
-  if (!email.includes('@')) {
+  if (!isEmailValid(email)) {
     sendInvalidInput(res, 'Invalid email address.');
     return;
   }

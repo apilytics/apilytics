@@ -7,9 +7,9 @@ import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
-import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
+import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
 import { formatCount, formatMilliseconds } from 'utils/metrics';
 import type { EndpointData, ValueOf, VerticalBarData } from 'types';
@@ -30,7 +30,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
   const requestsData = [..._data.sort((a, b) => b.totalRequests - a.totalRequests)];
   const responseTimeData = [..._data.sort((a, b) => b.responseTimeAvg - a.responseTimeAvg)];
-  const { handleOpenModal, handleCloseModal } = useModal();
+  const { handleOpenModal, handleCloseModal } = useUIState();
 
   const attributes = {
     requests: {

@@ -2,12 +2,20 @@ import {
   getOriginForUser,
   getSessionUserId,
   getSlugFromReq,
+  hasWritePermissionsForOrigin,
   makeMethodsHandler,
 } from 'lib-server/apiHelpers';
-import { sendConflict, sendInvalidInput, sendNotFound, sendOk } from 'lib-server/responses';
+import {
+  sendConflict,
+  sendInvalidInput,
+  sendNotFound,
+  sendOk,
+  sendUnauthorized,
+} from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
+import { PERMISSION_ERROR } from 'utils/constants';
 import type { ApiHandler, DynamicRouteWithMatches } from 'types';
 
 interface DynamicRoutesResponse {
@@ -43,6 +51,22 @@ ORDER BY dynamic_routes.route;`;
 const handleGet: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
+
+  const originUser = await prisma.originUser.findFirst({
+    where: { userId, origin: { slug } },
+    select: { role: true },
+  });
+
+  if (!originUser) {
+    sendNotFound(res, 'OriginUser');
+    return;
+  }
+
+  if (!hasWritePermissionsForOrigin(originUser.role)) {
+    sendUnauthorized(res, PERMISSION_ERROR);
+    return;
+  }
+
   const origin = await getOriginForUser({ userId, slug });
 
   if (!origin) {
@@ -57,6 +81,22 @@ const handleGet: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
 const handlePut: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
+
+  const originUser = await prisma.originUser.findFirst({
+    where: { userId, origin: { slug } },
+    select: { role: true },
+  });
+
+  if (!originUser) {
+    sendNotFound(res, 'OriginUser');
+    return;
+  }
+
+  if (!hasWritePermissionsForOrigin(originUser.role)) {
+    sendUnauthorized(res, PERMISSION_ERROR);
+    return;
+  }
+
   const origin = await getOriginForUser({ userId, slug });
 
   if (!origin) {
@@ -68,7 +108,7 @@ const handlePut: ApiHandler<DynamicRoutesResponse> = async (req, res) => {
   const body: string[] = req.body;
 
   if (new Set(body).size !== body.length) {
-    sendInvalidInput(res, 'This route is already in use.');
+    sendInvalidInput(res, 'The routes contain duplicate values.');
     return;
   }
 

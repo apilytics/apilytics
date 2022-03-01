@@ -1,10 +1,10 @@
 import slugify from 'slugify';
-import type { Origin } from '@prisma/client';
 
 import {
   getOriginForUser,
   getSessionUserId,
   getSlugFromReq,
+  hasWritePermissionsForOrigin,
   makeMethodsHandler,
 } from 'lib-server/apiHelpers';
 import {
@@ -13,17 +13,15 @@ import {
   sendNoContent,
   sendNotFound,
   sendOk,
+  sendUnauthorized,
 } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
-import type { ApiHandler } from 'types';
+import { PERMISSION_ERROR } from 'utils/constants';
+import type { ApiHandler, MessageResponse, OriginData } from 'types';
 
-interface OriginResponse {
-  data: Origin;
-}
-
-const handleGet: ApiHandler<OriginResponse> = async (req, res) => {
+const handleGet: ApiHandler<{ data: OriginData }> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
   const origin = await getOriginForUser({ userId, slug });
@@ -36,8 +34,25 @@ const handleGet: ApiHandler<OriginResponse> = async (req, res) => {
   sendOk(res, { data: origin });
 };
 
-const handlePut: ApiHandler<OriginResponse> = async (req, res) => {
+const handlePatch: ApiHandler<{ data: OriginData } & MessageResponse> = async (req, res) => {
   const userId = await getSessionUserId(req);
+  const slug = getSlugFromReq(req);
+
+  const originUser = await prisma.originUser.findFirst({
+    where: { userId, origin: { slug } },
+    select: { role: true },
+  });
+
+  if (!originUser) {
+    sendNotFound(res, 'OriginUser');
+    return;
+  }
+
+  if (!hasWritePermissionsForOrigin(originUser.role)) {
+    sendUnauthorized(res, PERMISSION_ERROR);
+    return;
+  }
+
   const { name } = req.body;
 
   if (!name) {
@@ -49,15 +64,10 @@ const handlePut: ApiHandler<OriginResponse> = async (req, res) => {
   const newSlug = slugify(name, { lower: true });
 
   try {
-    const { count } = await prisma.origin.updateMany({
-      where: { slug: oldSlug, userId },
+    await prisma.origin.update({
+      where: { slug: oldSlug },
       data: { name, slug: newSlug },
     });
-
-    if (count === 0) {
-      sendNotFound(res, 'Origin');
-      return;
-    }
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'This origin name has been taken.');
@@ -73,25 +83,38 @@ const handlePut: ApiHandler<OriginResponse> = async (req, res) => {
     return;
   }
 
-  sendOk(res, { data: origin });
+  sendOk(res, { data: origin, message: 'Origin settings saved.' });
 };
 
 const handleDelete: ApiHandler = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
-  const { count } = await prisma.origin.deleteMany({
-    where: { slug, userId },
+  const originUser = await prisma.originUser.findFirst({
+    where: { userId, origin: { slug } },
+    select: { role: true },
   });
 
-  if (count === 0) {
-    sendNotFound(res, 'Origin');
+  if (!originUser) {
+    sendNotFound(res, 'OriginUser');
     return;
   }
+
+  if (!hasWritePermissionsForOrigin(originUser.role)) {
+    sendUnauthorized(res, PERMISSION_ERROR);
+    return;
+  }
+
+  await prisma.origin.delete({
+    where: { slug },
+  });
 
   sendNoContent(res);
 };
 
-const handler = makeMethodsHandler({ GET: handleGet, PUT: handlePut, DELETE: handleDelete }, true);
+const handler = makeMethodsHandler(
+  { GET: handleGet, PATCH: handlePatch, DELETE: handleDelete },
+  true,
+);
 
 export default withApilytics(handler);

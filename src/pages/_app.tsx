@@ -11,8 +11,8 @@ import PlausibleProvider from 'next-plausible';
 import type { AppProps } from 'next/app';
 
 import { AccountProvider } from 'context/account';
-import { ModalProvider } from 'context/modal';
 import { OriginProvider } from 'context/origin';
+import { UIStateProvider } from 'context/uiState';
 import { FRONTEND_URL } from 'utils/router';
 
 dayjs.extend(localizedFormat);
@@ -24,9 +24,9 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => (
     <SessionProvider>
       <AccountProvider>
         <OriginProvider>
-          <ModalProvider>
+          <UIStateProvider>
             <Component {...pageProps} />
-          </ModalProvider>
+          </UIStateProvider>
         </OriginProvider>
       </AccountProvider>
     </SessionProvider>

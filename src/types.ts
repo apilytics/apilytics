@@ -15,6 +15,7 @@ import type {
   DAY,
   METHODS,
   MONTH_DAYS,
+  ORIGIN_ROLES,
   SIX_MONTHS_DAYS,
   THREE_MONTHS_DAYS,
   WEEK_DAYS,
@@ -65,6 +66,13 @@ export type PlausibleEvents = {
   'show-all-browsers-click': PlausibleProps;
   'show-all-operating-systems-click': PlausibleProps;
   'show-all-devices-click': PlausibleProps;
+  'origin-invite-created': PlausibleProps;
+  'origin-invite-resent': PlausibleProps;
+  'origin-invite-cancelled': PlausibleProps;
+  'origin-invite-accepted': PlausibleProps;
+  'origin-invite-declined': PlausibleProps;
+  'origin-user-edited': PlausibleProps;
+  'origin-user-deleted': PlausibleProps;
 };
 
 export interface HeadProps {
@@ -92,11 +100,9 @@ export type LayoutProps = {
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean | 'mobile';
   loading?: boolean;
-  tooltip?: string;
   startIcon?: React.FC<ComponentProps<'svg'>>;
   endIcon?: React.FC<ComponentProps<'svg'>>;
   linkTo?: string | UrlObject;
-  tooltipProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export interface MainTemplateProps extends LayoutProps {
@@ -108,9 +114,6 @@ export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
   title?: string;
   subTitle?: JSX.Element | string;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  error: string;
-  loading?: boolean;
-  submittedText?: string;
   contentAfter?: React.ReactNode;
 }
 
@@ -158,21 +161,19 @@ export interface Snippet {
 }
 
 export interface AccountContextType {
-  loading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-  error: boolean;
-  setError: Dispatch<SetStateAction<boolean>>;
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
   accountComplete: boolean;
   origins: OriginListItem[];
   setOrigins: Dispatch<SetStateAction<OriginListItem[]>>;
+  originInvites: OriginInviteData[];
+  setOriginInvites: Dispatch<SetStateAction<OriginInviteData[]>>;
 }
 export interface OriginContextType {
   slug: string;
   showApiKey: string;
-  origin: Origin | null;
-  setOrigin: Dispatch<SetStateAction<Origin | null>>;
+  origin: OriginData | null;
+  setOrigin: Dispatch<SetStateAction<OriginData | null>>;
   metrics: OriginMetrics | null;
   setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
   timeFrame: TimeFrame;
@@ -191,7 +192,15 @@ export interface OriginContextType {
   setSelectedDevice: Dispatch<SetStateAction<string | undefined>>;
 }
 
-export interface ModalContextType {
+export interface UIStateContextType {
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  successMessage: string;
+  setSuccessMessage: Dispatch<SetStateAction<string>>;
+  errorMessage: string;
+  setErrorMessage: Dispatch<SetStateAction<string>>;
+  notFound: boolean;
+  setNotFound: Dispatch<SetStateAction<boolean>>;
   modal: string | null;
   handleOpenModal: (name: string) => void;
   handleCloseModal: () => void;
@@ -201,6 +210,10 @@ export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,
 ) => Promise<void>;
+
+export interface MessageResponse {
+  message: string;
+}
 
 export interface GeneralData {
   totalRequests: number;
@@ -281,11 +294,24 @@ export interface DynamicRouteWithMatches {
   matchingPaths: number;
 }
 
+export interface OriginData extends Origin {
+  userRole: ORIGIN_ROLES;
+}
+
 export interface OriginListItem {
   name: string;
   slug: string;
   totalMetrics: number;
   lastDayMetrics: number;
+  userRole: ORIGIN_ROLES;
+}
+
+export interface OriginInviteData {
+  id: string;
+  role: ORIGIN_ROLES;
+  email?: string;
+  originSlug?: string;
+  originName?: string;
 }
 
 export type Method = typeof METHODS[number];
@@ -295,3 +321,9 @@ export type ValueOf<T> = T[keyof T];
 export type VerticalBarData = Partial<
   EndpointData & StatusCodeData & PercentileData & BrowserData & OSData & DeviceData
 >;
+
+export interface OriginUserData {
+  id: string;
+  email: string;
+  role: ORIGIN_ROLES;
+}

@@ -10,6 +10,7 @@ import { Input } from 'components/shared/Input';
 import { TextArea } from 'components/shared/TextArea';
 import { withUser } from 'hocs/withUser';
 import { usePlausible } from 'hooks/usePlausible';
+import { useUIState } from 'hooks/useUIState';
 import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 
@@ -19,17 +20,15 @@ const initialFormValues = {
 };
 
 const Contact: NextPage = () => {
+  const { setLoading, setSuccessMessage, setErrorMessage } = useUIState();
   const [formValues, setFormValues] = useState(initialFormValues);
-  const [loading, setLoading] = useState(false);
-  const [submittedText, setSubmittedText] = useState('');
-  const [error, setError] = useState('');
   const plausible = usePlausible();
 
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setSubmittedText('');
-    setError('');
+    setSuccessMessage('');
+    setErrorMessage('');
 
     try {
       const res = await fetch(staticApiRoutes.contact, {
@@ -44,14 +43,14 @@ const Contact: NextPage = () => {
 
       if (res.status === 200) {
         setFormValues(initialFormValues);
-        setError('');
-        setSubmittedText(message);
+        setErrorMessage('');
+        setSuccessMessage(message);
         plausible('contact-message');
       } else {
-        setError(UNEXPECTED_ERROR);
+        setErrorMessage(UNEXPECTED_ERROR);
       }
     } catch {
-      setError(UNEXPECTED_ERROR);
+      setErrorMessage(UNEXPECTED_ERROR);
     } finally {
       setLoading(false);
     }
@@ -76,14 +75,7 @@ const Contact: NextPage = () => {
       }}
     >
       <div className="card rounded-lg bg-base-100 p-4 shadow">
-        <Form
-          title="Send us a message"
-          subTitle={renderSubTitle}
-          onSubmit={handleSubmit}
-          error={error}
-          loading={loading}
-          submittedText={submittedText}
-        >
+        <Form title="Send us a message" subTitle={renderSubTitle} onSubmit={handleSubmit}>
           <Input
             type="email"
             name="email"

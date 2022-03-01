@@ -247,14 +247,14 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
   );
 
   const renderAccountMenu = accountComplete && (
-    <div className="dropdown-end dropdown-hover dropdown">
+    <div className="dropdown-end dropdown">
       <div tabIndex={0} className="btn btn-ghost flex">
         <span className="hidden sm:block">{truncateString(user?.name ?? '', 20)}</span>
         <DotsVerticalIcon className="h-5 w-5 sm:ml-2" />
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-primary shadow"
+        className="card-bordered dropdown-content menu rounded-box whitespace-nowrap bg-base-100 p-2 text-primary shadow"
       >
         {MENU_ITEMS.map(({ name, href }) => (
           <li key={name}>

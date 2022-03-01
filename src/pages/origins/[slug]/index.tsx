@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
@@ -10,9 +10,9 @@ import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
 import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
 import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
 import { UserAgentMetrics } from 'components/dashboard/UserAgentMetrics';
-import { ErrorTemplate } from 'components/layout/ErrorTemplate';
 import { Layout } from 'components/layout/Layout';
 import { NotFoundTemplate } from 'components/layout/NotFoundTemplate';
+import { UIAlerts } from 'components/layout/UIAlerts';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
 import { BackButton } from 'components/shared/BackButton';
 import { Modal } from 'components/shared/Modal';
@@ -20,9 +20,9 @@ import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
 import { useDashboardQuery } from 'hooks/useDashboardQuery';
-import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
-import { MODAL_NAMES } from 'utils/constants';
+import { useUIState } from 'hooks/useUIState';
+import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 
 const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
@@ -49,9 +49,16 @@ const Origin: NextPage = () => {
     setSelectedDevice,
   } = useOrigin();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const { handleOpenModal, handleCloseModal } = useModal();
+  const {
+    loading,
+    setLoading,
+    setErrorMessage,
+    notFound,
+    setNotFound,
+    handleOpenModal,
+    handleCloseModal,
+  } = useUIState();
+
   const { pathname, query, replace } = useRouter();
   const apiKey = origin?.apiKey || '';
   const maxWidth = 'max-w-6xl';
@@ -83,15 +90,30 @@ const Origin: NextPage = () => {
           if (res.status === 200) {
             const { data } = await res.json();
             setMetrics(data);
+          } else {
+            setNotFound(true);
           }
         } catch {
-          setError(true);
+          setErrorMessage(UNEXPECTED_ERROR);
         } finally {
           setLoading(false);
         }
       })();
     }
-  }, [endpoint, method, setMetrics, slug, statusCode, timeFrame, browser, os, device]);
+  }, [
+    endpoint,
+    method,
+    setMetrics,
+    slug,
+    statusCode,
+    timeFrame,
+    browser,
+    os,
+    device,
+    setLoading,
+    setErrorMessage,
+    setNotFound,
+  ]);
 
   useEffect(() => {
     if (showApiKey) {
@@ -120,7 +142,11 @@ const Origin: NextPage = () => {
     setSelectedStatusCode,
   ]);
 
-  if (loading) {
+  if (notFound) {
+    return <NotFoundTemplate />;
+  }
+
+  if (loading || !origin || !metrics) {
     return (
       <Layout
         headProps={{ title: origin?.name ?? 'Loading...' }}
@@ -199,70 +225,63 @@ const Origin: NextPage = () => {
     );
   }
 
-  if (error) {
-    return <ErrorTemplate />;
-  }
+  const {
+    generalData,
+    timeFrameData,
+    endpointData,
+    percentileData,
+    statusCodeData,
+    userAgentData,
+  } = metrics;
 
-  if (!origin || !metrics) {
-    return <NotFoundTemplate />;
-  } else {
-    const {
-      generalData,
-      timeFrameData,
-      endpointData,
-      percentileData,
-      statusCodeData,
-      userAgentData,
-    } = metrics;
-
-    return (
-      <Layout
-        headProps={{ title: origin.name }}
-        headerProps={{ maxWidth }}
-        footerProps={{ maxWidth }}
-      >
-        <div className="container flex max-w-6xl grow flex-col py-4">
-          <BackButton
-            linkTo={staticRoutes.origins}
-            text="Origins"
-            className="btn-sm hidden sm:flex"
-          />
-          <DashboardOptions origin={origin} apilyticsPackage={metrics.apilyticsPackage} />
-          <TimeFrameMetrics {...generalData} data={timeFrameData} />
-          <div className="mt-4">
-            <EndpointMetrics data={endpointData} />
-          </div>
-          <div className="mt-4">
-            <PercentileMetrics data={percentileData} />
-          </div>
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <StatusCodeMetrics data={statusCodeData} />
-            <UserAgentMetrics data={userAgentData} />
-          </div>
-          <p className="mt-4">
-            See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
-            metrics. Help us improve this dashboard by{' '}
-            <Link href={staticRoutes.contact}>
-              <a>giving us feedback</a>
-            </Link>
-            .
-          </p>
-          <Modal name={MODAL_NAMES.apiKey}>
-            <div className="flex items-center justify-between p-2">
-              <h6 className="px-2 text-white">Almost ready!</h6>
-              <ModalCloseButton onClick={handleCloseModal} />
-            </div>
-            <div className="px-4">
-              <p>Finish configuration by setting up your API key.</p>
-            </div>
-            <div className="p-4">
-              <ApiKeyField value={apiKey} />
-            </div>
-          </Modal>
+  return (
+    <Layout
+      headProps={{ title: origin.name }}
+      headerProps={{ maxWidth }}
+      footerProps={{ maxWidth }}
+    >
+      <div className="container flex max-w-6xl grow flex-col py-4">
+        <UIAlerts />
+        <BackButton
+          linkTo={staticRoutes.origins}
+          text="Origins"
+          className="btn-sm hidden sm:flex"
+        />
+        <DashboardOptions origin={origin} apilyticsPackage={metrics.apilyticsPackage} />
+        <TimeFrameMetrics {...generalData} data={timeFrameData} />
+        <div className="mt-4">
+          <EndpointMetrics data={endpointData} />
         </div>
-      </Layout>
-    );
-  }
+        <div className="mt-4">
+          <PercentileMetrics data={percentileData} />
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <StatusCodeMetrics data={statusCodeData} />
+          <UserAgentMetrics data={userAgentData} />
+        </div>
+        <p className="mt-4">
+          See our <Link href={staticRoutes.dashboard}>docs</Link> for more details about these
+          metrics. Help us improve this dashboard by{' '}
+          <Link href={staticRoutes.contact}>
+            <a>giving us feedback</a>
+          </Link>
+          .
+        </p>
+        <Modal name={MODAL_NAMES.apiKey}>
+          <div className="flex items-center justify-between p-2">
+            <h6 className="px-2 text-white">Almost ready!</h6>
+            <ModalCloseButton onClick={handleCloseModal} />
+          </div>
+          <div className="px-4">
+            <p>Finish configuration by setting up your API key.</p>
+          </div>
+          <div className="p-4">
+            <ApiKeyField value={apiKey} onClickCallback={(): void => handleCloseModal()} />
+          </div>
+        </Modal>
+      </div>
+    </Layout>
+  );
 };
 
 export default withAuth(withOrigin(Origin));

@@ -10,9 +10,9 @@ import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
-import { useModal } from 'hooks/useModal';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
+import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes } from 'utils/router';
 import type { DynamicRouteWithMatches, PlausibleEvents } from 'types';
@@ -22,12 +22,17 @@ const OriginDynamicRoutes: NextPage = () => {
   const [newRouteValue, setNewRouteValue] = useState('');
   const [updateRouteValue, setUpdateRouteValue] = useState('');
   const [routes, setRoutes] = useState<DynamicRouteWithMatches[]>([]);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [submittedText, setSubmittedText] = useState('');
   const [selectedRoute, setSelectedRoute] = useState<DynamicRouteWithMatches | null>(null);
-  const { handleOpenModal, handleCloseModal } = useModal();
   const plausible = usePlausible();
+
+  const {
+    loading,
+    setLoading,
+    setSuccessMessage,
+    setErrorMessage,
+    handleOpenModal,
+    handleCloseModal,
+  } = useUIState();
 
   const updateOrigins = async ({
     payload,
@@ -37,8 +42,8 @@ const OriginDynamicRoutes: NextPage = () => {
     event: keyof PlausibleEvents;
   }): Promise<void> => {
     setLoading(true);
-    setSubmittedText('');
-    setError('');
+    setSuccessMessage('');
+    setErrorMessage('');
 
     try {
       const res = await fetch(dynamicApiRoutes.dynamicRoutes({ slug }), {
@@ -53,18 +58,18 @@ const OriginDynamicRoutes: NextPage = () => {
 
       if (res.status === 200) {
         setRoutes(data);
-        setError('');
+        setErrorMessage('');
         setNewRouteValue('');
         setUpdateRouteValue('');
         setSelectedRoute(null);
         handleCloseModal();
-        setSubmittedText('Dynamic routes updated.');
+        setSuccessMessage('Dynamic routes updated.');
         plausible(event);
       } else {
-        setError(message);
+        setErrorMessage(message);
       }
     } catch {
-      setError(UNEXPECTED_ERROR);
+      setErrorMessage(UNEXPECTED_ERROR);
     } finally {
       setLoading(false);
     }
@@ -74,7 +79,7 @@ const OriginDynamicRoutes: NextPage = () => {
     if (route.match(/^\/.*<[a-z_-]+>.*$/)) {
       return true;
     } else {
-      setError('Route must be a relative path with at least one dynamic style placeholder.');
+      setErrorMessage('Route must be a relative path with at least one dynamic style placeholder.');
     }
   };
 
@@ -116,7 +121,7 @@ const OriginDynamicRoutes: NextPage = () => {
     setSelectedRoute(route);
     setUpdateRouteValue(route.route);
     handleOpenModal(MODAL_NAMES.dynamicRoute);
-    setSubmittedText('');
+    setSuccessMessage('');
   };
 
   useEffect(() => {
@@ -130,19 +135,19 @@ const OriginDynamicRoutes: NextPage = () => {
             setRoutes(data);
           }
         } catch {
-          setError(UNEXPECTED_ERROR);
+          setErrorMessage(UNEXPECTED_ERROR);
         } finally {
           setLoading(false);
         }
       })();
     }
-  }, [slug]);
+  }, [setErrorMessage, setLoading, slug]);
 
-  const formProps = {
-    error,
-    submittedText,
-    loading,
-  };
+  const renderLoadingRow = (
+    <div className="flex h-5 animate-pulse items-center rounded-lg border-2 border-base-content p-1">
+      <div className="h-full w-full rounded-lg bg-base-200" />
+    </div>
+  );
 
   const renderDeleteLink = (
     <p
@@ -153,11 +158,19 @@ const OriginDynamicRoutes: NextPage = () => {
     </p>
   );
 
-  return (
-    <MainTemplate headProps={{ title: 'Dynamic routes' }}>
-      <div className="card rounded-lg bg-base-100 p-4 shadow">
-        <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
-        <h5 className="text-white">Dynamic routes for {origin?.name}</h5>
+  const renderDynamicRouteForm = (
+    <div className="card rounded-lg bg-base-100 p-4 shadow">
+      <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
+      <h5 className="text-white">Dynamic routes for {origin?.name}</h5>
+      {loading ? (
+        <div className="mt-2 flex flex-col gap-2">
+          {renderLoadingRow}
+          {renderLoadingRow}
+          {renderLoadingRow}
+          {renderLoadingRow}
+          {renderLoadingRow}
+        </div>
+      ) : (
         <div className="mt-2 flex flex-col items-start">
           {routes.length ? (
             routes.map((route) => (
@@ -166,9 +179,7 @@ const OriginDynamicRoutes: NextPage = () => {
               </p>
             ))
           ) : (
-            <p className="text-white">
-              {loading ? 'Loading routes...' : 'No routes. Add your first dynamic route below.'}
-            </p>
+            <p className="text-white">No routes. Add your first dynamic route below.</p>
           )}
           <p className="mt-4 text-sm">
             All routes matching these patterns will be grouped into single endpoints by their HTTP
@@ -178,50 +189,69 @@ const OriginDynamicRoutes: NextPage = () => {
             matching the given route.
           </p>
         </div>
+      )}
+      <DynamicRouteForm
+        label="Add new route"
+        value={newRouteValue}
+        onInputChange={({ target }): void => setNewRouteValue(target.value)}
+        onSubmit={handleSubmitAddRoute}
+      />
+    </div>
+  );
+
+  const renderEditDynamicRouteModal = (
+    <Modal name={MODAL_NAMES.dynamicRoute}>
+      <div className="flex items-center justify-between p-2">
+        <p className="px-2 font-bold">
+          <p className="text-white">
+            {selectedRoute?.route} ({selectedRoute?.matchingPaths})
+          </p>
+        </p>
+        <ModalCloseButton onClick={handleCloseModal} />
+      </div>
+      <div className="p-4">
         <DynamicRouteForm
-          label="Add new route"
-          value={newRouteValue}
-          onInputChange={({ target }): void => setNewRouteValue(target.value)}
-          onSubmit={handleSubmitAddRoute}
-          {...formProps}
+          label="Update route"
+          value={updateRouteValue}
+          onInputChange={({ target }): void => setUpdateRouteValue(target.value)}
+          onSubmit={handleSubmitUpdateRoute}
+          contentAfter={renderDeleteLink}
         />
       </div>
-      <Modal name={MODAL_NAMES.dynamicRoute}>
-        <div className="flex items-center justify-between p-2">
-          <p className="px-2 font-bold">
-            <p className="text-white">
-              {selectedRoute?.route} ({selectedRoute?.matchingPaths})
-            </p>
-          </p>
-          <ModalCloseButton onClick={handleCloseModal} />
-        </div>
-        <div className="p-4">
-          <DynamicRouteForm
-            label="Update route"
-            value={updateRouteValue}
-            onInputChange={({ target }): void => setUpdateRouteValue(target.value)}
-            onSubmit={handleSubmitUpdateRoute}
-            contentAfter={renderDeleteLink}
-            {...formProps}
-          />
-        </div>
-      </Modal>
-      <Modal name={MODAL_NAMES.deleteDynamicRoute}>
-        <div className="flex justify-end p-2">
-          <ModalCloseButton onClick={handleCloseModal} />
-        </div>
-        <div className="p-4 text-white">
-          <p>Are you sure you want to delete this dynamic route?</p>
-        </div>
-        <div className="grid grid-cols-2 gap-2 p-2">
-          <Button className="btn-outline btn-error" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
-            Confirm
-          </Button>
-        </div>
-      </Modal>
+    </Modal>
+  );
+
+  const renderDeleteDynamicRouteModal = (
+    <Modal name={MODAL_NAMES.deleteDynamicRoute}>
+      <div className="flex items-center justify-between p-2">
+        <p className="px-2 font-bold">
+          <p className="text-white">Delete route</p>
+        </p>
+        <ModalCloseButton onClick={handleCloseModal} />
+      </div>
+      <div className="p-4">
+        <p>
+          Are you sure you want to delete dynamic route <code>{selectedRoute?.route}</code>?
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-2 p-2">
+        <Button className="btn-outline btn-error" onClick={handleCloseModal}>
+          Cancel
+        </Button>
+        <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
+          Confirm
+        </Button>
+      </div>
+    </Modal>
+  );
+
+  return (
+    <MainTemplate
+      headProps={{ title: origin?.name ? `Dynamic routes for ${origin.name}` : 'Loading...' }}
+    >
+      {renderDynamicRouteForm}
+      {renderEditDynamicRouteModal}
+      {renderDeleteDynamicRouteModal}
     </MainTemplate>
   );
 };

@@ -9,6 +9,7 @@ import {
   MOCK_OPERATING_SYSTEMS,
   MOCK_PATHS,
   MOCK_TOTAL_MEMORY,
+  ORIGIN_ROLES,
 } from '../src/utils/constants';
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -17,8 +18,10 @@ import {
   getRandomStatusCodeForMethod,
 } from '../src/utils/helpers';
 
-const USER_ID = 'ckyw15hbi000409l805yyhhfo';
-const ADMIN_USER_ID = 'ckzr8nnbj000009mo8pcb4jhe';
+const READ_ONLY_ADMIN_USER_ID = 'cl05jr6ya00003c5vzyhxqorj';
+const ORIGIN_OWNER_USER_ID = 'cl05jr6ya00013c5v63ipw1jb';
+const ORIGIN_ADMIN_USER_ID = 'cl05jr6ya00023c5vt2nkf4qj';
+const ORIGIN_VIEWER_USER_ID = 'cl05jr6ya00033c5v9ei1co4g';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
 const API_KEY = '0648c69d-4b42-4642-b125-0959619837cf';
 
@@ -32,44 +35,109 @@ const TEST_DYNAMIC_ROUTES = MOCK_DYNAMIC_ROUTES.map(({ route, pattern }) => ({
 }));
 
 const main = async (): Promise<void> => {
-  // Delete and re-create user to cascade changes to all relations.
+  // Delete and re-create test users to cascade changes to all relations.
   try {
-    await prisma.user.delete({ where: { id: USER_ID } });
-    await prisma.user.delete({ where: { id: ADMIN_USER_ID } });
+    await prisma.user.delete({ where: { id: READ_ONLY_ADMIN_USER_ID } });
+    await prisma.user.delete({ where: { id: ORIGIN_OWNER_USER_ID } });
+    await prisma.user.delete({ where: { id: ORIGIN_ADMIN_USER_ID } });
+    await prisma.user.delete({ where: { id: ORIGIN_VIEWER_USER_ID } });
   } catch {
-    // User does not exist.
+    // User not found.
   }
 
   await prisma.user.create({
     data: {
-      id: USER_ID,
-      name: 'Test User',
-      email: 'dev@apilytics.io', // Real email, so we can receive login emails in preview.
-      origins: {
-        create: [
-          {
-            id: ORIGIN_ID,
-            name: 'api.example.com',
-            slug: 'api-example-com',
-            apiKey: API_KEY,
-          },
-        ],
-      },
-    },
-  });
-
-  console.log('Test user created.');
-
-  await prisma.user.create({
-    data: {
-      id: ADMIN_USER_ID,
+      id: READ_ONLY_ADMIN_USER_ID,
       name: 'Test Admin User',
       email: 'admin@apilytics.io',
       isAdmin: true,
     },
   });
 
-  console.log('Test admin user created.');
+  console.log('Test read-only admin user created.');
+
+  await prisma.user.create({
+    data: {
+      id: ORIGIN_OWNER_USER_ID,
+      name: 'Test User',
+      email: 'dev@apilytics.io',
+      originUsers: {
+        create: [
+          {
+            role: ORIGIN_ROLES.OWNER,
+            origin: {
+              create: {
+                id: ORIGIN_ID,
+                name: 'api.example.com',
+                slug: 'api-example-com',
+                apiKey: API_KEY,
+              },
+            },
+          },
+        ],
+      },
+    },
+  });
+
+  console.log('Test origin owner created.');
+
+  await prisma.user.create({
+    data: {
+      id: ORIGIN_ADMIN_USER_ID,
+      name: 'Test User 2',
+      email: 'origin-admin@apilytics.io',
+      originUsers: {
+        create: [
+          {
+            role: ORIGIN_ROLES.ADMIN,
+            origin: {
+              connect: {
+                id: ORIGIN_ID,
+              },
+            },
+          },
+        ],
+      },
+    },
+  });
+
+  console.log('Test origin admin created.');
+
+  await prisma.user.create({
+    data: {
+      id: ORIGIN_VIEWER_USER_ID,
+      name: 'Test User 3',
+      email: 'origin-viewer@apilytics.io',
+      originUsers: {
+        create: [
+          {
+            role: ORIGIN_ROLES.VIEWER,
+            origin: {
+              connect: {
+                id: ORIGIN_ID,
+              },
+            },
+          },
+        ],
+      },
+    },
+  });
+
+  console.log('Test origin viewer created.');
+
+  await prisma.originInvite.create({
+    data: {
+      email: 'test-invitee@apilytics.io',
+      role: ORIGIN_ROLES.ADMIN,
+      origin: {
+        connect: {
+          id: ORIGIN_ID,
+        },
+      },
+    },
+  });
+
+  console.log('Test origin invite created.');
 
   const metricsBatch = [];
 
@@ -140,5 +208,7 @@ const main = async (): Promise<void> => {
   } catch (e) {
     console.error(e);
     process.exit(1);
+  } finally {
+    await prisma.$disconnect();
   }
 })();
