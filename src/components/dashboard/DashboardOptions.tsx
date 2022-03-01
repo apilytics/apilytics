@@ -55,7 +55,9 @@ export const DashboardOptions: React.FC<Props> = ({
     <div className="mt-2 mb-4 flex flex-wrap items-center justify-start gap-4">
       <h6 className="-mr-2 text-white">
         {name}
-        <div className="badge badge badge-primary badge-outline ml-2 capitalize">{userRole}</div>
+        {userRole && (
+          <div className="badge badge badge-primary badge-outline ml-2 capitalize">{userRole}</div>
+        )}
       </h6>
       {!!apilyticsPackage && <VersionInfo apilyticsPackage={apilyticsPackage} />}
       {selectedMethod && (
