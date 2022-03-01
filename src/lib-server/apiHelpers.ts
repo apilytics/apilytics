@@ -89,13 +89,13 @@ export const getSessionUserId = async (req: NextApiRequest): Promise<string> => 
   return userId;
 };
 
-export async function getOriginForUser({
+export const getOriginForUser = async ({
   userId,
   slug,
 }: {
   userId: string;
   slug?: string;
-}): Promise<OriginData | null> {
+}): Promise<OriginData | null> => {
   const user = await prisma.user.findFirst({
     where: { id: userId },
     select: { isAdmin: true },
@@ -109,14 +109,21 @@ export async function getOriginForUser({
   });
 
   if (origin) {
+    const { id, name, slug, apiKey, createdAt, updatedAt } = origin;
+
     return {
-      ...origin,
+      id,
+      name,
+      slug,
+      apiKey,
+      createdAt,
+      updatedAt,
       userRole: origin.originUsers?.[0]?.role as ORIGIN_ROLES,
     };
   }
 
   return null;
-}
+};
 
 const getOriginInviteEmailBody = (originName: string): string => `
 You have been invited to collaborate on ${originName} on Apilytics.
