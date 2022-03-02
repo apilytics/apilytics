@@ -30,6 +30,10 @@ const FEATURE_LINKS = [
     text: 'For startups',
     href: staticRoutes.forStartups,
   },
+  {
+    text: 'For consultants',
+    href: staticRoutes.forConsultants,
+  },
 ];
 
 const RESOURCE_LINKS = [
