@@ -34,6 +34,72 @@ const TEST_DYNAMIC_ROUTES = MOCK_DYNAMIC_ROUTES.map(({ route, pattern }) => ({
   pattern,
 }));
 
+const createMetrics = async ({
+  hours,
+  minDataPointsPerHour,
+  maxDataPointsPerHour,
+}: {
+  hours: number;
+  minDataPointsPerHour: number;
+  maxDataPointsPerHour: number;
+}): Promise<void> => {
+  const metricsBatch = [];
+
+  // Generate random data for each hour.
+  // Each hour of the year will have 10-20 random data points.
+  for (let hourIndex = 0; hourIndex < hours; hourIndex++) {
+    const metricsForHour = Array(getRandomNumberBetween(minDataPointsPerHour, maxDataPointsPerHour))
+      .fill(null)
+      .map(() => {
+        const path = getRandomArrayItem(MOCK_PATHS);
+        const method = getRandomArrayItem(METHODS);
+        const statusCode = getRandomStatusCodeForMethod(method);
+        const timeMillis = getRandomNumberBetween(20, 100);
+        const requestSize = getRandomNumberBetweenOrUndefined(0, 200_000);
+        const responseSize = getRandomNumberBetweenOrUndefined(100_000, 200_00);
+        const browser = getRandomArrayItem([...MOCK_BROWSERS, undefined]);
+        const os = getRandomArrayItem([...MOCK_OPERATING_SYSTEMS, undefined]);
+        const device = getRandomArrayItem([...DEVICES, undefined]);
+        const cpuUsage = Math.random();
+        const memoryUsage = getRandomNumberBetweenOrUndefined(1_000_000, 2_000_000_000); // 100 MB - 2 GB.
+        const memoryTotal = Math.random() < 0.1 ? undefined : MOCK_TOTAL_MEMORY;
+        const randomMinutes = getRandomNumberBetween(0, 60);
+        const randomSeconds = getRandomNumberBetween(0, 60);
+        const createdAt = new Date(Date.now() - hourIndex * randomMinutes * randomSeconds * 1000);
+
+        return {
+          path,
+          method,
+          statusCode,
+          timeMillis,
+          requestSize,
+          responseSize,
+          browser,
+          os,
+          device,
+          createdAt,
+          cpuUsage,
+          memoryTotal,
+          memoryUsage,
+          originId: ORIGIN_ID,
+        };
+      });
+
+    // Create metrics in batches of max 10 000 at a time.
+    if (metricsBatch.length >= 10_000 || hourIndex === hours - 1) {
+      await prisma.metric.createMany({ data: metricsBatch });
+      metricsBatch.splice(0);
+    }
+
+    metricsBatch.push(...metricsForHour);
+    const percentage = (hourIndex / hours) * 100;
+
+    if (percentage % 10 === 0) {
+      console.log(`Creating metrics, ${percentage.toFixed()}% complete.`);
+    }
+  }
+};
+
 const main = async (): Promise<void> => {
   // Delete and re-create test users to cascade changes to all relations.
   try {
@@ -139,60 +205,10 @@ const main = async (): Promise<void> => {
 
   console.log('Test origin invite created.');
 
-  const metricsBatch = [];
-
-  // Generate random data for each hour of the past year.
-  // Each hour of the year will have 10-20 random data points.
-  for (let hourIndex = 0; hourIndex < 365 * 24; hourIndex++) {
-    const metricsForHour = Array(getRandomNumberBetween(10, 20))
-      .fill(null)
-      .map(() => {
-        const path = getRandomArrayItem(MOCK_PATHS);
-        const method = getRandomArrayItem(METHODS);
-        const statusCode = getRandomStatusCodeForMethod(method);
-        const timeMillis = getRandomNumberBetween(20, 100);
-        const requestSize = getRandomNumberBetweenOrUndefined(0, 200_000);
-        const responseSize = getRandomNumberBetweenOrUndefined(100_000, 200_00);
-        const browser = getRandomArrayItem([...MOCK_BROWSERS, undefined]);
-        const os = getRandomArrayItem([...MOCK_OPERATING_SYSTEMS, undefined]);
-        const device = getRandomArrayItem([...DEVICES, undefined]);
-        const cpuUsage = Math.random();
-        const memoryUsage = getRandomNumberBetweenOrUndefined(1_000_000, 2_000_000_000); // 100 MB - 2 GB.
-        const memoryTotal = Math.random() < 0.1 ? undefined : MOCK_TOTAL_MEMORY;
-        const randomMinutes = getRandomNumberBetween(0, 60);
-        const randomSeconds = getRandomNumberBetween(0, 60);
-        const createdAt = new Date(Date.now() - hourIndex * randomMinutes * randomSeconds * 1000);
-
-        return {
-          path,
-          method,
-          statusCode,
-          timeMillis,
-          requestSize,
-          responseSize,
-          browser,
-          os,
-          device,
-          createdAt,
-          cpuUsage,
-          memoryTotal,
-          memoryUsage,
-          originId: ORIGIN_ID,
-        };
-      });
-
-    // Create metrics in batches of max 10 000 at a time.
-    if (metricsBatch.length >= 10_000 || hourIndex === 365 * 24 - 1) {
-      await prisma.metric.createMany({ data: metricsBatch });
-      metricsBatch.splice(0);
-    }
-
-    metricsBatch.push(...metricsForHour);
-    const percentage = (hourIndex / (365 * 24)) * 100;
-
-    if (percentage % 10 === 0) {
-      console.log(`Creating metrics, ${percentage.toFixed()}% complete.`);
-    }
+  if (process.env.VERCEL_ENV === 'preview') {
+    await createMetrics({ hours: 7 * 24, minDataPointsPerHour: 0, maxDataPointsPerHour: 10 });
+  } else {
+    await createMetrics({ hours: 365 * 24, minDataPointsPerHour: 10, maxDataPointsPerHour: 20 });
   }
 
   console.log('Metrics created.');

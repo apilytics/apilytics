@@ -8,10 +8,17 @@ import { dynamicRoutes } from 'utils/router';
 
 interface Props {
   slug: string;
-  userRole: ORIGIN_ROLES;
+  userRole?: ORIGIN_ROLES;
+  dynamicRouteCount?: number;
+  excludedRouteCount?: number;
 }
 
-export const OriginMenu: React.FC<Props> = ({ slug, userRole }) => {
+export const OriginMenu: React.FC<Props> = ({
+  slug,
+  userRole,
+  dynamicRouteCount,
+  excludedRouteCount,
+}) => {
   const disabled = userRole === ORIGIN_ROLES.VIEWER;
 
   return (
@@ -30,7 +37,12 @@ export const OriginMenu: React.FC<Props> = ({ slug, userRole }) => {
         </li>
         <li className={clsx(disabled && 'disabled pointer-events-none')}>
           <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>
-            <a className="unstyled">Dynamic routes</a>
+            <a className="unstyled">Dynamic routes ({dynamicRouteCount})</a>
+          </Link>
+        </li>
+        <li className={clsx(disabled && 'disabled pointer-events-none')}>
+          <Link href={dynamicRoutes.originExcludedRoutes({ slug })}>
+            <a className="unstyled">Excluded routes ({excludedRouteCount})</a>
           </Link>
         </li>
         <li className={clsx(disabled && 'disabled pointer-events-none')}>

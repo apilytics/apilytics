@@ -140,29 +140,44 @@ const Origins: NextPage = () => {
       </div>
     ));
 
-    const renderOrigins = origins.map(({ name, slug, totalMetrics, lastDayMetrics, userRole }) => (
-      <Link href={dynamicRoutes.origin({ slug })} key={name}>
-        <a className="unstyled">
-          <div className="card rounded-lg bg-base-100 px-4 py-2 hover:bg-gray-700" key={name}>
-            <div className="flex items-center justify-between">
-              <div>
-                <h6>{name}</h6>
-                <div className="flex gap-4 text-sm">
-                  <p>
-                    <span className="text-white">{formatCount(lastDayMetrics)}</span> requests in
-                    last 24h
-                  </p>
-                  <p>
-                    <span className="text-white">{formatCount(totalMetrics)}</span> total requests
-                  </p>
+    const renderOrigins = origins.map(
+      ({
+        name,
+        slug,
+        totalMetrics,
+        lastDayMetrics,
+        userRole,
+        dynamicRouteCount,
+        excludedRouteCount,
+      }) => (
+        <Link href={dynamicRoutes.origin({ slug })} key={name}>
+          <a className="unstyled">
+            <div className="card rounded-lg bg-base-100 px-4 py-2 hover:bg-gray-700" key={name}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h6>{name}</h6>
+                  <div className="flex gap-4 text-sm">
+                    <p>
+                      <span className="text-white">{formatCount(lastDayMetrics)}</span> requests in
+                      last 24h
+                    </p>
+                    <p>
+                      <span className="text-white">{formatCount(totalMetrics)}</span> total requests
+                    </p>
+                  </div>
                 </div>
+                <OriginMenu
+                  slug={slug}
+                  userRole={userRole}
+                  dynamicRouteCount={dynamicRouteCount}
+                  excludedRouteCount={excludedRouteCount}
+                />
               </div>
-              <OriginMenu slug={slug} userRole={userRole} />
             </div>
-          </div>
-        </a>
-      </Link>
-    ));
+          </a>
+        </Link>
+      ),
+    );
 
     if (loading) {
       return (

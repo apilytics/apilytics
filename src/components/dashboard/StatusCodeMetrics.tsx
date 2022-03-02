@@ -63,7 +63,6 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
           onClick={handleShowAllClick}
           className="btn-ghost btn-sm"
           endIcon={ArrowsExpandIcon}
-          fullWidth="mobile"
         >
           Show all ({formatCount(data.length)})
         </Button>

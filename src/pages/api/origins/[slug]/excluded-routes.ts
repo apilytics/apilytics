@@ -22,19 +22,19 @@ import type { ApiHandler, RouteData } from 'types';
 const getRoutes = async (originId: string): Promise<RouteData[]> => {
   const result: RouteData[] = await prisma.$queryRaw`
 SELECT
-  dynamic_routes.route,
+  excluded_routes.route,
   COUNT(DISTINCT metrics.path) AS "matchingPaths"
 
-FROM dynamic_routes
-  LEFT JOIN metrics ON metrics.origin_id = dynamic_routes.origin_id
-    AND metrics.path LIKE dynamic_routes.pattern
+FROM excluded_routes
+  LEFT JOIN metrics ON metrics.origin_id = excluded_routes.origin_id
+    AND metrics.path LIKE excluded_routes.pattern
     AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
-      = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
+      = LENGTH(excluded_routes.pattern) - LENGTH(REPLACE(excluded_routes.pattern, '/', ''))
 
-WHERE dynamic_routes.origin_id = ${originId}
+WHERE excluded_routes.origin_id = ${originId}
 
-GROUP BY dynamic_routes.route
-ORDER BY dynamic_routes.route;`;
+GROUP BY excluded_routes.route
+ORDER BY excluded_routes.route;`;
 
   return result;
 };
@@ -111,8 +111,8 @@ const handlePut: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
 
   try {
     await prisma.$transaction([
-      prisma.dynamicRoute.deleteMany({ where: { originId } }),
-      prisma.dynamicRoute.createMany({ data }),
+      prisma.excludedRoute.deleteMany({ where: { originId } }),
+      prisma.excludedRoute.createMany({ data }),
     ]);
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
@@ -124,7 +124,7 @@ const handlePut: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
   }
 
   const routes = await getRoutes(originId);
-  sendOk(res, { data: routes, message: 'Dynamic routes updated.' });
+  sendOk(res, { data: routes, message: 'Excluded routes updated.' });
 };
 
 const handler = makeMethodsHandler({ GET: handleGet, PUT: handlePut }, true);

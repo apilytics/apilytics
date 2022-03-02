@@ -76,10 +76,11 @@ model Origin {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  originUsers   OriginUser[]
-  metrics       Metric[]
-  dynamicRoutes DynamicRoute[]
-  invites       OriginInvite[]
+  originUsers    OriginUser[]
+  metrics        Metric[]
+  dynamicRoutes  DynamicRoute[]
+  excludedRoutes ExcludedRoute[]
+  invites        OriginInvite[]
 
   @@index([slug])
   @@map("origins")
@@ -113,6 +114,20 @@ model DynamicRoute {
   @@unique([pattern, originId])
   @@index([originId])
   @@map("dynamic_routes")
+}
+
+model ExcludedRoute {
+  id      String @id @default(uuid()) @db.Uuid
+  route   String
+  pattern String
+
+  originId String @map("origin_id") @db.Uuid
+  origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
+
+  @@unique([route, originId])
+  @@unique([pattern, originId])
+  @@index([originId])
+  @@map("excluded_routes")
 }
 
 model Metric {

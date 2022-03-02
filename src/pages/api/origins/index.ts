@@ -26,19 +26,32 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 SELECT
   origins.name,
   origins.slug,
-  COUNT(*) AS "totalMetrics",
-  SUM(
-    CASE WHEN metrics.created_at >= NOW() - INTERVAL '1 DAY' THEN 1 ELSE 0 END
-  ) AS "lastDayMetrics",
-  origin_users.role AS "userRole"
+  metrics.count AS "totalMetrics",
+  metrics.last_day_metrics as "lastDayMetrics",
+  origin_users.role AS "userRole",
+  COUNT(dynamic_routes) AS "dynamicRouteCount",
+  COUNT(excluded_routes) AS "excludedRouteCount"
 
 FROM origins
   LEFT JOIN origin_users ON origin_users.origin_id = origins.id
-  LEFT JOIN metrics ON origins.id = metrics.origin_id
+  LEFT JOIN dynamic_routes ON dynamic_routes.origin_id = origins.id
+  LEFT JOIN excluded_routes ON excluded_routes.origin_id = origins.id
+
+  LEFT JOIN LATERAL (
+    SELECT
+      COUNT(*),
+      SUM(CASE WHEN metrics.created_at >= NOW() - INTERVAL '1 DAY' THEN 1 ELSE 0 END) AS last_day_metrics
+    FROM metrics
+    WHERE metrics.origin_id = origins.id
+      AND NOT EXISTS (
+        SELECT 1 FROM excluded_routes
+        WHERE metrics.path LIKE excluded_routes.pattern
+      )
+  ) AS metrics ON TRUE
 
 ${whereClause}
 
-GROUP BY origins.name, origins.slug, origin_users.role
+GROUP BY origins.name, origins.slug, origin_users.role, metrics.count, metrics.last_day_metrics
 ORDER BY "totalMetrics" DESC;`;
 
   sendOk(res, { data });

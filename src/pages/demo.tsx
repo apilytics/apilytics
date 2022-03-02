@@ -22,7 +22,6 @@ import { staticRoutes } from 'utils/router';
 const Demo: NextPage = () => {
   useDashboardQuery();
   const plausible = usePlausible();
-  const origin = MOCK_ORIGIN;
   const eventOptions = { location: EVENT_LOCATIONS.PAGE_BOTTOM };
   const maxWidth = 'max-w-6xl';
 
@@ -34,7 +33,10 @@ const Demo: NextPage = () => {
     selectedBrowser: browser,
     selectedOs: os,
     selectedDevice: device,
+    setOrigin,
   } = useOrigin();
+
+  setOrigin(MOCK_ORIGIN);
 
   const {
     generalData,
@@ -65,7 +67,7 @@ const Demo: NextPage = () => {
       footerProps={{ maxWidth }}
     >
       <div className="container flex max-w-6xl grow flex-col py-4">
-        <DashboardOptions origin={origin} />
+        <DashboardOptions />
         <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} />

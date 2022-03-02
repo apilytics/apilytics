@@ -88,6 +88,7 @@ export const dynamicRoutes: DynamicRoutes = {
   origin: ({ slug }) => `/origins/${slug}`,
   originSettings: ({ slug }) => `/origins/${slug}/settings`,
   originDynamicRoutes: ({ slug }) => `/origins/${slug}/dynamic-routes`,
+  originExcludedRoutes: ({ slug }) => `/origins/${slug}/excluded-routes`,
   originUsers: ({ slug }) => `/origins/${slug}/users`,
   blog: ({ slug }) => `/blog/${slug}`,
 };
@@ -107,6 +108,7 @@ export const dynamicApiRoutes: DynamicRoutes = {
   originMetrics: ({ slug, ...params }) =>
     `/api/origins/${slug}/metrics?${new URLSearchParams(params)}`,
   dynamicRoutes: ({ slug }) => `/api/origins/${slug}/dynamic-routes`,
+  excludedRoutes: ({ slug }) => `/api/origins/${slug}/excluded-routes`,
   originUsers: ({ slug }) => `/api/origins/${slug}/users`,
   originUser: ({ slug, originUserId }) => `/api/origins/${slug}/users/${originUserId}`,
   originInvites: ({ slug }) => `/api/origins/${slug}/invites`,

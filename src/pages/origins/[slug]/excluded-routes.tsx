@@ -17,7 +17,7 @@ import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes } from 'utils/router';
 import type { PlausibleEvents, RouteData } from 'types';
 
-const OriginDynamicRoutes: NextPage = () => {
+const OriginExcludedRoutes: NextPage = () => {
   const { slug, origin } = useOrigin();
   const [value, setValue] = useState('');
   const [routes, setRoutes] = useState<RouteData[]>([]);
@@ -51,7 +51,7 @@ const OriginDynamicRoutes: NextPage = () => {
     setErrorMessage('');
 
     try {
-      const res = await fetch(dynamicApiRoutes.dynamicRoutes({ slug }), {
+      const res = await fetch(dynamicApiRoutes.excludedRoutes({ slug }), {
         method: 'PUT',
         body: JSON.stringify(payload),
         headers: {
@@ -78,10 +78,11 @@ const OriginDynamicRoutes: NextPage = () => {
   };
 
   const validateRoute = (route: string): boolean | void => {
-    if (route.match(/^\/.*<[a-z_-]+>.*$/)) {
+    // TODO: Improve the validation regex
+    if (route.match(/^\/.*$/)) {
       return true;
     } else {
-      setErrorMessage('Route must be a relative path with at least one dynamic style placeholder.');
+      setErrorMessage('Route must be a relative path.');
     }
   };
 
@@ -91,7 +92,7 @@ const OriginDynamicRoutes: NextPage = () => {
     if (validateRoute(value)) {
       const payload = routes.map(({ route }) => route);
       payload.push(value);
-      updateRoutes({ payload, event: 'add-dynamic-route' });
+      updateRoutes({ payload, event: 'add-excluded-route' });
     }
   };
 
@@ -107,7 +108,7 @@ const OriginDynamicRoutes: NextPage = () => {
         return route;
       });
 
-      updateRoutes({ payload, event: 'update-dynamic-route' });
+      updateRoutes({ payload, event: 'update-excluded-route' });
     }
   };
 
@@ -116,20 +117,20 @@ const OriginDynamicRoutes: NextPage = () => {
       .map(({ route }) => route)
       .filter((route) => route !== selectedRoute?.route);
 
-    updateRoutes({ payload, event: 'delete-dynamic-route' });
+    updateRoutes({ payload, event: 'delete-excluded-route' });
   };
 
   const handleRouteClick = (route: RouteData) => (): void => {
     setSelectedRoute(route);
     setValue(route.route);
-    handleOpenModal(MODAL_NAMES.dynamicRoute);
+    handleOpenModal(MODAL_NAMES.excludedRoute);
   };
 
   useEffect(() => {
     if (slug) {
       (async (): Promise<void> => {
         try {
-          const res = await fetch(dynamicApiRoutes.dynamicRoutes({ slug }));
+          const res = await fetch(dynamicApiRoutes.excludedRoutes({ slug }));
 
           if (res.status === 200) {
             const { data } = await res.json();
@@ -150,7 +151,7 @@ const OriginDynamicRoutes: NextPage = () => {
 
   const renderDeleteLink = (
     <p
-      onClick={(): void => handleOpenModal(MODAL_NAMES.deleteDynamicRoute)}
+      onClick={(): void => handleOpenModal(MODAL_NAMES.deleteExcludedRoute)}
       className="link mt-4 text-center text-error"
     >
       Delete route
@@ -162,7 +163,8 @@ const OriginDynamicRoutes: NextPage = () => {
     onInputChange: ({ target }: ChangeEvent<HTMLInputElement>): void => setValue(target.value),
     helperText: (
       <>
-        The route pattern should be in the following kind format:
+        The route pattern should be a relative path and it can contain wildcards in the following
+        format:
         <br />
         <code>{`/foo/<id>/bar`}</code>, where <code>{`<param>`}</code> placeholders indicate dynamic
         values.
@@ -173,7 +175,7 @@ const OriginDynamicRoutes: NextPage = () => {
   const renderRoutes = (
     <div className="card rounded-lg bg-base-100 p-4 shadow">
       <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
-      <h5 className="text-white">Dynamic routes for {origin?.name}</h5>
+      <h5 className="text-white">Excluded routes for {origin?.name}</h5>
       {loading ? (
         <div className="mt-2 flex flex-col gap-3">
           {renderLoadingRow}
@@ -191,23 +193,22 @@ const OriginDynamicRoutes: NextPage = () => {
               </p>
             ))
           ) : (
-            <p className="text-white">You have no dynamic routes. Add your first route below.</p>
+            <p className="text-white">You have no excluded routes. Add your first route below.</p>
           )}
           <p className="mt-4 text-sm">
-            All routes matching these patterns will be grouped into single endpoints by their HTTP
-            methods.
+            All routes matching these patterns will be ignored from your metrics.
             <br />
             The number after the route indicates how many paths of your existing metrics are
             matching the given route.
           </p>
         </div>
       )}
-      <RouteForm {...formProps} label="Add new dynamic route" onSubmit={handleSubmitAddRoute} />
+      <RouteForm {...formProps} label="Add new excluded route" onSubmit={handleSubmitAddRoute} />
     </div>
   );
 
   const renderEditRouteModal = (
-    <Modal name={MODAL_NAMES.dynamicRoute}>
+    <Modal name={MODAL_NAMES.excludedRoute}>
       <div className="flex items-center justify-between p-2">
         <p className="px-2 font-bold">
           <p className="text-white">
@@ -228,7 +229,7 @@ const OriginDynamicRoutes: NextPage = () => {
   );
 
   const renderDeleteRouteModal = (
-    <Modal name={MODAL_NAMES.deleteDynamicRoute}>
+    <Modal name={MODAL_NAMES.deleteExcludedRoute}>
       <div className="flex items-center justify-between p-2">
         <p className="px-2 font-bold">
           <p className="text-white">Delete route</p>
@@ -253,7 +254,7 @@ const OriginDynamicRoutes: NextPage = () => {
 
   return (
     <MainTemplate
-      headProps={{ title: origin?.name ? `Dynamic routes for ${origin.name}` : 'Loading...' }}
+      headProps={{ title: origin?.name ? `Excluded routes for ${origin.name}` : 'Loading...' }}
     >
       {renderRoutes}
       {renderEditRouteModal}
@@ -262,4 +263,4 @@ const OriginDynamicRoutes: NextPage = () => {
   );
 };
 
-export default withAuth(withOrigin(OriginDynamicRoutes));
+export default withAuth(withOrigin(OriginExcludedRoutes));

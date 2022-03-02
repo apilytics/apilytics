@@ -1,5 +1,7 @@
 import { ArrowsExpandIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 import { DashboardCard } from 'components/dashboard/DashboardCard';
@@ -12,6 +14,7 @@ import { usePlausible } from 'hooks/usePlausible';
 import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
 import { formatCount, formatMilliseconds } from 'utils/metrics';
+import { dynamicRoutes, staticRoutes } from 'utils/router';
 import type { EndpointData, ValueOf, VerticalBarData } from 'types';
 
 const METRIC_TYPES = {
@@ -25,11 +28,13 @@ interface Props {
 
 export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const plausible = usePlausible();
-  const { setSelectedMethod, setSelectedEndpoint } = useOrigin();
+  const { slug, origin, setSelectedMethod, setSelectedEndpoint } = useOrigin();
   const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
   const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
   const requestsData = [..._data.sort((a, b) => b.totalRequests - a.totalRequests)];
   const responseTimeData = [..._data.sort((a, b) => b.responseTimeAvg - a.responseTimeAvg)];
+  const { pathname } = useRouter();
+  const isDemo = pathname === staticRoutes.demo;
   const { handleOpenModal, handleCloseModal } = useUIState();
 
   const attributes = {
@@ -93,15 +98,24 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
       <div className="flex grow">
         <VerticalBarChart {...barChartProps} />
       </div>
-      <div className="flex">
+      <div className="flex flex-wrap items-center gap-4">
         <Button
           onClick={handleShowAllClick}
           className="btn-ghost btn-sm"
           endIcon={ArrowsExpandIcon}
-          fullWidth="mobile"
         >
           Show all ({formatCount(data.length)})
         </Button>
+        {!isDemo && (
+          <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>
+            <a>Dynamic routes ({origin?.dynamicRouteCount})</a>
+          </Link>
+        )}
+        {!isDemo && (
+          <Link href={dynamicRoutes.originExcludedRoutes({ slug })}>
+            <a>Excluded routes ({origin?.excludedRouteCount})</a>
+          </Link>
+        )}
       </div>
     </>
   );

@@ -160,7 +160,7 @@ const Origin: NextPage = () => {
             className="btn-sm hidden sm:flex"
           />
           {origin ? (
-            <DashboardOptions origin={origin} />
+            <DashboardOptions />
           ) : (
             <div className="my-4 flex animate-pulse flex-wrap gap-2">
               <div className="h-4 w-36 rounded-lg bg-base-100" />
@@ -247,7 +247,7 @@ const Origin: NextPage = () => {
           text="Origins"
           className="btn-sm hidden sm:flex"
         />
-        <DashboardOptions origin={origin} apilyticsPackage={metrics.apilyticsPackage} />
+        <DashboardOptions apilyticsPackage={metrics.apilyticsPackage} />
         <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} />
