@@ -46,7 +46,6 @@ const createMetrics = async ({
   const metricsBatch = [];
 
   // Generate random data for each hour.
-  // Each hour of the year will have 10-20 random data points.
   for (let hourIndex = 0; hourIndex < hours; hourIndex++) {
     const metricsForHour = Array(getRandomNumberBetween(minDataPointsPerHour, maxDataPointsPerHour))
       .fill(null)
