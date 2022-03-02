@@ -138,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
   );
 
   const renderWhyDropdown = (
-    <div className="dropdown-hover dropdown">
+    <div className="dropdown">
       <div tabIndex={0} className="btn btn-ghost flex">
         Why Apilytics?
         <ChevronDownIcon className="ml-2 h-5 w-5" />
@@ -164,7 +164,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
   );
 
   const renderCommunityDropdown = (
-    <div className="dropdown-hover dropdown">
+    <div className="dropdown">
       <div tabIndex={0} className="btn btn-ghost flex">
         Community
         <ChevronDownIcon className="ml-2 h-5 w-5" />
@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
 
   const renderButtonsForNotAuthenticated = !user && (
     <div className="flex gap-2">
-      <div className="dropdown-end dropdown-hover dropdown sm:hidden">
+      <div className="dropdown-end dropdown sm:hidden">
         <div tabIndex={0} className="btn btn-ghost">
           <DotsVerticalIcon className="h-5 w-5" />
         </div>
