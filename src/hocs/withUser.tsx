@@ -1,4 +1,3 @@
-import { signOut } from 'next-auth/react';
 import React, { useEffect } from 'react';
 import type { NextPage } from 'next';
 
@@ -30,8 +29,6 @@ export const withUser = <T extends Record<string, unknown>>(
 
             setUser(userData);
             setOriginInvites(originInviteData);
-          } else {
-            signOut();
           }
         } catch {
           setErrorMessage(UNEXPECTED_ERROR);
