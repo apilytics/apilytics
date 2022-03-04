@@ -145,11 +145,12 @@ FROM metrics
   LEFT JOIN origins ON metrics.origin_id = origins.id`;
 
   const baseWhereClause = Prisma.sql`
-WHERE NOT EXISTS (
-  SELECT 1 FROM excluded_routes
-  WHERE excluded_routes.origin_id = ${originId}
-    AND metrics.path LIKE excluded_routes.pattern
-)
+WHERE origins.id = ${originId}
+  AND NOT EXISTS (
+    SELECT 1 FROM excluded_routes
+    WHERE excluded_routes.origin_id = ${originId}
+      AND metrics.path LIKE excluded_routes.pattern
+  )
   ${wherePath}
   ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
   ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
