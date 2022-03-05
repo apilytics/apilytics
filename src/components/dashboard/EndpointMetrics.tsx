@@ -57,13 +57,18 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const { data, valueKey, label, renderValue } = attributes[metricType];
 
   const {
-    data: modalData,
+    data: _modalData,
     valueKey: modalValueKey,
     label: modalLabel,
     renderValue: renderModalValue,
   } = attributes[activeTab];
 
   const truncatedData = data.slice(0, 10);
+  const pageSize = 10;
+  const pages = Math.ceil(_modalData.length / pageSize);
+  const [page, setPage] = useState(0);
+  const offset = page * pageSize;
+  const paginatedModalData = _modalData.slice(offset, offset + pageSize);
 
   const handleLabelClick = (data: Partial<EndpointData>): void => {
     setSelectedMethod(data.method);
@@ -164,14 +169,40 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
             <div className="flex grow">
               <VerticalBarChart
                 {...barChartProps}
-                data={modalData}
+                data={paginatedModalData}
                 valueKey={modalValueKey}
                 renderValue={renderModalValue}
                 rightLabel={modalLabel}
               />
             </div>
           </div>
-          <div className="p-6" />
+          <div className="flex justify-center p-4">
+            <div className="btn-group">
+              {page > 0 && (
+                <button className="btn" onClick={(): void => setPage(0)}>
+                  {1}
+                </button>
+              )}
+              {page > 2 && <button className="btn-disabled btn">...</button>}
+              {page > 1 && (
+                <button className="btn" onClick={(): void => setPage(page - 1)}>
+                  {page}
+                </button>
+              )}
+              <button className="btn btn-active">{page + 1}</button>
+              {page < pages - 2 && (
+                <button className="btn" onClick={(): void => setPage(page + 1)}>
+                  {page + 2}
+                </button>
+              )}
+              {page < pages - 3 && <button className="btn-disabled btn">...</button>}
+              {page < pages - 1 && (
+                <button className="btn" onClick={(): void => setPage(pages - 1)}>
+                  {pages}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </Modal>
     </DashboardCard>
