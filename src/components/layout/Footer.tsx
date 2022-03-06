@@ -26,6 +26,9 @@ const FEATURE_LINKS = [
     text: 'Open source',
     href: staticRoutes.openSource,
   },
+];
+
+const USE_CASE_LINKS = [
   {
     text: 'For startups',
     href: staticRoutes.forStartups,
@@ -34,17 +37,29 @@ const FEATURE_LINKS = [
     text: 'For consultants',
     href: staticRoutes.forConsultants,
   },
+  {
+    text: 'For mobile apps',
+    href: staticRoutes.forMobileApps,
+  },
+  {
+    text: 'For microservices',
+    href: staticRoutes.forMicroServices,
+  },
+  {
+    text: 'For serverless',
+    href: staticRoutes.forServerless,
+  },
 ];
 
-const RESOURCE_LINKS = [
-  {
-    text: 'Blog',
-    href: staticRoutes.blog,
-    component: Link,
-  },
+const COMMUNITY_LINKS = [
   {
     text: 'Docs',
     href: staticRoutes.docs,
+    component: Link,
+  },
+  {
+    text: 'Blog',
+    href: staticRoutes.blog,
     component: Link,
   },
   {
@@ -57,9 +72,6 @@ const RESOURCE_LINKS = [
     href: staticRoutes.roadmap,
     component: ExternalLink,
   },
-];
-
-const COMMUNITY_LINKS = [
   {
     text: 'GitHub',
     href: staticRoutes.github,
@@ -144,11 +156,11 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             </ul>
           </div>
           <div>
-            <h6 className="footer-title text-sm">Resources</h6>
+            <h6 className="footer-title text-sm">Use cases</h6>
             <ul>
-              {RESOURCE_LINKS.map(({ text, href, component: Component }) => (
+              {USE_CASE_LINKS.map(({ text, href }) => (
                 <p key={text} className="whitespace-nowrap" onClick={handleClick(text)}>
-                  <Component href={href}>{text}</Component>
+                  <Link href={href}>{text}</Link>
                 </p>
               ))}
             </ul>

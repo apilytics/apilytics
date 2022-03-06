@@ -6,5 +6,5 @@ interface Props {
 }
 
 export const DashboardCard: React.FC<Props> = ({ children }) => (
-  <div className={clsx('card rounded-lg bg-base-100 p-2 shadow')}>{children}</div>
+  <div className={clsx('card rounded-lg bg-base-100 p-2')}>{children}</div>
 );
