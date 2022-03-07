@@ -61,16 +61,6 @@ export const CTASection: React.FC = () => {
           href={staticRoutes.openSource}
           text="We want to be transparent on how we process the data of our users. This is why we have open sourced 100% of our client middleware code, keeping our users updated on what data from their API is processed."
         />
-        <FeatureCard
-          title="For startups"
-          href={staticRoutes.forStartups}
-          text="Apilytics is the optimal monitoring solution for startups. With us, you can focus on your business and not on your monitoring infrastructure."
-        />
-        <FeatureCard
-          title="For consultants"
-          href={staticRoutes.forConsultants}
-          text="Apilytics is ideal for software consultants and freelancers that want to monitor multiple production environments in one go with minimal configuration."
-        />
       </div>
     </div>
   );

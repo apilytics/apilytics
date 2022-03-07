@@ -49,6 +49,9 @@ export const staticRoutes = {
   changelog: '/changelog',
   forStartups: '/for-startups',
   forConsultants: '/for-consultants',
+  forMobileApps: '/for-mobile-apps',
+  forMicroServices: '/for-microservices',
+  forServerless: '/for-serverless',
   ...DOCS_ROUTES,
   ...BLOG_ROUTES,
   ...COMMUNITY_ROUTES,
@@ -63,6 +66,9 @@ export const INDEXABLE_CONTENT_ROUTES = [
   staticRoutes.changelog,
   staticRoutes.forStartups,
   staticRoutes.forConsultants,
+  staticRoutes.forMobileApps,
+  staticRoutes.forMicroServices,
+  staticRoutes.forServerless,
 ];
 
 export const INDEXABLE_DOCS_ROUTES = Object.values(DOCS_ROUTES);
