@@ -94,7 +94,7 @@
   }
 
   input::placeholder {
-    @apply text-base-content;
+    opacity: 0.35;
   }
 
   .step:not(.step-primary)::before,
