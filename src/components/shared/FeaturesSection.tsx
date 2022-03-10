@@ -46,7 +46,7 @@ const FEATURES = [
   },
 ];
 
-export const Features: React.FC = () => (
+export const FeaturesSection: React.FC = () => (
   <div className="container max-w-3xl py-4 lg:py-16">
     <h1 className="text-white">
       It's time to stop being <span className="text-primary">blind</span> about your

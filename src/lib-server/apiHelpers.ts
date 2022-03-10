@@ -264,12 +264,12 @@ export const sendVerificationRequest = async ({
   token: string;
 }): Promise<void> => {
   const { host } = new URL(url);
-  const transport = nodemailer.createTransport(server);
   const text = getVerificationEmailText({ url, host });
 
   if (process.env.NODE_ENV === 'production') {
     const subject = `Sign in to ${host}`;
     const html = getVerificationEmailHtml({ url, host, email });
+    const transport = nodemailer.createTransport(server);
 
     await transport.sendMail({
       to: email,

@@ -16,12 +16,12 @@ import type { MDXPageProps } from 'types';
 interface Props extends MDXPageProps {
   data: {
     title: string;
-    description?: string;
-    indexable?: boolean;
+    description: string;
+    indexable: boolean;
   };
 }
 
-const Content: NextPage<Props> = ({ source, data }) => (
+const ContentPage: NextPage<Props> = ({ source, data }) => (
   <MainTemplate headProps={data}>
     <div className="card rounded-lg bg-base-100 p-4 text-white shadow">
       <MDX source={source} />
@@ -33,7 +33,7 @@ const Content: NextPage<Props> = ({ source, data }) => (
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const path = `src/content/${params?.slug}.mdx`;
   const { source, data } = await getMDXContent(path);
-  const properties = ['title'];
+  const properties = ['title', 'description', 'indexable'];
   validateMandatoryFrontMatterKeys(data, properties, path);
 
   return {
@@ -57,4 +57,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default withUser(Content);
+export default withUser(ContentPage);

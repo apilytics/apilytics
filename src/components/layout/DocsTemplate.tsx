@@ -36,7 +36,7 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
           ?.filter(({ subOrder }) => !subOrder)
           .map(({ path, name, order: parentOrder }) => (
             <Fragment key={path}>
-              <li>
+              <li className="text-primary">
                 <Link href={path}>
                   <a>{name}</a>
                 </Link>
@@ -45,7 +45,7 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
                 {docsData
                   ?.filter(({ order, subOrder }) => order === parentOrder && subOrder)
                   .map(({ name, path }) => (
-                    <li key={path}>
+                    <li key={path} className="text-primary">
                       <Link href={path}>
                         <a>{name}</a>
                       </Link>
@@ -60,7 +60,7 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
           {previousDoc && <BackButton linkTo={previousDoc.path} text={previousDoc.name} />}
           <MDX source={source} />
           <div className="mt-4 flex flex-wrap items-center justify-between">
-            <p className="text-base-content">Last updated: {dayjs(updatedAt).format('LL')}</p>
+            <p>Last updated: {dayjs(updatedAt).format('LL')}</p>
             {nextDoc && (
               <Button linkTo={nextDoc.path} endIcon={ArrowSmRightIcon} className="btn-link p-0">
                 {nextDoc.name}

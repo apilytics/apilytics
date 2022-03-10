@@ -42,8 +42,8 @@ export const CTASection: React.FC = () => {
       </div>
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FeatureCard
-          title="Ease of use"
-          href={staticRoutes.easeOfUse}
+          title="Easy to use"
+          href={staticRoutes.easyToUse}
           text="API monitoring doesn't have to be hard. Unfortunately with the most tools out there, that is the case though. Apilytics is here to fix that. Our 5-minute installation is one of the corner stones why you should pick Apilytics."
         />
         <FeatureCard

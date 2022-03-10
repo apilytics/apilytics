@@ -26,8 +26,8 @@ import type { HeaderProps } from 'types';
 const WHY_ITEMS = [
   {
     icon: ChartBarIcon,
-    href: staticRoutes.easeOfUse,
-    title: 'Ease of use',
+    href: staticRoutes.easyToUse,
+    title: 'Easy to use',
     description:
       'Ease of use is one of the main reasons why you should choose Apilytics over other API monitoring solutions.',
   },
@@ -110,7 +110,7 @@ const MENU_ITEMS = [
 
 export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) => {
   const plausible = usePlausible();
-  const { user, accountComplete } = useAccount();
+  const { accountComplete, user } = useAccount();
   const maxWidthForNotAuthenticated = maxWidth !== DEFAULT_MAX_WIDTH ? maxWidth : 'max-w-5xl';
 
   const eventOptions = { location: EVENT_LOCATIONS.HEADER };
@@ -151,10 +151,10 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
           <li key={title}>
             <Link href={href}>
               <a className="unstyled flex flex-col">
-                <p className="flex items-center self-start">
+                <p className="flex items-center self-start text-primary">
                   <Icon className="mr-2 h-5 w-5" /> {title}
                 </p>
-                <p className="text-sm text-base-content">{description}</p>
+                <p className="text-sm">{description}</p>
               </a>
             </Link>
           </li>
@@ -180,10 +180,10 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
                 className="unstyled flex flex-col"
                 {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
               >
-                <p className="flex items-center self-start">
+                <p className="flex items-center self-start text-primary">
                   <Icon className="mr-2 h-5 w-5" /> {title}
                 </p>
-                <p className="text-sm text-base-content">{description}</p>
+                <p className="text-sm">{description}</p>
               </a>
             </Link>
           </li>
@@ -208,21 +208,18 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
         <div tabIndex={0} className="btn btn-ghost">
           <DotsVerticalIcon className="h-5 w-5" />
         </div>
-        <ul
-          tabIndex={0}
-          className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-primary shadow"
-        >
-          <li onClick={handleRegisterClick}>
+        <ul tabIndex={0} className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 shadow">
+          <li className="text-primary" onClick={handleRegisterClick}>
             <Link href={staticRoutes.register}>
               <a className="unstyled">Start free trial</a>
             </Link>
           </li>
-          <li onClick={handleLoginClick}>
+          <li className="text-primary" onClick={handleLoginClick}>
             <Link href={staticRoutes.login}>
               <a className="unstyled">Log in</a>
             </Link>
           </li>
-          <li onClick={handlePricingClick}>
+          <li className="text-primary" onClick={handlePricingClick}>
             <Link href={staticRoutes.pricing}>
               <a className="unstyled">Pricing</a>
             </Link>
