@@ -20,6 +20,11 @@
     @apply my-1;
   }
 
+  p,
+  li {
+    @apply text-base-content;
+  }
+
   h1,
   h2,
   h3,
