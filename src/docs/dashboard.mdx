@@ -1,12 +1,12 @@
 ---
-name: Dashboard
+name: Dashboard guide
 path: /docs/dashboard
 description: The dashboard documentation helps you to get started with using our dashboard. Learn how to inspect your metrics historically, by endpoints and much more.
 order: 3
-updatedAt: '2022-02-01'
+updatedAt: '2022-03-10'
 ---
 
-### Dashboard 📊
+### Dashboard guide 📊
 
 <br />
 
@@ -20,7 +20,7 @@ The dashboard is quite self-explanatory, but the visualization is divided into t
 
 <br />
 
-#### [Requests time frame ⌛](#requests-time-frame) {#requests-time-frame}
+#### Time frame metrics ⌛ {#requests-time-frame}
 
 <br />
 
@@ -34,40 +34,6 @@ So if you've for instance selected 24 hours as the time frame, the growth will b
 
 <br />
 
-#### [Endpoint requests 🧐](#endpoint-metrics) {#endpoint-metrics}
-
-<br />
-
-![Endpoint requests](/mock-ups/endpoint-requests.png)
-
-<br />
-
-The endpoint requests bar chart breaks down your requests to their corresponding endpoints.
-From the right-hand side you can see the amount of requests to each endpoint.
-By clicking on individual endpoints you can get a set of additional information for the given endpoint.
-
-<br />
-
-#### [Endpoint response times ⚡](#endpoint-response-times) {#endpoint-response-times}
-
-<br />
-
-![Endpoint response times](/mock-ups/endpoint-response-times.png)
-
-<br />
-
-The endpoint-specific response time visualization gives you a similar overview than the endpoint requests visualization,
-except that the endpoints have been sorted by the average response times that it took for the endpoints to respond.
-
-The percentile thresholds tell you the exact thresholds under which a certain percentage of the requests to the endpoint have responded.
-So for instance the `p75` threshold means that 75% of the requests made to the endpoint have a response time under the specified value for the given `p75` value.
-
-<br />
-
-#### [Errors time frame ⌛](#time-frame) {#time-frame}
-
-<br />
-
 ![Errors time frame](/mock-ups/errors-time-frame.png)
 
 <br />
@@ -78,7 +44,137 @@ So if you've for instance selected 24 hours as the time frame, the growth will b
 
 <br />
 
-#### [How to spot bottlenecks? 🍼](#bottlenecks) {#bottlenecks}
+#### Endpoint metrics 🧐 {#endpoint-metrics}
+
+<br />
+
+![Endpoint requests](/mock-ups/endpoint-requests.png)
+
+<br />
+
+The endpoint requests bar chart breaks down your requests to their corresponding endpoints.
+From the right-hand side you can see the amount of requests to each endpoint.
+You can use the endpoints as filters by clicking them.
+
+<br />
+
+![Endpoint response times](/mock-ups/endpoint-response-times.png)
+
+<br />
+
+The endpoint-specific response time visualization gives you a similar overview than the endpoint requests visualization,
+except that the endpoints have been sorted by the average response times that it took for the endpoints to respond.
+
+You may combine your dynamic endpoints into one by navigating to the "Dynamic routes" settings from the top-right menu.
+Yuu may also exclude specific routes or routes having a certain patter from the "Excluded routes" section from the same menu.
+
+<br />
+
+#### Performance metrics {#performance-metrics}
+
+The percentile thresholds tell you the exact thresholds that the specified values are within.
+So for instance the `p75` threshold for the response times means that 75% of the requests made to the endpoint have a response time under the specified value for the given `p75` value.
+
+<br />
+
+![Performance response times](/mock-ups/performance-response-times.png)
+
+<br />
+
+The response time tab shows you average and percentile values for response times of your endpoints.
+
+<br />
+
+![Performance request sizes](/mock-ups/performance-request-sizes.png)
+
+<br />
+
+The request size tab shows you average and percentile values for request sizes of your endpoints.
+The request size indicates the size of the body of the requests logged by your APIs.
+
+<br />
+
+![Performance response sizes](/mock-ups/performance-response-sizes.png)
+
+<br />
+
+The response size tab shows you average and percentile values for response sizes of all of your endpoints.
+The response size indicates the size of the body of the request responses logged by your APIs.
+
+<br />
+
+![Performance CPU usage](/mock-ups/performance-cpu-usage.png)
+
+<br />
+
+The CPU usage tab shows you average and percentile values for CPU usage of your endpoints.
+The CPU usage is calculated for each request logged by your API separately and the data you see in the dashboard is aggrated from the logged requests.
+
+<br />
+
+![Performance memory usage](/mock-ups/performance-memory-usage.png)
+
+<br />
+
+The memory usage tab shows you average and percentile values for memory usage of your endpoints.
+The memory usage is absolute and calculated for each request logged by your API separately and the data you see in the dashboard is aggrated from the logged requests.
+
+<br />
+
+![Performance total memory](/mock-ups/performance-total-memory.png)
+
+<br />
+
+The total memory tab shows you average and percentile values for the total memory of your endpoints.
+The values indicate the total available memory in your API and the data you see in the dashboard is aggrated from individual requests.
+
+<br />
+
+#### Status code metrics {#status-code-metrics}
+
+<br />
+
+![Status code metrics](/mock-ups/status-code-metrics.png)
+
+<br />
+
+The status code metrics show you how many times your API has responded with the shown status codes.
+You can use the status codes as filters by clicking them.
+
+<br />
+
+#### User agent metrics {#user-agent-metrics}
+
+<br />
+
+![Browser metrics](/mock-ups/user-agent-browsers.png)
+
+<br />
+
+The browser metrics show you which browser have been used to make requests to your APIs.
+You can use the browsers as filters by clicking them.
+
+<br />
+
+![Operating system metrics](/mock-ups/user-agent-operating-systems.png)
+
+<br />
+
+The operating system metrics show you which operating systems have been used to make requests to your APIs.
+You can use the browsers a filters by clicking them.
+
+<br />
+
+![Device metrics](/mock-ups/user-agent-devices.png)
+
+<br />
+
+The device metrics show you which type of devices have been used to make requests to your APIs.
+You can use the devices as filters by clicking them.
+
+<br />
+
+#### How to spot bottlenecks? 🍼 {#bottlenecks}
 
 <br />
 
