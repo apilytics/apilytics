@@ -7,11 +7,13 @@ import type { Snippet } from 'types';
 
 interface Props {
   snippets: Snippet[];
+  framework?: string;
+  noBackground?: boolean;
 }
 
-export const Setup: React.FC<Props> = ({ snippets }) => {
+export const SetupSection: React.FC<Props> = ({ snippets, framework, noBackground = false }) => {
   const plausible = usePlausible();
-  const [selectedIntegration, setSelectedIntegration] = useState(snippets[0].name);
+  const [selectedIntegration, setSelectedIntegration] = useState(framework ?? snippets[0].name);
   const snippet = snippets.find(({ name }) => selectedIntegration === name);
 
   const handleTabClick = (name: string) => (): void => {
@@ -23,11 +25,15 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
     throw Error('Snippet not found!');
   }
 
+  if (framework && !snippets.some((snippet) => snippet.name === framework)) {
+    throw Error(`Framework ${framework} not found!`);
+  }
+
   const { source } = snippet;
 
   return (
-    <div className="bg-background bg-cover bg-no-repeat">
-      <div className="bg-filter">
+    <div className={clsx(!noBackground && 'bg-background bg-cover bg-no-repeat')}>
+      <div className={clsx(!noBackground && 'bg-filter')}>
         <div className="container flex max-w-3xl flex-col py-4 lg:py-16">
           <h1 className="text-white">
             Set up in <span className="text-primary">5 minutes</span>
@@ -46,17 +52,22 @@ export const Setup: React.FC<Props> = ({ snippets }) => {
             </ul>
           </div>
           <div className="mockup-code mt-4 w-full rounded-lg bg-base-100 pb-0">
-            <div className="tabs px-4">
-              {snippets.map(({ name }) => (
-                <p
-                  key={name}
-                  className={clsx('tab tab-bordered', selectedIntegration === name && 'tab-active')}
-                  onClick={handleTabClick(name)}
-                >
-                  {name}
-                </p>
-              ))}
-            </div>
+            {!framework && (
+              <div className="tabs px-4">
+                {snippets.map(({ name }) => (
+                  <p
+                    key={name}
+                    className={clsx(
+                      'tab tab-bordered',
+                      selectedIntegration === name && 'tab-active',
+                    )}
+                    onClick={handleTabClick(name)}
+                  >
+                    {name}
+                  </p>
+                ))}
+              </div>
+            )}
             <div className="p-4">
               <MDX source={source} />
             </div>

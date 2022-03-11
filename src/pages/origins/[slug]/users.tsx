@@ -292,12 +292,12 @@ const OriginUsers: NextPage = () => {
             </div>
             <ul
               tabIndex={0}
-              className="card-bordered dropdown-content menu rounded-box bg-base-100 p-2 text-primary shadow"
+              className="card-bordered dropdown-content menu rounded-box bg-base-100 p-2 shadow"
             >
-              <li onClick={handleClickEditUser(user)}>
+              <li className="text-primary" onClick={handleClickEditUser(user)}>
                 <a>Edit</a>
               </li>
-              <li className="text-error hover:text-error" onClick={handleClickDeleteUser(user)}>
+              <li className="text-error" onClick={handleClickDeleteUser(user)}>
                 <a className="unstyled">Delete</a>
               </li>
             </ul>

@@ -1,4 +1,4 @@
-import { XIcon } from '@heroicons/react/solid';
+import { PlusIcon, XIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
 import React from 'react';
 import type { ChangeEvent } from 'react';
@@ -9,9 +9,9 @@ import { OriginMenu } from 'components/shared/OriginMenu';
 import { Select } from 'components/shared/Select';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
-import { TIME_FRAME_OPTIONS } from 'utils/constants';
+import { ORIGIN_ROLES, TIME_FRAME_OPTIONS } from 'utils/constants';
 import { truncateString } from 'utils/helpers';
-import { staticRoutes } from 'utils/router';
+import { dynamicRoutes, staticRoutes } from 'utils/router';
 import type { ApilyticsPackage, TimeFrame } from 'types';
 
 interface Props {
@@ -102,6 +102,15 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
           </option>
         ))}
       </Select>
+      {origin?.userRole && [ORIGIN_ROLES.OWNER, ORIGIN_ROLES.ADMIN].includes(origin.userRole) && (
+        <Button
+          className="btn-outline btn-primary hidden sm:flex"
+          linkTo={dynamicRoutes.originUsers({ slug })}
+          endIcon={PlusIcon}
+        >
+          Invite users
+        </Button>
+      )}
       {!isDemo && (
         <OriginMenu
           slug={slug}

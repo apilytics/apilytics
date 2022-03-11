@@ -7,6 +7,8 @@ import rehypeHighlight from 'rehype-highlight';
 import remarkHeadingId from 'remark-heading-id';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
+import type { Snippet } from 'types';
+
 export const getFullPath = (path: string): string => join(process.cwd(), path);
 
 interface MDXContent {
@@ -35,6 +37,7 @@ export const getFilePaths = (path: string): string[] => readdirSync(path).filter
 export const DOCS_PATH = getFullPath('src/docs');
 export const BLOGS_PATH = getFullPath('src/blogs');
 export const CONTENT_PATH = getFullPath('src/content');
+export const FOR_PATH = getFullPath('src/for');
 
 export const validateMandatoryFrontMatterKeys = (
   data: Record<string, unknown>,
@@ -76,3 +79,26 @@ export const getBlogsData = (): Record<string, unknown>[] =>
       return data;
     })
     .sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1));
+
+export const getSnippets = async (): Promise<Snippet[]> => {
+  const path = getFullPath('src/snippets');
+  const files = readdirSync(path).filter((path) => /\.mdx?$/.test(path));
+
+  // @ts-ignore: The front matter types are inferred as `any`;
+  const _snippets: Snippet[] = await Promise.all(
+    files.map(async (file) => {
+      const {
+        source,
+        data: { name, order },
+      } = await getMDXContent(`src/snippets/${file}`);
+
+      return {
+        name,
+        order,
+        source,
+      };
+    }),
+  );
+
+  return _snippets.sort((a, b) => a.order - b.order);
+};

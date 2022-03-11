@@ -28,6 +28,29 @@ const COMMUNITY_ROUTES = {
   reddit: 'https://reddit.com/r/apilytics',
 };
 
+const CONTENT_ROUTES = {
+  privacyPolicy: '/privacy-policy',
+  terms: '/terms',
+  about: '/about',
+  privacyFriendly: '/privacy-friendly',
+  lightweight: '/lightweight',
+  openSource: '/open-source',
+  easyToUse: '/easy-to-use',
+  changelog: '/changelog',
+};
+
+const FOR_ROUTES = {
+  forStartups: '/for/startups',
+  forConsultants: '/for/consultants',
+  forMobileApps: '/for/mobile-apps',
+  forMicroServices: '/for/microservices',
+  forServerless: '/for/serverless',
+  forNextJS: '/for/next',
+  forExpress: '/for/express',
+  forDjango: '/for/django',
+  forFastAPI: '/for/fastapi',
+};
+
 export const staticRoutes = {
   root: '/',
   pricing: '/#pricing',
@@ -39,43 +62,20 @@ export const staticRoutes = {
   newOrigin: '/new-origin',
   account: '/account',
   contact: '/contact',
-  privacyPolicy: '/privacy-policy',
-  terms: '/terms',
-  about: '/about',
-  privacyFriendly: '/privacy-friendly',
-  lightweight: '/lightweight',
-  openSource: '/open-source',
-  easeOfUse: '/ease-of-use',
-  changelog: '/changelog',
-  forStartups: '/for-startups',
-  forConsultants: '/for-consultants',
-  forMobileApps: '/for-mobile-apps',
-  forMicroServices: '/for-microservices',
-  forServerless: '/for-serverless',
+  ...CONTENT_ROUTES,
+  ...FOR_ROUTES,
   ...DOCS_ROUTES,
   ...BLOG_ROUTES,
   ...COMMUNITY_ROUTES,
 };
 
-export const INDEXABLE_CONTENT_ROUTES = [
-  staticRoutes.about,
-  staticRoutes.privacyFriendly,
-  staticRoutes.lightweight,
-  staticRoutes.openSource,
-  staticRoutes.easeOfUse,
-  staticRoutes.changelog,
-  staticRoutes.forStartups,
-  staticRoutes.forConsultants,
-  staticRoutes.forMobileApps,
-  staticRoutes.forMicroServices,
-  staticRoutes.forServerless,
-];
-
+export const INDEXABLE_CONTENT_ROUTES = Object.values(CONTENT_ROUTES);
+export const INDEXABLE_FOR_ROUTES = Object.values(FOR_ROUTES);
 export const INDEXABLE_DOCS_ROUTES = Object.values(DOCS_ROUTES);
-
 export const INDEXABLE_BLOG_ROUTES = Object.values(BLOG_ROUTES);
 
 export const MISC_INDEXABLE_ROUTES = [
+  staticRoutes.root,
   staticRoutes.demo,
   staticRoutes.login,
   staticRoutes.register,
@@ -83,8 +83,8 @@ export const MISC_INDEXABLE_ROUTES = [
 ];
 
 export const INDEXABLE_ROUTES = [
-  staticRoutes.root,
   ...INDEXABLE_CONTENT_ROUTES,
+  ...INDEXABLE_FOR_ROUTES,
   ...INDEXABLE_DOCS_ROUTES,
   ...INDEXABLE_BLOG_ROUTES,
   ...MISC_INDEXABLE_ROUTES,

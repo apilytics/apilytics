@@ -8,7 +8,7 @@ const REASONS = [
       'Existing tools require you to either build, deploy or maintain stuff. We solve all of these problems for you.',
   },
   {
-    title: 'Ease of use',
+    title: 'Easy to use',
     content:
       "You don't need a team of experts with Apilytics. We'll take care of everything for you.",
   },
@@ -30,7 +30,7 @@ const REASONS = [
   },
 ];
 
-export const Why: React.FC = () => (
+export const WhySection: React.FC = () => (
   <div className="bg-background bg-cover bg-no-repeat">
     <div className="bg-filter">
       <div className="container flex max-w-3xl flex-col py-4 lg:py-16">

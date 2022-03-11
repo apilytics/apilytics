@@ -11,8 +11,8 @@ import type { FooterProps } from 'types';
 
 const FEATURE_LINKS = [
   {
-    text: 'Ease of use',
-    href: staticRoutes.easeOfUse,
+    text: 'Easy to use',
+    href: staticRoutes.easyToUse,
   },
   {
     text: 'Lightweight',
@@ -28,30 +28,7 @@ const FEATURE_LINKS = [
   },
 ];
 
-const USE_CASE_LINKS = [
-  {
-    text: 'For startups',
-    href: staticRoutes.forStartups,
-  },
-  {
-    text: 'For consultants',
-    href: staticRoutes.forConsultants,
-  },
-  {
-    text: 'For mobile apps',
-    href: staticRoutes.forMobileApps,
-  },
-  {
-    text: 'For microservices',
-    href: staticRoutes.forMicroServices,
-  },
-  {
-    text: 'For serverless',
-    href: staticRoutes.forServerless,
-  },
-];
-
-const COMMUNITY_LINKS = [
+const PRODUCT_LINKS = [
   {
     text: 'Docs',
     href: staticRoutes.docs,
@@ -72,6 +49,9 @@ const COMMUNITY_LINKS = [
     href: staticRoutes.roadmap,
     component: ExternalLink,
   },
+];
+
+const COMMUNITY_LINKS = [
   {
     text: 'GitHub',
     href: staticRoutes.github,
@@ -108,6 +88,48 @@ const COMPANY_LINKS = [
   },
 ];
 
+const PLATFORM_LINKS = [
+  {
+    text: 'Next.js',
+    href: staticRoutes.forNextJS,
+  },
+  {
+    text: 'Express.js',
+    href: staticRoutes.forExpress,
+  },
+  {
+    text: 'Django',
+    href: staticRoutes.forDjango,
+  },
+  {
+    text: 'FastAPI',
+    href: staticRoutes.forFastAPI,
+  },
+];
+
+const USE_CASE_LINKS = [
+  {
+    text: 'Serverless',
+    href: staticRoutes.forServerless,
+  },
+  {
+    text: 'Microservices',
+    href: staticRoutes.forMicroServices,
+  },
+  {
+    text: 'Mobile apps',
+    href: staticRoutes.forMobileApps,
+  },
+  {
+    text: 'Startups',
+    href: staticRoutes.forStartups,
+  },
+  {
+    text: 'Consultants',
+    href: staticRoutes.forConsultants,
+  },
+];
+
 export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) => {
   const plausible = usePlausible();
   const handleClick = (value: string) => (): void => plausible('footer-link-click', { value });
@@ -130,7 +152,7 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
               objectFit="contain"
               alt="Logo"
             />
-            <h6 className="ml-2">Apilytics</h6>
+            <h6 className="footer-title ml-2 text-sm">Apilytics</h6>
           </div>
           <p className="max-w-64 py-2">{DESCRIPTION}</p>
           <p className="text-xs">
@@ -144,7 +166,37 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             </ExternalLink>
           </p>
         </div>
-        <div className="flex flex-col gap-4 md:flex-row md:gap-12">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div>
+            <h6 className="footer-title text-sm">Company</h6>
+            <ul>
+              {COMPANY_LINKS.map(({ text, href }) => (
+                <p key={text} className="whitespace-nowrap" onClick={handleClick(text)}>
+                  <Link href={href}>{text}</Link>
+                </p>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h6 className="footer-title text-sm">Product</h6>
+            <ul>
+              {PRODUCT_LINKS.map(({ text, href }) => (
+                <p key={text} className="whitespace-nowrap" onClick={handleClick(text)}>
+                  <Link href={href}>{text}</Link>
+                </p>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h6 className="footer-title text-sm">Community</h6>
+            <ul>
+              {COMMUNITY_LINKS.map(({ text, href, component: Component }) => (
+                <p key={text} className="whitespace-nowrap" onClick={handleClick(text)}>
+                  <Component href={href}>{text}</Component>
+                </p>
+              ))}
+            </ul>
+          </div>
           <div>
             <h6 className="footer-title text-sm">Features</h6>
             <ul>
@@ -166,19 +218,9 @@ export const Footer: React.FC<FooterProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             </ul>
           </div>
           <div>
-            <h6 className="footer-title text-sm">Community</h6>
+            <h6 className="footer-title text-sm">Platforms</h6>
             <ul>
-              {COMMUNITY_LINKS.map(({ text, href, component: Component }) => (
-                <p key={text} className="whitespace-nowrap" onClick={handleClick(text)}>
-                  <Component href={href}>{text}</Component>
-                </p>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h6 className="footer-title text-sm">Company</h6>
-            <ul>
-              {COMPANY_LINKS.map(({ text, href }) => (
+              {PLATFORM_LINKS.map(({ text, href }) => (
                 <p key={text} className="whitespace-nowrap" onClick={handleClick(text)}>
                   <Link href={href}>{text}</Link>
                 </p>

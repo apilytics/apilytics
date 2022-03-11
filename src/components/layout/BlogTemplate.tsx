@@ -28,11 +28,11 @@ export const BlogTemplate: React.FC<BlogPageProps> = ({
         <div className="card items-start break-words rounded-lg bg-base-100 p-4 text-white shadow">
           <BackButton text="All blogs" linkTo={staticRoutes.blog} />
           <h3>{title}</h3>
-          <p className="text-sm text-base-content">
+          <p className="text-sm">
             <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
           </p>
           <MDX source={source} />
-          <p className="mt-4 text-sm text-base-content">
+          <p className="mt-4 text-sm">
             <ExternalLink href={authorLink}>{author}</ExternalLink> · {dayjs(date).format('LL')}
           </p>
         </div>

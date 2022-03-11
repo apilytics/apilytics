@@ -120,14 +120,6 @@ const OriginSettings: NextPage = () => {
             required
           />
           <ApiKeyField value={apiKey} />
-          <div className="form-control mt-4">
-            <Button
-              linkTo={dynamicRoutes.originDynamicRoutes({ slug })}
-              className="btn-outline btn-primary"
-            >
-              Dynamic routes
-            </Button>
-          </div>
           <Modal name={MODAL_NAMES.deleteOrigin}>
             <div className="flex justify-end p-2">
               <ModalCloseButton onClick={handleCloseModal} />
