@@ -131,7 +131,9 @@
   color: #50e3c2;
 }
 
-.text-method-options {
+.text-method-options,
+.text-method-trace,
+.text-method-connect {
   color: #42bbd7;
 }
 
