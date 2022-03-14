@@ -83,7 +83,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
 
   const renderLabel = ({ method, endpoint }: Partial<EndpointData>): JSX.Element => (
     <a className="unstyled text-white hover:text-primary">
-      <span className={`text-method-${method?.toLowerCase()} cursor-pointer`}>{method}</span>{' '}
+      <span className={`text-method-${method?.toLowerCase()}`}>{method}</span>{' '}
       <span className="link">{endpoint}</span>
     </a>
   );
@@ -128,7 +128,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   return (
     <DashboardCard>
       <div className="flex flex-wrap gap-4 px-2">
-        <p className="mr-auto text-white">Endpoints</p>
+        <p className="mr-auto text-white">{attributes[metricType].label}</p>
         <div className="tabs">
           {Object.values(METRIC_TYPES).map((type) => (
             <p
@@ -148,7 +148,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
       <Modal name={MODAL_NAMES.endpoints} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-128 sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="pl-4 text-white">Endpoints</p>
+            <p className="pl-4 text-white">{attributes[activeTab].label}</p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="tabs my-2 px-6">

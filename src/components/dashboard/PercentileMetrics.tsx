@@ -47,48 +47,36 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
       renderValue: ({ responseTime }: Partial<PercentileData>) => formatMilliseconds(responseTime),
       valueKey: 'responseTime',
       label: 'Response times',
-      emptyLabel: 'No response times available.',
     },
     requestSizes: {
       renderValue: ({ requestSize }: Partial<PercentileData>) => formatBytes(requestSize),
       valueKey: 'requestSize',
       label: 'Requests sizes',
-      emptyLabel: 'No request sizes available.',
     },
     responseSizes: {
       renderValue: ({ responseSize }: Partial<PercentileData>) => formatBytes(responseSize),
       valueKey: 'responseSize',
       label: 'Response sizes',
-      emptyLabel: 'No response sizes available.',
     },
     cpuUsage: {
       renderValue: ({ cpuUsage = 0 }: Partial<PercentileData>) =>
         `${(Number(cpuUsage) * 100).toFixed(1)} %`,
       valueKey: 'cpuUsage',
       label: 'CPU usage',
-      emptyLabel: 'No CPU usage available.',
     },
     memoryUsage: {
       renderValue: ({ memoryUsage }: Partial<PercentileData>) => formatBytes(memoryUsage),
       valueKey: 'memoryUsage',
       label: 'Memory usage',
-      emptyLabel: 'No memory usage available.',
     },
     memoryTotal: {
       renderValue: ({ memoryTotal }: Partial<PercentileData>) => formatBytes(memoryTotal),
       valueKey: 'memoryTotal',
       label: 'Total memory',
-      emptyLabel: 'No total memory available.',
     },
   } as const;
 
-  const { valueKey, label, emptyLabel, renderValue } = attributes[metricType];
-
-  const renderNoMetrics = !data.length && (
-    <div className="flex flex-col items-center justify-center py-40">
-      <p>{emptyLabel}</p>
-    </div>
-  );
+  const { valueKey, label, renderValue } = attributes[metricType];
 
   const renderLabel = ({ key = '' }: Partial<PercentileData>): JSX.Element => (
     <span className="text-white">{key}</span>
@@ -108,7 +96,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
   return (
     <DashboardCard>
       <div className="flex flex-wrap gap-4 px-2">
-        <p className="mr-auto text-white">Performance metrics</p>
+        <p className="mr-auto text-white">{attributes[metricType].label}</p>
         <div className="tabs">
           {Object.values(METRIC_TYPES).map((type) => (
             <p
@@ -124,7 +112,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
           ))}
         </div>
       </div>
-      <div className="mt-4">{renderNoMetrics || renderMetrics}</div>
+      <div className="mt-4">{renderMetrics}</div>
     </DashboardCard>
   );
 };
