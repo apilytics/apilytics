@@ -23,6 +23,10 @@ export const OriginProvider: React.FC = ({ children }) => {
   const [selectedBrowser, setSelectedBrowser] = useState<string>();
   const [selectedOs, setSelectedOs] = useState<string>();
   const [selectedDevice, setSelectedDevice] = useState<string>();
+  const [selectedCountry, setSelectedCountry] = useState<string>();
+  const [selectedCountryCode, setSelectedCountryCode] = useState<string>();
+  const [selectedRegion, setSelectedRegion] = useState<string>();
+  const [selectedCity, setSelectedCity] = useState<string>();
 
   const value = {
     slug,
@@ -45,6 +49,14 @@ export const OriginProvider: React.FC = ({ children }) => {
     setSelectedOs,
     selectedDevice,
     setSelectedDevice,
+    selectedCountry,
+    setSelectedCountry,
+    selectedCountryCode,
+    setSelectedCountryCode,
+    selectedRegion,
+    setSelectedRegion,
+    selectedCity,
+    setSelectedCity,
   };
 
   return <OriginContext.Provider value={value}>{children}</OriginContext.Provider>;

@@ -148,6 +148,10 @@ model Metric {
   cpuUsage     Float?  @map("cpu_usage")
   memoryUsage  BigInt? @map("memory_usage")
   memoryTotal  BigInt? @map("memory_total")
+  country      String?
+  countryCode  String? @map("country_code")
+  region       String?
+  city         String?
 
   apilyticsVersion String? @map("apilytics_version")
 

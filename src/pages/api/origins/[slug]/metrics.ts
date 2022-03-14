@@ -10,14 +10,18 @@ import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
 import { PERCENTILE_DATA_KEYS } from 'utils/constants';
-import type { ApiHandler, EndpointData, OriginMetrics, TimeFrameData } from 'types';
+import type {
+  ApiHandler,
+  CityData,
+  CountryData,
+  EndpointData,
+  OriginMetrics,
+  RegionData,
+  TimeFrameData,
+} from 'types';
 
 const DAY_MILLIS = 24 * 60 * 60 * 1000;
 const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
-
-interface GetResponse {
-  data: OriginMetrics;
-}
 
 interface GeneralData {
   totalRequests: number;
@@ -88,17 +92,17 @@ const extractFromMiscData = <
       ({ [key]: val, requests }) =>
         // Assertion is needed because of computed property key type widening:
         // https://github.com/microsoft/TypeScript/issues/13948
-        ({ [key]: val, requests } as { [Key in K]: NonNullable<T[Key]> } & { requests: number }),
+        ({ [key]: val, requests } as { [Key in K]: NonNullable<T[Key]> } & {
+          requests: number;
+        }),
     );
 
-const handleGet: ApiHandler<GetResponse> = async (req, res) => {
+const handleGet: ApiHandler<{ data: OriginMetrics }> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
-  const { from, to, endpoint, method, statusCode, browser, os, device } = req.query as Record<
-    string,
-    string
-  >;
+  const { from, to, endpoint, method, statusCode, browser, os, device, country, region, city } =
+    req.query as Record<string, string>;
 
   const origin = await getOriginForUser({ userId, slug });
 
@@ -156,7 +160,10 @@ WHERE origins.id = ${originId}
   ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
   ${browser ? Prisma.sql`AND metrics.browser = ${browser}` : Prisma.empty}
   ${os ? Prisma.sql`AND metrics.os = ${os}` : Prisma.empty}
-  ${device ? Prisma.sql`AND metrics.device = ${device}` : Prisma.empty}`;
+  ${device ? Prisma.sql`AND metrics.device = ${device}` : Prisma.empty}
+  ${country ? Prisma.sql`AND metrics.country = ${country}` : Prisma.empty}
+  ${region ? Prisma.sql`AND metrics.region = ${region}` : Prisma.empty}
+  ${city ? Prisma.sql`AND metrics.city = ${city}` : Prisma.empty}`;
 
   const whereClause = Prisma.sql`
 ${baseWhereClause}
@@ -294,21 +301,69 @@ GROUP BY GROUPING SETS (
   metrics.status_code
 );`;
 
+  const countryDataPromise: Promise<CountryData[]> = prisma.$queryRaw`
+SELECT
+  metrics.country,
+  metrics.country_code AS "countryCode",
+  COUNT(*) AS requests
+
+${fromClause}
+${whereClause}
+  AND metrics.country IS NOT NULL
+
+GROUP BY metrics.country, metrics.country_code;`;
+
+  const regionDataPromise: Promise<RegionData[]> = prisma.$queryRaw`
+SELECT
+  metrics.region,
+  metrics.country_code AS "countryCode",
+  COUNT(*) AS requests
+
+${fromClause}
+${whereClause}
+  AND metrics.region IS NOT NULL
+
+GROUP BY metrics.region, metrics.country_code;`;
+
+  const cityDataPromise: Promise<CityData[]> = prisma.$queryRaw`
+SELECT
+  metrics.city,
+  metrics.country_code AS "countryCode",
+  COUNT(*) AS requests
+
+${fromClause}
+${whereClause}
+  AND metrics.city IS NOT NULL
+
+GROUP BY metrics.city, metrics.country_code;`;
+
   const versionDataPromise = prisma.metric.findFirst({
     where: { originId },
     orderBy: { createdAt: 'desc' },
     select: { apilyticsVersion: true },
   });
 
-  const [prevGeneralData, _generalData, timeFrameData, _endpointData, miscData, versionData] =
-    await Promise.all([
-      prevGeneralDataPromise,
-      generalDataPromise,
-      timeFrameDataPromise,
-      endpointDataPromise,
-      miscDataPromise,
-      versionDataPromise,
-    ]);
+  const [
+    prevGeneralData,
+    _generalData,
+    timeFrameData,
+    _endpointData,
+    miscData,
+    countryData,
+    regionData,
+    cityData,
+    versionData,
+  ] = await Promise.all([
+    prevGeneralDataPromise,
+    generalDataPromise,
+    timeFrameDataPromise,
+    endpointDataPromise,
+    miscDataPromise,
+    countryDataPromise,
+    regionDataPromise,
+    cityDataPromise,
+    versionDataPromise,
+  ]);
 
   const { totalRequests: prevTotalRequests, totalErrors: prevTotalErrors } = prevGeneralData[0];
   const { totalRequests, totalErrors, ...g } = _generalData[0];
@@ -404,7 +459,14 @@ GROUP BY GROUPING SETS (
     deviceData: extractFromMiscData(miscData, 'device'),
   };
 
+  const geoLocationData = {
+    countryData,
+    regionData,
+    cityData,
+  };
+
   const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
+
   const apilyticsPackage =
     !!identifier && !!version
       ? {
@@ -420,6 +482,7 @@ GROUP BY GROUPING SETS (
     percentileData,
     statusCodeData: extractFromMiscData(miscData, 'statusCode'),
     userAgentData,
+    geoLocationData,
     apilyticsPackage,
   };
 

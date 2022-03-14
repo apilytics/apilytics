@@ -119,6 +119,7 @@ export enum MODAL_NAMES {
   resendOriginInvite = 'resend-origin-invite',
   acceptOriginInvite = 'accept-origin-invite',
   rejectOriginInvite = 'reject-origin-invite',
+  geoLocation = 'geo-location',
 }
 
 export const DEFAULT_MAX_WIDTH = 'max-w-3xl';

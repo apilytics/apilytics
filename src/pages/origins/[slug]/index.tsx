@@ -6,6 +6,7 @@ import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
 import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
+import { GeoLocationMetrics } from 'components/dashboard/GeoLocationMetrics';
 import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
 import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
 import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
@@ -47,6 +48,12 @@ const Origin: NextPage = () => {
     setSelectedOs,
     selectedDevice: device = '',
     setSelectedDevice,
+    selectedCountry: country = '',
+    setSelectedCountry,
+    selectedRegion: region = '',
+    setSelectedRegion,
+    selectedCity: city = '',
+    setSelectedCity,
   } = useOrigin();
 
   const {
@@ -84,6 +91,9 @@ const Origin: NextPage = () => {
               browser,
               os,
               device,
+              country,
+              region,
+              city,
             }),
           );
 
@@ -113,6 +123,9 @@ const Origin: NextPage = () => {
     setLoading,
     setErrorMessage,
     setNotFound,
+    country,
+    region,
+    city,
   ]);
 
   useEffect(() => {
@@ -132,13 +145,19 @@ const Origin: NextPage = () => {
       setSelectedBrowser(undefined);
       setSelectedOs(undefined);
       setSelectedDevice(undefined);
+      setSelectedCountry(undefined);
+      setSelectedRegion(undefined);
+      setSelectedCity(undefined);
     };
   }, [
     setSelectedBrowser,
+    setSelectedCity,
+    setSelectedCountry,
     setSelectedDevice,
     setSelectedEndpoint,
     setSelectedMethod,
     setSelectedOs,
+    setSelectedRegion,
     setSelectedStatusCode,
   ]);
 
@@ -232,6 +251,7 @@ const Origin: NextPage = () => {
     percentileData,
     statusCodeData,
     userAgentData,
+    geoLocationData,
   } = metrics;
 
   return (
@@ -251,6 +271,9 @@ const Origin: NextPage = () => {
         <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} />
+        </div>
+        <div className="mt-4">
+          <GeoLocationMetrics data={geoLocationData} />
         </div>
         <div className="mt-4">
           <PercentileMetrics data={percentileData} />
