@@ -35,6 +35,11 @@ const PRODUCT_LINKS = [
     component: Link,
   },
   {
+    text: 'Live demo',
+    href: staticRoutes.demo,
+    component: Link,
+  },
+  {
     text: 'Blog',
     href: staticRoutes.blog,
     component: Link,
