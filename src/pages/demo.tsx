@@ -11,7 +11,7 @@ import { UserAgentMetrics } from 'components/dashboard/UserAgentMetrics';
 import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
 import { EmailListForm } from 'components/shared/EmailListForm';
-import { withNoAuth } from 'hocs/withNoAuth';
+import { withUser } from 'hocs/withUser';
 import { useDashboardQuery } from 'hooks/useDashboardQuery';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
@@ -117,4 +117,4 @@ const Demo: NextPage = () => {
   );
 };
 
-export default withNoAuth(Demo);
+export default withUser(Demo);
