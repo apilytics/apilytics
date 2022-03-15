@@ -299,6 +299,7 @@ export interface RouteData {
 
 export interface OriginData extends Origin {
   userRole: ORIGIN_ROLES;
+  userCount: number;
   dynamicRouteCount: number;
   excludedRouteCount: number;
 }
@@ -309,6 +310,7 @@ export interface OriginListItem {
   totalMetrics: number;
   lastDayMetrics: number;
   userRole: ORIGIN_ROLES;
+  userCount: number;
   dynamicRouteCount: number;
   excludedRouteCount: number;
 }

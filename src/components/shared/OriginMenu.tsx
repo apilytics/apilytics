@@ -9,6 +9,7 @@ import { dynamicRoutes } from 'utils/router';
 interface Props {
   slug: string;
   userRole?: ORIGIN_ROLES;
+  userCount: number;
   dynamicRouteCount?: number;
   excludedRouteCount?: number;
 }
@@ -16,6 +17,7 @@ interface Props {
 export const OriginMenu: React.FC<Props> = ({
   slug,
   userRole,
+  userCount,
   dynamicRouteCount,
   excludedRouteCount,
 }) => {
@@ -32,7 +34,7 @@ export const OriginMenu: React.FC<Props> = ({
       >
         <li className={clsx('text-primary', disabled && 'disabled pointer-events-none')}>
           <Link href={dynamicRoutes.originSettings({ slug })}>
-            <a className="unstyled">Settings</a>
+            <a className="unstyled">Origin settings</a>
           </Link>
         </li>
         <li className={clsx('text-primary', disabled && 'disabled pointer-events-none')}>
@@ -47,7 +49,7 @@ export const OriginMenu: React.FC<Props> = ({
         </li>
         <li className={clsx('text-primary', disabled && 'disabled pointer-events-none')}>
           <Link href={dynamicRoutes.originUsers({ slug })}>
-            <a className="unstyled">Users</a>
+            <a className="unstyled">Manage users ({userCount})</a>
           </Link>
         </li>
       </ul>

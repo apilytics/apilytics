@@ -29,6 +29,7 @@ SELECT
   metrics.count AS "totalMetrics",
   metrics.last_day_metrics as "lastDayMetrics",
   origin_users.role AS "userRole",
+  COUNT(origin_users) AS "userCount",
   COUNT(dynamic_routes) AS "dynamicRouteCount",
   COUNT(excluded_routes) AS "excludedRouteCount"
 

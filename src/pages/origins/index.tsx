@@ -147,6 +147,7 @@ const Origins: NextPage = () => {
         totalMetrics,
         lastDayMetrics,
         userRole,
+        userCount,
         dynamicRouteCount,
         excludedRouteCount,
       }) => (
@@ -169,6 +170,7 @@ const Origins: NextPage = () => {
                 <OriginMenu
                   slug={slug}
                   userRole={userRole}
+                  userCount={userCount}
                   dynamicRouteCount={dynamicRouteCount}
                   excludedRouteCount={excludedRouteCount}
                 />
