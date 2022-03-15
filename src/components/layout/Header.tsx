@@ -251,10 +251,10 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
       </div>
       <ul
         tabIndex={0}
-        className="card-bordered dropdown-content menu rounded-box whitespace-nowrap bg-base-100 p-2 text-primary shadow"
+        className="card-bordered dropdown-content menu rounded-box whitespace-nowrap bg-base-100 p-2 shadow"
       >
         {MENU_ITEMS.map(({ name, href }) => (
-          <li key={name}>
+          <li key={name} className="text-primary">
             <Link href={href}>
               <a className="unstyled">{name}</a>
             </Link>
