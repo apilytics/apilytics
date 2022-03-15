@@ -102,24 +102,24 @@ export const MOCK_ORIGIN = {
   excludedRouteCount: 0,
 };
 
-export const MODAL_NAMES = {
-  deleteOrigin: 'delete-origin',
-  apiKey: 'api-key',
-  endpoints: 'endpoints',
-  statusCodes: 'status-codes',
-  userAgents: 'user-agents',
-  dynamicRoute: 'dynamic-route',
-  deleteDynamicRoute: 'delete-dynamic-route',
-  excludedRoute: 'excluded-route',
-  deleteExcludedRoute: 'delete-excluded-route',
-  inviteOriginUser: 'invite-origin-user',
-  editOriginUser: 'edit-origin-user',
-  deleteOriginUser: 'delete-origin-user',
-  deleteOriginInvite: 'delete-origin-invite',
-  resendOriginInvite: 'resend-origin-invite',
-  acceptOriginInvite: 'accept-origin-invite',
-  rejectOriginInvite: 'reject-origin-invite',
-};
+export enum MODAL_NAMES {
+  deleteOrigin = 'delete-origin',
+  apiKey = 'api-key',
+  endpoints = 'endpoints',
+  statusCodes = 'status-codes',
+  userAgents = 'user-agents',
+  dynamicRoute = 'dynamic-route',
+  deleteDynamicRoute = 'delete-dynamic-route',
+  excludedRoute = 'excluded-route',
+  deleteExcludedRoute = 'delete-excluded-route',
+  inviteOriginUser = 'invite-origin-user',
+  editOriginUser = 'edit-origin-user',
+  deleteOriginUser = 'delete-origin-user',
+  deleteOriginInvite = 'delete-origin-invite',
+  resendOriginInvite = 'resend-origin-invite',
+  acceptOriginInvite = 'accept-origin-invite',
+  rejectOriginInvite = 'reject-origin-invite',
+}
 
 export const DEFAULT_MAX_WIDTH = 'max-w-3xl';
 

@@ -56,7 +56,7 @@ export const DocsTemplate: React.FC<DocsPageProps> = ({
           ))}
       </ul>
       <div className="height-full container flex max-w-3xl grow animate-fade-in-top flex-col py-4 lg:pt-16">
-        <div className="card break-words rounded-lg bg-base-100 p-4 text-white shadow">
+        <div className="card break-words rounded-lg bg-base-100 p-4 shadow">
           {previousDoc && <BackButton linkTo={previousDoc.path} text={previousDoc.name} />}
           <MDX source={source} />
           <div className="mt-4 flex flex-wrap items-center justify-between">

@@ -25,7 +25,7 @@ export const BlogTemplate: React.FC<BlogPageProps> = ({
   return (
     <Layout headProps={{ title, description, indexable: true }}>
       <div className="height-full container flex max-w-3xl grow animate-fade-in-top flex-col py-4 lg:pt-16">
-        <div className="card items-start break-words rounded-lg bg-base-100 p-4 text-white shadow">
+        <div className="card items-start break-words rounded-lg bg-base-100 p-4 shadow">
           <BackButton text="All blogs" linkTo={staticRoutes.blog} />
           <h3>{title}</h3>
           <p className="text-sm">

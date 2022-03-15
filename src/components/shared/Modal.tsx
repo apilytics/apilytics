@@ -5,9 +5,10 @@ import ReactDOM from 'react-dom';
 import type { MouseEvent } from 'react';
 
 import { useUIState } from 'hooks/useUIState';
+import type { MODAL_NAMES } from 'utils/constants';
 
 interface Props {
-  name: string;
+  name: MODAL_NAMES;
   mobileFullscreen?: boolean;
   onClose?: () => void;
 }
