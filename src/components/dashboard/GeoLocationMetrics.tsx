@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
+import { ExternalLink } from 'components/shared/ExternalLink';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { useOrigin } from 'hooks/useOrigin';
@@ -187,14 +188,18 @@ export const GeoLocationMetrics: React.FC<Props> = ({
       <div className="flex grow">
         <VerticalBarChart {...barChartProps} />
       </div>
-      <div className="flex">
+      <div className="flex flex-wrap items-center gap-4">
         <Button
           onClick={handleShowAllClick}
-          className="btn-ghost btn-sm"
+          className="btn-ghost btn-sm mr-auto"
           endIcon={ArrowsExpandIcon}
         >
           Show all ({formatCount(data.length)})
         </Button>
+        <p className="text-sm">
+          We never store or expose the IP addresses used to aggregate this data. IP geolocation by{' '}
+          <ExternalLink href="https://db-ip.com">DB-IP</ExternalLink>.
+        </p>
       </div>
     </>
   );
