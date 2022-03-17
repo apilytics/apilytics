@@ -17,6 +17,8 @@ import {
   getRandomNumberBetween,
   getRandomStatusCodeForMethod,
 } from '../src/utils/helpers';
+// eslint-disable-next-line no-restricted-imports
+import MOCK_COUNTRIES from '../src/utils/mock-countries.json';
 
 const READ_ONLY_ADMIN_USER_ID = 'cl05jr6ya00003c5vzyhxqorj';
 const ORIGIN_OWNER_USER_ID = 'cl05jr6ya00013c5v63ipw1jb';
@@ -62,6 +64,12 @@ const createMetrics = async ({
         const cpuUsage = Math.random();
         const memoryUsage = getRandomNumberBetweenOrUndefined(1_000_000, 2_000_000_000); // 100 MB - 2 GB.
         const memoryTotal = Math.random() < 0.1 ? undefined : MOCK_TOTAL_MEMORY;
+        const _country = getRandomArrayItem([...MOCK_COUNTRIES, undefined]);
+        const country = _country?.name;
+        const countryCode = _country?.code;
+        const _region = _country ? getRandomArrayItem([..._country.regions, undefined]) : undefined;
+        const region = _region?.name;
+        const city = _region ? getRandomArrayItem([..._region.cities, undefined]) : undefined;
         const randomMinutes = getRandomNumberBetween(0, 60);
         const randomSeconds = getRandomNumberBetween(0, 60);
         const createdAt = new Date(Date.now() - hourIndex * randomMinutes * randomSeconds * 1000);
@@ -78,8 +86,12 @@ const createMetrics = async ({
           device,
           createdAt,
           cpuUsage,
-          memoryTotal,
           memoryUsage,
+          memoryTotal,
+          country,
+          countryCode,
+          region,
+          city,
           originId: ORIGIN_ID,
         };
       });
@@ -204,11 +216,21 @@ const main = async (): Promise<void> => {
 
   console.log('Test origin invite created.');
 
+  let hours;
+  let minDataPointsPerHour;
+  let maxDataPointsPerHour;
+
   if (process.env.VERCEL_ENV === 'preview') {
-    await createMetrics({ hours: 7 * 24, minDataPointsPerHour: 0, maxDataPointsPerHour: 10 });
+    hours = 7 * 24;
+    minDataPointsPerHour = 0;
+    maxDataPointsPerHour = 10;
   } else {
-    await createMetrics({ hours: 365 * 24, minDataPointsPerHour: 10, maxDataPointsPerHour: 20 });
+    hours = 365 * 24;
+    minDataPointsPerHour = 10;
+    maxDataPointsPerHour = 20;
   }
+
+  await createMetrics({ hours, minDataPointsPerHour, maxDataPointsPerHour });
 
   console.log('Metrics created.');
 

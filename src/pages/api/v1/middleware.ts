@@ -25,6 +25,7 @@ type OptionalFields = {
   cpuUsage?: number;
   memoryUsage?: number;
   memoryTotal?: number;
+  ip?: string;
 };
 
 type PostBody = RequiredFields & OptionalFields;
@@ -41,17 +42,21 @@ function limitValue(value: number | undefined, { min, max }: Limits): number | u
   if (value === undefined) {
     return undefined;
   }
+
   if (min !== undefined) {
     value = Math.max(value, min);
   }
+
   if (max !== undefined) {
     value = Math.min(value, max);
   }
+
   return value;
 }
 
 const handlePost: ApiHandler = async (req, res) => {
   const apiKey = req.headers['x-api-key'];
+
   if (typeof apiKey !== 'string' || !apiKey) {
     sendApiKeyMissing(res);
     return;
@@ -75,6 +80,7 @@ const handlePost: ApiHandler = async (req, res) => {
 
   const requiredFields: (keyof RequiredFields)[] = ['path', 'method', 'timeMillis'];
   const missing = requiredFields.filter((field) => req.body[field] === undefined);
+
   if (missing.length) {
     sendMissingInput(res, missing);
     return;
@@ -92,6 +98,7 @@ const handlePost: ApiHandler = async (req, res) => {
     cpuUsage,
     memoryUsage,
     memoryTotal,
+    ip,
   } = req.body as PostBody;
 
   const requestSize =
@@ -119,6 +126,32 @@ const handlePost: ApiHandler = async (req, res) => {
     device = ua.device.type;
   }
 
+  let country;
+  let countryCode;
+  let region;
+  let city;
+
+  if (ip) {
+    try {
+      const geoIpRes = await fetch('https://geoip.apilytics.io/geoip', {
+        method: 'POST',
+        body: JSON.stringify({ ip }),
+        headers: {
+          'X-API-Key': process.env.GEOIP_API_KEY ?? 'secret',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      ({
+        country: { name: country, code: countryCode },
+        region,
+        city,
+      } = await geoIpRes.json());
+    } catch {
+      // Do nothing and save empty location data.
+    }
+  }
+
   await prisma.metric.create({
     data: {
       originId: origin.id,
@@ -135,6 +168,10 @@ const handlePost: ApiHandler = async (req, res) => {
       cpuUsage: limitValue(cpuUsage, { min: 0, max: 1 }),
       memoryUsage: limitValue(memoryUsage, { min: 0 }),
       memoryTotal: limitValue(memoryTotal, { min: 0 }),
+      country,
+      countryCode,
+      region,
+      city,
       apilyticsVersion,
     },
   });

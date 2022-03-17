@@ -118,7 +118,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
   };
 
   const handleShowAllClick = (): void => {
-    handleOpenModal(MODAL_NAMES.userAgents);
+    handleOpenModal(MODAL_NAMES.USER_AGENTS);
 
     const events: Record<string, keyof PlausibleEvents> = {
       browser: 'show-all-browsers-click',
@@ -162,7 +162,7 @@ export const UserAgentMetrics: React.FC<Props> = ({
   return (
     <DashboardCard>
       <div className="flex flex-wrap gap-4 px-2">
-        <p className="mr-auto text-white">User agents</p>
+        <p className="mr-auto text-white">Devices</p>
         <div className="tabs">
           {Object.values(METRIC_TYPES).map((type) => (
             <p
@@ -179,10 +179,10 @@ export const UserAgentMetrics: React.FC<Props> = ({
         </div>
       </div>
       <div className="mt-4 flex grow flex-col">{renderMetrics}</div>
-      <Modal name={MODAL_NAMES.userAgents} mobileFullscreen>
+      <Modal name={MODAL_NAMES.USER_AGENTS} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="pl-4 text-white">User agents</p>
+            <p className="pl-4 text-white">Devices</p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="tabs my-2 px-6">

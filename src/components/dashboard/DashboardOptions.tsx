@@ -10,7 +10,7 @@ import { Select } from 'components/shared/Select';
 import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { ORIGIN_ROLES, TIME_FRAME_OPTIONS } from 'utils/constants';
-import { truncateString } from 'utils/helpers';
+import { getFlagEmoji, truncateString } from 'utils/helpers';
 import { dynamicRoutes, staticRoutes } from 'utils/router';
 import type { ApilyticsPackage, TimeFrame } from 'types';
 
@@ -40,6 +40,14 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
     setSelectedOs,
     selectedDevice,
     setSelectedDevice,
+    selectedCountry,
+    setSelectedCountry,
+    selectedCountryCode,
+    setSelectedCountryCode,
+    selectedRegion,
+    setSelectedRegion,
+    selectedCity,
+    setSelectedCity,
   } = useOrigin();
 
   const { name, userRole, userCount, dynamicRouteCount, excludedRouteCount } = origin ?? {};
@@ -50,6 +58,9 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
     query.timeFrame = TIME_FRAME_OPTIONS[val];
     replace({ pathname, query });
   };
+
+  const renderGeoLocationValue = (value: string): string =>
+    selectedCountryCode ? `${getFlagEmoji(selectedCountryCode)} ${value}` : value;
 
   return (
     <div className="mt-2 mb-4 flex flex-wrap items-center justify-start gap-4">
@@ -88,6 +99,39 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
       {selectedDevice && (
         <Button onClick={(): void => setSelectedDevice(undefined)} endIcon={XIcon}>
           {selectedDevice}
+        </Button>
+      )}
+      {selectedCountry && (
+        <Button
+          onClick={(): void => {
+            setSelectedCountry(undefined);
+            setSelectedCountryCode(undefined);
+          }}
+          endIcon={XIcon}
+        >
+          {renderGeoLocationValue(selectedCountry)}
+        </Button>
+      )}
+      {selectedRegion && (
+        <Button
+          onClick={(): void => {
+            setSelectedRegion(undefined);
+            setSelectedCountryCode(undefined);
+          }}
+          endIcon={XIcon}
+        >
+          {renderGeoLocationValue(selectedRegion)}
+        </Button>
+      )}
+      {selectedCity && (
+        <Button
+          onClick={(): void => {
+            setSelectedCity(undefined);
+            setSelectedCountryCode(undefined);
+          }}
+          endIcon={XIcon}
+        >
+          {renderGeoLocationValue(selectedCity)}
         </Button>
       )}
       <Select

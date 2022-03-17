@@ -4,6 +4,7 @@ import type { NextPage } from 'next';
 
 import { DashboardOptions } from 'components/dashboard/DashboardOptions';
 import { EndpointMetrics } from 'components/dashboard/EndpointMetrics';
+import { GeoLocationMetrics } from 'components/dashboard/GeoLocationMetrics';
 import { PercentileMetrics } from 'components/dashboard/PercentileMetrics';
 import { StatusCodeMetrics } from 'components/dashboard/StatusCodeMetrics';
 import { TimeFrameMetrics } from 'components/dashboard/TimeFrameMetrics';
@@ -33,6 +34,9 @@ const Demo: NextPage = () => {
     selectedBrowser: browser,
     selectedOs: os,
     selectedDevice: device,
+    selectedCountry: country,
+    selectedRegion: region,
+    selectedCity: city,
     setOrigin,
   } = useOrigin();
 
@@ -45,6 +49,7 @@ const Demo: NextPage = () => {
     percentileData,
     statusCodeData,
     userAgentData,
+    geoLocationData,
   } = getMockMetrics({
     timeFrame,
     method,
@@ -53,6 +58,9 @@ const Demo: NextPage = () => {
     browser,
     os,
     device,
+    country,
+    region,
+    city,
   });
 
   return (
@@ -71,6 +79,9 @@ const Demo: NextPage = () => {
         <TimeFrameMetrics {...generalData} data={timeFrameData} />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} />
+        </div>
+        <div className="mt-4">
+          <GeoLocationMetrics data={geoLocationData} />
         </div>
         <div className="mt-4">
           <PercentileMetrics data={percentileData} />

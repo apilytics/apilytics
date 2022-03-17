@@ -18,6 +18,7 @@ import {
   getRandomNumberBetween,
   getRandomStatusCodeForMethod,
 } from 'utils/helpers';
+import MOCK_COUNTRIES from 'utils/mock-countries.json';
 import type { EndpointData, OriginMetrics, TimeFrame } from 'types';
 
 export const getTimeFrameScope = (timeFrame: TimeFrame): OpUnitType => {
@@ -57,6 +58,12 @@ const getEndpointFromPath = (path: string): string =>
 
 const initialMockMetrics = MOCK_PATHS.map((path) => {
   const method = getRandomArrayItem(METHODS);
+  const _country = getRandomArrayItem(MOCK_COUNTRIES);
+  const country = _country.name;
+  const countryCode = _country.code;
+  const _region = getRandomArrayItem(_country.regions);
+  const region = _region?.name ?? null;
+  const city = _region ? getRandomArrayItem(_region.cities) : null;
 
   return {
     path,
@@ -68,6 +75,10 @@ const initialMockMetrics = MOCK_PATHS.map((path) => {
     cpuUsage: getRandomNumberBetween(0, 100),
     memoryUsage: getRandomNumberBetween(0, 100),
     memoryTotal: MOCK_TOTAL_MEMORY,
+    country,
+    countryCode,
+    region,
+    city,
   };
 });
 
@@ -79,6 +90,9 @@ interface MockMetricsParams {
   browser?: string;
   os?: string;
   device?: string;
+  country?: string;
+  region?: string;
+  city?: string;
 }
 
 export const getMockMetrics = ({
@@ -89,6 +103,9 @@ export const getMockMetrics = ({
   browser,
   os,
   device,
+  country,
+  region,
+  city,
 }: MockMetricsParams): OriginMetrics => {
   let requestsMultiplier = 24;
 
@@ -129,6 +146,18 @@ export const getMockMetrics = ({
 
   if (device) {
     mockMetrics = mockMetrics.filter((metric) => metric.device === device);
+  }
+
+  if (country) {
+    mockMetrics = mockMetrics.filter((metric) => metric.country === country);
+  }
+
+  if (region) {
+    mockMetrics = mockMetrics.filter((metric) => metric.region === region);
+  }
+
+  if (city) {
+    mockMetrics = mockMetrics.filter((metric) => metric.city === city);
   }
 
   const _timeFramePoints = dataPoints.flatMap((time) =>
@@ -328,6 +357,53 @@ export const getMockMetrics = ({
     deviceData,
   };
 
+  const uniqueCountriesWithCounts: Record<string, number> = {};
+  const uniqueRegionsWithCounts: Record<string, number> = {};
+  const uniqueCitiesWithCounts: Record<string, number> = {};
+
+  const allCountries = mockMetrics.flatMap(({ country }) => country);
+  const allRegions = mockMetrics.flatMap(({ region }) => region).filter(Boolean);
+  const allCities = mockMetrics.flatMap(({ city }) => city).filter(Boolean);
+
+  allCountries.forEach((country) => {
+    uniqueCountriesWithCounts[country] = (uniqueCountriesWithCounts[country] || 0) + 1;
+  });
+
+  allRegions.forEach((region) => {
+    uniqueRegionsWithCounts[region] = (uniqueRegionsWithCounts[region] || 0) + 1;
+  });
+
+  allCities.forEach((city) => {
+    uniqueCitiesWithCounts[city as keyof typeof uniqueCitiesWithCounts] =
+      (uniqueCitiesWithCounts[city as keyof typeof uniqueCitiesWithCounts] || 0) + 1;
+  });
+
+  const countryData = Object.entries(uniqueCountriesWithCounts).map(([country, count]) => ({
+    country,
+    countryCode: MOCK_COUNTRIES.find((c) => c.name === country)?.code ?? null,
+    requests: count * requestsMultiplier,
+  }));
+
+  const regionData = Object.entries(uniqueRegionsWithCounts).map(([region, count]) => ({
+    region,
+    countryCode: MOCK_COUNTRIES.find((c) => c.regions.some((r) => r.name === region))?.code ?? null,
+    requests: count * requestsMultiplier,
+  }));
+
+  const cityData = Object.entries(uniqueCitiesWithCounts).map(([city, count]) => ({
+    city,
+    countryCode:
+      MOCK_COUNTRIES.find((c) => c.regions.some((c) => c.cities.some((c) => c === city)))?.code ??
+      null,
+    requests: count * requestsMultiplier,
+  }));
+
+  const geoLocationData = {
+    countryData,
+    regionData,
+    cityData,
+  };
+
   return {
     generalData,
     timeFrameData,
@@ -335,6 +411,7 @@ export const getMockMetrics = ({
     percentileData,
     statusCodeData,
     userAgentData,
+    geoLocationData,
   };
 };
 

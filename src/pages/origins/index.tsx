@@ -121,7 +121,7 @@ const Origins: NextPage = () => {
             className="btn-success"
             onClick={(): void => {
               setSelectedOriginInvite(originInvite);
-              handleOpenModal(MODAL_NAMES.acceptOriginInvite);
+              handleOpenModal(MODAL_NAMES.ACCEPT_ORIGIN_INVITE);
             }}
           >
             Accept
@@ -130,7 +130,7 @@ const Origins: NextPage = () => {
             className="btn-outline btn-error"
             onClick={(): void => {
               setSelectedOriginInvite(originInvite);
-              handleOpenModal(MODAL_NAMES.rejectOriginInvite);
+              handleOpenModal(MODAL_NAMES.REJECT_ORIGIN_INVITE);
             }}
           >
             Decline
@@ -227,7 +227,7 @@ const Origins: NextPage = () => {
   const renderAcceptInviteModal = (
     <ConfirmModal
       title="Accept invite"
-      name={MODAL_NAMES.acceptOriginInvite}
+      name={MODAL_NAMES.ACCEPT_ORIGIN_INVITE}
       onConfirm={handleConfirmInvite(true)}
       loading={loading}
     >
@@ -245,7 +245,7 @@ const Origins: NextPage = () => {
   const renderDeclineInviteModal = (
     <ConfirmModal
       title="Reject invite"
-      name={MODAL_NAMES.rejectOriginInvite}
+      name={MODAL_NAMES.REJECT_ORIGIN_INVITE}
       onConfirm={handleConfirmInvite(false)}
       loading={loading}
       dangerAction

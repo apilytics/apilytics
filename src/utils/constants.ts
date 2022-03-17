@@ -1,9 +1,9 @@
 export const DESCRIPTION =
-  'Apilytics is an easy to use, lightweight, privacy-friendly application monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliance.';
+  'Apilytics is an easy to use, lightweight, privacy-friendly application analytics & monitoring service. Simple 5 minute installation, all data stored in the EU with full GDPR compliance.';
 
 // A shorter < 160 character version.
 export const DEFAULT_SEO_DESCRIPTION =
-  'Apilytics is an easy to use, lightweight, privacy-friendly application monitoring service. Simple 5 minute installation with full GDPR compliance';
+  'Apilytics is an easy to use, lightweight, privacy-friendly application analytics & monitoring service. Simple 5 minute installation with full GDPR compliance';
 
 export const METHODS = [
   'GET',
@@ -103,22 +103,23 @@ export const MOCK_ORIGIN = {
 };
 
 export enum MODAL_NAMES {
-  deleteOrigin = 'delete-origin',
-  apiKey = 'api-key',
-  endpoints = 'endpoints',
-  statusCodes = 'status-codes',
-  userAgents = 'user-agents',
-  dynamicRoute = 'dynamic-route',
-  deleteDynamicRoute = 'delete-dynamic-route',
-  excludedRoute = 'excluded-route',
-  deleteExcludedRoute = 'delete-excluded-route',
-  inviteOriginUser = 'invite-origin-user',
-  editOriginUser = 'edit-origin-user',
-  deleteOriginUser = 'delete-origin-user',
-  deleteOriginInvite = 'delete-origin-invite',
-  resendOriginInvite = 'resend-origin-invite',
-  acceptOriginInvite = 'accept-origin-invite',
-  rejectOriginInvite = 'reject-origin-invite',
+  DELETE_ORIGIN = 'DELETE_ORIGIN',
+  API_KEY = 'API_KEY',
+  ENDPOINTS = 'ENDPOINTS',
+  STATUS_CODES = 'STATUS_CODES',
+  USER_AGENTS = 'USER_AGENTS',
+  DYNAMIC_ROUTE = 'DYNAMIC_ROUTE',
+  DELETE_DYNAMIC_ROUTE = 'DELETE_DYNAMIC_ROUTE',
+  EXCLUDED_ROUTE = 'EXCLUDED_ROUTE',
+  DELETE_EXCLUDED_ROUTE = 'DELETE_EXCLUDED_ROUTE',
+  INVITE_ORIGIN_USER = 'INVITE_ORIGIN_USER',
+  EDIT_ORIGIN_USER = 'EDIT_ORIGIN_USER',
+  DELETE_ORIGIN_USER = 'DELETE_ORIGIN_USER',
+  DELETE_ORIGIN_INVITE = 'DELETE_ORIGIN_INVITE',
+  RESEND_ORIGIN_INVITE = 'RESEND_ORIGIN_INVITE',
+  ACCEPT_ORIGIN_INVITE = 'ACCEPT_ORIGIN_INVITE',
+  REJECT_ORIGIN_INVITE = 'REJECT_ORIGIN_INVITE',
+  GEO_LOCATION = 'GEO_LOCATION',
 }
 
 export const DEFAULT_MAX_WIDTH = 'max-w-3xl';

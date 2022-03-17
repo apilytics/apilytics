@@ -33,7 +33,7 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
   };
 
   const handleShowAllClick = (): void => {
-    handleOpenModal(MODAL_NAMES.statusCodes);
+    handleOpenModal(MODAL_NAMES.STATUS_CODES);
     plausible('show-all-status-codes-click');
   };
 
@@ -76,7 +76,7 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
         <p className="mr-auto text-white">Status codes</p>
       </div>
       <div className="mt-4 flex grow flex-col">{renderMetrics}</div>
-      <Modal name={MODAL_NAMES.statusCodes} mobileFullscreen>
+      <Modal name={MODAL_NAMES.STATUS_CODES} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
             <p className="pl-4 text-white">Status codes</p>

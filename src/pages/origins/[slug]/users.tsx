@@ -86,22 +86,22 @@ const OriginUsers: NextPage = () => {
   const handleClickEditUser = (user: OriginUserData) => (): void => {
     setSelectedOriginUser(user);
     setFormValues(user);
-    handleOpenModal(MODAL_NAMES.editOriginUser);
+    handleOpenModal(MODAL_NAMES.EDIT_ORIGIN_USER);
   };
 
   const handleClickDeleteUser = (user: OriginUserData) => (): void => {
     setSelectedOriginUser(user);
-    handleOpenModal(MODAL_NAMES.deleteOriginUser);
+    handleOpenModal(MODAL_NAMES.DELETE_ORIGIN_USER);
   };
 
   const handleClickResendInvite = (invite: OriginInviteData) => (): void => {
     setSelectedOriginInvite(invite);
-    handleOpenModal(MODAL_NAMES.resendOriginInvite);
+    handleOpenModal(MODAL_NAMES.RESEND_ORIGIN_INVITE);
   };
 
   const handleClickDeleteInvite = (invite: OriginInviteData) => (): void => {
     setSelectedOriginInvite(invite);
-    handleOpenModal(MODAL_NAMES.deleteOriginInvite);
+    handleOpenModal(MODAL_NAMES.DELETE_ORIGIN_INVITE);
   };
 
   const handleSubmitInviteUser = async (e: FormEvent): Promise<void> => {
@@ -371,7 +371,7 @@ const OriginUsers: NextPage = () => {
         <Button
           className="btn-primary mt-4"
           endIcon={PlusIcon}
-          onClick={(): void => handleOpenModal(MODAL_NAMES.inviteOriginUser)}
+          onClick={(): void => handleOpenModal(MODAL_NAMES.INVITE_ORIGIN_USER)}
         >
           Invite new user
         </Button>
@@ -380,7 +380,7 @@ const OriginUsers: NextPage = () => {
   );
 
   const renderInviteOriginUserModal = (
-    <Modal name={MODAL_NAMES.inviteOriginUser}>
+    <Modal name={MODAL_NAMES.INVITE_ORIGIN_USER}>
       <div className="flex items-center justify-between p-2">
         <p className="px-2 font-bold">
           <p className="text-white">Invite new user to {origin?.name}</p>
@@ -397,7 +397,7 @@ const OriginUsers: NextPage = () => {
   );
 
   const renderEditOriginUserModal = (
-    <Modal name={MODAL_NAMES.editOriginUser}>
+    <Modal name={MODAL_NAMES.EDIT_ORIGIN_USER}>
       <div className="flex items-center justify-between p-2">
         <p className="px-2 font-bold">
           <p className="text-white">Edit role for {selectedOriginUser?.email}</p>
@@ -416,7 +416,7 @@ const OriginUsers: NextPage = () => {
   const renderDeleteOriginUserModal = (
     <ConfirmModal
       title="Remove user from origin"
-      name={MODAL_NAMES.deleteOriginUser}
+      name={MODAL_NAMES.DELETE_ORIGIN_USER}
       onConfirm={handleConfirmDeleteOriginUser}
       loading={loading}
       dangerAction
@@ -434,7 +434,7 @@ const OriginUsers: NextPage = () => {
   const renderDeleteOriginInviteModal = (
     <ConfirmModal
       title="Delete invite"
-      name={MODAL_NAMES.deleteOriginInvite}
+      name={MODAL_NAMES.DELETE_ORIGIN_INVITE}
       onConfirm={handleConfirmDeleteInvite}
       loading={loading}
       dangerAction
@@ -449,7 +449,7 @@ const OriginUsers: NextPage = () => {
   const renderResendOriginInviteModal = (
     <ConfirmModal
       title="Resend invite"
-      name={MODAL_NAMES.resendOriginInvite}
+      name={MODAL_NAMES.RESEND_ORIGIN_INVITE}
       onConfirm={handleConfirmResendInvite}
       loading={loading}
     >

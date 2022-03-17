@@ -67,9 +67,15 @@ export type PlausibleEvents = {
   'browser-click': PlausibleProps;
   'os-click': PlausibleProps;
   'device-click': PlausibleProps;
+  'country-click': PlausibleProps;
+  'region-click': PlausibleProps;
+  'city-click': PlausibleProps;
   'show-all-browsers-click': PlausibleProps;
   'show-all-operating-systems-click': PlausibleProps;
   'show-all-devices-click': PlausibleProps;
+  'show-all-countries-click': PlausibleProps;
+  'show-all-regions-click': PlausibleProps;
+  'show-all-cities-click': PlausibleProps;
   'origin-invite-created': PlausibleProps;
   'origin-invite-resent': PlausibleProps;
   'origin-invite-cancelled': PlausibleProps;
@@ -194,6 +200,14 @@ export interface OriginContextType {
   setSelectedOs: Dispatch<SetStateAction<string | undefined>>;
   selectedDevice: string | undefined;
   setSelectedDevice: Dispatch<SetStateAction<string | undefined>>;
+  selectedCountry: string | undefined;
+  setSelectedCountry: Dispatch<SetStateAction<string | undefined>>;
+  selectedCountryCode: string | undefined;
+  setSelectedCountryCode: Dispatch<SetStateAction<string | undefined>>;
+  selectedRegion: string | undefined;
+  setSelectedRegion: Dispatch<SetStateAction<string | undefined>>;
+  selectedCity: string | undefined;
+  setSelectedCity: Dispatch<SetStateAction<string | undefined>>;
 }
 
 export interface UIStateContextType {
@@ -278,6 +292,30 @@ export interface EndpointData {
   responseTimeAvg: number;
 }
 
+export interface CountryData {
+  country: string;
+  countryCode: string | null;
+  requests: number;
+}
+
+export interface RegionData {
+  region: string;
+  countryCode: string | null;
+  requests: number;
+}
+
+export interface CityData {
+  city: string;
+  countryCode: string | null;
+  requests: number;
+}
+
+export interface GeoLocationData {
+  countryData: CountryData[];
+  regionData: RegionData[];
+  cityData: CityData[];
+}
+
 export interface ApilyticsPackage {
   identifier: string;
   version: string;
@@ -290,6 +328,7 @@ export interface OriginMetrics {
   percentileData: PercentileData[];
   statusCodeData: StatusCodeData[];
   userAgentData: UserAgentData;
+  geoLocationData: GeoLocationData;
   apilyticsPackage?: ApilyticsPackage;
 }
 
