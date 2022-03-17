@@ -123,7 +123,7 @@ const OriginExcludedRoutes: NextPage = () => {
   const handleRouteClick = (route: RouteData) => (): void => {
     setSelectedRoute(route);
     setValue(route.route);
-    handleOpenModal(MODAL_NAMES.excludedRoute);
+    handleOpenModal(MODAL_NAMES.EXCLUDED_ROUTE);
   };
 
   useEffect(() => {
@@ -151,7 +151,7 @@ const OriginExcludedRoutes: NextPage = () => {
 
   const renderDeleteLink = (
     <p
-      onClick={(): void => handleOpenModal(MODAL_NAMES.deleteExcludedRoute)}
+      onClick={(): void => handleOpenModal(MODAL_NAMES.DELETE_EXCLUDED_ROUTE)}
       className="link mt-4 text-center text-error"
     >
       Delete route
@@ -208,7 +208,7 @@ const OriginExcludedRoutes: NextPage = () => {
   );
 
   const renderEditRouteModal = (
-    <Modal name={MODAL_NAMES.excludedRoute}>
+    <Modal name={MODAL_NAMES.EXCLUDED_ROUTE}>
       <div className="flex items-center justify-between p-2">
         <p className="px-2 font-bold">
           <p className="text-white">
@@ -231,7 +231,7 @@ const OriginExcludedRoutes: NextPage = () => {
   const renderDeleteRouteModal = (
     <ConfirmModal
       title="Delete route"
-      name={MODAL_NAMES.deleteExcludedRoute}
+      name={MODAL_NAMES.DELETE_EXCLUDED_ROUTE}
       onConfirm={handleConfirmDelete}
       loading={loading}
       dangerAction

@@ -122,7 +122,7 @@ const OriginDynamicRoutes: NextPage = () => {
   const handleRouteClick = (route: RouteData) => (): void => {
     setSelectedRoute(route);
     setValue(route.route);
-    handleOpenModal(MODAL_NAMES.dynamicRoute);
+    handleOpenModal(MODAL_NAMES.DYNAMIC_ROUTE);
   };
 
   useEffect(() => {
@@ -150,7 +150,7 @@ const OriginDynamicRoutes: NextPage = () => {
 
   const renderDeleteLink = (
     <p
-      onClick={(): void => handleOpenModal(MODAL_NAMES.deleteDynamicRoute)}
+      onClick={(): void => handleOpenModal(MODAL_NAMES.DELETE_DYNAMIC_ROUTE)}
       className="link mt-4 text-center text-error"
     >
       Delete route
@@ -207,7 +207,7 @@ const OriginDynamicRoutes: NextPage = () => {
   );
 
   const renderEditRouteModal = (
-    <Modal name={MODAL_NAMES.dynamicRoute}>
+    <Modal name={MODAL_NAMES.DYNAMIC_ROUTE}>
       <div className="flex items-center justify-between p-2">
         <p className="px-2 font-bold">
           <p className="text-white">
@@ -230,7 +230,7 @@ const OriginDynamicRoutes: NextPage = () => {
   const renderDeleteRouteModal = (
     <ConfirmModal
       title="Delete route"
-      name={MODAL_NAMES.deleteDynamicRoute}
+      name={MODAL_NAMES.DELETE_DYNAMIC_ROUTE}
       onConfirm={handleConfirmDelete}
       loading={loading}
       dangerAction

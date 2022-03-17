@@ -77,7 +77,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   };
 
   const handleShowAllClick = (): void => {
-    handleOpenModal(MODAL_NAMES.endpoints);
+    handleOpenModal(MODAL_NAMES.ENDPOINTS);
     plausible('show-all-endpoints-click');
   };
 
@@ -145,7 +145,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
         </div>
       </div>
       <div className="mt-4">{renderMetrics}</div>
-      <Modal name={MODAL_NAMES.endpoints} mobileFullscreen>
+      <Modal name={MODAL_NAMES.ENDPOINTS} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-128 sm:min-w-96">
           <div className="flex justify-between p-2">
             <p className="pl-4 text-white">{attributes[activeTab].label}</p>

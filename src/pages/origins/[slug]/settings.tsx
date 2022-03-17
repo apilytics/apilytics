@@ -97,7 +97,7 @@ const OriginSettings: NextPage = () => {
 
   const renderDeleteOriginLink = (
     <p
-      onClick={(): void => handleOpenModal(MODAL_NAMES.deleteOrigin)}
+      onClick={(): void => handleOpenModal(MODAL_NAMES.DELETE_ORIGIN)}
       className="link mt-4 text-center text-error"
     >
       Delete origin
@@ -126,7 +126,7 @@ const OriginSettings: NextPage = () => {
           <ApiKeyField value={apiKey} />
           <ConfirmModal
             title="Delete origin"
-            name={MODAL_NAMES.deleteOrigin}
+            name={MODAL_NAMES.DELETE_ORIGIN}
             onConfirm={handleConfirmDelete}
             loading={loading}
             dangerAction

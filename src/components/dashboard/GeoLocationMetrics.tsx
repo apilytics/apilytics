@@ -159,7 +159,7 @@ export const GeoLocationMetrics: React.FC<Props> = ({
   };
 
   const handleShowAllClick = (): void => {
-    handleOpenModal(MODAL_NAMES.geoLocation);
+    handleOpenModal(MODAL_NAMES.GEO_LOCATION);
 
     const events: Record<string, keyof PlausibleEvents> = {
       country: 'show-all-countries-click',
@@ -224,7 +224,7 @@ export const GeoLocationMetrics: React.FC<Props> = ({
         </div>
       </div>
       <div className="mt-4 flex grow flex-col">{renderMetrics}</div>
-      <Modal name={MODAL_NAMES.geoLocation} mobileFullscreen>
+      <Modal name={MODAL_NAMES.GEO_LOCATION} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
             <p className="pl-4 text-white">{attributes[activeTab].label}</p>

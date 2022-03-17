@@ -130,7 +130,7 @@ const Origin: NextPage = () => {
 
   useEffect(() => {
     if (showApiKey) {
-      handleOpenModal(MODAL_NAMES.apiKey);
+      handleOpenModal(MODAL_NAMES.API_KEY);
       delete query.showApiKey;
       replace({ pathname, query });
     }
@@ -290,7 +290,7 @@ const Origin: NextPage = () => {
           </Link>
           .
         </p>
-        <Modal name={MODAL_NAMES.apiKey}>
+        <Modal name={MODAL_NAMES.API_KEY}>
           <div className="flex items-center justify-between p-2">
             <h6 className="px-2 text-white">Almost ready!</h6>
             <ModalCloseButton onClick={handleCloseModal} />
