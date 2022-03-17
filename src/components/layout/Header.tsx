@@ -143,10 +143,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
         Why Apilytics?
         <ChevronDownIcon className="ml-2 h-5 w-5" />
       </div>
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu rounded-box w-96 bg-base-200 p-2 text-primary shadow"
-      >
+      <ul tabIndex={0} className="dropdown-content menu rounded-box w-96 bg-base-200 p-2 shadow">
         {WHY_ITEMS.map(({ icon: Icon, href, title, description }) => (
           <li key={title}>
             <Link href={href}>
@@ -169,10 +166,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
         Community
         <ChevronDownIcon className="ml-2 h-5 w-5" />
       </div>
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu rounded-box w-96 bg-base-200 p-2 text-primary shadow"
-      >
+      <ul tabIndex={0} className="dropdown-content menu rounded-box w-96 bg-base-200 p-2 shadow">
         {COMMUNITY_ITEMS.map(({ external, icon: Icon, href, title, description }) => (
           <li key={title}>
             <Link href={href}>
@@ -208,18 +202,21 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
         <div tabIndex={0} className="btn btn-ghost">
           <DotsVerticalIcon className="h-5 w-5" />
         </div>
-        <ul tabIndex={0} className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 shadow">
-          <li className="text-primary" onClick={handleRegisterClick}>
+        <ul
+          tabIndex={0}
+          className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-primary shadow"
+        >
+          <li onClick={handleRegisterClick}>
             <Link href={staticRoutes.register}>
               <a className="unstyled">Start free trial</a>
             </Link>
           </li>
-          <li className="text-primary" onClick={handleLoginClick}>
+          <li onClick={handleLoginClick}>
             <Link href={staticRoutes.login}>
               <a className="unstyled">Log in</a>
             </Link>
           </li>
-          <li className="text-primary" onClick={handlePricingClick}>
+          <li onClick={handlePricingClick}>
             <Link href={staticRoutes.pricing}>
               <a className="unstyled">Pricing</a>
             </Link>

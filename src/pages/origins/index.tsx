@@ -5,8 +5,7 @@ import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
-import { Modal } from 'components/shared/Modal';
-import { ModalCloseButton } from 'components/shared/ModalCloseButton';
+import { ConfirmModal } from 'components/shared/ConfirmModal';
 import { OriginMenu } from 'components/shared/OriginMenu';
 import { withAuth } from 'hocs/withAuth';
 import { useAccount } from 'hooks/useAccount';
@@ -147,6 +146,7 @@ const Origins: NextPage = () => {
         totalMetrics,
         lastDayMetrics,
         userRole,
+        userCount,
         dynamicRouteCount,
         excludedRouteCount,
       }) => (
@@ -169,6 +169,7 @@ const Origins: NextPage = () => {
                 <OriginMenu
                   slug={slug}
                   userRole={userRole}
+                  userCount={userCount}
                   dynamicRouteCount={dynamicRouteCount}
                   excludedRouteCount={excludedRouteCount}
                 />
@@ -224,70 +225,37 @@ const Origins: NextPage = () => {
   );
 
   const renderAcceptInviteModal = (
-    <Modal name={MODAL_NAMES.acceptOriginInvite}>
-      <div className="flex items-center justify-between p-2">
-        <p className="px-2 font-bold">
-          <p className="text-white">Accept invite</p>
-        </p>
-        <ModalCloseButton onClick={handleCloseModal} />
-      </div>
-      <div className="p-4">
-        <p>
-          Are you sure you want to accept invite for{' '}
-          <span className="text-white">{selectedOriginInvite?.originName}</span>?
-        </p>
-        <p>
-          After accepting, you will become a collaborator with{' '}
-          <span className="text-white">{selectedOriginInvite?.role}</span> rights.
-        </p>
-      </div>
-      <div className="grid grid-cols-2 gap-2 p-2">
-        <Button className="btn-outline btn-error" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button
-          className="btn-primary"
-          onClick={handleConfirmInvite(true)}
-          autoFocus
-          disabled={loading}
-          loading={loading}
-        >
-          Confirm
-        </Button>
-      </div>
-    </Modal>
+    <ConfirmModal
+      title="Accept invite"
+      name={MODAL_NAMES.acceptOriginInvite}
+      onConfirm={handleConfirmInvite(true)}
+      loading={loading}
+    >
+      <p>
+        Are you sure you want to accept invite for{' '}
+        <span className="text-white">{selectedOriginInvite?.originName}</span>?
+      </p>
+      <p>
+        After accepting, you will become a collaborator with{' '}
+        <span className="text-white">{selectedOriginInvite?.role}</span> rights.
+      </p>
+    </ConfirmModal>
   );
 
   const renderDeclineInviteModal = (
-    <Modal name={MODAL_NAMES.rejectOriginInvite}>
-      <div className="flex items-center justify-between p-2">
-        <p className="px-2 font-bold">
-          <p className="text-white">Reject invite</p>
-        </p>
-        <ModalCloseButton onClick={handleCloseModal} />
-      </div>
-      <div className="p-4">
-        <p>
-          Are you sure you want to reject invite for{' '}
-          <span className="text-white">{selectedOriginInvite?.originName}</span>?
-        </p>
-        <p>After rejecting, the invite will be lost and you need a new invite.</p>
-      </div>
-      <div className="grid grid-cols-2 gap-2 p-2">
-        <Button className="btn-outline btn-error" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button
-          className="btn-primary"
-          onClick={handleConfirmInvite(false)}
-          autoFocus
-          disabled={loading}
-          loading={loading}
-        >
-          Confirm
-        </Button>
-      </div>
-    </Modal>
+    <ConfirmModal
+      title="Reject invite"
+      name={MODAL_NAMES.rejectOriginInvite}
+      onConfirm={handleConfirmInvite(false)}
+      loading={loading}
+      dangerAction
+    >
+      <p>
+        Are you sure you want to reject invite for{' '}
+        <span className="text-white">{selectedOriginInvite?.originName}</span>?
+      </p>
+      <p>After rejecting, the invite will be lost and you need a new invite.</p>
+    </ConfirmModal>
   );
 
   return (

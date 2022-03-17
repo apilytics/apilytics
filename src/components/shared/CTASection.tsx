@@ -12,7 +12,7 @@ export const CTASection: React.FC = () => {
   const eventOptions = { location: EVENT_LOCATIONS.PAGE_BOTTOM };
 
   return (
-    <div className="container max-w-3xl py-4 sm:py-8">
+    <div className="container max-w-3xl px-0 py-4 sm:py-8">
       <div className="flex flex-col gap-8 sm:flex-row">
         <div className="grow">
           <h3 className="text-white">Would you like to try Apilytics?</h3>

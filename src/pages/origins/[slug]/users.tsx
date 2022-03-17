@@ -6,6 +6,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { BackButton } from 'components/shared/BackButton';
 import { Button } from 'components/shared/Button';
+import { ConfirmModal } from 'components/shared/ConfirmModal';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { OriginUserForm } from 'components/shared/OriginUserForm';
@@ -292,10 +293,10 @@ const OriginUsers: NextPage = () => {
             </div>
             <ul
               tabIndex={0}
-              className="card-bordered dropdown-content menu rounded-box bg-base-100 p-2 shadow"
+              className="card-bordered dropdown-content menu rounded-box bg-base-100 p-2 text-primary shadow"
             >
-              <li className="text-primary" onClick={handleClickEditUser(user)}>
-                <a>Edit</a>
+              <li onClick={handleClickEditUser(user)}>
+                <a className="unstyled">Edit</a>
               </li>
               <li className="text-error" onClick={handleClickDeleteUser(user)}>
                 <a className="unstyled">Delete</a>
@@ -321,9 +322,9 @@ const OriginUsers: NextPage = () => {
             className="card-bordered dropdown-content menu rounded-box bg-base-100 p-2 text-primary shadow"
           >
             <li onClick={handleClickResendInvite(invite)}>
-              <a>Resend invite</a>
+              <a className="unstyled">Resend invite</a>
             </li>
-            <li className="text-error hover:text-error" onClick={handleClickDeleteInvite(invite)}>
+            <li className="text-error" onClick={handleClickDeleteInvite(invite)}>
               <a className="unstyled">Delete</a>
             </li>
           </ul>
@@ -372,7 +373,7 @@ const OriginUsers: NextPage = () => {
           endIcon={PlusIcon}
           onClick={(): void => handleOpenModal(MODAL_NAMES.inviteOriginUser)}
         >
-          Invite
+          Invite new user
         </Button>
       </div>
     </div>
@@ -413,99 +414,50 @@ const OriginUsers: NextPage = () => {
   );
 
   const renderDeleteOriginUserModal = (
-    <Modal name={MODAL_NAMES.deleteOriginUser}>
-      <div className="flex items-center justify-between p-2">
-        <p className="px-2 font-bold">
-          <p className="text-white">Remove user from origin</p>
-        </p>
-        <ModalCloseButton onClick={handleCloseModal} />
-      </div>
-      <div className="p-4">
-        <p>
-          Are you sure you want to delete{' '}
-          <span className="text-white">{selectedOriginUser?.email}</span> from{' '}
-          <span className="text-white">{origin?.name}</span>?
-          <br />
-          After this action, the user will no longer have access to this origin.
-        </p>
-      </div>
-      <div className="grid grid-cols-2 gap-2 p-2">
-        <Button className="btn-outline btn-error" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button
-          className="btn-primary"
-          onClick={handleConfirmDeleteOriginUser}
-          autoFocus
-          disabled={loading}
-          loading={loading}
-        >
-          Confirm
-        </Button>
-      </div>
-    </Modal>
+    <ConfirmModal
+      title="Remove user from origin"
+      name={MODAL_NAMES.deleteOriginUser}
+      onConfirm={handleConfirmDeleteOriginUser}
+      loading={loading}
+      dangerAction
+    >
+      <p>
+        Are you sure you want to delete{' '}
+        <span className="text-white">{selectedOriginUser?.email}</span> from{' '}
+        <span className="text-white">{origin?.name}</span>?
+        <br />
+        After this action, the user will no longer have access to this origin.
+      </p>
+    </ConfirmModal>
   );
 
   const renderDeleteOriginInviteModal = (
-    <Modal name={MODAL_NAMES.deleteOriginInvite}>
-      <div className="flex items-center justify-between p-2">
-        <p className="px-2 font-bold">
-          <p className="text-white">Delete invite</p>
-        </p>
-        <ModalCloseButton onClick={handleCloseModal} />
-      </div>
-      <div className="p-4">
-        <p>
-          Are you sure you want to delete invite for{' '}
-          <span className="text-white">{selectedOriginInvite?.email}</span>?
-        </p>
-      </div>
-      <div className="grid grid-cols-2 gap-2 p-2">
-        <Button className="btn-outline btn-error" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button
-          className="btn-primary"
-          onClick={handleConfirmDeleteInvite}
-          autoFocus
-          disabled={loading}
-          loading={loading}
-        >
-          Confirm
-        </Button>
-      </div>
-    </Modal>
+    <ConfirmModal
+      title="Delete invite"
+      name={MODAL_NAMES.deleteOriginInvite}
+      onConfirm={handleConfirmDeleteInvite}
+      loading={loading}
+      dangerAction
+    >
+      <p>
+        Are you sure you want to delete invite for{' '}
+        <span className="text-white">{selectedOriginInvite?.email}</span>?
+      </p>
+    </ConfirmModal>
   );
 
   const renderResendOriginInviteModal = (
-    <Modal name={MODAL_NAMES.resendOriginInvite}>
-      <div className="flex items-center justify-between p-2">
-        <p className="px-2 font-bold">
-          <p className="text-white">Resend invite</p>
-        </p>
-        <ModalCloseButton onClick={handleCloseModal} />
-      </div>
-      <div className="p-4">
-        <p>
-          Are you sure you want to resend invite for{' '}
-          <span className="text-white">{selectedOriginInvite?.email}</span>?
-        </p>
-      </div>
-      <div className="grid grid-cols-2 gap-2 p-2">
-        <Button className="btn-outline btn-error" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button
-          className="btn-primary"
-          onClick={handleConfirmResendInvite}
-          autoFocus
-          disabled={loading}
-          loading={loading}
-        >
-          Confirm
-        </Button>
-      </div>
-    </Modal>
+    <ConfirmModal
+      title="Resend invite"
+      name={MODAL_NAMES.resendOriginInvite}
+      onConfirm={handleConfirmResendInvite}
+      loading={loading}
+    >
+      <p>
+        Are you sure you want to resend invite for{' '}
+        <span className="text-white">{selectedOriginInvite?.email}</span>?
+      </p>
+    </ConfirmModal>
   );
 
   return (

@@ -9,6 +9,7 @@ import { dynamicRoutes } from 'utils/router';
 interface Props {
   slug: string;
   userRole?: ORIGIN_ROLES;
+  userCount?: number;
   dynamicRouteCount?: number;
   excludedRouteCount?: number;
 }
@@ -16,6 +17,7 @@ interface Props {
 export const OriginMenu: React.FC<Props> = ({
   slug,
   userRole,
+  userCount,
   dynamicRouteCount,
   excludedRouteCount,
 }) => {
@@ -28,26 +30,26 @@ export const OriginMenu: React.FC<Props> = ({
       </div>
       <ul
         tabIndex={0}
-        className="card-bordered dropdown-content menu rounded-box whitespace-nowrap bg-base-100 p-2 shadow"
+        className="card-bordered dropdown-content menu rounded-box whitespace-nowrap bg-base-100 p-2 text-primary shadow"
       >
-        <li className={clsx('text-primary', disabled && 'disabled pointer-events-none')}>
+        <li className={clsx(disabled && 'disabled pointer-events-none')}>
           <Link href={dynamicRoutes.originSettings({ slug })}>
-            <a className="unstyled">Settings</a>
+            <a className="unstyled">Origin settings</a>
           </Link>
         </li>
-        <li className={clsx('text-primary', disabled && 'disabled pointer-events-none')}>
+        <li className={clsx(disabled && 'disabled pointer-events-none')}>
           <Link href={dynamicRoutes.originDynamicRoutes({ slug })}>
             <a className="unstyled">Dynamic routes ({dynamicRouteCount})</a>
           </Link>
         </li>
-        <li className={clsx('text-primary', disabled && 'disabled pointer-events-none')}>
+        <li className={clsx(disabled && 'disabled pointer-events-none')}>
           <Link href={dynamicRoutes.originExcludedRoutes({ slug })}>
             <a className="unstyled">Excluded routes ({excludedRouteCount})</a>
           </Link>
         </li>
-        <li className={clsx('text-primary', disabled && 'disabled pointer-events-none')}>
+        <li className={clsx(disabled && 'disabled pointer-events-none')}>
           <Link href={dynamicRoutes.originUsers({ slug })}>
-            <a className="unstyled">Users</a>
+            <a className="unstyled">Manage users ({userCount})</a>
           </Link>
         </li>
       </ul>

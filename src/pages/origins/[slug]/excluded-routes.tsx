@@ -4,7 +4,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { BackButton } from 'components/shared/BackButton';
-import { Button } from 'components/shared/Button';
+import { ConfirmModal } from 'components/shared/ConfirmModal';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { RouteForm } from 'components/shared/RouteForm';
@@ -229,27 +229,17 @@ const OriginExcludedRoutes: NextPage = () => {
   );
 
   const renderDeleteRouteModal = (
-    <Modal name={MODAL_NAMES.deleteExcludedRoute}>
-      <div className="flex items-center justify-between p-2">
-        <p className="px-2 font-bold">
-          <p className="text-white">Delete route</p>
-        </p>
-        <ModalCloseButton onClick={handleCloseModal} />
-      </div>
-      <div className="p-4">
-        <p>
-          Are you sure you want to delete <code>{selectedRoute?.route}</code>?
-        </p>
-      </div>
-      <div className="grid grid-cols-2 gap-2 p-2">
-        <Button className="btn-outline btn-error" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button className="btn-primary" onClick={handleConfirmDelete} autoFocus>
-          Confirm
-        </Button>
-      </div>
-    </Modal>
+    <ConfirmModal
+      title="Delete route"
+      name={MODAL_NAMES.deleteExcludedRoute}
+      onConfirm={handleConfirmDelete}
+      loading={loading}
+      dangerAction
+    >
+      <p>
+        Are you sure you want to delete <code>{selectedRoute?.route}</code>?
+      </p>
+    </ConfirmModal>
   );
 
   return (

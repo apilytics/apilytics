@@ -108,9 +108,9 @@ export const getOriginForUser = async ({
   const origin = await prisma.origin.findFirst({
     where,
     include: {
-      originUsers: { where: { userId }, select: { role: true } },
-      dynamicRoutes: true,
-      excludedRoutes: true,
+      originUsers: { select: { userId: true, role: true } },
+      dynamicRoutes: { select: { id: true } },
+      excludedRoutes: { select: { id: true } },
     },
   });
 
@@ -124,8 +124,8 @@ export const getOriginForUser = async ({
       apiKey,
       createdAt,
       updatedAt,
-      userRole: origin.originUsers?.[0]?.role as ORIGIN_ROLES,
-      // Cannot select count from these directly in the query.
+      userRole: origin.originUsers.find((user) => user.userId === userId)?.role as ORIGIN_ROLES,
+      userCount: origin.originUsers.length,
       dynamicRouteCount: dynamicRoutes.length,
       excludedRouteCount: excludedRoutes.length,
     };

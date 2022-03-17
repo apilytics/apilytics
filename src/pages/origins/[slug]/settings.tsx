@@ -5,11 +5,9 @@ import type { NextPage } from 'next';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
 import { BackButton } from 'components/shared/BackButton';
-import { Button } from 'components/shared/Button';
+import { ConfirmModal } from 'components/shared/ConfirmModal';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
-import { Modal } from 'components/shared/Modal';
-import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
 import { useOrigin } from 'hooks/useOrigin';
@@ -30,8 +28,14 @@ const OriginSettings: NextPage = () => {
     }
   }, [initialName]);
 
-  const { setLoading, setSuccessMessage, setErrorMessage, handleOpenModal, handleCloseModal } =
-    useUIState();
+  const {
+    loading,
+    setLoading,
+    setSuccessMessage,
+    setErrorMessage,
+    handleOpenModal,
+    handleCloseModal,
+  } = useUIState();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -120,26 +124,19 @@ const OriginSettings: NextPage = () => {
             required
           />
           <ApiKeyField value={apiKey} />
-          <Modal name={MODAL_NAMES.deleteOrigin}>
-            <div className="flex justify-end p-2">
-              <ModalCloseButton onClick={handleCloseModal} />
-            </div>
-            <div className="p-4">
-              <p className="text-white">
-                Are you sure you want to delete this origin?
-                <br />
-                All data associated with it will be lost forever.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-2 p-2">
-              <Button className="btn-outline btn-primary" onClick={handleCloseModal}>
-                Cancel
-              </Button>
-              <Button className="btn-outline btn-error" onClick={handleConfirmDelete} autoFocus>
-                Confirm
-              </Button>
-            </div>
-          </Modal>
+          <ConfirmModal
+            title="Delete origin"
+            name={MODAL_NAMES.deleteOrigin}
+            onConfirm={handleConfirmDelete}
+            loading={loading}
+            dangerAction
+          >
+            <p>
+              Are you sure you want to delete this origin?
+              <br />
+              All data associated with it will be lost forever.
+            </p>
+          </ConfirmModal>
         </Form>
       </div>
     </MainTemplate>

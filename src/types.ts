@@ -14,6 +14,7 @@ import type {
 import type {
   DAY,
   METHODS,
+  MODAL_NAMES,
   MONTH_DAYS,
   ORIGIN_ROLES,
   SIX_MONTHS_DAYS,
@@ -204,8 +205,8 @@ export interface UIStateContextType {
   setErrorMessage: Dispatch<SetStateAction<string>>;
   notFound: boolean;
   setNotFound: Dispatch<SetStateAction<boolean>>;
-  modal: string | null;
-  handleOpenModal: (name: string) => void;
+  modal: MODAL_NAMES | null;
+  handleOpenModal: (name: MODAL_NAMES) => void;
   handleCloseModal: () => void;
 }
 
@@ -299,6 +300,7 @@ export interface RouteData {
 
 export interface OriginData extends Origin {
   userRole: ORIGIN_ROLES;
+  userCount: number;
   dynamicRouteCount: number;
   excludedRouteCount: number;
 }
@@ -309,6 +311,7 @@ export interface OriginListItem {
   totalMetrics: number;
   lastDayMetrics: number;
   userRole: ORIGIN_ROLES;
+  userCount: number;
   dynamicRouteCount: number;
   excludedRouteCount: number;
 }

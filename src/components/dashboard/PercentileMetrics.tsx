@@ -90,11 +90,15 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
     </div>
   );
 
+  const renderLabel = ({ key = '' }: Partial<PercentileData>): JSX.Element => (
+    <span className="text-white">{key}</span>
+  );
+
   const renderMetrics = (
     <VerticalBarChart
       data={data}
       valueKey={valueKey}
-      renderLabel={({ key = '' }: Partial<PercentileData>): string => key}
+      renderLabel={renderLabel}
       renderValue={renderValue}
       leftLabel="Name"
       rightLabel={label}

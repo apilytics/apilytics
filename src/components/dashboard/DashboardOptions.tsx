@@ -42,7 +42,7 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
     setSelectedDevice,
   } = useOrigin();
 
-  const { name, userRole, dynamicRouteCount, excludedRouteCount } = origin ?? {};
+  const { name, userRole, userCount, dynamicRouteCount, excludedRouteCount } = origin ?? {};
 
   const handleTimeFrameChange = ({ target }: ChangeEvent<HTMLSelectElement>): void => {
     const val = Number(target.value) as TimeFrame;
@@ -115,6 +115,7 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
         <OriginMenu
           slug={slug}
           userRole={userRole}
+          userCount={userCount}
           dynamicRouteCount={dynamicRouteCount}
           excludedRouteCount={excludedRouteCount}
         />

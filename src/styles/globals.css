@@ -20,17 +20,13 @@
     @apply my-1;
   }
 
-  p,
-  li {
-    @apply text-base-content;
-  }
-
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
+    @apply text-white;
     @apply my-2;
   }
 
@@ -145,7 +141,7 @@
 }
 
 #swagger-ui *:not(.cancel, a) {
-  color: unset;
+  @apply text-white;
 }
 
 #swagger-ui .opblock-section-header {

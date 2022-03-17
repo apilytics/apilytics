@@ -46,7 +46,7 @@ const ForPage: NextPage<Props> = ({ data, source, snippets }) => (
       hideIntegrations={data.hideIntegrations}
     />
     {!data.hideMDXContent && (
-      <div className="container flex max-w-3xl flex-col py-4 text-white lg:py-16">
+      <div className="container flex max-w-3xl flex-col py-4 lg:py-16">
         <MDX source={source} snippets={snippets} />
       </div>
     )}
