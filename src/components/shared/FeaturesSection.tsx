@@ -56,12 +56,12 @@ const CATEGORIES = [
     icon: ClockIcon,
     title: 'Time series data',
     content:
-      'Your API usage is visualized in a time series format, allowing you to spot anomalies with ease.',
+      'The usage of your APIs is visualized in a time series format, allowing you to spot anomalies with ease.',
   },
   {
     icon: ExclamationCircleIcon,
     title: 'Error rates',
-    content: 'Track the error rates of your API easily and apply filters for comparison.',
+    content: 'Track the error rates of your APIs easily and apply filters for comparison.',
   },
   {
     icon: SearchIcon,
@@ -71,17 +71,17 @@ const CATEGORIES = [
   {
     icon: GlobeIcon,
     title: 'Geolocation data',
-    content: 'See where your users are located and make data-driven desicions.',
+    content: 'See where your users are located and make data-driven decisions.',
   },
   {
     icon: ServerIcon,
-    title: 'Perfomance data',
-    content: 'See how your API is performing with metrics like CPU or memory usage.',
+    title: 'Performance data',
+    content: 'See how your APIs are performing with metrics like CPU or memory usage.',
   },
   {
     icon: DeviceMobileIcon,
     title: 'Client metrics',
-    content: 'Compare device types, operating systems and browser with a breeze.',
+    content: 'Compare device types, operating systems and browsers with a breeze.',
   },
 ];
 
