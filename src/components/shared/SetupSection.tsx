@@ -7,14 +7,24 @@ import type { Snippet } from 'types';
 
 interface Props {
   snippets: Snippet[];
-  framework?: string;
+  frameworks?: string;
   noBackground?: boolean;
 }
 
-export const SetupSection: React.FC<Props> = ({ snippets, framework, noBackground = false }) => {
+export const SetupSection: React.FC<Props> = ({
+  snippets: _snippets,
+  frameworks: _frameworks,
+  noBackground = false,
+}) => {
   const plausible = usePlausible();
-  const [selectedIntegration, setSelectedIntegration] = useState(framework ?? snippets[0].name);
-  const snippet = snippets.find(({ name }) => selectedIntegration === name);
+  const frameworks = _frameworks?.split(', ') ?? [];
+  const snippets = _snippets.filter(({ name }) => frameworks.includes(name));
+
+  const [selectedIntegration, setSelectedIntegration] = useState(
+    frameworks[0] ?? _snippets[0].name,
+  );
+
+  const snippet = _snippets.find(({ name }) => selectedIntegration === name);
 
   const handleTabClick = (name: string) => (): void => {
     setSelectedIntegration(name);
@@ -25,9 +35,11 @@ export const SetupSection: React.FC<Props> = ({ snippets, framework, noBackgroun
     throw Error('Snippet not found!');
   }
 
-  if (framework && !snippets.some((snippet) => snippet.name === framework)) {
-    throw Error(`Framework ${framework} not found!`);
-  }
+  frameworks?.forEach((framework) => {
+    if (!_snippets.some(({ name }) => name === framework)) {
+      throw Error(`Framework ${framework} not found!`);
+    }
+  });
 
   const { source } = snippet;
 
@@ -52,7 +64,7 @@ export const SetupSection: React.FC<Props> = ({ snippets, framework, noBackgroun
             </ul>
           </div>
           <div className="mockup-code mt-4 w-full rounded-lg bg-base-100 pb-0">
-            {!framework && (
+            {snippets.length > 1 && (
               <div className="tabs px-4">
                 {snippets.map(({ name }) => (
                   <p

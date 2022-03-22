@@ -21,7 +21,7 @@ interface Props extends MDXPageProps {
   data: {
     title: string;
     name: string;
-    framework?: string;
+    frameworks?: string;
     description: string;
     indexable: boolean;
     hideIntegrations?: boolean;
@@ -50,7 +50,7 @@ const ForPage: NextPage<Props> = ({ data, source, snippets }) => (
         <MDX source={source} snippets={snippets} />
       </div>
     )}
-    <SetupSection snippets={snippets} framework={data.framework} noBackground />
+    <SetupSection snippets={snippets} frameworks={data.frameworks} noBackground />
     <WhySection />
     <CTASection />
   </Layout>

@@ -95,12 +95,24 @@ const COMPANY_LINKS = [
 
 const PLATFORM_LINKS = [
   {
+    text: 'JavaScript',
+    href: staticRoutes.forJS,
+  },
+  {
+    text: 'Python',
+    href: staticRoutes.forPython,
+  },
+  {
     text: 'Next.js',
     href: staticRoutes.forNextJS,
   },
   {
     text: 'Express.js',
     href: staticRoutes.forExpress,
+  },
+  {
+    text: 'Node.js',
+    href: staticRoutes.forNodeJS,
   },
   {
     text: 'Django',
