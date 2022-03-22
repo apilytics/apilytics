@@ -1,4 +1,4 @@
-import type { Method } from 'types';
+import type { Method, ValueOf } from 'types';
 
 export const truncateString = (str: string, maxLength: number): string =>
   str.length > maxLength ? `${str.slice(0, maxLength - 3)}...` : str;
@@ -42,4 +42,18 @@ export const getFlagEmoji = (countryCode: string): string => {
     .map((char) => 127397 + char.charCodeAt(0));
 
   return String.fromCodePoint(...codePoints);
+};
+
+type ValuesOfUnion<T> = T extends T ? ValueOf<T> : never;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const safeGet = <T extends Record<keyof any, any>>(
+  obj: T,
+  prop: string,
+): ValuesOfUnion<T> | undefined => {
+  if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+    return obj[prop];
+  } else {
+    return undefined;
+  }
 };

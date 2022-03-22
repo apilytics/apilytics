@@ -11,6 +11,7 @@ import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
+import { safeGet } from 'utils/helpers';
 import { formatCount } from 'utils/metrics';
 import type {
   BrowserData,
@@ -22,20 +23,6 @@ import type {
 } from 'types';
 
 type CombinedUserAgentData = BrowserData | OSData | DeviceData;
-
-type ValuesOfUnion<T> = T extends T ? ValueOf<T> : never;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const safeGet = <T extends Record<keyof any, any>>(
-  obj: T,
-  prop: string,
-): ValuesOfUnion<T> | undefined => {
-  if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-    return obj[prop];
-  } else {
-    return undefined;
-  }
-};
 
 const METRIC_TYPES = {
   browsers: 'browsers',

@@ -9,7 +9,9 @@ import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
+import { Pagination } from 'components/shared/Pagination';
 import { useOrigin } from 'hooks/useOrigin';
+import { usePagination } from 'hooks/usePagination';
 import { usePlausible } from 'hooks/usePlausible';
 import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
@@ -57,18 +59,17 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   const { data, valueKey, label, renderValue } = attributes[metricType];
 
   const {
-    data: _modalData,
+    data: modalData,
     valueKey: modalValueKey,
     label: modalLabel,
     renderValue: renderModalValue,
   } = attributes[activeTab];
 
   const truncatedData = data.slice(0, 10);
-  const pageSize = 10;
-  const pages = Math.ceil(_modalData.length / pageSize);
-  const [page, setPage] = useState(0);
-  const offset = page * pageSize;
-  const paginatedModalData = _modalData.slice(offset, offset + pageSize);
+
+  const { paginatedData: paginatedModalData, ...paginationProps } = usePagination<
+    Partial<EndpointData>
+  >({ data: modalData, tab: activeTab });
 
   const handleLabelClick = (data: Partial<EndpointData>): void => {
     setSelectedMethod(data.method);
@@ -178,29 +179,7 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
           </div>
           <div className="flex justify-center p-4">
             <div className="btn-group">
-              {page > 0 && (
-                <button className="btn" onClick={(): void => setPage(0)}>
-                  {1}
-                </button>
-              )}
-              {page > 2 && <button className="btn-disabled btn">...</button>}
-              {page > 1 && (
-                <button className="btn" onClick={(): void => setPage(page - 1)}>
-                  {page}
-                </button>
-              )}
-              <button className="btn btn-active">{page + 1}</button>
-              {page < pages - 2 && (
-                <button className="btn" onClick={(): void => setPage(page + 1)}>
-                  {page + 2}
-                </button>
-              )}
-              {page < pages - 3 && <button className="btn-disabled btn">...</button>}
-              {page < pages - 1 && (
-                <button className="btn" onClick={(): void => setPage(pages - 1)}>
-                  {pages}
-                </button>
-              )}
+              <Pagination {...paginationProps} />
             </div>
           </div>
         </div>

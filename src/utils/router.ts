@@ -45,8 +45,11 @@ const FOR_ROUTES = {
   forMobileApps: '/for/mobile-apps',
   forMicroServices: '/for/microservices',
   forServerless: '/for/serverless',
+  forJS: '/for/javascript',
+  forPython: '/for/python',
   forNextJS: '/for/next',
   forExpress: '/for/express',
+  forNodeJS: '/for/node',
   forDjango: '/for/django',
   forFastAPI: '/for/fastapi',
 };
