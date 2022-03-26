@@ -52,6 +52,7 @@ const FOR_ROUTES = {
   forNodeJS: '/for/node',
   forDjango: '/for/django',
   forFastAPI: '/for/fastapi',
+  forFlask: '/for/flask',
 };
 
 export const staticRoutes = {

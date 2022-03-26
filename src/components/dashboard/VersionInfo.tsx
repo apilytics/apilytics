@@ -43,6 +43,11 @@ const APILYTICS_PACKAGES: {
     url: 'https://pypi.org/pypi/apilytics/json',
     versionKey: 'info.version',
   },
+  'apilytics-python-flask': {
+    name: 'Python [flask] apilytics',
+    url: 'https://pypi.org/pypi/apilytics/json',
+    versionKey: 'info.version',
+  },
 };
 
 const isFirstVersionGreater = (first: string, second: string): boolean => {

@@ -1,0 +1,31 @@
+---
+name: Flask
+order: 5
+---
+
+Install with pip:
+
+```sh
+pip install apilytics
+```
+
+Install with poetry:
+
+```sh
+poetry add apilytics
+```
+
+Usage:
+
+```python
+# app.py
+
+import os
+
+from apilytics.flask import apilytics_middleware
+from flask import Flask
+
+app = Flask(__name__)
+
+app = apilytics_middleware(app, api_key=os.getenv("APILYTICS_API_KEY"))
+```
