@@ -18,7 +18,9 @@ export const SetupSection: React.FC<Props> = ({
 }) => {
   const plausible = usePlausible();
   const frameworks = _frameworks?.split(', ') ?? [];
-  const snippets = _snippets.filter(({ name }) => frameworks.includes(name));
+  const snippets = frameworks.length
+    ? _snippets.filter(({ name }) => frameworks.includes(name))
+    : _snippets;
 
   const [selectedIntegration, setSelectedIntegration] = useState(
     frameworks[0] ?? _snippets[0].name,
