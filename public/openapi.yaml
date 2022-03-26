@@ -68,6 +68,13 @@ paths:
                   type: string
                   description: Value of the `User-Agent` header from the user's HTTP request.
                   example: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36
+                ip:
+                  type: string
+                  oneOf:
+                    - format: ipv4
+                    - format: ipv6
+                  description: User's IP address (used for geolocation, never stored nor sent to 3rd parties).
+                  example: 127.0.0.1
                 cpuUsage:
                   type: number
                   minimum: 0
