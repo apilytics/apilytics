@@ -122,6 +122,10 @@ const PLATFORM_LINKS = [
     text: 'FastAPI',
     href: staticRoutes.forFastAPI,
   },
+  {
+    text: 'Flask',
+    href: staticRoutes.forFlask,
+  },
 ];
 
 const USE_CASE_LINKS = [
