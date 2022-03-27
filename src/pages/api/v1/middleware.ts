@@ -146,7 +146,7 @@ const handlePost: ApiHandler = async (req, res) => {
       if (![200, 400].includes(geoIpRes.status)) {
         let message;
         try {
-          message = await geoIpRes.json();
+          message = await geoIpRes.clone().json();
         } catch {
           message = await geoIpRes.text();
         }
