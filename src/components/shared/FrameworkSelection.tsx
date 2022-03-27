@@ -6,7 +6,7 @@ import { Select } from 'components/shared/Select';
 import { usePlausible } from 'hooks/usePlausible';
 import { staticRoutes } from 'utils/router';
 
-const FRAMEWORKS = ['Ruby on Rails', 'Laravel', '.NET', 'Spring', 'Flask', 'Other'];
+const FRAMEWORKS = ['Ruby on Rails', 'Laravel', '.NET', 'Spring', 'Go net/http', 'Gin', 'Other'];
 
 export const FrameworkSelection: React.FC = () => {
   const [value, setValue] = useState('');
