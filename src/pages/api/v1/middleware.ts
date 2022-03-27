@@ -141,20 +141,26 @@ const handlePost: ApiHandler = async (req, res) => {
           'Content-Type': 'application/json',
         },
       });
-      const json = await geoIpRes.json();
 
       // 400 signals an invalid IP address.
       if (![200, 400].includes(geoIpRes.status)) {
+        let message;
+        try {
+          message = await geoIpRes.json();
+        } catch {
+          message = await geoIpRes.text();
+        }
+
         console.error(
           `Got an unexpected status code from GeoIP API: ${geoIpRes.status}, message:\n`,
-          json,
+          message,
         );
       } else {
         ({
           country: { name: country, code: countryCode },
           region,
           city,
-        } = json);
+        } = await geoIpRes.json());
       }
     } catch (e) {
       console.error('Error when calling GeoIP API:\n', e);
