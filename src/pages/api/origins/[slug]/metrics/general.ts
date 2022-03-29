@@ -10,15 +10,7 @@ import { sendNotFound, sendOk } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
 import { PERCENTILE_DATA_KEYS } from 'utils/constants';
-import type {
-  ApiHandler,
-  CityData,
-  CountryData,
-  EndpointData,
-  OriginMetrics,
-  RegionData,
-  TimeFrameData,
-} from 'types';
+import type { ApiHandler, OriginMetrics } from 'types';
 
 const DAY_MILLIS = 24 * 60 * 60 * 1000;
 const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
@@ -69,35 +61,7 @@ interface RawGeneralData extends GeneralData {
   memoryTotalP99: number;
 }
 
-type RawEndpointData = Omit<EndpointData, 'methodAndEndpoint'>;
-
-interface RawMiscData {
-  browser: string | null;
-  os: string | null;
-  device: string | null;
-  statusCode: number | null;
-  requests: number;
-}
-
-const extractFromMiscData = <
-  T extends RawMiscData,
-  K extends Exclude<keyof RawMiscData, 'requests'>,
->(
-  arr: T[],
-  key: K,
-): ({ [Key in K]: NonNullable<T[Key]> } & { requests: number })[] =>
-  arr
-    .filter(({ [key]: val }) => val !== null)
-    .map(
-      ({ [key]: val, requests }) =>
-        // Assertion is needed because of computed property key type widening:
-        // https://github.com/microsoft/TypeScript/issues/13948
-        ({ [key]: val, requests } as { [Key in K]: NonNullable<T[Key]> } & {
-          requests: number;
-        }),
-    );
-
-const handleGet: ApiHandler<{ data: OriginMetrics }> = async (req, res) => {
+const handleGet: ApiHandler<{ data: Pick<OriginMetrics, 'generalData'> }> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
 
@@ -234,135 +198,9 @@ SELECT
 ${fromClause}
 ${whereClause}`;
 
-  const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
-SELECT
-  COUNT(*) AS requests,
-  DATE_TRUNC(${scope}, metrics.created_at) AS time,
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS errors
-
-${fromClause}
-${whereClause}
-
-GROUP BY time;`;
-
-  // If an endpoint is provided as a filter, return all paths matching that endpoint.
-  // Otherwise, return all dynamic routes + other paths through `endpoint`.
-  let endpointSelectClause: Prisma.Sql | undefined;
-
-  if (endpoint) {
-    endpointSelectClause = Prisma.sql`metrics.path AS endpoint`;
-  } else {
-    endpointSelectClause = Prisma.sql`
-CASE
-  WHEN matched_routes.route IS NULL
-  THEN metrics.path
-  ELSE matched_routes.route END AS endpoint`;
-  }
-
-  const endpointDataPromise: Promise<RawEndpointData[]> = prisma.$queryRaw`
-SELECT
-  COUNT(*) AS "totalRequests",
-  metrics.method,
-  ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
-  ${endpointSelectClause}
-
-${fromClause}
-
-  LEFT JOIN LATERAL (
-    SELECT dynamic_routes.route
-    FROM dynamic_routes
-    WHERE dynamic_routes.origin_id = ${originId}
-      AND metrics.path LIKE dynamic_routes.pattern
-      AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
-        = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
-    ORDER BY LENGTH(dynamic_routes.pattern) DESC
-    LIMIT 1
-  ) AS matched_routes ON TRUE
-
-${whereClause}
-
-GROUP BY metrics.method, endpoint;`;
-
-  const miscDataPromise: Promise<RawMiscData[]> = prisma.$queryRaw`
-SELECT
-  metrics.browser,
-  metrics.os,
-  metrics.device,
-  metrics.status_code as "statusCode",
-  COUNT(*) AS requests
-
-${fromClause}
-${whereClause}
-
-GROUP BY GROUPING SETS (
-  metrics.browser,
-  metrics.os,
-  metrics.device,
-  metrics.status_code
-);`;
-
-  const countryDataPromise: Promise<CountryData[]> = prisma.$queryRaw`
-SELECT
-  metrics.country,
-  metrics.country_code AS "countryCode",
-  COUNT(*) AS requests
-
-${fromClause}
-${whereClause}
-  AND metrics.country IS NOT NULL
-
-GROUP BY metrics.country, metrics.country_code;`;
-
-  const regionDataPromise: Promise<RegionData[]> = prisma.$queryRaw`
-SELECT
-  metrics.region,
-  metrics.country_code AS "countryCode",
-  COUNT(*) AS requests
-
-${fromClause}
-${whereClause}
-  AND metrics.region IS NOT NULL
-
-GROUP BY metrics.region, metrics.country_code;`;
-
-  const cityDataPromise: Promise<CityData[]> = prisma.$queryRaw`
-SELECT
-  metrics.city,
-  metrics.country_code AS "countryCode",
-  COUNT(*) AS requests
-
-${fromClause}
-${whereClause}
-  AND metrics.city IS NOT NULL
-
-GROUP BY metrics.city, metrics.country_code;`;
-
-  const versionDataPromise = prisma.metric.findFirst({
-    where: { originId },
-    orderBy: { createdAt: 'desc' },
-    select: { apilyticsVersion: true },
-  });
-
-  const [
-    prevGeneralData,
-    _generalData,
-    timeFrameData,
-    _endpointData,
-    miscData,
-    countryData,
-    regionData,
-    cityData,
-    versionData,
-  ] = await Promise.all([
+  const [prevGeneralData, _generalData] = await Promise.all([
     prevGeneralDataPromise,
     generalDataPromise,
-    timeFrameDataPromise,
-    endpointDataPromise,
-    miscDataPromise,
-    countryDataPromise,
-    regionDataPromise,
-    cityDataPromise,
-    versionDataPromise,
   ]);
 
   const { totalRequests: prevTotalRequests, totalErrors: prevTotalErrors } = prevGeneralData[0];
@@ -374,11 +212,6 @@ GROUP BY metrics.city, metrics.country_code;`;
   const prevErrorRate = Number((prevTotalErrors / prevTotalRequests).toFixed(2));
   const errorRate = Number((totalErrors / totalRequests).toFixed(2));
   const errorRateGrowth = Number((errorRate / prevErrorRate).toFixed(2));
-
-  const endpointData = _endpointData.map((endpoint) => ({
-    ...endpoint,
-    methodAndEndpoint: `${endpoint.method} ${endpoint.endpoint}`,
-  }));
 
   const generalData = {
     totalRequests,
@@ -453,37 +286,9 @@ GROUP BY metrics.city, metrics.country_code;`;
     memoryTotal: totalMemory[key],
   }));
 
-  const userAgentData = {
-    browserData: extractFromMiscData(miscData, 'browser'),
-    osData: extractFromMiscData(miscData, 'os'),
-    deviceData: extractFromMiscData(miscData, 'device'),
-  };
-
-  const geoLocationData = {
-    countryData,
-    regionData,
-    cityData,
-  };
-
-  const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
-
-  const apilyticsPackage =
-    !!identifier && !!version
-      ? {
-          identifier,
-          version,
-        }
-      : undefined;
-
   const data = {
     generalData,
-    timeFrameData,
-    endpointData,
     percentileData,
-    statusCodeData: extractFromMiscData(miscData, 'statusCode'),
-    userAgentData,
-    geoLocationData,
-    apilyticsPackage,
   };
 
   sendOk(res, { data });

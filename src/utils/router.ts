@@ -135,6 +135,17 @@ export const dynamicApiRoutes = {
   origin: ({ slug }: Slug): string => `/api/origins/${slug}`,
   originMetrics: ({ slug, ...params }: OriginMetricParams): string =>
     `/api/origins/${slug}/metrics?${new URLSearchParams(JSON.parse(JSON.stringify(params)))}`,
+  originMetricsEndpoint: ({ slug, ...params }: OriginMetricParams) =>
+    `/api/origins/${slug}/metrics/endpoint?${new URLSearchParams(params)}`,
+  originMetricsGeneral: ({ slug, ...params }: OriginMetricParams) =>
+    `/api/origins/${slug}/metrics/general?${new URLSearchParams(params)}`,
+  originMetricsGeoLocation: ({ slug, ...params }) =>
+    `/api/origins/${slug}/metrics/geolocation?${new URLSearchParams(params)}`,
+  originMetricsMisc: ({ slug, ...params }) =>
+    `/api/origins/${slug}/metrics/misc?${new URLSearchParams(params)}`,
+  originMetricsTimeFrame: ({ slug, ...params }) =>
+    `/api/origins/${slug}/metrics/timeframe?${new URLSearchParams(params)}`,
+  originMetricsVersion: ({ slug }) => `/api/origins/${slug}/metrics/version`,
   dynamicRoutes: ({ slug }: Slug): string => `/api/origins/${slug}/dynamic-routes`,
   excludedRoutes: ({ slug }: Slug): string => `/api/origins/${slug}/excluded-routes`,
   originUsers: ({ slug }: Slug): string => `/api/origins/${slug}/users`,
