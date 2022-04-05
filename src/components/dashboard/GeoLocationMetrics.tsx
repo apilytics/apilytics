@@ -10,10 +10,9 @@ import { ExternalLink } from 'components/shared/ExternalLink';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { Pagination } from 'components/shared/Pagination';
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
 import { usePagination } from 'hooks/usePagination';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
 import { getFlagEmoji, safeGet } from 'utils/helpers';
 import { formatCount } from 'utils/metrics';
@@ -42,15 +41,21 @@ export const GeoLocationMetrics: React.FC<Props> = ({
   data: { countryData, regionData, cityData },
 }) => {
   const plausible = usePlausible();
-  const { setSelectedCountry, setSelectedCountryCode, setSelectedRegion, setSelectedCity } =
-    useOrigin();
+
+  const {
+    setSelectedCountry,
+    setSelectedCountryCode,
+    setSelectedRegion,
+    setSelectedCity,
+    handleOpenModal,
+    handleCloseModal,
+  } = useContext();
 
   const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(
     METRIC_TYPES.countries,
   );
 
   const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.countries);
-  const { handleOpenModal, handleCloseModal } = useUIState();
 
   const sortData = (a: CombinedGeoLocationData, b: CombinedGeoLocationData): number =>
     b.requests - a.requests;

@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
@@ -10,89 +10,72 @@ import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
-import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
+import { MODAL_NAMES } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
+import type { OriginData } from 'types';
 
 const OriginSettings: NextPage = () => {
-  const { origin, setOrigin } = useOrigin();
-  const { name: initialName, apiKey = '', slug = '' } = origin ?? {};
-  const [name, setName] = useState('');
   const plausible = usePlausible();
+  const { handleOpenModal, handleCloseModal, origin, setOrigin } = useContext();
+  const { name: initialName, apiKey = '', slug = '' } = origin ?? {};
 
-  useEffect(() => {
-    if (initialName) {
-      setName(initialName);
-    }
-  }, [initialName]);
+  const initialFormValues = useMemo(
+    () => ({
+      name: initialName,
+      apiKey,
+      slug,
+    }),
+    [apiKey, initialName, slug],
+  );
 
   const {
     loading,
-    setLoading,
-    setSuccessMessage,
-    setErrorMessage,
-    handleOpenModal,
-    handleCloseModal,
-  } = useUIState();
+    formValues: { name },
+    setFormValues,
+    onInputChange,
+    submitForm,
+  } = useForm(initialFormValues);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  useEffect(() => {
+    setFormValues(initialFormValues);
+  }, [apiKey, initialFormValues, initialName, setFormValues, slug]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
 
-    try {
-      const res = await fetch(dynamicApiRoutes.origin({ slug }), {
+    submitForm<OriginData>({
+      url: dynamicApiRoutes.origin({ slug }),
+      options: {
         method: 'PATCH',
         body: JSON.stringify({ name }),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { message, data } = await res.json();
-
-      if (res.status === 200) {
+      },
+      successCallback: ({ data }) => {
         setOrigin(data);
-        setErrorMessage('');
-        setSuccessMessage(message);
         plausible('update-origin');
-      } else {
-        setErrorMessage(message || UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-    }
+        Router.replace(dynamicRoutes.originSettings({ slug: data.slug }));
+      },
+    });
   };
 
-  const handleConfirmDelete = async (): Promise<void> => {
+  const handleConfirmDelete = (): void => {
     handleCloseModal();
-    setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
 
-    try {
-      const res = await fetch(dynamicApiRoutes.origin({ slug }), {
+    submitForm({
+      url: dynamicApiRoutes.origin({ slug }),
+      options: {
         method: 'DELETE',
-      });
-
-      if (res.status === 204) {
-        setErrorMessage('');
+      },
+      successCallback: () => {
         plausible('delete-origin');
         Router.push(staticRoutes.origins);
-      } else {
-        const { message = UNEXPECTED_ERROR } = await res.json();
-        setErrorMessage(message);
-        setLoading(false);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-      setLoading(false);
-    }
+      },
+    });
   };
 
   const renderDeleteOriginLink = (
@@ -114,13 +97,14 @@ const OriginSettings: NextPage = () => {
           title={`Settings for ${origin?.name}`}
           onSubmit={handleSubmit}
           contentAfter={renderDeleteOriginLink}
+          loading={loading}
         >
           <Input
             name="name"
             label="Origin name"
             helperText='E.g. "example.api.com" or "Internal REST API"'
             value={name}
-            onChange={({ target }): void => setName(target.value)}
+            onChange={onInputChange}
             required
           />
           <ApiKeyField value={apiKey} />

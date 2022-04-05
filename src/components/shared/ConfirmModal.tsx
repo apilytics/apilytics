@@ -4,7 +4,7 @@ import React from 'react';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
-import { useUIState } from 'hooks/useUIState';
+import { useContext } from 'hooks/useContext';
 import type { MODAL_NAMES } from 'utils/constants';
 
 interface Props {
@@ -23,7 +23,7 @@ export const ConfirmModal: React.FC<Props> = ({
   dangerAction,
   children,
 }) => {
-  const { handleCloseModal } = useUIState();
+  const { handleCloseModal } = useContext();
 
   return (
     <Modal name={name}>

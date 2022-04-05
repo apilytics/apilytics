@@ -1,6 +1,6 @@
 import { PlusIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
@@ -8,58 +8,40 @@ import { Button } from 'components/shared/Button';
 import { ConfirmModal } from 'components/shared/ConfirmModal';
 import { OriginMenu } from 'components/shared/OriginMenu';
 import { withAuth } from 'hocs/withAuth';
-import { useAccount } from 'hooks/useAccount';
+import { useContext } from 'hooks/useContext';
+import { useFetch } from 'hooks/useFetch';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
-import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
+import { MODAL_NAMES } from 'utils/constants';
 import { formatCount } from 'utils/metrics';
 import { dynamicApiRoutes, dynamicRoutes, staticApiRoutes, staticRoutes } from 'utils/router';
-import type { OriginInviteData } from 'types';
+import type { OriginInviteData, OriginListItem } from 'types';
 
 const Origins: NextPage = () => {
-  const { origins, setOrigins, originInvites, setOriginInvites } = useAccount();
+  const {
+    data: origins = [],
+    loading,
+    fetcher: refetchOrigins,
+  } = useFetch<OriginListItem[]>({ url: staticApiRoutes.origins });
+
   const [selectedOriginInvite, setSelectedOriginInvite] = useState<OriginInviteData | null>(null);
+  const { submitForm } = useForm();
   const plausible = usePlausible();
 
   const {
-    loading,
-    setLoading,
-    setSuccessMessage,
-    setErrorMessage,
+    originInvites,
     handleOpenModal,
     handleCloseModal: _handleCloseModal,
-  } = useUIState();
-
-  const fetchOrigins = useCallback(async (): Promise<void> => {
-    setLoading(true);
-
-    try {
-      const res = await fetch(staticApiRoutes.origins);
-
-      if (res.status === 200) {
-        const { data } = await res.json();
-        setOrigins(data);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-    }
-  }, [setErrorMessage, setLoading, setOrigins]);
-
-  useEffect(() => {
-    fetchOrigins();
-  }, [fetchOrigins]);
+    setSuccessMessage,
+    setOriginInvites,
+  } = useContext();
 
   const handleCloseModal = (): void => {
     setSelectedOriginInvite(null);
     _handleCloseModal();
   };
 
-  const handleConfirmInvite = (accept: boolean) => async (): Promise<void> => {
-    setLoading(true);
-    setErrorMessage('');
-
+  const handleConfirmInvite = (accept: boolean) => (): void => {
     const { id = '', role, originSlug = '' } = selectedOriginInvite ?? {};
 
     const payload = {
@@ -68,35 +50,23 @@ const Origins: NextPage = () => {
       accept,
     };
 
-    try {
-      const res = await fetch(
-        dynamicApiRoutes.originInvite({ slug: originSlug, originInviteId: id }),
-        {
-          method: 'DELETE',
-          body: JSON.stringify(payload),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+    submitForm({
+      url: dynamicApiRoutes.originInvite({ slug: originSlug, originInviteId: id }),
+      options: {
+        method: 'DELETE',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
-
-      if (res.status === 204) {
-        setErrorMessage('');
+      },
+      successCallback: (): void => {
         setSuccessMessage(`Invite ${accept ? 'accepted' : 'rejected'} successfully.`);
         setOriginInvites([...originInvites].filter((invite) => invite.id !== id));
-        fetchOrigins();
+        refetchOrigins();
+        handleCloseModal();
         plausible('origin-invite-accepted');
-      } else {
-        const { message = UNEXPECTED_ERROR } = await res.json();
-        setErrorMessage(message);
-        setLoading(false);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-      setLoading(false);
-    } finally {
-      handleCloseModal();
-    }
+      },
+    });
   };
 
   const renderSkeletonRow = (
@@ -155,7 +125,14 @@ const Origins: NextPage = () => {
             <div className="card rounded-lg bg-base-100 px-4 py-2 hover:bg-gray-700" key={name}>
               <div className="flex items-center justify-between">
                 <div>
-                  <h6>{name}</h6>
+                  <h6 className="flex flex-wrap items-center gap-2">
+                    {name}
+                    {userRole && (
+                      <div className="badge badge-sm badge-primary badge-outline capitalize">
+                        {userRole}
+                      </div>
+                    )}
+                  </h6>
                   <div className="flex gap-4 text-sm">
                     <p>
                       <span className="text-white">{formatCount(lastDayMetrics)}</span> requests in

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 
 import { Alert } from 'components/shared/Alert';
-import { useUIState } from 'hooks/useUIState';
+import { useContext } from 'hooks/useContext';
 
 export const UIAlerts: React.FC = () => {
-  const { successMessage, setSuccessMessage, errorMessage, setErrorMessage } = useUIState();
+  const { successMessage, setSuccessMessage, errorMessage, setErrorMessage } = useContext();
 
   useEffect(() => {
     return () => {

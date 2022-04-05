@@ -13,8 +13,8 @@ import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
 import { EmailListForm } from 'components/shared/EmailListForm';
 import { withUser } from 'hocs/withUser';
+import { useContext } from 'hooks/useContext';
 import { useDashboardQuery } from 'hooks/useDashboardQuery';
-import { useOrigin } from 'hooks/useOrigin';
 import { usePlausible } from 'hooks/usePlausible';
 import { EVENT_LOCATIONS, MOCK_ORIGIN } from 'utils/constants';
 import { getMockMetrics } from 'utils/metrics';
@@ -38,7 +38,7 @@ const Demo: NextPage = () => {
     selectedRegion: region,
     selectedCity: city,
     setOrigin,
-  } = useOrigin();
+  } = useContext();
 
   setOrigin(MOCK_ORIGIN);
 

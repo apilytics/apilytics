@@ -3,7 +3,7 @@ import type { ParsedUrlQuery } from 'querystring';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
 import { TIME_FRAME_OPTIONS } from 'utils/constants';
 import type { TimeFrame } from 'types';
 
@@ -24,7 +24,7 @@ export const useDashboardQuery = (requireSlug?: boolean): void => {
     setSelectedOs,
     selectedDevice,
     setSelectedDevice,
-  } = useOrigin();
+  } = useContext();
 
   // Initialize filters from existing URL parameters.
   useEffect(() => {

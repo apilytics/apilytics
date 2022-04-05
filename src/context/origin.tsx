@@ -1,12 +1,10 @@
 import { useRouter } from 'next/router';
-import { createContext, useState } from 'react';
+import { useState } from 'react';
 
 import { WEEK_DAYS } from 'utils/constants';
-import type { OriginContextType, OriginData, OriginMetrics, TimeFrame } from 'types';
+import type { OriginContextType, OriginData, TimeFrame } from 'types';
 
-export const OriginContext = createContext<OriginContextType | null>(null);
-
-export const OriginProvider: React.FC = ({ children }) => {
+export const _useOriginContext = (): OriginContextType => {
   const {
     query: { slug: _slug, showApiKey: _showApiKey },
   } = useRouter();
@@ -14,9 +12,8 @@ export const OriginProvider: React.FC = ({ children }) => {
   const slug = String(_slug ?? '');
   const showApiKey = String(_showApiKey ?? '');
 
-  const [timeFrame, setTimeFrame] = useState<TimeFrame>(() => WEEK_DAYS);
+  const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
   const [origin, setOrigin] = useState<OriginData | null>(null);
-  const [metrics, setMetrics] = useState<OriginMetrics | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>();
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>();
   const [selectedStatusCode, setSelectedStatusCode] = useState<string>();
@@ -28,13 +25,11 @@ export const OriginProvider: React.FC = ({ children }) => {
   const [selectedRegion, setSelectedRegion] = useState<string>();
   const [selectedCity, setSelectedCity] = useState<string>();
 
-  const value = {
+  return {
     slug,
     showApiKey,
     origin,
     setOrigin,
-    metrics,
-    setMetrics,
     timeFrame,
     setTimeFrame,
     selectedMethod,
@@ -58,6 +53,4 @@ export const OriginProvider: React.FC = ({ children }) => {
     selectedCity,
     setSelectedCity,
   };
-
-  return <OriginContext.Provider value={value}>{children}</OriginContext.Provider>;
 };

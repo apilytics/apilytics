@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import type { MouseEvent } from 'react';
 
-import { useUIState } from 'hooks/useUIState';
+import { useContext } from 'hooks/useContext';
 import type { MODAL_NAMES } from 'utils/constants';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const _Modal: React.FC<Props> = ({ name, mobileFullscreen, onClose, children }) => {
-  const { modal, handleCloseModal } = useUIState();
+  const { modal, handleCloseModal } = useContext();
   const open = modal === name;
   const modalRef = useRef<HTMLDivElement>(null);
   const [el] = useState(() => document.createElement('div'));
@@ -76,4 +76,4 @@ const _Modal: React.FC<Props> = ({ name, mobileFullscreen, onClose, children }) 
   return open ? ReactDOM.createPortal(renderModal, el) : null;
 };
 
-export const Modal = dynamic<Props>(() => Promise.resolve(_Modal), { ssr: false });
+export const Modal = dynamic(() => Promise.resolve(_Modal), { ssr: false });

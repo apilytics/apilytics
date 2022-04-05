@@ -7,7 +7,7 @@ import { VersionInfo } from 'components/dashboard/VersionInfo';
 import { Button } from 'components/shared/Button';
 import { OriginMenu } from 'components/shared/OriginMenu';
 import { Select } from 'components/shared/Select';
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
 import { usePlausible } from 'hooks/usePlausible';
 import { ORIGIN_ROLES, TIME_FRAME_OPTIONS } from 'utils/constants';
 import { getFlagEmoji, truncateString } from 'utils/helpers';
@@ -48,7 +48,7 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
     setSelectedRegion,
     selectedCity,
     setSelectedCity,
-  } = useOrigin();
+  } = useContext();
 
   const { name, userRole, userCount, dynamicRouteCount, excludedRouteCount } = origin ?? {};
 
@@ -67,7 +67,7 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
       <h6 className="-mr-2 text-white">
         {name}
         {userRole && (
-          <div className="badge badge badge-primary badge-outline ml-2 capitalize">{userRole}</div>
+          <div className="badge badge-primary badge-outline ml-2 capitalize">{userRole}</div>
         )}
       </h6>
       {!!apilyticsPackage && <VersionInfo apilyticsPackage={apilyticsPackage} />}

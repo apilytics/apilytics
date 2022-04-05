@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import type { NextPage } from 'next';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { FormEvent } from 'react';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { CTASection } from 'components/shared/CTASection';
@@ -9,55 +9,33 @@ import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { TextArea } from 'components/shared/TextArea';
 import { withUser } from 'hocs/withUser';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
-import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 
-const initialFormValues = {
-  email: '',
-  message: '',
-};
-
 const Contact: NextPage = () => {
-  const { setLoading, setSuccessMessage, setErrorMessage } = useUIState();
-  const [formValues, setFormValues] = useState(initialFormValues);
+  const { loading, formValues, onInputChange, submitForm } = useForm({
+    email: '',
+    message: '',
+  });
+
   const plausible = usePlausible();
 
-  const handleSubmit = async (e: FormEvent): Promise<void> => {
+  const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
-    setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
 
-    try {
-      const res = await fetch(staticApiRoutes.contact, {
+    submitForm({
+      url: staticApiRoutes.contact,
+      options: {
         method: 'POST',
         body: JSON.stringify(formValues),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { message } = await res.json();
-
-      if (res.status === 200) {
-        setFormValues(initialFormValues);
-        setErrorMessage('');
-        setSuccessMessage(message);
-        plausible('contact-message');
-      } else {
-        setErrorMessage(UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-    }
+      },
+      successCallback: (): void => plausible('contact-message'),
+    });
   };
-
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void =>
-    setFormValues({ ...formValues, [target.name]: target.value });
 
   const renderSubTitle = (
     <>
@@ -75,12 +53,17 @@ const Contact: NextPage = () => {
       }}
     >
       <div className="card rounded-lg bg-base-100 p-4 shadow">
-        <Form title="Send us a message" subTitle={renderSubTitle} onSubmit={handleSubmit}>
+        <Form
+          title="Send us a message"
+          subTitle={renderSubTitle}
+          onSubmit={handleSubmit}
+          loading={loading}
+        >
           <Input
             type="email"
             name="email"
             value={formValues.email}
-            onChange={handleChange}
+            onChange={onInputChange}
             label="Your email"
             required
           />
@@ -88,7 +71,7 @@ const Contact: NextPage = () => {
             name="message"
             label="Your message"
             value={formValues.message}
-            onChange={handleChange}
+            onChange={onInputChange}
             required
           />
         </Form>

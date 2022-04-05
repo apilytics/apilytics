@@ -94,15 +94,31 @@ export const INDEXABLE_ROUTES = [
   ...MISC_INDEXABLE_ROUTES,
 ];
 
-type DynamicRoutes = Record<string, (args: Record<string, string>) => string>;
+type Slug = { slug: string };
+type OriginUserId = { originUserId: string };
+type OriginInviteId = { originInviteId: string };
 
-export const dynamicRoutes: DynamicRoutes = {
-  origin: ({ slug }) => `/origins/${slug}`,
-  originSettings: ({ slug }) => `/origins/${slug}/settings`,
-  originDynamicRoutes: ({ slug }) => `/origins/${slug}/dynamic-routes`,
-  originExcludedRoutes: ({ slug }) => `/origins/${slug}/excluded-routes`,
-  originUsers: ({ slug }) => `/origins/${slug}/users`,
-  blog: ({ slug }) => `/blog/${slug}`,
+interface OriginMetricParams extends Slug {
+  from: string;
+  to: string;
+  method: string;
+  endpoint: string;
+  statusCode: string;
+  browser: string;
+  os: string;
+  device: string;
+  country: string;
+  region: string;
+  city: string;
+}
+
+export const dynamicRoutes = {
+  origin: ({ slug }: Slug): string => `/origins/${slug}`,
+  originSettings: ({ slug }: Slug): string => `/origins/${slug}/settings`,
+  originDynamicRoutes: ({ slug }: Slug): string => `/origins/${slug}/dynamic-routes`,
+  originExcludedRoutes: ({ slug }: Slug): string => `/origins/${slug}/excluded-routes`,
+  originUsers: ({ slug }: Slug): string => `/origins/${slug}/users`,
+  blog: ({ slug }: Slug): string => `/blog/${slug}`,
 };
 
 export const staticApiRoutes = {
@@ -115,14 +131,16 @@ export const staticApiRoutes = {
   contact: '/api/contact',
 };
 
-export const dynamicApiRoutes: DynamicRoutes = {
-  origin: ({ slug }) => `/api/origins/${slug}`,
-  originMetrics: ({ slug, ...params }) =>
-    `/api/origins/${slug}/metrics?${new URLSearchParams(params)}`,
-  dynamicRoutes: ({ slug }) => `/api/origins/${slug}/dynamic-routes`,
-  excludedRoutes: ({ slug }) => `/api/origins/${slug}/excluded-routes`,
-  originUsers: ({ slug }) => `/api/origins/${slug}/users`,
-  originUser: ({ slug, originUserId }) => `/api/origins/${slug}/users/${originUserId}`,
-  originInvites: ({ slug }) => `/api/origins/${slug}/invites`,
-  originInvite: ({ slug, originInviteId }) => `/api/origins/${slug}/invites/${originInviteId}`,
-};
+export const dynamicApiRoutes = {
+  origin: ({ slug }: Slug): string => `/api/origins/${slug}`,
+  originMetrics: ({ slug, ...params }: OriginMetricParams): string =>
+    `/api/origins/${slug}/metrics?${new URLSearchParams(JSON.parse(JSON.stringify(params)))}`,
+  dynamicRoutes: ({ slug }: Slug): string => `/api/origins/${slug}/dynamic-routes`,
+  excludedRoutes: ({ slug }: Slug): string => `/api/origins/${slug}/excluded-routes`,
+  originUsers: ({ slug }: Slug): string => `/api/origins/${slug}/users`,
+  originUser: ({ slug, originUserId }: Slug & OriginUserId): string =>
+    `/api/origins/${slug}/users/${originUserId}`,
+  originInvites: ({ slug }: Slug): string => `/api/origins/${slug}/invites`,
+  originInvite: ({ slug, originInviteId }: Slug & OriginInviteId): string =>
+    `/api/origins/${slug}/invites/${originInviteId}`,
+} as const;

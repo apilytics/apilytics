@@ -10,9 +10,7 @@ import { SessionProvider } from 'next-auth/react';
 import PlausibleProvider from 'next-plausible';
 import type { AppProps } from 'next/app';
 
-import { AccountProvider } from 'context/account';
-import { OriginProvider } from 'context/origin';
-import { UIStateProvider } from 'context/uiState';
+import { RootContextProvider } from 'context';
 import { FRONTEND_URL } from 'utils/router';
 
 dayjs.extend(localizedFormat);
@@ -22,13 +20,9 @@ const FRONTEND_DOMAIN = new URL(FRONTEND_URL).host;
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => (
   <PlausibleProvider domain={FRONTEND_DOMAIN} enabled={process.env.VERCEL_ENV === 'production'}>
     <SessionProvider>
-      <AccountProvider>
-        <OriginProvider>
-          <UIStateProvider>
-            <Component {...pageProps} />
-          </UIStateProvider>
-        </OriginProvider>
-      </AccountProvider>
+      <RootContextProvider>
+        <Component {...pageProps} />
+      </RootContextProvider>
     </SessionProvider>
   </PlausibleProvider>
 );

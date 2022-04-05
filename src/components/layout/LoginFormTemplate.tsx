@@ -6,9 +6,9 @@ import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
+import { useContext } from 'hooks/useContext';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
-import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes, staticRoutes } from 'utils/router';
 import type { FormProps, PlausibleEvents } from 'types';
 
@@ -31,9 +31,20 @@ export const LoginFormTemplate: React.FC<Props> = ({
   initialError = '',
   csrfToken,
 }) => {
-  const { setLoading, setErrorMessage } = useUIState();
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const {
+    loading,
+    formValues: { email },
+    setFormValues,
+    submitted,
+    setSubmitted,
+    onInputChange,
+    submitForm,
+  } = useForm({
+    email: '',
+  });
+
+  const [submittedEmail, setSubmittedEmail] = useState('');
+  const { setErrorMessage } = useContext();
   const plausible = usePlausible();
   const headProps = { title, description, indexable: true };
 
@@ -41,34 +52,29 @@ export const LoginFormTemplate: React.FC<Props> = ({
     setErrorMessage(initialError);
   }, [initialError, setErrorMessage]);
 
-  const handleSubmit = async (e: FormEvent): Promise<void> => {
+  const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
-    setLoading(true);
-    setSubmitted(false);
-    setErrorMessage('');
     const body = new URLSearchParams({ csrfToken, email, callbackUrl: staticRoutes.root });
 
-    try {
-      const res = await fetch(staticApiRoutes.emailSignIn, {
+    submitForm({
+      url: staticApiRoutes.emailSignIn,
+      options: {
         method: 'POST',
         body,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-      });
-
-      if (res.status === 200) {
-        setErrorMessage('');
-        setSubmitted(true);
+      },
+      successCallback: (): void => {
+        setSubmittedEmail(email);
         plausible(plausibleEvent);
-      } else {
-        setErrorMessage(UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-    }
+      },
+    });
+  };
+
+  const handleClickSendAgain = (): void => {
+    setSubmitted(false);
+    setFormValues({ email: submittedEmail });
   };
 
   if (submitted) {
@@ -83,7 +89,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
           again and check your spam folder. <Link href={staticRoutes.contact}>Contact us</Link> if
           the problem still persists.
         </p>
-        <Button className="btn-outline btn-primary mt-4" onClick={(): void => setSubmitted(false)}>
+        <Button className="btn-outline btn-primary mt-4" onClick={handleClickSendAgain}>
           Send again
         </Button>
       </MainTemplate>
@@ -98,12 +104,13 @@ export const LoginFormTemplate: React.FC<Props> = ({
           subTitle={subTitle}
           contentAfter={contentAfter}
           onSubmit={handleSubmit}
+          loading={loading}
         >
           <Input
             type="email"
             name="email"
             value={email}
-            onChange={({ target }): void => setEmail(target.value)}
+            onChange={onInputChange}
             label="Email"
             required
           />

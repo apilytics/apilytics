@@ -7,25 +7,25 @@ import type { FormProps } from 'types';
 
 interface Props extends FormProps {
   label: string;
-  value: string;
+  routeName: string;
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   helperText?: JSX.Element;
 }
 
 export const RouteForm: React.FC<Props> = ({
   label,
-  value,
+  routeName,
   onInputChange,
   helperText,
   ...formProps
 }) => (
   <Form {...formProps}>
     <Input
-      name="route"
+      name="routeName"
       label={label}
       placeholder="/foo/<id>/bar"
       helperText={helperText}
-      value={value}
+      value={routeName}
       onChange={onInputChange}
       required
     />

@@ -7,9 +7,8 @@ import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
 import { safeGet } from 'utils/helpers';
 import { formatCount } from 'utils/metrics';
@@ -37,11 +36,17 @@ interface Props {
 export const UserAgentMetrics: React.FC<Props> = ({
   data: { browserData, osData, deviceData },
 }) => {
+  const {
+    setSelectedBrowser,
+    setSelectedOs,
+    setSelectedDevice,
+    handleOpenModal,
+    handleCloseModal,
+  } = useContext();
+
   const plausible = usePlausible();
-  const { setSelectedBrowser, setSelectedOs, setSelectedDevice } = useOrigin();
   const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.browsers);
   const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.browsers);
-  const { handleOpenModal, handleCloseModal } = useUIState();
 
   const sortData = (a: CombinedUserAgentData, b: CombinedUserAgentData): number =>
     b.requests - a.requests;

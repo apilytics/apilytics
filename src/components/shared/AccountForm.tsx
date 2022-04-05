@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import type { User } from '@prisma/client';
 
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { Select } from 'components/shared/Select';
 import { TextArea } from 'components/shared/TextArea';
-import { useAccount } from 'hooks/useAccount';
+import { useContext } from 'hooks/useContext';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
-import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 
 interface Props {
@@ -16,69 +16,61 @@ interface Props {
 }
 
 export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
-  const { user, setUser } = useAccount();
-  const { setLoading, setSuccessMessage, setErrorMessage } = useUIState();
+  const { user, setUser } = useContext();
+  const { name, email, usedTechnologies, intendedUse } = user ?? {};
   const plausible = usePlausible();
 
-  const [formValues, setFormValues] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    usedTechnologies: user?.usedTechnologies || '',
-    intendedUse: user?.intendedUse || '',
-  });
+  const initialFormValues = useMemo(
+    () => ({
+      name,
+      email,
+      usedTechnologies,
+      intendedUse,
+    }),
+    [email, intendedUse, name, usedTechnologies],
+  );
 
-  const handleChange = ({
-    target,
-  }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void =>
-    setFormValues({ ...formValues, [target.name]: target.value });
+  const { loading, onInputChange, formValues, setFormValues, submitForm } =
+    useForm(initialFormValues);
+
+  useEffect(() => {
+    setFormValues(initialFormValues);
+  }, [initialFormValues, setFormValues]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
 
-    try {
-      const res = await fetch(staticApiRoutes.user, {
+    submitForm<User>({
+      url: staticApiRoutes.user,
+      options: {
         method: 'PUT',
         body: JSON.stringify(formValues),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { data, message } = await res.json();
-
-      if (res.status === 200) {
-        setErrorMessage('');
-        setSuccessMessage(message);
+      },
+      successCallback: ({ data }): void => {
         plausible('update-account');
         setUser(data);
-      } else {
-        setErrorMessage(message || UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-    }
+      },
+    });
   };
 
   return (
-    <Form title={title} onSubmit={handleSubmit}>
+    <Form title={title} onSubmit={handleSubmit} loading={loading}>
       <Input
         name="name"
         label="Account name"
         helperText="This can be either your organization name or your personal one."
         value={formValues.name}
-        onChange={handleChange}
+        onChange={onInputChange}
         required
       />
       <Input
         name="email"
         label="Your email"
         value={formValues.email}
-        onChange={handleChange}
+        onChange={onInputChange}
         required
       />
       {isSignUp && (
@@ -86,7 +78,7 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
           name="usedTechnologies"
           label="What languages and frameworks do you plan to use with Apilytics?"
           value={formValues.usedTechnologies}
-          onChange={handleChange}
+          onChange={onInputChange}
           required
         />
       )}
@@ -101,7 +93,7 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
           <Select
             name="intendedUse"
             value={formValues.intendedUse}
-            onChange={handleChange}
+            onChange={onInputChange}
             required
           >
             <option value="">---</option>

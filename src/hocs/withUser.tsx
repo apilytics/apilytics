@@ -1,40 +1,24 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import type { User } from '@prisma/client';
 import type { NextPage } from 'next';
 
-import { useAccount } from 'hooks/useAccount';
-import { useUIState } from 'hooks/useUIState';
-import { UNEXPECTED_ERROR } from 'utils/constants';
+import { useContext } from 'hooks/useContext';
+import { useFetch } from 'hooks/useFetch';
 import { staticApiRoutes } from 'utils/router';
+import type { OriginInviteData } from 'types';
 
 export const withUser = <T extends Record<string, unknown>>(
   PageComponent: NextPage<T>,
 ): NextPage<T> => {
   const WithUser: NextPage<T> = (pageProps: T) => {
-    const { setUser, setOriginInvites } = useAccount();
-    const { setErrorMessage } = useUIState();
+    const { setUser, setOriginInvites } = useContext();
 
-    useEffect(() => {
-      (async (): Promise<void> => {
-        try {
-          const [userRes, originInviteRes] = await Promise.all([
-            fetch(staticApiRoutes.user),
-            fetch(staticApiRoutes.originInvites),
-          ]);
+    useFetch<User>({ url: staticApiRoutes.user, successCallback: ({ data }) => setUser(data) });
 
-          if (userRes.status === 200 && originInviteRes.status === 200) {
-            const [{ data: userData }, { data: originInviteData }] = await Promise.all([
-              userRes.json(),
-              originInviteRes.json(),
-            ]);
-
-            setUser(userData);
-            setOriginInvites(originInviteData);
-          }
-        } catch {
-          setErrorMessage(UNEXPECTED_ERROR);
-        }
-      })();
-    }, [setErrorMessage, setOriginInvites, setUser]);
+    useFetch<OriginInviteData[]>({
+      url: staticApiRoutes.originInvites,
+      successCallback: ({ data }) => setOriginInvites(data),
+    });
 
     return <PageComponent {...pageProps} />;
   };

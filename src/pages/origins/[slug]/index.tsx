@@ -20,21 +20,20 @@ import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
+import { useContext } from 'hooks/useContext';
 import { useDashboardQuery } from 'hooks/useDashboardQuery';
-import { useOrigin } from 'hooks/useOrigin';
-import { useUIState } from 'hooks/useUIState';
-import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
+import { useFetch } from 'hooks/useFetch';
+import { MODAL_NAMES } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
+import type { OriginMetrics } from 'types';
 
-const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm:ss';
+const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm';
 
 const Origin: NextPage = () => {
   const {
     slug,
     showApiKey,
     origin,
-    metrics,
-    setMetrics,
     timeFrame,
     selectedMethod: method = '',
     setSelectedMethod,
@@ -54,78 +53,51 @@ const Origin: NextPage = () => {
     setSelectedRegion,
     selectedCity: city = '',
     setSelectedCity,
-  } = useOrigin();
+  } = useContext();
 
-  const {
-    loading,
-    setLoading,
-    setErrorMessage,
-    notFound,
-    setNotFound,
-    handleOpenModal,
-    handleCloseModal,
-  } = useUIState();
-
+  const { data: metrics, loading, notFound, fetcher: fetchMetrics } = useFetch<OriginMetrics>();
+  const { handleOpenModal, handleCloseModal } = useContext();
   const { pathname, query, replace } = useRouter();
-  const apiKey = origin?.apiKey || '';
+  const apiKey = origin?.apiKey ?? '';
   const maxWidth = 'max-w-6xl';
 
   useDashboardQuery(true);
 
   useEffect(() => {
     if (slug) {
-      (async (): Promise<void> => {
-        setLoading(true);
-        const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
-        const to = dayjs().format(REQUEST_TIME_FORMAT);
+      const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
+      const to = dayjs().format(REQUEST_TIME_FORMAT);
 
-        try {
-          const res = await fetch(
-            dynamicApiRoutes.originMetrics({
-              slug,
-              from,
-              to,
-              method,
-              endpoint,
-              statusCode,
-              browser,
-              os,
-              device,
-              country,
-              region,
-              city,
-            }),
-          );
+      const url = dynamicApiRoutes.originMetrics({
+        slug,
+        from,
+        to,
+        method,
+        endpoint,
+        statusCode,
+        browser,
+        os,
+        device,
+        country,
+        region,
+        city,
+      });
 
-          if (res.status === 200) {
-            const { data } = await res.json();
-            setMetrics(data);
-          } else {
-            setNotFound(true);
-          }
-        } catch {
-          setErrorMessage(UNEXPECTED_ERROR);
-        } finally {
-          setLoading(false);
-        }
-      })();
+      fetchMetrics({ url });
     }
   }, [
     endpoint,
     method,
-    setMetrics,
     slug,
     statusCode,
     timeFrame,
     browser,
     os,
     device,
-    setLoading,
-    setErrorMessage,
-    setNotFound,
     country,
     region,
     city,
+    fetchMetrics,
   ]);
 
   useEffect(() => {
