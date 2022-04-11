@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import type { FormEvent } from 'react';
 
-import { MainTemplate } from 'components/layout/MainTemplate';
-import { BackButton } from 'components/shared/BackButton';
+import { OriginSettingsTemplate } from 'components/layout/OriginSettingsTemplate';
 import { ConfirmModal } from 'components/shared/ConfirmModal';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
@@ -14,8 +13,8 @@ import { useContext } from 'hooks/useContext';
 import { useFetch } from 'hooks/useFetch';
 import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { MODAL_NAMES } from 'utils/constants';
-import { dynamicApiRoutes, dynamicRoutes } from 'utils/router';
+import { MODAL_NAMES, ORIGIN_MENU_KEYS } from 'utils/constants';
+import { dynamicApiRoutes } from 'utils/router';
 import type { PlausibleEvents, RouteData } from 'types';
 
 const initialFormValues = {
@@ -152,8 +151,7 @@ const OriginExcludedRoutes: NextPage = () => {
   };
 
   const renderRoutes = (
-    <div className="card rounded-lg bg-base-100 p-4 shadow">
-      <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
+    <>
       <h5 className="text-white">Excluded routes for {origin?.name}</h5>
       {loading ? (
         <div className="mt-2 flex flex-col gap-3">
@@ -183,7 +181,7 @@ const OriginExcludedRoutes: NextPage = () => {
         </div>
       )}
       <RouteForm {...formProps} label="Add new excluded route" onSubmit={handleSubmitAddRoute} />
-    </div>
+    </>
   );
 
   const renderEditRouteModal = (
@@ -222,13 +220,14 @@ const OriginExcludedRoutes: NextPage = () => {
   );
 
   return (
-    <MainTemplate
+    <OriginSettingsTemplate
       headProps={{ title: origin?.name ? `Excluded routes for ${origin.name}` : 'Loading...' }}
+      activeItem={ORIGIN_MENU_KEYS.EXCLUDED_ROUTES}
     >
       {renderRoutes}
       {renderEditRouteModal}
       {renderDeleteRouteModal}
-    </MainTemplate>
+    </OriginSettingsTemplate>
   );
 };
 
