@@ -75,7 +75,6 @@ interface Props {
 
 export const VersionInfo: React.FC<Props> = ({ apilyticsPackage }) => {
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
-
   const packageInfo = APILYTICS_PACKAGES[apilyticsPackage.identifier];
 
   useEffect(() => {
@@ -98,7 +97,6 @@ export const VersionInfo: React.FC<Props> = ({ apilyticsPackage }) => {
   }
 
   const isUpToDate = isFirstVersionGreater(apilyticsPackage.version, latestVersion);
-
   const tooltipNote = isUpToDate ? '(latest version)' : `(Note! v${latestVersion} available)`;
 
   const renderIcon = isUpToDate ? (

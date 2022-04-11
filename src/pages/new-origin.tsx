@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
@@ -7,61 +7,57 @@ import { BackButton } from 'components/shared/BackButton';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { withAuth } from 'hocs/withAuth';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
-import { UNEXPECTED_ERROR } from 'utils/constants';
 import { dynamicRoutes, staticApiRoutes, staticRoutes } from 'utils/router';
+import type { OriginData } from 'types';
 
 const NewOrigin: NextPage = () => {
-  const { setLoading, setErrorMessage } = useUIState();
-  const [name, setName] = useState('');
+  const {
+    loading,
+    formValues: { name },
+    onInputChange,
+    submitForm,
+  } = useForm({
+    name: '',
+  });
+
   const plausible = usePlausible();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setLoading(true);
-    setErrorMessage('');
 
-    try {
-      const res = await fetch(staticApiRoutes.origins, {
+    submitForm<OriginData>({
+      url: staticApiRoutes.origins,
+      options: {
         method: 'POST',
         body: JSON.stringify({ name }),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { message, data } = await res.json();
-
-      if (res.status === 201) {
-        setErrorMessage('');
+      },
+      successCallback: ({ data: { slug } }): void => {
         plausible('new-origin');
 
         Router.push({
-          pathname: dynamicRoutes.origin({ slug: data.slug }),
+          pathname: dynamicRoutes.origin({ slug }),
           query: { showApiKey: true },
         });
-      } else {
-        setErrorMessage(message || UNEXPECTED_ERROR);
-        setLoading(false);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-      setLoading(false);
-    }
+      },
+    });
   };
 
   return (
     <MainTemplate headProps={{ title: 'New origin' }}>
       <div className="card rounded-lg bg-base-100 p-4 shadow">
         <BackButton linkTo={staticRoutes.origins} text="Origins" />
-        <Form title="Add new origin" onSubmit={handleSubmit}>
+        <Form title="Add new origin" onSubmit={handleSubmit} loading={loading}>
           <Input
             name="name"
             label="Origin name"
             helperText='E.g. "example.api.com" or "Internal REST API"'
             value={name}
-            onChange={({ target }): void => setName(target.value)}
+            onChange={onInputChange}
             required
           />
         </Form>

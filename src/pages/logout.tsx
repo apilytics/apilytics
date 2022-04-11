@@ -4,12 +4,12 @@ import type { NextPage } from 'next';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { Button } from 'components/shared/Button';
-import { useAccount } from 'hooks/useAccount';
+import { useContext } from 'hooks/useContext';
 import { usePlausible } from 'hooks/usePlausible';
 import { staticRoutes } from 'utils/router';
 
 const Logout: NextPage = () => {
-  const { user } = useAccount();
+  const { user } = useContext();
   const plausible = usePlausible();
 
   useEffect(() => {

@@ -6,9 +6,8 @@ import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
 import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
 import { formatCount } from 'utils/metrics';
 import type { StatusCodeData } from 'types';
@@ -19,8 +18,7 @@ interface Props {
 
 export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
   const plausible = usePlausible();
-  const { setSelectedStatusCode } = useOrigin();
-  const { handleOpenModal, handleCloseModal } = useUIState();
+  const { setSelectedStatusCode, handleOpenModal, handleCloseModal } = useContext();
   const data = [..._data.sort((a, b) => b.requests - a.requests)];
   const truncatedData = data.slice(0, 10);
 

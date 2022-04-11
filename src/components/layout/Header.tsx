@@ -16,7 +16,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import { Button } from 'components/shared/Button';
-import { useAccount } from 'hooks/useAccount';
+import { useContext } from 'hooks/useContext';
 import { usePlausible } from 'hooks/usePlausible';
 import { DEFAULT_MAX_WIDTH, EVENT_LOCATIONS } from 'utils/constants';
 import { truncateString } from 'utils/helpers';
@@ -110,7 +110,7 @@ const MENU_ITEMS = [
 
 export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) => {
   const plausible = usePlausible();
-  const { accountComplete, user } = useAccount();
+  const { accountComplete, user } = useContext();
   const maxWidthForNotAuthenticated = maxWidth !== DEFAULT_MAX_WIDTH ? maxWidth : 'max-w-5xl';
 
   const eventOptions = { location: EVENT_LOCATIONS.HEADER };

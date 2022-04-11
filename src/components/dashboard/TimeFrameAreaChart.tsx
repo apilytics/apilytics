@@ -4,7 +4,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'rec
 import type { TooltipProps } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
 import {
   DAY,
   MONTH_DAYS,
@@ -27,7 +27,7 @@ interface Props {
 }
 
 export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, color }) => {
-  const { timeFrame } = useOrigin();
+  const { timeFrame } = useContext();
   const scope = getTimeFrameScope(timeFrame);
 
   // Make sure the data contains points in time for the whole specified time frame.

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import React from 'react';
 
 import { IconButton } from 'components/shared/IconButton';
+import { useContext } from 'hooks/useContext';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
 import { staticRoutes } from 'utils/router';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 
 export const ApiKeyField: React.FC<Props> = ({ value, onClickCallback }) => {
   const plausible = usePlausible();
-  const { setSuccessMessage } = useUIState();
+  const { setSuccessMessage } = useContext();
 
   const onClick = (): void => {
     navigator.clipboard.writeText(value);

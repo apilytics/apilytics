@@ -1,47 +1,40 @@
 import React, { useState } from 'react';
 
 import { Button } from 'components/shared/Button';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { UNEXPECTED_ERROR } from 'utils/constants';
 import { staticApiRoutes } from 'utils/router';
 
 export const EmailListForm: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+  const {
+    loading,
+    formValues: { email },
+    onInputChange,
+    submitForm,
+  } = useForm({ email: '' });
+
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [email, setEmail] = useState('');
   const plausible = usePlausible();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setLoading(true);
-    setErrorMessage('');
-    setSuccessMessage('');
 
-    try {
-      const res = await fetch(staticApiRoutes.emailList, {
+    submitForm({
+      url: staticApiRoutes.emailList,
+      options: {
         method: 'POST',
         body: JSON.stringify({ email }),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { message } = await res.json();
-
-      if (res.status === 201) {
+      },
+      successCallback: ({ message }): void => {
         setErrorMessage('');
-        setEmail('');
         setSuccessMessage(message);
         plausible('email-list-subscribe');
-      } else {
-        setErrorMessage(message || UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-    }
+      },
+    });
   };
 
   return (
@@ -57,7 +50,7 @@ export const EmailListForm: React.FC = () => {
             id="email-input"
             placeholder="Your email"
             value={email}
-            onChange={({ target }): void => setEmail(target.value)}
+            onChange={onInputChange}
             className="input-primary input w-full sm:w-auto"
             required
           />

@@ -125,6 +125,7 @@ export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
   subTitle?: JSX.Element | string;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   contentAfter?: React.ReactNode;
+  loading: boolean;
 }
 
 export interface DocsFrontMatter {
@@ -184,8 +185,6 @@ export interface OriginContextType {
   showApiKey: string;
   origin: OriginData | null;
   setOrigin: Dispatch<SetStateAction<OriginData | null>>;
-  metrics: OriginMetrics | null;
-  setMetrics: Dispatch<SetStateAction<OriginMetrics | null>>;
   timeFrame: TimeFrame;
   setTimeFrame: Dispatch<SetStateAction<TimeFrame>>;
   selectedMethod: string | undefined;
@@ -210,19 +209,17 @@ export interface OriginContextType {
   setSelectedCity: Dispatch<SetStateAction<string | undefined>>;
 }
 
-export interface UIStateContextType {
-  loading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
+export interface UIContextType {
   successMessage: string;
   setSuccessMessage: Dispatch<SetStateAction<string>>;
   errorMessage: string;
   setErrorMessage: Dispatch<SetStateAction<string>>;
-  notFound: boolean;
-  setNotFound: Dispatch<SetStateAction<boolean>>;
   modal: MODAL_NAMES | null;
   handleOpenModal: (name: MODAL_NAMES) => void;
   handleCloseModal: () => void;
 }
+
+export type RootContextType = AccountContextType & OriginContextType & UIContextType;
 
 export type ApiHandler<T = unknown> = (
   req: NextApiRequest,
@@ -376,3 +373,5 @@ export interface OriginUserData {
   email: string;
   role: ORIGIN_ROLES;
 }
+
+export type SuccessCallbackParams<T = null> = { data: T; message: string };

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { FormEvent } from 'react';
 
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { BackButton } from 'components/shared/BackButton';
@@ -10,32 +10,43 @@ import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { RouteForm } from 'components/shared/RouteForm';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
+import { useFetch } from 'hooks/useFetch';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
-import { MODAL_NAMES, UNEXPECTED_ERROR } from 'utils/constants';
+import { MODAL_NAMES } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes } from 'utils/router';
 import type { PlausibleEvents, RouteData } from 'types';
 
+const initialFormValues = {
+  routeName: '',
+};
+
 const OriginExcludedRoutes: NextPage = () => {
-  const { slug, origin } = useOrigin();
-  const [value, setValue] = useState('');
-  const [routes, setRoutes] = useState<RouteData[]>([]);
-  const [selectedRoute, setSelectedRoute] = useState<RouteData | null>(null);
   const plausible = usePlausible();
+  const [selectedRoute, setSelectedRoute] = useState<RouteData | null>(null);
 
   const {
-    loading,
-    setLoading,
-    setSuccessMessage,
-    setErrorMessage,
+    slug,
+    origin,
     handleOpenModal,
     handleCloseModal: _handleCloseModal,
-  } = useUIState();
+    setErrorMessage,
+  } = useContext();
+
+  const url = slug ? dynamicApiRoutes.excludedRoutes({ slug }) : undefined;
+  const { data: routes = [], setData: setRoutes, loading } = useFetch<RouteData[]>({ url });
+
+  const {
+    formValues: { routeName },
+    setFormValues,
+    onInputChange,
+    submitForm,
+  } = useForm(initialFormValues);
 
   const handleCloseModal = (): void => {
     setSelectedRoute(null);
-    setValue('');
+    setFormValues(initialFormValues);
     _handleCloseModal();
   };
 
@@ -46,35 +57,21 @@ const OriginExcludedRoutes: NextPage = () => {
     payload: string[];
     event: keyof PlausibleEvents;
   }): Promise<void> => {
-    setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
-
-    try {
-      const res = await fetch(dynamicApiRoutes.excludedRoutes({ slug }), {
+    submitForm<RouteData[]>({
+      url: dynamicApiRoutes.excludedRoutes({ slug }),
+      options: {
         method: 'PUT',
         body: JSON.stringify(payload),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { message, data } = await res.json();
-
-      if (res.status === 200) {
+      },
+      successCallback: ({ data }) => {
         setRoutes(data);
-        setValue('');
         handleCloseModal();
-        setSuccessMessage(message);
         plausible(event);
-      } else {
-        setErrorMessage(message || UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-    }
+      },
+    });
   };
 
   const validateRoute = (route: string): boolean | void => {
@@ -89,9 +86,9 @@ const OriginExcludedRoutes: NextPage = () => {
   const handleSubmitAddRoute = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    if (validateRoute(value)) {
+    if (validateRoute(routeName)) {
       const payload = routes.map(({ route }) => route);
-      payload.push(value);
+      payload.push(routeName);
       updateRoutes({ payload, event: 'add-excluded-route' });
     }
   };
@@ -99,10 +96,10 @@ const OriginExcludedRoutes: NextPage = () => {
   const handleSubmitUpdateRoute = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    if (validateRoute(value)) {
+    if (validateRoute(routeName)) {
       const payload = routes.map(({ route }) => {
         if (route == selectedRoute?.route) {
-          return value;
+          return routeName;
         }
 
         return route;
@@ -122,28 +119,9 @@ const OriginExcludedRoutes: NextPage = () => {
 
   const handleRouteClick = (route: RouteData) => (): void => {
     setSelectedRoute(route);
-    setValue(route.route);
+    setFormValues({ routeName: route.route });
     handleOpenModal(MODAL_NAMES.EXCLUDED_ROUTE);
   };
-
-  useEffect(() => {
-    if (slug) {
-      (async (): Promise<void> => {
-        try {
-          const res = await fetch(dynamicApiRoutes.excludedRoutes({ slug }));
-
-          if (res.status === 200) {
-            const { data } = await res.json();
-            setRoutes(data);
-          }
-        } catch {
-          setErrorMessage(UNEXPECTED_ERROR);
-        } finally {
-          setLoading(false);
-        }
-      })();
-    }
-  }, [setErrorMessage, setLoading, slug]);
 
   const renderLoadingRow = (
     <div className="h-2 animate-pulse items-center rounded-lg bg-base-content" />
@@ -159,8 +137,9 @@ const OriginExcludedRoutes: NextPage = () => {
   );
 
   const formProps = {
-    value,
-    onInputChange: ({ target }: ChangeEvent<HTMLInputElement>): void => setValue(target.value),
+    routeName,
+    onInputChange,
+    loading,
     helperText: (
       <>
         The route pattern should be a relative path and it can contain wildcards in the following

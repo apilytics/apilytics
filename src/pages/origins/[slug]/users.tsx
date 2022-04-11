@@ -1,5 +1,5 @@
 import { DotsVerticalIcon, PlusIcon } from '@heroicons/react/solid';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import type { ChangeEvent, FormEvent } from 'react';
 
@@ -12,11 +12,11 @@ import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { OriginUserForm } from 'components/shared/OriginUserForm';
 import { withAuth } from 'hocs/withAuth';
 import { withOrigin } from 'hocs/withOrigin';
-import { useAccount } from 'hooks/useAccount';
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
+import { useFetch } from 'hooks/useFetch';
+import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
-import { MODAL_NAMES, ORIGIN_ROLES, UNEXPECTED_ERROR } from 'utils/constants';
+import { MODAL_NAMES, ORIGIN_ROLES } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes } from 'utils/router';
 import type { OriginInviteData, OriginUserData } from 'types';
 
@@ -27,54 +27,37 @@ const initialFormValues = {
 };
 
 const OriginUsers: NextPage = () => {
-  const { slug, origin } = useOrigin();
-  const { user: loggedInUser } = useAccount();
-  const [originUsers, setOriginUsers] = useState<OriginUserData[]>([]);
-  const [originInvites, setOriginInvites] = useState<OriginInviteData[]>([]);
-  const [formValues, setFormValues] = useState<OriginUserData>(initialFormValues);
+  const {
+    slug,
+    origin,
+    user: loggedInUser,
+    handleOpenModal,
+    handleCloseModal: _handleCloseModal,
+    setSuccessMessage,
+  } = useContext();
+
+  const plausible = usePlausible();
+  const originUsersUrl = slug ? dynamicApiRoutes.originUsers({ slug }) : undefined;
+  const originInvitesUrl = slug ? dynamicApiRoutes.originInvites({ slug }) : undefined;
+
+  const {
+    data: originUsers = [],
+    setData: setOriginUsers,
+    loading: originUsersLoading,
+  } = useFetch<OriginUserData[]>({ url: originUsersUrl });
+
+  const {
+    data: originInvites = [],
+    setData: setOriginInvites,
+    loading: originInvitesLoading,
+  } = useFetch<OriginInviteData[]>({ url: originInvitesUrl });
+
+  const loading = originUsersLoading || originInvitesLoading;
+  const { formValues, setFormValues, submitForm } = useForm(initialFormValues);
   const [selectedOriginUser, setSelectedOriginUser] = useState<OriginUserData | null>(null);
   const originUserId = selectedOriginUser?.id ?? '';
   const [selectedOriginInvite, setSelectedOriginInvite] = useState<OriginInviteData | null>(null);
   const originInviteId = selectedOriginInvite?.id ?? '';
-  const plausible = usePlausible();
-
-  const {
-    loading,
-    setLoading,
-    setSuccessMessage,
-    setErrorMessage,
-    handleOpenModal,
-    handleCloseModal: _handleCloseModal,
-  } = useUIState();
-
-  useEffect(() => {
-    if (slug) {
-      (async (): Promise<void> => {
-        setLoading(true);
-
-        try {
-          const [originUsersRes, originInvitesRes] = await Promise.all([
-            fetch(dynamicApiRoutes.originUsers({ slug })),
-            fetch(dynamicApiRoutes.originInvites({ slug })),
-          ]);
-
-          if (originUsersRes.status === 200 && originInvitesRes.status === 200) {
-            const [{ data: originUsersData }, { data: originInvitesData }] = await Promise.all([
-              originUsersRes.json(),
-              originInvitesRes.json(),
-            ]);
-
-            setOriginUsers(originUsersData);
-            setOriginInvites(originInvitesData);
-          }
-        } catch {
-          setErrorMessage(UNEXPECTED_ERROR);
-        } finally {
-          setLoading(false);
-        }
-      })();
-    }
-  }, [setErrorMessage, setLoading, slug]);
 
   const handleCloseModal = (): void => {
     setSelectedOriginUser(null);
@@ -104,106 +87,67 @@ const OriginUsers: NextPage = () => {
     handleOpenModal(MODAL_NAMES.DELETE_ORIGIN_INVITE);
   };
 
-  const handleSubmitInviteUser = async (e: FormEvent): Promise<void> => {
+  const handleSubmitInviteUser = (e: FormEvent): void => {
     e.preventDefault();
 
-    setLoading(true);
-    setErrorMessage('');
-
-    try {
-      const res = await fetch(dynamicApiRoutes.originInvites({ slug }), {
+    submitForm<OriginInviteData[]>({
+      url: dynamicApiRoutes.originInvites({ slug }),
+      options: {
         method: 'POST',
         body: JSON.stringify(formValues),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { message, data = [] } = await res.json();
-
-      if (res.status === 201) {
-        setErrorMessage('');
-        setSuccessMessage(message);
+      },
+      successCallback: ({ data }) => {
         setOriginInvites(data);
+        handleCloseModal();
         plausible('origin-invite-created');
-      } else {
-        setErrorMessage(message || UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-      handleCloseModal();
-    }
+      },
+    });
   };
 
-  const handleSubmitEditUser = async (e: FormEvent): Promise<void> => {
+  const handleSubmitEditUser = (e: FormEvent): void => {
     e.preventDefault();
 
-    setLoading(true);
-    setErrorMessage('');
-
-    try {
-      const res = await fetch(dynamicApiRoutes.originUser({ slug, originUserId }), {
+    submitForm<OriginUserData>({
+      url: dynamicApiRoutes.originUser({ slug, originUserId }),
+      options: {
         method: 'PATCH',
         body: JSON.stringify(formValues),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { message, data } = await res.json();
-
-      if (res.status === 200) {
-        setErrorMessage('');
-        setSuccessMessage(message);
+      },
+      successCallback: ({ data }) => {
         setOriginUsers(originUsers.map((user) => (user.id === data.id ? data : user)));
+        handleCloseModal();
         plausible('origin-user-edited');
-      } else {
-        setErrorMessage(message || UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-      handleCloseModal();
-    }
+      },
+    });
   };
 
-  const handleConfirmDeleteOriginUser = async (): Promise<void> => {
-    setLoading(true);
-    setErrorMessage('');
-
-    try {
-      const res = await fetch(dynamicApiRoutes.originUser({ slug, originUserId }), {
+  const handleConfirmDeleteOriginUser = (): void => {
+    submitForm({
+      url: dynamicApiRoutes.originUser({ slug, originUserId }),
+      options: {
         method: 'DELETE',
         body: JSON.stringify({ id: originUserId }),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      if (res.status === 204) {
-        setErrorMessage('');
+      },
+      successCallback: () => {
         setSuccessMessage('User deleted successfully.');
         setOriginUsers(originUsers.filter((user) => user.id !== originUserId));
+        handleCloseModal();
         plausible('origin-invite-cancelled');
-      } else {
-        const { message = UNEXPECTED_ERROR } = await res.json();
-        setErrorMessage(message);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-      handleCloseModal();
-    }
+      },
+      errorCallback: () => handleCloseModal(),
+    });
   };
 
-  const handleConfirmDeleteInvite = async (): Promise<void> => {
-    setLoading(true);
-    setErrorMessage('');
-
+  const handleConfirmDeleteInvite = (): void => {
     const { id, role } = selectedOriginInvite ?? {};
 
     const payload = {
@@ -212,60 +156,40 @@ const OriginUsers: NextPage = () => {
       accept: false,
     };
 
-    try {
-      const res = await fetch(dynamicApiRoutes.originInvite({ slug, originInviteId }), {
+    submitForm({
+      url: dynamicApiRoutes.originInvite({ slug, originInviteId }),
+      options: {
         method: 'DELETE',
         body: JSON.stringify(payload),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      if (res.status === 204) {
-        setErrorMessage('');
+      },
+      successCallback: () => {
         setSuccessMessage('Invite deleted.');
         setOriginInvites(originInvites.filter((invite) => invite.id !== originInviteId));
+        handleCloseModal();
         plausible('origin-invite-cancelled');
-      } else {
-        const { message = UNEXPECTED_ERROR } = await res.json();
-        setErrorMessage(message);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-      handleCloseModal();
-    }
+      },
+      errorCallback: (): void => handleCloseModal(),
+    });
   };
 
-  const handleConfirmResendInvite = async (): Promise<void> => {
-    setLoading(true);
-    setErrorMessage('');
-
-    try {
-      const res = await fetch(dynamicApiRoutes.originInvite({ slug, originInviteId }), {
+  const handleConfirmResendInvite = (): void => {
+    submitForm({
+      url: dynamicApiRoutes.originInvite({ slug, originInviteId }),
+      options: {
         method: 'PATCH',
         body: JSON.stringify({ email: selectedOriginInvite?.email }),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-
-      const { message } = await res.json();
-
-      if (res.status === 200) {
-        setErrorMessage('');
-        setSuccessMessage(message);
+      },
+      successCallback: () => {
+        handleCloseModal();
         plausible('origin-invite-resent');
-      } else {
-        setErrorMessage(message || UNEXPECTED_ERROR);
-      }
-    } catch {
-      setErrorMessage(UNEXPECTED_ERROR);
-    } finally {
-      setLoading(false);
-      handleCloseModal();
-    }
+      },
+    });
   };
 
   const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>): void =>

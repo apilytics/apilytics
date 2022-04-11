@@ -8,7 +8,7 @@ import { MainTemplate } from 'components/layout/MainTemplate';
 import { AccountForm } from 'components/shared/AccountForm';
 import { Button } from 'components/shared/Button';
 import { withUser } from 'hocs/withUser';
-import { useAccount } from 'hooks/useAccount';
+import { useContext } from 'hooks/useContext';
 import { staticRoutes } from 'utils/router';
 
 export const withAuth = <T extends Record<string, unknown>>(
@@ -16,7 +16,8 @@ export const withAuth = <T extends Record<string, unknown>>(
 ): NextPage<T> => {
   const WithAuth: NextPage<T> = (pageProps: T) => {
     useSession({ required: true });
-    const { user, accountComplete } = useAccount();
+
+    const { user, accountComplete } = useContext();
     const [welcomePassed, setWelcomePassed] = useState(false);
 
     if (user && !accountComplete) {

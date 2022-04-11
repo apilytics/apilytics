@@ -10,10 +10,9 @@ import { Button } from 'components/shared/Button';
 import { Modal } from 'components/shared/Modal';
 import { ModalCloseButton } from 'components/shared/ModalCloseButton';
 import { Pagination } from 'components/shared/Pagination';
-import { useOrigin } from 'hooks/useOrigin';
+import { useContext } from 'hooks/useContext';
 import { usePagination } from 'hooks/usePagination';
 import { usePlausible } from 'hooks/usePlausible';
-import { useUIState } from 'hooks/useUIState';
 import { MODAL_NAMES } from 'utils/constants';
 import { formatCount, formatMilliseconds } from 'utils/metrics';
 import { dynamicRoutes, staticRoutes } from 'utils/router';
@@ -29,15 +28,22 @@ interface Props {
 }
 
 export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
+  const {
+    slug,
+    origin,
+    setSelectedMethod,
+    setSelectedEndpoint,
+    handleOpenModal,
+    handleCloseModal,
+  } = useContext();
+
   const plausible = usePlausible();
-  const { slug, origin, setSelectedMethod, setSelectedEndpoint } = useOrigin();
   const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
   const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
   const requestsData = [..._data.sort((a, b) => b.totalRequests - a.totalRequests)];
   const responseTimeData = [..._data.sort((a, b) => b.responseTimeAvg - a.responseTimeAvg)];
   const { pathname } = useRouter();
   const isDemo = pathname === staticRoutes.demo;
-  const { handleOpenModal, handleCloseModal } = useUIState();
 
   const attributes = {
     requests: {
