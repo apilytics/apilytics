@@ -11,6 +11,7 @@ interface Props {
   title: string;
   name: MODAL_NAMES;
   onConfirm: () => void;
+  onClose?: () => void;
   loading: boolean;
   dangerAction?: boolean;
 }
@@ -19,11 +20,20 @@ export const ConfirmModal: React.FC<Props> = ({
   title,
   name,
   onConfirm,
+  onClose,
   loading,
   dangerAction,
   children,
 }) => {
-  const { handleCloseModal } = useContext();
+  const { handleCloseModal: _handleCloseModal } = useContext();
+
+  const handleCloseModal = (): void => {
+    _handleCloseModal();
+
+    if (onClose) {
+      onClose();
+    }
+  };
 
   return (
     <Modal name={name}>

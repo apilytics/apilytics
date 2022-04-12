@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { VerticalBarChart } from 'components/dashboard/VerticalBarChart';
-import { formatMilliseconds } from 'utils/metrics';
+import { formatBytes, formatCpuUsage, formatMilliseconds } from 'utils/metrics';
 import type { PercentileData, ValueOf } from 'types';
 
 const METRIC_TYPES = {
@@ -14,24 +14,6 @@ const METRIC_TYPES = {
   memoryUsage: 'memoryUsage',
   memoryTotal: 'memoryTotal',
 } as const;
-
-const formatBytes = (value = 0): string => {
-  const base = 1024;
-
-  if (value > base ** 3) {
-    return `${(value / base ** 3).toFixed(1)} GiB`;
-  }
-
-  if (value > base ** 2) {
-    return `${(value / base ** 2).toFixed(1)} MiB`;
-  }
-
-  if (value > base) {
-    return `${(value / base).toFixed(1)} KiB`;
-  }
-
-  return `${value ?? 0} B`;
-};
 
 interface Props {
   data: PercentileData[];
@@ -59,8 +41,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
       label: 'Response sizes',
     },
     cpuUsage: {
-      renderValue: ({ cpuUsage = 0 }: Partial<PercentileData>) =>
-        `${(Number(cpuUsage) * 100).toFixed(1)} %`,
+      renderValue: ({ cpuUsage }: Partial<PercentileData>) => formatCpuUsage(cpuUsage),
       valueKey: 'cpuUsage',
       label: 'CPU usage',
     },
@@ -88,7 +69,7 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
       valueKey={valueKey}
       renderLabel={renderLabel}
       renderValue={renderValue}
-      leftLabel="Name"
+      leftLabel="Value"
       rightLabel={label}
     />
   );

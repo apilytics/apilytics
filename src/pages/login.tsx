@@ -15,6 +15,7 @@ const ERRORS = {
   Configuration: UNEXPECTED_ERROR,
   AccessDenied: UNEXPECTED_ERROR,
   Verification: 'The sign-in link is expired or has already been used.',
+  SessionRequired: 'You need to log in to view this page.',
   Default: UNEXPECTED_ERROR,
 };
 

@@ -33,7 +33,7 @@
     "next-auth": "4.2.1",
     "next-mdx-remote": "3.0.8",
     "next-plausible": "3.1.4",
-    "nodemailer": "6.7.2",
+    "nodemailer": "6.7.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "recharts": "2.1.9",

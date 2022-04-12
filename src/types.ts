@@ -83,6 +83,10 @@ export type PlausibleEvents = {
   'origin-invite-declined': PlausibleProps;
   'origin-user-edited': PlausibleProps;
   'origin-user-deleted': PlausibleProps;
+  'weekly-email-reports-toggled': PlausibleProps;
+  'weekly-email-report-recipient-added': PlausibleProps;
+  'weekly-email-report-recipient-deleted': PlausibleProps;
+  'weekly-email-reports-sent': PlausibleProps;
 };
 
 export interface HeadProps {
@@ -126,6 +130,7 @@ export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   contentAfter?: React.ReactNode;
   loading: boolean;
+  submitButtonText?: string;
 }
 
 export interface DocsFrontMatter {

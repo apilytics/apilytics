@@ -99,17 +99,17 @@ type OriginUserId = { originUserId: string };
 type OriginInviteId = { originInviteId: string };
 
 interface OriginMetricParams extends Slug {
-  from: string;
-  to: string;
-  method: string;
-  endpoint: string;
-  statusCode: string;
-  browser: string;
-  os: string;
-  device: string;
-  country: string;
-  region: string;
-  city: string;
+  from?: string;
+  to?: string;
+  method?: string;
+  endpoint?: string;
+  statusCode?: string;
+  browser?: string;
+  os?: string;
+  device?: string;
+  country?: string;
+  region?: string;
+  city?: string;
 }
 
 export const dynamicRoutes = {
@@ -118,6 +118,7 @@ export const dynamicRoutes = {
   originDynamicRoutes: ({ slug }: Slug): string => `/origins/${slug}/dynamic-routes`,
   originExcludedRoutes: ({ slug }: Slug): string => `/origins/${slug}/excluded-routes`,
   originUsers: ({ slug }: Slug): string => `/origins/${slug}/users`,
+  originEmailReports: ({ slug }: Slug): string => `/origins/${slug}/email-reports`,
   blog: ({ slug }: Slug): string => `/blog/${slug}`,
 };
 
@@ -143,4 +144,6 @@ export const dynamicApiRoutes = {
   originInvites: ({ slug }: Slug): string => `/api/origins/${slug}/invites`,
   originInvite: ({ slug, originInviteId }: Slug & OriginInviteId): string =>
     `/api/origins/${slug}/invites/${originInviteId}`,
+  originEmailReportRecipients: ({ slug }: Slug): string => `/api/origins/${slug}/email-recipients`,
+  originEmailReports: ({ slug }: Slug): string => `/api/origins/${slug}/email-reports`,
 } as const;

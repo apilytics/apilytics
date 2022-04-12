@@ -19,15 +19,16 @@ import type { OriginData } from 'types';
 const OriginSettings: NextPage = () => {
   const plausible = usePlausible();
   const { handleOpenModal, handleCloseModal, origin, setOrigin } = useContext();
-  const { name: initialName, apiKey = '', slug = '' } = origin ?? {};
+  const { name: initialName, apiKey = '', slug = '', weeklyEmailReportsEnabled } = origin ?? {};
 
   const initialFormValues = useMemo(
     () => ({
       name: initialName,
       apiKey,
       slug,
+      weeklyEmailReportsEnabled,
     }),
-    [apiKey, initialName, slug],
+    [apiKey, initialName, slug, weeklyEmailReportsEnabled],
   );
 
   const {

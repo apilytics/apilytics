@@ -5,6 +5,7 @@ import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { Select } from 'components/shared/Select';
 import { TextArea } from 'components/shared/TextArea';
+import { Toggle } from 'components/shared/Toggle';
 import { useContext } from 'hooks/useContext';
 import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
@@ -17,7 +18,7 @@ interface Props {
 
 export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
   const { user, setUser } = useContext();
-  const { name, email, usedTechnologies, intendedUse } = user ?? {};
+  const { name, email, usedTechnologies, intendedUse, emailPermission } = user ?? {};
   const plausible = usePlausible();
 
   const initialFormValues = useMemo(
@@ -26,8 +27,9 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
       email,
       usedTechnologies,
       intendedUse,
+      emailPermission,
     }),
-    [email, intendedUse, name, usedTechnologies],
+    [email, emailPermission, intendedUse, name, usedTechnologies],
   );
 
   const { loading, onInputChange, formValues, setFormValues, submitForm } =
@@ -101,6 +103,16 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
             <option value="hobby">Hobby</option>
           </Select>
         </div>
+      )}
+      {!isSignUp && (
+        <Toggle
+          label="Email permission"
+          helperText="This includes email reports and other important updates."
+          name="emailPermission"
+          value={formValues.emailPermission ? 'true' : 'false'}
+          checked={formValues.emailPermission}
+          onChange={onInputChange}
+        />
       )}
     </Form>
   );

@@ -15,6 +15,7 @@ model User {
   usedTechnologies String    @default("") @map("used_technologies")
   intendedUse      String    @default("") @map("intended_use")
   isAdmin          Boolean   @default(false) @map("is_admin")
+  emailPermission  Boolean   @default(true) @map("email_permission")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -39,6 +40,18 @@ model OriginUser {
   @@index([userId])
   @@index([originId])
   @@map("origin_users")
+}
+
+model WeeklyEmailReportRecipient {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  email    String  @unique
+  Origin   Origin? @relation(fields: [originId], references: [id], onDelete: Cascade)
+  originId String? @map("origin_id") @db.Uuid
+  @@map("weekly_email_report_recipients")
 }
 
 model VerificationToken {
@@ -68,19 +81,21 @@ model WaitlistUser {
 }
 
 model Origin {
-  id     String @id @default(uuid()) @db.Uuid
-  name   String @unique
-  slug   String @unique
-  apiKey String @unique @default(uuid()) @map("api_key") @db.Uuid
+  id                        String  @id @default(uuid()) @db.Uuid
+  name                      String  @unique
+  slug                      String  @unique
+  apiKey                    String  @unique @default(uuid()) @map("api_key") @db.Uuid
+  weeklyEmailReportsEnabled Boolean @default(true) @map("weekly_email_reports_enabled")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  originUsers    OriginUser[]
-  metrics        Metric[]
-  dynamicRoutes  DynamicRoute[]
-  excludedRoutes ExcludedRoute[]
-  invites        OriginInvite[]
+  originUsers                 OriginUser[]
+  metrics                     Metric[]
+  dynamicRoutes               DynamicRoute[]
+  excludedRoutes              ExcludedRoute[]
+  invites                     OriginInvite[]
+  weeklyEmailReportRecipients WeeklyEmailReportRecipient[]
 
   @@index([slug])
   @@map("origins")

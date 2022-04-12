@@ -53,9 +53,9 @@ const handlePatch: ApiHandler<{ data: OriginData } & MessageResponse> = async (r
     return;
   }
 
-  const { name } = req.body;
+  const { name, weeklyEmailReportsEnabled } = req.body;
 
-  if (!name) {
+  if (!name || weeklyEmailReportsEnabled === undefined) {
     sendInvalidInput(res);
     return;
   }
@@ -66,13 +66,14 @@ const handlePatch: ApiHandler<{ data: OriginData } & MessageResponse> = async (r
   try {
     await prisma.origin.update({
       where: { slug: oldSlug },
-      data: { name, slug: newSlug },
+      data: { name, slug: newSlug, weeklyEmailReportsEnabled },
     });
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'This origin name has been taken.');
       return;
     }
+
     throw e;
   }
 

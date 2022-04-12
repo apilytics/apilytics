@@ -434,3 +434,23 @@ export const formatMilliseconds = (value = 0): string => {
 
   return `${value ?? 0} ms`;
 };
+
+export const formatBytes = (value = 0): string => {
+  const base = 1024;
+
+  if (value > base ** 3) {
+    return `${(value / base ** 3).toFixed(1)} GiB`;
+  }
+
+  if (value > base ** 2) {
+    return `${(value / base ** 2).toFixed(1)} MiB`;
+  }
+
+  if (value > base) {
+    return `${(value / base).toFixed(1)} KiB`;
+  }
+
+  return `${value ?? 0} B`;
+};
+
+export const formatCpuUsage = (value?: number): string => `${(Number(value) * 100).toFixed(1)}%`;

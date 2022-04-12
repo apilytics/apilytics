@@ -15,7 +15,7 @@ interface Props extends MainTemplateProps {
 
 export const OriginSettingsTemplate: React.FC<Props> = ({ headProps, activeItem, children }) => {
   const { origin } = useContext();
-  const { slug = '', dynamicRouteCount, excludedRouteCount, userCount } = origin ?? {};
+  const { slug = '', dynamicRouteCount = 0, excludedRouteCount = 0, userCount = 0 } = origin ?? {};
 
   const menuItems = [
     {
@@ -38,16 +38,21 @@ export const OriginSettingsTemplate: React.FC<Props> = ({ headProps, activeItem,
       key: ORIGIN_MENU_KEYS.USERS,
       label: `Users (${userCount})`,
     },
+    {
+      href: dynamicRoutes.originEmailReports({ slug }),
+      key: ORIGIN_MENU_KEYS.EMAIL_REPORTS,
+      label: `Email reports`,
+    },
   ];
 
   return (
     <MainTemplate headProps={headProps}>
       <div className="flex gap-2">
-        <div className="card rounded-lg bg-base-100 shadow">
-          <div className="p-4">
+        <div className="card rounded-lg bg-base-100 py-4 shadow">
+          <div className="px-4">
             <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
           </div>
-          <ul className="menu w-60 text-primary">
+          <ul className="menu mt-4 w-60 text-primary">
             {menuItems.map(({ href, key, label }) => (
               <li key={key}>
                 <Link href={href}>
@@ -57,7 +62,7 @@ export const OriginSettingsTemplate: React.FC<Props> = ({ headProps, activeItem,
             ))}
           </ul>
         </div>
-        <div className="card rounded-lg bg-base-100 p-4 shadow">{children}</div>
+        <div className="card grow rounded-lg bg-base-100 p-4 shadow">{children}</div>
       </div>
     </MainTemplate>
   );

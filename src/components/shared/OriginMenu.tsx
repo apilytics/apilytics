@@ -17,9 +17,9 @@ interface Props {
 export const OriginMenu: React.FC<Props> = ({
   slug,
   userRole,
-  userCount,
-  dynamicRouteCount,
-  excludedRouteCount,
+  userCount = 0,
+  dynamicRouteCount = 0,
+  excludedRouteCount = 0,
 }) => {
   const disabled = userRole === ORIGIN_ROLES.VIEWER;
 
@@ -50,6 +50,11 @@ export const OriginMenu: React.FC<Props> = ({
         <li className={clsx(disabled && 'disabled pointer-events-none')}>
           <Link href={dynamicRoutes.originUsers({ slug })}>
             <a className="unstyled">Manage users ({userCount})</a>
+          </Link>
+        </li>
+        <li className={clsx(disabled && 'disabled pointer-events-none')}>
+          <Link href={dynamicRoutes.originEmailReports({ slug })}>
+            <a className="unstyled">Email reports</a>
           </Link>
         </li>
       </ul>

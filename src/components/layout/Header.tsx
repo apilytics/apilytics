@@ -129,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({ maxWidth = DEFAULT_MAX_WIDTH }) 
             width={90}
             height={60}
             objectFit="contain"
-            alt="Logo"
+            alt="Apilytics logo"
           />
         </a>
       </Link>
