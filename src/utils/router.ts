@@ -29,7 +29,6 @@ const COMMUNITY_ROUTES = {
 };
 
 const CONTENT_ROUTES = {
-  privacyPolicy: '/privacy-policy',
   terms: '/terms',
   about: '/about',
   privacyFriendly: '/privacy-friendly',
@@ -66,6 +65,7 @@ export const staticRoutes = {
   newOrigin: '/new-origin',
   account: '/account',
   contact: '/contact',
+  privacyPolicy: '/privacy-policy',
   ...CONTENT_ROUTES,
   ...FOR_ROUTES,
   ...DOCS_ROUTES,
