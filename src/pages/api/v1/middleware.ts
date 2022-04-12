@@ -157,7 +157,7 @@ const handlePost: ApiHandler = async (req, res) => {
         );
       } else {
         ({
-          country: { name: country, code: countryCode },
+          country: { name: country, code: countryCode } = { name: undefined, code: undefined },
           region,
           city,
         } = await geoIpRes.json());
