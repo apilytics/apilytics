@@ -3,7 +3,11 @@ import React, { useState } from 'react';
 
 import { DashboardCard } from 'components/dashboard/DashboardCard';
 import { TimeFrameAreaChart } from 'components/dashboard/TimeFrameAreaChart';
+import { useContext } from 'hooks/useContext';
+import { useFetch } from 'hooks/useFetch';
+import { useOriginMetrics } from 'hooks/useOriginMetrics';
 import { formatCount } from 'utils/metrics';
+import { dynamicApiRoutes } from 'utils/router';
 import type { GeneralData, TimeFrameData, ValueOf } from 'types';
 
 const METRIC_TYPES = {
@@ -11,19 +15,10 @@ const METRIC_TYPES = {
   errors: 'errors',
 } as const;
 
-interface Props extends GeneralData {
-  data: TimeFrameData[];
-}
+export const TimeFrameMetrics: React.FC = () => {
+  const {} = useOriginMetrics('timeFrame');
 
-export const TimeFrameMetrics: React.FC<Props> = ({
-  totalRequests,
-  totalRequestsGrowth,
-  totalErrors,
-  totalErrorsGrowth,
-  errorRate,
-  errorRateGrowth,
-  data,
-}) => {
+  const { data } = useFetch(dynamicApiRoutes.originMetrics({ slug }));
   const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
   const positiveTotalRequestsGrowth = totalRequestsGrowth >= 0;
   const positiveTotalErrorsGrowth = totalErrorsGrowth <= 0;

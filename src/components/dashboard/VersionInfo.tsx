@@ -1,7 +1,10 @@
 import { ExclamationIcon, ShieldCheckIcon } from '@heroicons/react/solid';
 import React, { useEffect, useState } from 'react';
 
-import type { ApilyticsPackage } from 'types';
+import { useContext } from 'hooks/useContext';
+import { useFetch } from 'hooks/useFetch';
+import { dynamicApiRoutes } from 'utils/router';
+import type { OriginMetrics } from 'types';
 
 type PackageInfo = {
   name: string;
@@ -69,13 +72,14 @@ const getLatestVersion = async (packageInfo: PackageInfo): Promise<string> => {
 
 const noBreak = (text: string): string => text.replace(/ /g, '\u00a0');
 
-interface Props {
-  apilyticsPackage: ApilyticsPackage;
-}
-
-export const VersionInfo: React.FC<Props> = ({ apilyticsPackage }) => {
+export const VersionInfo: React.FC = () => {
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
-  const packageInfo = APILYTICS_PACKAGES[apilyticsPackage.identifier];
+  const { slug } = useContext();
+  const { data: apilyticsPackage } = useFetch<OriginMetrics['apilyticsPackage']>({
+    url: slug ? dynamicApiRoutes.originMetricsVersion({ slug }) : undefined,
+  });
+
+  const packageInfo = apilyticsPackage && APILYTICS_PACKAGES[apilyticsPackage.identifier];
 
   useEffect(() => {
     if (packageInfo) {

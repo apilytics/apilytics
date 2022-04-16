@@ -27,78 +27,27 @@ import { MODAL_NAMES } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { OriginMetrics } from 'types';
 
-const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm';
-
 const Origin: NextPage = () => {
   const {
-    slug,
     showApiKey,
     origin,
-    timeFrame,
-    selectedMethod: method = '',
     setSelectedMethod,
-    selectedEndpoint: endpoint = '',
     setSelectedEndpoint,
-    selectedStatusCode: statusCode = '',
     setSelectedStatusCode,
-    selectedBrowser: browser = '',
     setSelectedBrowser,
-    selectedOs: os = '',
     setSelectedOs,
-    selectedDevice: device = '',
     setSelectedDevice,
-    selectedCountry: country = '',
     setSelectedCountry,
-    selectedRegion: region = '',
     setSelectedRegion,
-    selectedCity: city = '',
     setSelectedCity,
   } = useContext();
 
-  const { data: metrics, loading, notFound, fetcher: fetchMetrics } = useFetch<OriginMetrics>();
   const { handleOpenModal, handleCloseModal } = useContext();
   const { pathname, query, replace } = useRouter();
   const apiKey = origin?.apiKey ?? '';
   const maxWidth = 'max-w-6xl';
 
   useDashboardQuery(true);
-
-  useEffect(() => {
-    if (slug) {
-      const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
-      const to = dayjs().format(REQUEST_TIME_FORMAT);
-
-      const url = dynamicApiRoutes.originMetrics({
-        slug,
-        from,
-        to,
-        method,
-        endpoint,
-        statusCode,
-        browser,
-        os,
-        device,
-        country,
-        region,
-        city,
-      });
-
-      fetchMetrics({ url });
-    }
-  }, [
-    endpoint,
-    method,
-    slug,
-    statusCode,
-    timeFrame,
-    browser,
-    os,
-    device,
-    country,
-    region,
-    city,
-    fetchMetrics,
-  ]);
 
   useEffect(() => {
     if (showApiKey) {
@@ -133,98 +82,88 @@ const Origin: NextPage = () => {
     setSelectedStatusCode,
   ]);
 
-  if (notFound) {
+  if (!origin) {
     return <NotFoundTemplate />;
   }
 
-  if (loading || !origin || !metrics) {
-    return (
-      <Layout
-        headProps={{ title: origin?.name ?? 'Loading...' }}
-        headerProps={{ maxWidth }}
-        footerProps={{ maxWidth }}
-      >
-        <div className="container flex max-w-6xl grow flex-col py-4">
-          <BackButton
-            linkTo={staticRoutes.origins}
-            text="Origins"
-            className="btn-sm hidden sm:flex"
-          />
-          {origin ? (
-            <DashboardOptions />
-          ) : (
-            <div className="my-4 flex animate-pulse flex-wrap gap-2">
-              <div className="h-4 w-36 rounded-lg bg-base-100" />
-              <div className="ml-auto h-4 w-24 rounded-lg bg-base-100" />
-              <div className="h-4 w-4 rounded-lg bg-base-100" />
-            </div>
-          )}
-          <div className="flex animate-pulse flex-col rounded-lg border-2 border-base-content">
-            <div className="flex">
-              <div className="flex flex-col gap-2 p-4">
-                <div className="h-4 w-24 rounded-lg bg-base-100" />
-                <div className="h-2 w-16 rounded-lg bg-base-100" />
-              </div>
-              <div className="flex flex-col gap-2 p-4">
-                <div className="h-4 w-24 rounded-lg bg-base-100" />
-                <div className="h-2 w-16 rounded-lg bg-base-100" />
-              </div>
-              <div className="flex flex-col gap-2 p-4">
-                <div className="h-4 w-24 rounded-lg bg-base-100" />
-                <div className="h-2 w-16 rounded-lg bg-base-100" />
-              </div>
-              <div className="ml-auto flex gap-2 p-4">
-                <div className="h-4 w-16 rounded-lg bg-base-100" />
-                <div className="h-4 w-16 rounded-lg bg-base-100" />
-                <div className="h-4 w-16 rounded-lg bg-base-100" />
-              </div>
-            </div>
-            <div className="flex h-96 items-end justify-evenly gap-2 p-4">
-              <div className="h-1/6 w-full rounded-lg bg-base-100" />
-              <div className="h-2/6 w-full rounded-lg bg-base-100" />
-              <div className="h-1/6 w-full rounded-lg bg-base-100" />
-              <div className="h-2/6 w-full rounded-lg bg-base-100" />
-              <div className="h-3/6 w-full rounded-lg bg-base-100" />
-              <div className="h-4/6 w-full rounded-lg bg-base-100" />
-              <div className="h-3/6 w-full rounded-lg bg-base-100" />
-              <div className="h-2/6 w-full rounded-lg bg-base-100" />
-              <div className="h-3/6 w-full rounded-lg bg-base-100" />
-              <div className="h-4/6 w-full rounded-lg bg-base-100" />
-              <div className="h-5/6 w-full rounded-lg bg-base-100" />
-              <div className="h-full w-full rounded-lg bg-base-100" />
-            </div>
-          </div>
-          <div className="mt-4 flex h-96 animate-pulse flex-col rounded-lg border-2 border-base-content">
-            <div className="flex flex-wrap p-4">
-              <div className="mr-auto h-4 w-24 rounded-lg bg-base-100" />
-              <div className="flex flex-wrap gap-2">
-                <div className="h-4 w-14 rounded-lg bg-base-100" />
-                <div className="h-4 w-14 rounded-lg bg-base-100" />
-              </div>
-            </div>
-            <div className="flex grow flex-col justify-evenly gap-2 p-4">
-              <div className="h-full w-full rounded-lg bg-base-100" />
-              <div className="h-full w-5/6 rounded-lg bg-base-100" />
-              <div className="h-full w-4/6 rounded-lg bg-base-100" />
-              <div className="h-full w-3/6 rounded-lg bg-base-100" />
-              <div className="h-full w-2/6 rounded-lg bg-base-100" />
-              <div className="h-full w-1/6 rounded-lg bg-base-100" />
-            </div>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-
-  const {
-    generalData,
-    timeFrameData,
-    endpointData,
-    percentileData,
-    statusCodeData,
-    userAgentData,
-    geoLocationData,
-  } = metrics;
+  // if (loading || !origin || !metrics) {
+  //   return (
+  //     <Layout
+  //       headProps={{ title: origin?.name ?? 'Loading...' }}
+  //       headerProps={{ maxWidth }}
+  //       footerProps={{ maxWidth }}
+  //     >
+  //       <div className="container flex max-w-6xl grow flex-col py-4">
+  //         <BackButton
+  //           linkTo={staticRoutes.origins}
+  //           text="Origins"
+  //           className="btn-sm hidden sm:flex"
+  //         />
+  //         {origin ? (
+  //           <DashboardOptions />
+  //         ) : (
+  //           <div className="my-4 flex animate-pulse flex-wrap gap-2">
+  //             <div className="h-4 w-36 rounded-lg bg-base-100" />
+  //             <div className="ml-auto h-4 w-24 rounded-lg bg-base-100" />
+  //             <div className="h-4 w-4 rounded-lg bg-base-100" />
+  //           </div>
+  //         )}
+  //         <div className="flex animate-pulse flex-col rounded-lg border-2 border-base-content">
+  //           <div className="flex">
+  //             <div className="flex flex-col gap-2 p-4">
+  //               <div className="h-4 w-24 rounded-lg bg-base-100" />
+  //               <div className="h-2 w-16 rounded-lg bg-base-100" />
+  //             </div>
+  //             <div className="flex flex-col gap-2 p-4">
+  //               <div className="h-4 w-24 rounded-lg bg-base-100" />
+  //               <div className="h-2 w-16 rounded-lg bg-base-100" />
+  //             </div>
+  //             <div className="flex flex-col gap-2 p-4">
+  //               <div className="h-4 w-24 rounded-lg bg-base-100" />
+  //               <div className="h-2 w-16 rounded-lg bg-base-100" />
+  //             </div>
+  //             <div className="ml-auto flex gap-2 p-4">
+  //               <div className="h-4 w-16 rounded-lg bg-base-100" />
+  //               <div className="h-4 w-16 rounded-lg bg-base-100" />
+  //               <div className="h-4 w-16 rounded-lg bg-base-100" />
+  //             </div>
+  //           </div>
+  //           <div className="flex h-96 items-end justify-evenly gap-2 p-4">
+  //             <div className="h-1/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-2/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-1/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-2/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-3/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-4/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-3/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-2/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-3/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-4/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-5/6 w-full rounded-lg bg-base-100" />
+  //             <div className="h-full w-full rounded-lg bg-base-100" />
+  //           </div>
+  //         </div>
+  //         <div className="mt-4 flex h-96 animate-pulse flex-col rounded-lg border-2 border-base-content">
+  //           <div className="flex flex-wrap p-4">
+  //             <div className="mr-auto h-4 w-24 rounded-lg bg-base-100" />
+  //             <div className="flex flex-wrap gap-2">
+  //               <div className="h-4 w-14 rounded-lg bg-base-100" />
+  //               <div className="h-4 w-14 rounded-lg bg-base-100" />
+  //             </div>
+  //           </div>
+  //           <div className="flex grow flex-col justify-evenly gap-2 p-4">
+  //             <div className="h-full w-full rounded-lg bg-base-100" />
+  //             <div className="h-full w-5/6 rounded-lg bg-base-100" />
+  //             <div className="h-full w-4/6 rounded-lg bg-base-100" />
+  //             <div className="h-full w-3/6 rounded-lg bg-base-100" />
+  //             <div className="h-full w-2/6 rounded-lg bg-base-100" />
+  //             <div className="h-full w-1/6 rounded-lg bg-base-100" />
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </Layout>
+  //   );
+  // }
 
   return (
     <Layout
@@ -239,8 +178,8 @@ const Origin: NextPage = () => {
           text="Origins"
           className="btn-sm hidden sm:flex"
         />
-        <DashboardOptions apilyticsPackage={metrics.apilyticsPackage} />
-        <TimeFrameMetrics {...generalData} data={timeFrameData} />
+        <DashboardOptions />
+        <TimeFrameMetrics />
         <div className="mt-4">
           <EndpointMetrics data={endpointData} />
         </div>

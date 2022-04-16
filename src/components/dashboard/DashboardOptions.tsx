@@ -12,13 +12,9 @@ import { usePlausible } from 'hooks/usePlausible';
 import { ORIGIN_ROLES, TIME_FRAME_OPTIONS } from 'utils/constants';
 import { getFlagEmoji, truncateString } from 'utils/helpers';
 import { dynamicRoutes, staticRoutes } from 'utils/router';
-import type { ApilyticsPackage, TimeFrame } from 'types';
+import type { TimeFrame } from 'types';
 
-interface Props {
-  apilyticsPackage?: ApilyticsPackage;
-}
-
-export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
+export const DashboardOptions: React.FC = () => {
   const plausible = usePlausible();
   const { pathname, query, replace } = useRouter();
   const isDemo = pathname === staticRoutes.demo;
@@ -70,7 +66,7 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
           <div className="badge badge-primary badge-outline ml-2 capitalize">{userRole}</div>
         )}
       </h6>
-      {!!apilyticsPackage && <VersionInfo apilyticsPackage={apilyticsPackage} />}
+      {<VersionInfo />}
       {selectedMethod && (
         <Button onClick={(): void => setSelectedMethod(undefined)} endIcon={XIcon}>
           <span className={`text-method-${selectedMethod.toLowerCase()}`}>{selectedMethod}</span>

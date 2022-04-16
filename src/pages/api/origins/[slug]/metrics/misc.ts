@@ -38,7 +38,7 @@ const extractFromMiscData = <
     );
 
 const handleGet: ApiHandler<{
-  data: Pick<OriginMetrics, 'statusCodeData' | 'userAgentData' | 'apilyticsPackage'>;
+  data: Pick<OriginMetrics, 'statusCodeData' | 'userAgentData'>;
 }> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
@@ -100,7 +100,7 @@ ${baseWhereClause}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}`;
 
-  const miscDataPromise: Promise<RawMiscData[]> = prisma.$queryRaw`
+  const miscData: RawMiscData[] = await prisma.$queryRaw`
 SELECT
   metrics.browser,
   metrics.os,
@@ -117,35 +117,15 @@ GROUP BY GROUPING SETS (
   metrics.device,
   metrics.status_code
 );`;
-
-  const versionDataPromise = prisma.metric.findFirst({
-    where: { originId },
-    orderBy: { createdAt: 'desc' },
-    select: { apilyticsVersion: true },
-  });
-
-  const [miscData, versionData] = await Promise.all([miscDataPromise, versionDataPromise]);
-
   const userAgentData = {
     browserData: extractFromMiscData(miscData, 'browser'),
     osData: extractFromMiscData(miscData, 'os'),
     deviceData: extractFromMiscData(miscData, 'device'),
   };
 
-  const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
-
-  const apilyticsPackage =
-    !!identifier && !!version
-      ? {
-          identifier,
-          version,
-        }
-      : undefined;
-
   const data = {
     statusCodeData: extractFromMiscData(miscData, 'statusCode'),
     userAgentData,
-    apilyticsPackage,
   };
 
   sendOk(res, { data });

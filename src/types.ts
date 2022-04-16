@@ -326,7 +326,7 @@ export interface OriginMetrics {
   statusCodeData: StatusCodeData[];
   userAgentData: UserAgentData;
   geoLocationData: GeoLocationData;
-  apilyticsPackage?: ApilyticsPackage;
+  apilyticsPackage: ApilyticsPackage | null;
 }
 
 export interface RouteData {
