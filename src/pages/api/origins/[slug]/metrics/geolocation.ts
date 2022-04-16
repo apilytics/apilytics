@@ -11,9 +11,6 @@ import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler, CityData, CountryData, OriginMetrics, RegionData } from 'types';
 
-const DAY_MILLIS = 24 * 60 * 60 * 1000;
-const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
-
 const handleGet: ApiHandler<{ data: Pick<OriginMetrics, 'geoLocationData'> }> = async (
   req,
   res,
@@ -35,9 +32,6 @@ const handleGet: ApiHandler<{ data: Pick<OriginMetrics, 'geoLocationData'> }> = 
 
   const fromDate = new Date(from);
   const toDate = new Date(to);
-  const fromTime = fromDate.getTime();
-  const toTime = toDate.getTime();
-  const timeFrame = toTime - fromTime;
 
   let wherePath: Prisma.Sql | undefined;
 
@@ -53,15 +47,6 @@ const handleGet: ApiHandler<{ data: Pick<OriginMetrics, 'geoLocationData'> }> = 
     }
   } else {
     wherePath = Prisma.empty;
-  }
-
-  // The scope indicates which time unit the metrics are grouped by.
-  let scope = 'day';
-
-  if (timeFrame <= DAY_MILLIS) {
-    scope = 'hour';
-  } else if (timeFrame >= THREE_MONTHS_MILLIS) {
-    scope = 'week';
   }
 
   const fromClause = Prisma.sql`
@@ -89,11 +74,6 @@ WHERE origins.id = ${originId}
 ${baseWhereClause}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}`;
-
-  const whereClausePreviousPeriod = Prisma.sql`
-${baseWhereClause}
-  AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
-  AND metrics.created_at <= ${fromDate}`;
 
   const countryDataPromise: Promise<CountryData[]> = prisma.$queryRaw`
 SELECT

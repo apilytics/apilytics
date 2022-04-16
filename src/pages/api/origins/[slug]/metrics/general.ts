@@ -12,9 +12,6 @@ import { withApilytics } from 'utils/apilytics';
 import { PERCENTILE_DATA_KEYS } from 'utils/constants';
 import type { ApiHandler, OriginMetrics } from 'types';
 
-const DAY_MILLIS = 24 * 60 * 60 * 1000;
-const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
-
 interface GeneralData {
   totalRequests: number;
   totalRequestsGrowth: number;
@@ -81,7 +78,6 @@ const handleGet: ApiHandler<{ data: Pick<OriginMetrics, 'generalData'> }> = asyn
   const toDate = new Date(to);
   const fromTime = fromDate.getTime();
   const toTime = toDate.getTime();
-  const timeFrame = toTime - fromTime;
 
   let wherePath: Prisma.Sql | undefined;
 
@@ -97,15 +93,6 @@ const handleGet: ApiHandler<{ data: Pick<OriginMetrics, 'generalData'> }> = asyn
     }
   } else {
     wherePath = Prisma.empty;
-  }
-
-  // The scope indicates which time unit the metrics are grouped by.
-  let scope = 'day';
-
-  if (timeFrame <= DAY_MILLIS) {
-    scope = 'hour';
-  } else if (timeFrame >= THREE_MONTHS_MILLIS) {
-    scope = 'week';
   }
 
   const fromClause = Prisma.sql`

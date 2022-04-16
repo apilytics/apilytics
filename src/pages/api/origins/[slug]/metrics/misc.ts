@@ -11,9 +11,6 @@ import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
 import type { ApiHandler, OriginMetrics } from 'types';
 
-const DAY_MILLIS = 24 * 60 * 60 * 1000;
-const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
-
 interface RawMiscData {
   browser: string | null;
   os: string | null;
@@ -41,7 +38,7 @@ const extractFromMiscData = <
     );
 
 const handleGet: ApiHandler<{
-  data: Pick<OriginMetrics, 'statusCodeData' | 'userAgentData'>;
+  data: Pick<OriginMetrics, 'statusCodeData' | 'userAgentData' | 'apilyticsPackage'>;
 }> = async (req, res) => {
   const userId = await getSessionUserId(req);
   const slug = getSlugFromReq(req);
@@ -60,9 +57,6 @@ const handleGet: ApiHandler<{
 
   const fromDate = new Date(from);
   const toDate = new Date(to);
-  const fromTime = fromDate.getTime();
-  const toTime = toDate.getTime();
-  const timeFrame = toTime - fromTime;
 
   let wherePath: Prisma.Sql | undefined;
 
@@ -78,15 +72,6 @@ const handleGet: ApiHandler<{
     }
   } else {
     wherePath = Prisma.empty;
-  }
-
-  // The scope indicates which time unit the metrics are grouped by.
-  let scope = 'day';
-
-  if (timeFrame <= DAY_MILLIS) {
-    scope = 'hour';
-  } else if (timeFrame >= THREE_MONTHS_MILLIS) {
-    scope = 'week';
   }
 
   const fromClause = Prisma.sql`
@@ -115,7 +100,7 @@ ${baseWhereClause}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}`;
 
-  const miscData: RawMiscData[] = await prisma.$queryRaw`
+  const miscDataPromise: Promise<RawMiscData[]> = prisma.$queryRaw`
 SELECT
   metrics.browser,
   metrics.os,
@@ -132,15 +117,35 @@ GROUP BY GROUPING SETS (
   metrics.device,
   metrics.status_code
 );`;
+
+  const versionDataPromise = prisma.metric.findFirst({
+    where: { originId },
+    orderBy: { createdAt: 'desc' },
+    select: { apilyticsVersion: true },
+  });
+
+  const [miscData, versionData] = await Promise.all([miscDataPromise, versionDataPromise]);
+
   const userAgentData = {
     browserData: extractFromMiscData(miscData, 'browser'),
     osData: extractFromMiscData(miscData, 'os'),
     deviceData: extractFromMiscData(miscData, 'device'),
   };
 
+  const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
+
+  const apilyticsPackage =
+    !!identifier && !!version
+      ? {
+          identifier,
+          version,
+        }
+      : undefined;
+
   const data = {
     statusCodeData: extractFromMiscData(miscData, 'statusCode'),
     userAgentData,
+    apilyticsPackage,
   };
 
   sendOk(res, { data });
