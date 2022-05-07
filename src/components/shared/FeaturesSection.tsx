@@ -36,7 +36,6 @@ const FEATURES = [
     icon: DocumentReportIcon,
     title: 'Reports',
     content: 'Get automatic weekly email and Slack reports for your API metrics.',
-    comingSoon: true,
   },
   {
     icon: DatabaseIcon,
