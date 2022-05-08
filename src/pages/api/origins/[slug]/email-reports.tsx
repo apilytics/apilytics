@@ -94,7 +94,8 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
 
     userId = adminUser.id;
   } else {
-    const { userId, isAdmin } = (await getSession({ req })) ?? {};
+    const { userId: _userId, isAdmin } = (await getSession({ req })) ?? {};
+    userId = _userId;
 
     if (!userId) {
       sendUnauthorized(res);
@@ -122,7 +123,7 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
     }
   }
 
-  const origin = await getOriginForUser({ userId: userId ?? '', slug });
+  const origin = await getOriginForUser({ userId, slug });
 
   if (!origin) {
     sendNotFound(res, 'Origin');

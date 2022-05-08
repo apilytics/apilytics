@@ -16,7 +16,7 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
     select: { slug: true },
   });
 
-  origins.forEach(async ({ slug }) => {
+  origins.forEach(({ slug }) => {
     fetch(`${FRONTEND_URL}/api/origins/${slug}/email-reports`, {
       method: 'POST',
       headers: {

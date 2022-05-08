@@ -29,12 +29,12 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     : Prisma.empty;
 
   const data: OriginListItem[] = await prisma.$queryRaw`
-SELECT
+SELECT DISTINCT
   origins.name,
   origins.slug,
   metrics.count AS "totalMetrics",
   metrics.last_day_metrics as "lastDayMetrics",
-  origin_users.role AS "userRole",
+  ${!user?.isAdmin ? Prisma.sql`origin_users.role` : Prisma.sql`'admin'`} AS "userRole",
   COUNT(origin_users) AS "userCount",
   COUNT(dynamic_routes) AS "dynamicRouteCount",
   COUNT(excluded_routes) AS "excludedRouteCount"
