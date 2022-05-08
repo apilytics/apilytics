@@ -64,18 +64,19 @@ export const useFetch = <T>({
         const res = await fetch(url, options);
         const { status, ok } = res;
 
-        if (status === 404) {
-          setLoading(false);
-          setNotFound(true);
-          return;
-        }
-
         const text = await res.text();
 
         try {
           ({ data, message } = JSON.parse(text));
         } catch {
           // Received non-JSON response.
+        }
+
+        if (status === 404) {
+          setLoading(false);
+          setNotFound(true);
+          handleError(message);
+          return;
         }
 
         if (ok) {
