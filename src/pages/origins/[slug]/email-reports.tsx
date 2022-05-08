@@ -1,6 +1,7 @@
 import { TrashIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
@@ -22,16 +23,14 @@ import { useFetch } from 'hooks/useFetch';
 import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
 import { MODAL_NAMES, ORIGIN_MENU_KEYS, REQUEST_TIME_FORMAT, WEEK_DAYS } from 'utils/constants';
-import { dynamicApiRoutes } from 'utils/router';
+import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { OriginData, OriginMetrics } from 'types';
 
 const OriginEmailReports: NextPage = () => {
   const plausible = usePlausible();
   const { origin, setOrigin, handleOpenModal, handleCloseModal: _handleCloseModal } = useContext();
-  const { submitForm: submitOriginSettingsForm, loading: originSettingsFormLoading } = useForm({});
-
-  const { submitForm: submitSendWeeklyEmailReports, loading: sendWeeklyEmailReportsLoading } =
-    useForm({});
+  const { submitForm: submitOriginSettingsForm } = useForm({});
+  const { submitForm: submitSendReports, loading: sendReportsLoading } = useForm({});
 
   const {
     name,
@@ -80,14 +79,7 @@ const OriginEmailReports: NextPage = () => {
     loading: recipientsFormLoading,
   } = useForm({ recipient: '' });
 
-  const loading =
-    originSettingsFormLoading ||
-    recipientsLoading ||
-    recipientsFormLoading ||
-    sendWeeklyEmailReportsLoading ||
-    metricsLoading;
-
-  const sendReportsButtonDisabled = !recipients.length || loading;
+  const sendReportsButtonDisabled = !recipients.length || metricsLoading;
 
   const handleCloseModal = (): void => {
     setSelectedRecipient(null);
@@ -161,7 +153,7 @@ const OriginEmailReports: NextPage = () => {
   const handleConfirmSendWeeklyEmailReports = (): void => {
     handleCloseModal();
 
-    submitSendWeeklyEmailReports({
+    submitSendReports({
       url: dynamicApiRoutes.originEmailReports({ slug }),
       options: {
         method: 'POST',
@@ -181,9 +173,15 @@ const OriginEmailReports: NextPage = () => {
     >
       <Form
         title={`Email reports for ${origin?.name}`}
-        subTitle="Send weekly email reports to your colleagues etc."
+        subTitle={
+          <>
+            Send weekly email reports to your colleagues etc. To receive email reports, make sure
+            that you've enabled the email notifications from your{' '}
+            <Link href={staticRoutes.account}>account settings</Link>.
+          </>
+        }
         onSubmit={handleSubmitAddRecipient}
-        loading={loading}
+        loading={recipientsFormLoading || recipientsLoading}
         submitButtonText="Add recipient"
       >
         <Toggle
@@ -219,10 +217,10 @@ const OriginEmailReports: NextPage = () => {
       </Form>
       <Button
         onClick={(): void => handleOpenModal(MODAL_NAMES.SEE_WEEKLY_EMAIL_REPORT)}
-        className={clsx('btn-primary mt-4', !loading && 'btn-outline')} // `btn-outline` won't with `disabled` attribute.
+        className={clsx('btn-primary mt-4', !metricsLoading && 'btn-outline')} // `btn-outline` won't with `disabled` attribute.
         fullWidth
-        loading={loading}
-        disabled={loading}
+        loading={metricsLoading}
+        disabled={metricsLoading}
       >
         Preview report
       </Button>
@@ -231,7 +229,7 @@ const OriginEmailReports: NextPage = () => {
         className={clsx('btn-primary mt-4', !sendReportsButtonDisabled && 'btn-outline')} // `btn-outline` won't with `disabled` attribute.
         fullWidth
         disabled={sendReportsButtonDisabled}
-        loading={sendWeeklyEmailReportsLoading}
+        loading={sendReportsLoading || recipientsLoading}
       >
         Send reports now
       </Button>
@@ -240,7 +238,7 @@ const OriginEmailReports: NextPage = () => {
         name={MODAL_NAMES.DELETE_RECIPIENT}
         onConfirm={handleConfirmDeleteRecipient}
         onClose={(): void => setSelectedRecipient(null)}
-        loading={loading}
+        loading={recipientsFormLoading || recipientsLoading}
         dangerAction
       >
         <p>
@@ -262,10 +260,14 @@ const OriginEmailReports: NextPage = () => {
         title="Send weekly email reports"
         name={MODAL_NAMES.SEND_WEEKLY_EMAIL_REPORTS}
         onConfirm={handleConfirmSendWeeklyEmailReports}
-        loading={loading}
+        loading={sendReportsLoading || recipientsLoading}
       >
-        <p>Are you sure you want to send the weekly email reports to the following recipients?</p>
-        <ul className="list-none">
+        <p>
+          Are you sure you want to send the weekly email reports to the following recipients?
+          <br />
+          Users who have disabled their email notifications will not receive these emails.
+        </p>
+        <ul className="mt-2 list-none">
           {recipients.map((email) => (
             <li className="text-white" key={email}>
               {email}

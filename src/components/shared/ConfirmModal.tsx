@@ -49,7 +49,10 @@ export const ConfirmModal: React.FC<Props> = ({
           Cancel
         </Button>
         <Button
-          className={clsx(dangerAction ? 'btn-error' : 'btn-primary', 'btn-outline')}
+          className={clsx(
+            dangerAction ? 'btn-error' : 'btn-primary',
+            !loading && 'btn-outline', // `btn-outline` won't with `disabled` attribute.
+          )}
           onClick={onConfirm}
           autoFocus
           disabled={loading}
