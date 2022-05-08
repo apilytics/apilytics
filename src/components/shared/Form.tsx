@@ -11,6 +11,7 @@ export const Form: React.FC<FormProps> = ({
   contentAfter,
   loading,
   className,
+  submitButtonText = 'Submit',
   children,
   ...props
 }) => (
@@ -25,7 +26,7 @@ export const Form: React.FC<FormProps> = ({
       type="submit"
       fullWidth
     >
-      Submit
+      {submitButtonText}
     </Button>
     {contentAfter}
   </form>

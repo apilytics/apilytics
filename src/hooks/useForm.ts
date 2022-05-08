@@ -31,9 +31,20 @@ export const useForm = <T extends Record<string, unknown>>(
   const [submitted, setSubmitted] = useState(false);
 
   const onInputChange = ({
-    target: { name, value },
-  }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void =>
+    target: { name, value: _value, type, checked },
+  }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
+    if (!Object.keys(formValues).includes(name) && process.env.NODE_ENV !== 'production') {
+      throw Error(`No form field found with name: ${name}`);
+    }
+
+    let value: string | boolean = _value;
+
+    if (type === 'checkbox') {
+      value = checked;
+    }
+
     setFormValues({ ...formValues, [name]: value } as T);
+  };
 
   const submitForm = <T>({
     url,

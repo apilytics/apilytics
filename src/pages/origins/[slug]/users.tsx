@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import type { ChangeEvent, FormEvent } from 'react';
 
-import { MainTemplate } from 'components/layout/MainTemplate';
-import { BackButton } from 'components/shared/BackButton';
+import { OriginSettingsTemplate } from 'components/layout/OriginSettingsTemplate';
 import { Button } from 'components/shared/Button';
 import { ConfirmModal } from 'components/shared/ConfirmModal';
 import { Modal } from 'components/shared/Modal';
@@ -16,8 +15,8 @@ import { useContext } from 'hooks/useContext';
 import { useFetch } from 'hooks/useFetch';
 import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { MODAL_NAMES, ORIGIN_ROLES } from 'utils/constants';
-import { dynamicApiRoutes, dynamicRoutes } from 'utils/router';
+import { MODAL_NAMES, ORIGIN_MENU_KEYS, ORIGIN_ROLES } from 'utils/constants';
+import { dynamicApiRoutes } from 'utils/router';
 import type { OriginInviteData, OriginUserData } from 'types';
 
 const initialFormValues = {
@@ -264,8 +263,7 @@ const OriginUsers: NextPage = () => {
   );
 
   const renderUsersAndInvites = (
-    <div className="card rounded-lg bg-base-100 p-4 shadow">
-      <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
+    <>
       <h5 className="text-white">Users for {origin?.name}</h5>
       <p className="mt-2 text-sm">Invite and manage users who can view or modify this origin.</p>
       <div className="mt-4">
@@ -296,11 +294,12 @@ const OriginUsers: NextPage = () => {
           className="btn-primary mt-4"
           endIcon={PlusIcon}
           onClick={(): void => handleOpenModal(MODAL_NAMES.INVITE_ORIGIN_USER)}
+          fullWidth
         >
           Invite new user
         </Button>
       </div>
-    </div>
+    </>
   );
 
   const renderInviteOriginUserModal = (
@@ -385,14 +384,17 @@ const OriginUsers: NextPage = () => {
   );
 
   return (
-    <MainTemplate headProps={{ title: origin?.name ? `Users for ${origin.name}` : 'Loading...' }}>
+    <OriginSettingsTemplate
+      headProps={{ title: origin?.name ? `Users for ${origin.name}` : 'Loading...' }}
+      activeItem={ORIGIN_MENU_KEYS.USERS}
+    >
       {renderUsersAndInvites}
       {renderInviteOriginUserModal}
       {renderEditOriginUserModal}
       {renderDeleteOriginUserModal}
       {renderDeleteOriginInviteModal}
       {renderResendOriginInviteModal}
-    </MainTemplate>
+    </OriginSettingsTemplate>
   );
 };
 

@@ -7,6 +7,6 @@ interface Props {
   onClick: () => void;
 }
 
-export const ModalCloseButton: React.FC<Props> = ({ onClick }) => {
-  return <IconButton className="btn-sm" icon={XIcon} onClick={onClick} />;
-};
+export const ModalCloseButton: React.FC<Props> = ({ onClick }) => (
+  <IconButton className="btn-sm" icon={XIcon} onClick={onClick} />
+);

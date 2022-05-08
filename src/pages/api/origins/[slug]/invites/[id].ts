@@ -102,6 +102,13 @@ const handleDelete: ApiHandler<MessageResponse> = async (req, res) => {
       await prisma.originUser.create({
         data: { role, userId, originId: inviteForInvitee.originId },
       });
+
+      await prisma.weeklyEmailReportRecipient.create({
+        data: {
+          originId: inviteForInvitee.originId,
+          email: user.email,
+        },
+      });
     } catch (e) {
       if (isUniqueConstraintFailed(e)) {
         sendConflict(res, 'A user with this email already exists for this origin.');

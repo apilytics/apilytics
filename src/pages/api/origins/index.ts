@@ -3,7 +3,13 @@ import slugify from 'slugify';
 import type { Origin } from '@prisma/client';
 
 import { getSessionUserId, makeMethodsHandler } from 'lib-server/apiHelpers';
-import { sendConflict, sendCreated, sendInvalidInput, sendOk } from 'lib-server/responses';
+import {
+  sendConflict,
+  sendCreated,
+  sendInvalidInput,
+  sendNotFound,
+  sendOk,
+} from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
@@ -73,6 +79,12 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
 
   let origin: Origin | undefined;
   const slug = slugify(name, { lower: true });
+  const user = await prisma.user.findFirst({ where: { id: userId } });
+
+  if (!user) {
+    sendNotFound(res, 'User not found.');
+    return;
+  }
 
   try {
     origin = await prisma.origin.create({
@@ -81,6 +93,11 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
           create: {
             role: ORIGIN_ROLES.OWNER,
             userId,
+          },
+        },
+        weeklyEmailReportRecipients: {
+          create: {
+            email: user.email,
           },
         },
         name,
@@ -92,6 +109,7 @@ const handlePost: ApiHandler<PostResponse> = async (req, res) => {
       sendConflict(res, 'An origin with this name already exists.');
       return;
     }
+
     throw e;
   }
 

@@ -20,7 +20,7 @@ const handleGet: ApiHandler<{ data: User }> = async (req, res) => {
 
 const handlePut: ApiHandler<{ data: User } & MessageResponse> = async (req, res) => {
   const id = await getSessionUserId(req);
-  const { name, email, usedTechnologies, intendedUse } = req.body;
+  const { name, email, usedTechnologies, intendedUse, emailPermission } = req.body;
 
   if (!name || !email) {
     sendInvalidInput(res);
@@ -29,7 +29,7 @@ const handlePut: ApiHandler<{ data: User } & MessageResponse> = async (req, res)
 
   const user = await prisma.user.update({
     where: { id },
-    data: { name, email, usedTechnologies, intendedUse },
+    data: { name, email, usedTechnologies, intendedUse, emailPermission },
   });
 
   if (!user) {

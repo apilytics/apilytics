@@ -23,11 +23,9 @@ import { withOrigin } from 'hocs/withOrigin';
 import { useContext } from 'hooks/useContext';
 import { useDashboardQuery } from 'hooks/useDashboardQuery';
 import { useFetch } from 'hooks/useFetch';
-import { MODAL_NAMES } from 'utils/constants';
+import { MODAL_NAMES, REQUEST_TIME_FORMAT } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { OriginMetrics } from 'types';
-
-const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm';
 
 const Origin: NextPage = () => {
   const {

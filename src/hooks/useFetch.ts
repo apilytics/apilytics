@@ -50,6 +50,7 @@ export const useFetch = <T>({
 
       const handleError = (msg = UNEXPECTED_ERROR): void => {
         setErrorMessage(msg);
+        setNotFound(true);
 
         if (errorCallback) {
           errorCallback();

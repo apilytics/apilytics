@@ -2,9 +2,8 @@ import Router from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import type { NextPage } from 'next';
 
-import { MainTemplate } from 'components/layout/MainTemplate';
+import { OriginSettingsTemplate } from 'components/layout/OriginSettingsTemplate';
 import { ApiKeyField } from 'components/shared/ApiKeyField';
-import { BackButton } from 'components/shared/BackButton';
 import { ConfirmModal } from 'components/shared/ConfirmModal';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
@@ -13,22 +12,23 @@ import { withOrigin } from 'hocs/withOrigin';
 import { useContext } from 'hooks/useContext';
 import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
-import { MODAL_NAMES } from 'utils/constants';
+import { MODAL_NAMES, ORIGIN_MENU_KEYS } from 'utils/constants';
 import { dynamicApiRoutes, dynamicRoutes, staticRoutes } from 'utils/router';
 import type { OriginData } from 'types';
 
 const OriginSettings: NextPage = () => {
   const plausible = usePlausible();
   const { handleOpenModal, handleCloseModal, origin, setOrigin } = useContext();
-  const { name: initialName, apiKey = '', slug = '' } = origin ?? {};
+  const { name: initialName, apiKey = '', slug = '', weeklyEmailReportsEnabled } = origin ?? {};
 
   const initialFormValues = useMemo(
     () => ({
       name: initialName,
       apiKey,
       slug,
+      weeklyEmailReportsEnabled,
     }),
-    [apiKey, initialName, slug],
+    [apiKey, initialName, slug, weeklyEmailReportsEnabled],
   );
 
   const {
@@ -88,42 +88,40 @@ const OriginSettings: NextPage = () => {
   );
 
   return (
-    <MainTemplate
+    <OriginSettingsTemplate
       headProps={{ title: origin?.name ? `Settings for ${origin.name}` : 'Loading...' }}
+      activeItem={ORIGIN_MENU_KEYS.SETTINGS}
     >
-      <div className="card rounded-lg bg-base-100 p-4 shadow">
-        <BackButton linkTo={dynamicRoutes.origin({ slug })} text="Dashboard" />
-        <Form
-          title={`Settings for ${origin?.name}`}
-          onSubmit={handleSubmit}
-          contentAfter={renderDeleteOriginLink}
+      <Form
+        title={`Settings for ${origin?.name}`}
+        onSubmit={handleSubmit}
+        contentAfter={renderDeleteOriginLink}
+        loading={loading}
+      >
+        <Input
+          name="name"
+          label="Origin name"
+          helperText='E.g. "example.api.com" or "Internal REST API"'
+          value={name}
+          onChange={onInputChange}
+          required
+        />
+        <ApiKeyField value={apiKey} />
+        <ConfirmModal
+          title="Delete origin"
+          name={MODAL_NAMES.DELETE_ORIGIN}
+          onConfirm={handleConfirmDelete}
           loading={loading}
+          dangerAction
         >
-          <Input
-            name="name"
-            label="Origin name"
-            helperText='E.g. "example.api.com" or "Internal REST API"'
-            value={name}
-            onChange={onInputChange}
-            required
-          />
-          <ApiKeyField value={apiKey} />
-          <ConfirmModal
-            title="Delete origin"
-            name={MODAL_NAMES.DELETE_ORIGIN}
-            onConfirm={handleConfirmDelete}
-            loading={loading}
-            dangerAction
-          >
-            <p>
-              Are you sure you want to delete this origin?
-              <br />
-              All data associated with it will be lost forever.
-            </p>
-          </ConfirmModal>
-        </Form>
-      </div>
-    </MainTemplate>
+          <p>
+            Are you sure you want to delete this origin?
+            <br />
+            All data associated with it will be lost forever.
+          </p>
+        </ConfirmModal>
+      </Form>
+    </OriginSettingsTemplate>
   );
 };
 

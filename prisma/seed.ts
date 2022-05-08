@@ -128,6 +128,7 @@ const main = async (): Promise<void> => {
       name: 'Test Admin User',
       email: 'admin@apilytics.io',
       isAdmin: true,
+      emailPermission: true,
     },
   });
 

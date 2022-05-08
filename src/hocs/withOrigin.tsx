@@ -1,6 +1,7 @@
 import React from 'react';
 import type { NextPage } from 'next';
 
+import { LoadingTemplate } from 'components/layout/LoadingTemplate';
 import { NotFoundTemplate } from 'components/layout/NotFoundTemplate';
 import { useContext } from 'hooks/useContext';
 import { useFetch } from 'hooks/useFetch';
@@ -14,13 +15,17 @@ export const withOrigin = <T extends Record<string, unknown>>(
     const { slug, setOrigin } = useContext();
     const url = slug ? dynamicApiRoutes.origin({ slug }) : undefined;
 
-    const { notFound } = useFetch<OriginData>({
+    const { loading, notFound } = useFetch<OriginData>({
       url,
       successCallback: ({ data }) => setOrigin(data),
     });
 
     if (notFound) {
       return <NotFoundTemplate />;
+    }
+
+    if (loading) {
+      return <LoadingTemplate />;
     }
 
     return <PageComponent {...pageProps} />;

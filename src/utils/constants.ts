@@ -100,6 +100,7 @@ export const MOCK_ORIGIN = {
   userCount: 1,
   dynamicRouteCount: MOCK_DYNAMIC_ROUTES.length,
   excludedRouteCount: 0,
+  weeklyEmailReportsEnabled: false,
 };
 
 export enum MODAL_NAMES {
@@ -120,6 +121,9 @@ export enum MODAL_NAMES {
   ACCEPT_ORIGIN_INVITE = 'ACCEPT_ORIGIN_INVITE',
   REJECT_ORIGIN_INVITE = 'REJECT_ORIGIN_INVITE',
   GEO_LOCATION = 'GEO_LOCATION',
+  DELETE_RECIPIENT = 'DELETE_RECIPIENT',
+  SEE_WEEKLY_EMAIL_REPORT = 'SEE_WEEKLY_EMAIL_REPORT',
+  SEND_WEEKLY_EMAIL_REPORTS = 'SEND_WEEKLY_EMAIL_REPORTS',
 }
 
 export const DEFAULT_MAX_WIDTH = 'max-w-3xl';
@@ -139,3 +143,13 @@ export enum EVENT_LOCATIONS {
 export const PERCENTILE_DATA_KEYS = ['avg', 'p50', 'p75', 'p90', 'p95', 'p99'] as const;
 
 export const DEVICES = ['console', 'mobile', 'tablet', 'smarttv', 'wearable', 'embedded'];
+
+export enum ORIGIN_MENU_KEYS {
+  SETTINGS = 'SETTINGS',
+  DYNAMIC_ROUTES = 'DYNAMIC_ROUTES',
+  EXCLUDED_ROUTES = 'EXCLUDED_ROUTES',
+  USERS = 'USERS',
+  EMAIL_REPORTS = 'EMAIL_REPORTS',
+}
+
+export const REQUEST_TIME_FORMAT = 'YYYY-MM-DD:HH:mm';

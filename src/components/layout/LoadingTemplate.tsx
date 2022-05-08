@@ -1,13 +1,12 @@
 import React from 'react';
 
-import { Head } from 'components/layout/Head';
+import { MainTemplate } from 'components/layout/MainTemplate';
 import { LoadingIndicator } from 'components/shared/LoadingIndicator';
 
 export const LoadingTemplate: React.FC = () => (
-  <>
-    <Head title="Loading..." loading />
-    <div className="flex h-screen items-center justify-center">
+  <MainTemplate headProps={{ title: 'Loading...', loading: true }}>
+    <div className="flex grow items-center justify-center p-5">
       <LoadingIndicator />
     </div>
-  </>
+  </MainTemplate>
 );
