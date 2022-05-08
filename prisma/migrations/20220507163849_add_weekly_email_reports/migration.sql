@@ -34,4 +34,5 @@ INSERT INTO "weekly_email_report_recipients" (
   FROM "origin_users"
   LEFT JOIN "users" ON "origin_users"."user_id" = "users"."id"
   LEFT JOIN "origins" ON "origin_users"."origin_id" = "origins"."id"
-  WHERE "origins"."weekly_email_reports_enabled" = TRUE;
+  WHERE "origins"."weekly_email_reports_enabled" = TRUE
+  AND "users"."email" IN (SELECT DISTINCT "users"."email");
