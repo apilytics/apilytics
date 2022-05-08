@@ -24,7 +24,7 @@ export const withOrigin = <T extends Record<string, unknown>>(
       return <NotFoundTemplate />;
     }
 
-    if (loading) {
+    if (loading || !slug) {
       return <LoadingTemplate />;
     }
 
