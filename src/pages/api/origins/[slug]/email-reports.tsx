@@ -130,10 +130,17 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
     return;
   }
 
-  const { id: originId } = origin;
-  const _recipients = await prisma.weeklyEmailReportRecipient.findMany({ where: { originId } });
-  const recipients = _recipients.map(({ email }) => email);
+  const { id: originId, name } = origin;
+  const _allRecipients = await prisma.weeklyEmailReportRecipient.findMany({ where: { originId } });
+  const allRecipients = _allRecipients.map(({ email }) => email);
 
+  const _unsubbedEmails = await prisma.user.findMany({
+    where: { email: { in: allRecipients, mode: 'insensitive' }, emailPermission: false },
+    select: { email: true },
+  });
+
+  const unsubbedEmails = _unsubbedEmails.map(({ email }) => email.toLowerCase());
+  const recipients = allRecipients.filter((email) => !unsubbedEmails.includes(email.toLowerCase()));
   const from = dayjs().subtract(WEEK_DAYS, 'day').format(REQUEST_TIME_FORMAT);
   const to = dayjs().format(REQUEST_TIME_FORMAT);
 
@@ -147,7 +154,7 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
 
   const weeklyReport = <WeeklyReport origin={origin} metrics={metrics} from={from} to={to} />;
   const body = ReactDOMServer.renderToStaticMarkup(weeklyReport);
-  sendWeeklyEmailReport({ recipients, name: origin.name, body });
+  sendWeeklyEmailReport({ recipients, name, body });
   sendOk(res, { message: 'Weekly report has been sent to the recipients.' });
 };
 
