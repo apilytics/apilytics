@@ -48,9 +48,11 @@ model WeeklyEmailReportRecipient {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  email    String  @unique
+  email    String
   Origin   Origin? @relation(fields: [originId], references: [id], onDelete: Cascade)
   originId String? @map("origin_id") @db.Uuid
+
+  @@unique([email, originId])
   @@map("weekly_email_report_recipients")
 }
 
