@@ -18,70 +18,12 @@ import { withApilytics } from 'utils/apilytics';
 import { PERMISSION_ERROR, REQUEST_TIME_FORMAT, SAFE_METHODS, WEEK_DAYS } from 'utils/constants';
 import type { ApiHandler, MessageResponse } from 'types';
 
-const sendWeeklyEmailReport = async ({
-  recipients,
-  name,
-  body,
-}: {
-  recipients: string[];
-  name: string;
-  body: string;
-}): Promise<void> => {
-  const { EMAIL_FROM = '' } = process.env;
-  const subject = `Apilytics weekly report for ${name}`;
-
-  const params = {
-    Source: EMAIL_FROM,
-    Destination: {
-      ToAddresses: recipients,
-    },
-    ReplyToAddresses: [EMAIL_FROM],
-    Message: {
-      Body: {
-        Html: {
-          Charset: 'UTF-8',
-          Data: body,
-        },
-      },
-      Subject: {
-        Charset: 'UTF-8',
-        Data: subject,
-      },
-    },
-  };
-
-  if (process.env.NODE_ENV === 'production') {
-    try {
-      await AWS_SES.sendEmail(params).promise();
-    } catch (e) {
-      console.error(e);
-    }
-  } else {
-    nodemailer.createTestAccount((_, account) => {
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        secure: false,
-        auth: {
-          user: account.user,
-          pass: account.pass,
-        },
-      });
-
-      transporter
-        .sendMail({ from: EMAIL_FROM, to: recipients, subject, html: body })
-        .then((info) => {
-          console.log('Preview URL: ' + nodemailer.getTestMessageUrl(info));
-        });
-    });
-  }
-};
-
 const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
   const slug = getSlugFromReq(req);
+  const isAutomaticReport = req.headers['x-api-key'] === process.env.INTERNAL_API_KEY;
   let userId;
 
-  if (req.headers['x-api-key'] === process.env.INTERNAL_API_KEY) {
+  if (isAutomaticReport) {
     const adminUser = await prisma.user.findFirst({
       where: { isAdmin: true },
       select: { id: true },
@@ -154,7 +96,62 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
 
   const weeklyReport = <WeeklyReport origin={origin} metrics={metrics} from={from} to={to} />;
   const body = ReactDOMServer.renderToStaticMarkup(weeklyReport);
-  sendWeeklyEmailReport({ recipients, name, body });
+  const { EMAIL_FROM = '' } = process.env;
+  const subject = `Apilytics weekly report for ${name}`;
+
+  const params = {
+    Source: EMAIL_FROM,
+    Destination: {
+      ToAddresses: recipients,
+    },
+    ReplyToAddresses: [EMAIL_FROM],
+    Message: {
+      Body: {
+        Html: {
+          Charset: 'UTF-8',
+          Data: body,
+        },
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: subject,
+      },
+    },
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      await AWS_SES.sendEmail(params).promise();
+
+      if (isAutomaticReport) {
+        await prisma.origin.update({
+          where: { id: originId },
+          data: { lastAutomaticWeeklyEmailReportsSentAt: new Date() },
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  } else {
+    nodemailer.createTestAccount((_, account) => {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false,
+        auth: {
+          user: account.user,
+          pass: account.pass,
+        },
+      });
+
+      transporter
+        .sendMail({ from: EMAIL_FROM, to: recipients, subject, html: body })
+        .then((info) => {
+          console.log('Preview URL: ' + nodemailer.getTestMessageUrl(info));
+        });
+    });
+  }
+
   sendOk(res, { message: 'Weekly report has been sent to the recipients.' });
 };
 

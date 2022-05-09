@@ -101,6 +101,7 @@ export const MOCK_ORIGIN = {
   dynamicRouteCount: MOCK_DYNAMIC_ROUTES.length,
   excludedRouteCount: 0,
   weeklyEmailReportsEnabled: false,
+  lastAutomaticWeeklyEmailReportsSentAt: null,
 };
 
 export enum MODAL_NAMES {

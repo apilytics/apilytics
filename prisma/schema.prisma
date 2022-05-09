@@ -92,12 +92,13 @@ model Origin {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  originUsers                 OriginUser[]
-  metrics                     Metric[]
-  dynamicRoutes               DynamicRoute[]
-  excludedRoutes              ExcludedRoute[]
-  invites                     OriginInvite[]
-  weeklyEmailReportRecipients WeeklyEmailReportRecipient[]
+  originUsers                           OriginUser[]
+  metrics                               Metric[]
+  dynamicRoutes                         DynamicRoute[]
+  excludedRoutes                        ExcludedRoute[]
+  invites                               OriginInvite[]
+  weeklyEmailReportRecipients           WeeklyEmailReportRecipient[]
+  lastAutomaticWeeklyEmailReportsSentAt DateTime?                    @map("last_automatic_weekly_email_reports_sent_at")
 
   @@index([slug])
   @@map("origins")

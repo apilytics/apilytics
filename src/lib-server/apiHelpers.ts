@@ -137,6 +137,7 @@ export const getOriginForUser = async ({
       dynamicRoutes,
       excludedRoutes,
       weeklyEmailReportsEnabled,
+      lastAutomaticWeeklyEmailReportsSentAt,
     } = origin;
 
     return {
@@ -151,6 +152,7 @@ export const getOriginForUser = async ({
       dynamicRouteCount: dynamicRoutes.length,
       excludedRouteCount: excludedRoutes.length,
       weeklyEmailReportsEnabled,
+      lastAutomaticWeeklyEmailReportsSentAt,
     };
   }
 
