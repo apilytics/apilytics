@@ -188,6 +188,11 @@ const OriginEmailReports: NextPage = () => {
           label="Enable weekly email reports"
           checked={weeklyEmailReportsEnabled}
           onChange={handleWeeklyEmailReportsToggle}
+          helperText={
+            origin?.lastAutomaticWeeklyEmailReportsSentAt
+              ? `Last sent on ${dayjs(origin.lastAutomaticWeeklyEmailReportsSentAt).format('LLLL')}`
+              : ''
+          }
         />
         <p className="mt-4 text-white">Recipients</p>
         {recipients.length ? (
