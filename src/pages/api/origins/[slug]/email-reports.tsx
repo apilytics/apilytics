@@ -94,8 +94,13 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
     },
   });
 
-  const weeklyReport = <WeeklyReport origin={origin} metrics={metrics} from={from} to={to} />;
-  const body = ReactDOMServer.renderToStaticMarkup(weeklyReport);
+  const body = ReactDOMServer.renderToStaticMarkup(
+    <html>
+      <body style={{ margin: 0, padding: 0, backgroundColor: '#1f2937' }}>
+        <WeeklyReport origin={origin} metrics={metrics} from={from} to={to} />
+      </body>
+    </html>,
+  );
   const { EMAIL_FROM = '' } = process.env;
   const subject = `Apilytics weekly report for ${name}`;
 
