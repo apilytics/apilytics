@@ -14,9 +14,16 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
   const origins = await prisma.origin.findMany({
     where: {
       weeklyEmailReportsEnabled: true,
-      lastAutomaticWeeklyEmailReportsSentAt: {
-        lt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6), // 6 days ago.
-      },
+      OR: [
+        {
+          lastAutomaticWeeklyEmailReportsSentAt: {
+            lt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6), // 6 days ago.
+          },
+        },
+        {
+          lastAutomaticWeeklyEmailReportsSentAt: null,
+        },
+      ],
     },
     select: { slug: true },
     take: 1, // Send only one report at a time to avoid connection pooling issues.
