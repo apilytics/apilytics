@@ -1,5 +1,5 @@
 import { makeMethodsHandler } from 'lib-server/apiHelpers';
-import { sendOk, sendUnauthorized } from 'lib-server/responses';
+import { sendOk, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { withApilytics } from 'utils/apilytics';
 import { FRONTEND_URL } from 'utils/router';
@@ -22,16 +22,26 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
     take: 1, // Send only one report at a time to avoid connection pooling issues.
   });
 
-  origins.forEach(({ slug }) => {
-    fetch(`${FRONTEND_URL}/api/origins/${slug}/email-reports`, {
+  if (!origins.length) {
+    sendOk(res, { message: 'All weekly email reports already sent, nothing to do.' });
+    return;
+  }
+
+  for (const { slug } of origins) {
+    const fetchResponse = await fetch(`${FRONTEND_URL}/api/origins/${slug}/email-reports`, {
       method: 'POST',
       headers: {
         'X-API-Key': process.env.INTERNAL_API_KEY ?? '',
       },
     });
-  });
 
-  sendOk(res, { message: 'Weekly reports has been sent to the recipients.' });
+    if (!fetchResponse.ok) {
+      sendUnknownError(res);
+      return;
+    }
+  }
+
+  sendOk(res, { message: `Weekly email reports sent to ${origins.length} recipients.` });
 };
 
 const handler = makeMethodsHandler({ POST: handlePost }, false);
