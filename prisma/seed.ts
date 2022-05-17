@@ -22,6 +22,7 @@ import MOCK_COUNTRIES from '../src/utils/mock-countries.json';
 
 const READ_ONLY_ADMIN_USER_ID = 'cl05jr6ya00003c5vzyhxqorj';
 const ORIGIN_OWNER_USER_ID = 'cl05jr6ya00013c5v63ipw1jb';
+const ORIGIN_OWNER_USER_EMAIL = 'dev@apilytics.io';
 const ORIGIN_ADMIN_USER_ID = 'cl05jr6ya00023c5vt2nkf4qj';
 const ORIGIN_VIEWER_USER_ID = 'cl05jr6ya00033c5v9ei1co4g';
 const ORIGIN_ID = '201bb1b4-1376-484b-92f0-fa02552c9593';
@@ -138,7 +139,7 @@ const main = async (): Promise<void> => {
     data: {
       id: ORIGIN_OWNER_USER_ID,
       name: 'Test User',
-      email: 'dev@apilytics.io',
+      email: ORIGIN_OWNER_USER_EMAIL,
       originUsers: {
         create: [
           {
@@ -149,6 +150,11 @@ const main = async (): Promise<void> => {
                 name: 'api.example.com',
                 slug: 'api-example-com',
                 apiKey: API_KEY,
+                weeklyEmailReportRecipients: {
+                  create: {
+                    email: ORIGIN_OWNER_USER_EMAIL,
+                  },
+                },
               },
             },
           },
