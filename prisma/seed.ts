@@ -228,9 +228,9 @@ const main = async (): Promise<void> => {
   let maxDataPointsPerHour;
 
   if (process.env.VERCEL_ENV === 'preview') {
-    hours = 7 * 24;
-    minDataPointsPerHour = 0;
-    maxDataPointsPerHour = 10;
+    hours = 180 * 24;
+    minDataPointsPerHour = 10;
+    maxDataPointsPerHour = 20;
   } else {
     hours = 365 * 24;
     minDataPointsPerHour = 10;
