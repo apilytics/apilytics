@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import { useContext } from 'hooks/useContext';
-import { TIME_FRAME_OPTIONS } from 'utils/constants';
+import { TIME_FRAME_OPTIONS, WEEK_DAYS } from 'utils/constants';
 import type { TimeFrame } from 'types';
 
 export const useDashboardQuery = (requireSlug?: boolean): void => {
@@ -39,6 +39,8 @@ export const useDashboardQuery = (requireSlug?: boolean): void => {
       if (_timeFrame) {
         setTimeFrame(Number(_timeFrame) as TimeFrame);
       }
+    } else {
+      setTimeFrame(WEEK_DAYS);
     }
 
     if (method && typeof method === 'string') {
