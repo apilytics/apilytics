@@ -12,6 +12,7 @@ import {
   MOCK_TOTAL_MEMORY,
   PERCENTILE_DATA_KEYS,
   THREE_MONTHS_DAYS,
+  WEEK_DAYS,
 } from 'utils/constants';
 import {
   getRandomArrayItem,
@@ -21,7 +22,7 @@ import {
 import MOCK_COUNTRIES from 'utils/mock-countries.json';
 import type { EndpointData, OriginMetrics, TimeFrame } from 'types';
 
-export const getTimeFrameScope = (timeFrame: TimeFrame): OpUnitType => {
+export const getTimeFrameScope = (timeFrame: TimeFrame = WEEK_DAYS): OpUnitType => {
   let scope: OpUnitType = 'day';
 
   if (timeFrame <= DAY) {
@@ -35,7 +36,7 @@ export const getTimeFrameScope = (timeFrame: TimeFrame): OpUnitType => {
   return scope;
 };
 
-export const getDataPointsBetweenTimeFrame = (timeFrame: TimeFrame): string[] => {
+export const getDataPointsBetweenTimeFrame = (timeFrame: TimeFrame = WEEK_DAYS): string[] => {
   const scope = getTimeFrameScope(timeFrame);
   const dates = [];
 
@@ -83,7 +84,7 @@ const initialMockMetrics = MOCK_PATHS.map((path) => {
 });
 
 interface MockMetricsParams {
-  timeFrame: TimeFrame;
+  timeFrame?: TimeFrame;
   method?: string;
   endpoint?: string;
   statusCode?: string;
@@ -96,7 +97,7 @@ interface MockMetricsParams {
 }
 
 export const getMockMetrics = ({
-  timeFrame,
+  timeFrame = WEEK_DAYS,
   method,
   endpoint,
   statusCode,

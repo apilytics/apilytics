@@ -62,7 +62,7 @@ const Origin: NextPage = () => {
   useDashboardQuery(true);
 
   useEffect(() => {
-    if (slug) {
+    if (slug && timeFrame) {
       const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
       const to = dayjs().format(REQUEST_TIME_FORMAT);
 

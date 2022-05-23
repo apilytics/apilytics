@@ -190,8 +190,8 @@ export interface OriginContextType {
   showApiKey: string;
   origin: OriginData | null;
   setOrigin: Dispatch<SetStateAction<OriginData | null>>;
-  timeFrame: TimeFrame;
-  setTimeFrame: Dispatch<SetStateAction<TimeFrame>>;
+  timeFrame: TimeFrame | undefined;
+  setTimeFrame: Dispatch<SetStateAction<TimeFrame | undefined>>;
   selectedMethod: string | undefined;
   setSelectedMethod: Dispatch<SetStateAction<string | undefined>>;
   selectedEndpoint: string | undefined;

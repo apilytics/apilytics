@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import { WEEK_DAYS } from 'utils/constants';
 import type { OriginContextType, OriginData, TimeFrame } from 'types';
 
 export const _useOriginContext = (): OriginContextType => {
@@ -12,7 +11,7 @@ export const _useOriginContext = (): OriginContextType => {
   const slug = String(_slug ?? '');
   const showApiKey = String(_showApiKey ?? '');
 
-  const [timeFrame, setTimeFrame] = useState<TimeFrame>(WEEK_DAYS);
+  const [timeFrame, setTimeFrame] = useState<TimeFrame>();
   const [origin, setOrigin] = useState<OriginData | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>();
   const [selectedEndpoint, setSelectedEndpoint] = useState<string>();
