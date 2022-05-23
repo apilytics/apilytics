@@ -494,46 +494,46 @@ SELECT
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors",
 
   ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
-  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP50",
-  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP75",
-  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP90",
-  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP95",
-  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP99",
+  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP50",
+  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP75",
+  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP90",
+  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP95",
+  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP99",
 
   ROUND(AVG(metrics.request_size)) AS "requestSizeAvg",
-  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP50",
-  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP75",
-  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP90",
-  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP95",
-  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP99",
+  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP50",
+  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP75",
+  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP90",
+  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP95",
+  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP99",
 
   ROUND(AVG(metrics.response_size)) AS "responseSizeAvg",
-  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP50",
-  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP75",
-  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP90",
-  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP95",
-  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99",
+  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP50",
+  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP75",
+  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP90",
+  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP95",
+  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99",
 
   ROUND(AVG(metrics.cpu_usage)) AS "cpuUsageAvg",
-  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP50",
-  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP75",
-  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP90",
-  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP95",
-  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP99",
+  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP50",
+  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP75",
+  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP90",
+  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP95",
+  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP99",
 
   ROUND(AVG(metrics.memory_usage)) AS "memoryUsageAvg",
-  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP50",
-  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP75",
-  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP90",
-  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP95",
-  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP99",
+  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP50",
+  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP75",
+  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP90",
+  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP95",
+  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP99",
 
   ROUND(AVG(metrics.memory_total)) AS "memoryTotalAvg",
-  PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP50",
-  PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP75",
-  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP90",
-  PERCENTILE_DISC(0.95) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP95",
-  PERCENTILE_DISC(0.99) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP99"
+  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP50",
+  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP75",
+  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP90",
+  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP95",
+  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP99"
 
 ${fromClause}
 ${whereClause}`;
@@ -579,8 +579,6 @@ ${fromClause}
       AND metrics.path LIKE dynamic_routes.pattern
       AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
         = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
-    ORDER BY LENGTH(dynamic_routes.pattern) DESC
-    LIMIT 1
   ) AS matched_routes ON TRUE
 
 ${whereClause}

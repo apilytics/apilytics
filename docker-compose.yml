@@ -3,7 +3,7 @@ version: "3.7"
 services:
   apilytics-db:
     container_name: apilytics-db
-    image: postgres:14.2-alpine3.15@sha256:da0b571d3abdfbd20aee7d696d817c5ff0565e7bf4cb65343455974dea7e7792
+    image: timescale/timescaledb:latest-pg14
     ports:
       - "5434:5432"
     environment:

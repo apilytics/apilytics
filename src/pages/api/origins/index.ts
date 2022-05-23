@@ -52,7 +52,8 @@ FROM origins
     WHERE metrics.origin_id = origins.id
       AND NOT EXISTS (
         SELECT 1 FROM excluded_routes
-        WHERE metrics.path LIKE excluded_routes.pattern
+        WHERE excluded_routes.origin_id = origins.id
+          AND metrics.path LIKE excluded_routes.pattern
       )
   ) AS metrics ON TRUE
 
