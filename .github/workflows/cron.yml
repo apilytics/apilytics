@@ -2,7 +2,7 @@ name: "Weekly email report CRON"
 
 on:
   schedule:
-    - cron: "* 0-6 * * MON" # Every minute from 00:00 to 06:00 on Sun-Mon night.
+    - cron: "* 0-0 * * MON" # Every minute from 00:00 to 24:00 on Sun-Mon night.
   workflow_dispatch:
 
 jobs:

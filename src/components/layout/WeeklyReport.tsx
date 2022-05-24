@@ -224,10 +224,11 @@ export const WeeklyReport: React.FC<Props> = ({
               {requestsData.length
                 ? requestsData.map(({ method, endpoint, totalRequests }) => (
                     <li key={endpoint} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'inline-flex', gap: 5 }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         <span
                           style={{
                             color: HTTP_METHOD_COLORS[method as keyof typeof HTTP_METHOD_COLORS],
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           {method}
@@ -250,10 +251,11 @@ export const WeeklyReport: React.FC<Props> = ({
               {responseTimeData.length
                 ? responseTimeData.map(({ method, endpoint, responseTimeAvg }) => (
                     <li key={endpoint} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'inline-flex', gap: 5 }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         <span
                           style={{
                             color: HTTP_METHOD_COLORS[method as keyof typeof HTTP_METHOD_COLORS],
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           {method}
@@ -297,9 +299,12 @@ export const WeeklyReport: React.FC<Props> = ({
                 ? countryData.map(({ country, countryCode, requests }) => (
                     <li
                       key={countryCode}
-                      style={{ display: 'flex', justifyContent: 'space-between' }}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }}
                     >
-                      <div style={{ display: 'inline-flex', gap: 5 }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         {countryCode && <span>{getFlagEmoji(countryCode)}</span>}
                         <span style={{ color: 'white' }}>{country}</span>
                       </div>
@@ -322,7 +327,7 @@ export const WeeklyReport: React.FC<Props> = ({
                       key={countryCode}
                       style={{ display: 'flex', justifyContent: 'space-between' }}
                     >
-                      <div style={{ display: 'inline-flex', gap: 5 }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         {countryCode && <span>{getFlagEmoji(countryCode)}</span>}
                         <span style={{ color: 'white' }}>{region}</span>
                       </div>
@@ -345,7 +350,7 @@ export const WeeklyReport: React.FC<Props> = ({
                       key={countryCode}
                       style={{ display: 'flex', justifyContent: 'space-between' }}
                     >
-                      <div style={{ display: 'inline-flex', gap: 5 }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         {countryCode && <span>{getFlagEmoji(countryCode)}</span>}
                         <span style={{ color: 'white' }}>{city}</span>
                       </div>
