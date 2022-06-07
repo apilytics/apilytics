@@ -83,6 +83,11 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
 
   const unsubbedEmails = _unsubbedEmails.map(({ email }) => email.toLowerCase());
   const recipients = allRecipients.filter((email) => !unsubbedEmails.includes(email.toLowerCase()));
+
+  if (!recipients.length) {
+    sendNotFound(res, 'No recipients found.');
+  }
+
   const from = dayjs().subtract(WEEK_DAYS, 'day').format(REQUEST_TIME_FORMAT);
   const to = dayjs().format(REQUEST_TIME_FORMAT);
 
@@ -101,6 +106,7 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
       </body>
     </html>,
   );
+
   const { EMAIL_FROM = '' } = process.env;
   const subject = `Apilytics weekly report for ${name}`;
 

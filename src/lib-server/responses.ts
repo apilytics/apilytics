@@ -39,8 +39,12 @@ export const sendInvalidApiKey = (res: NextApiResponse): void => {
   res.status(403).json({ message: 'Invalid API key.' });
 };
 
-export const sendNotFound = (res: NextApiResponse, objectName: string): void => {
-  res.status(404).json({ message: `${objectName} not found.` });
+export const sendNotFound = (
+  res: NextApiResponse,
+  objectName: string,
+  message = `${objectName} not found.`,
+): void => {
+  res.status(404).json({ message });
 };
 
 export const sendMethodNotAllowed = (res: NextApiResponse, allowed: string[]): void => {
