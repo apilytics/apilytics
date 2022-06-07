@@ -84,6 +84,13 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
   const unsubbedEmails = _unsubbedEmails.map(({ email }) => email.toLowerCase());
   const recipients = allRecipients.filter((email) => !unsubbedEmails.includes(email.toLowerCase()));
 
+  if (isAutomaticReport) {
+    await prisma.origin.update({
+      where: { id: originId },
+      data: { lastAutomaticWeeklyEmailReportsSentAt: new Date() },
+    });
+  }
+
   if (!recipients.length) {
     sendNotFound(res, 'No recipients found.');
     return;
@@ -134,13 +141,6 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
   if (process.env.NODE_ENV === 'production') {
     try {
       await AWS_SES.sendEmail(params).promise();
-
-      if (isAutomaticReport) {
-        await prisma.origin.update({
-          where: { id: originId },
-          data: { lastAutomaticWeeklyEmailReportsSentAt: new Date() },
-        });
-      }
     } catch (e) {
       console.error(e);
     }
