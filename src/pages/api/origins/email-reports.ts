@@ -11,9 +11,16 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
     return;
   }
 
-  const _origins = await prisma.origin.findMany({
+  const origins = await prisma.origin.findMany({
     where: {
       weeklyEmailReportsEnabled: true,
+      weeklyEmailReportRecipients: {
+        some: {
+          email: {
+            gt: '', // Only select origins that have email recipients.
+          },
+        },
+      },
       OR: [
         {
           lastAutomaticWeeklyEmailReportsSentAt: {
@@ -25,13 +32,9 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
         },
       ],
     },
-    select: { slug: true, weeklyEmailReportRecipients: true },
+    select: { slug: true },
     take: 1, // Send only one report at a time to avoid connection pooling issues.
   });
-
-  const origins = _origins.filter(
-    ({ weeklyEmailReportRecipients }) => weeklyEmailReportRecipients.length > 0,
-  );
 
   if (!origins.length) {
     sendOk(res, { message: 'All weekly email reports already sent, nothing to do.' });
