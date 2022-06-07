@@ -39,14 +39,15 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
   }
 
   for (const { slug } of origins) {
-    const fetchResponse = await fetch(`${FRONTEND_URL}/api/origins/${slug}/email-reports`, {
-      method: 'POST',
-      headers: {
-        'X-API-Key': process.env.INTERNAL_API_KEY ?? '',
-      },
-    });
-
-    if (!fetchResponse.ok) {
+    try {
+      await fetch(`${FRONTEND_URL}/api/origins/${slug}/email-reports`, {
+        method: 'POST',
+        headers: {
+          'X-API-Key': process.env.INTERNAL_API_KEY ?? '',
+        },
+      });
+    } catch (e) {
+      console.error(e);
       sendUnknownError(res);
       return;
     }
