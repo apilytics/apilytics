@@ -86,6 +86,7 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
 
   if (!recipients.length) {
     sendNotFound(res, 'No recipients found.');
+    return;
   }
 
   const from = dayjs().subtract(WEEK_DAYS, 'day').format(REQUEST_TIME_FORMAT);
