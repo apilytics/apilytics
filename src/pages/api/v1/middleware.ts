@@ -88,7 +88,7 @@ const handlePost: ApiHandler = async (req, res) => {
 
   const {
     path,
-    query,
+    query: _query,
     method,
     statusCode,
     timeMillis,
@@ -108,6 +108,8 @@ const handlePost: ApiHandler = async (req, res) => {
       ? 0
       : _requestSize;
 
+  // eslint-disable-next-line no-control-regex
+  const query = _query?.replace(/\x00/g, ''); // Remove null bytes, as Postgres cannot serialize them into JSON.
   const queryParams = query ? Object.fromEntries(new URLSearchParams(query)) : undefined;
 
   const apilyticsVersion =
