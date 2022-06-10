@@ -88,7 +88,7 @@ const handlePost: ApiHandler = async (req, res) => {
 
   const {
     path,
-    query,
+    query: _query,
     method,
     statusCode,
     timeMillis,
@@ -108,6 +108,8 @@ const handlePost: ApiHandler = async (req, res) => {
       ? 0
       : _requestSize;
 
+  // eslint-disable-next-line no-control-regex
+  const query = _query?.replace(/\x00/g, ''); // Remove null bytes, as Postgres cannot serialize them into JSON.
   const queryParams = query ? Object.fromEntries(new URLSearchParams(query)) : undefined;
 
   const apilyticsVersion =
@@ -168,33 +170,32 @@ const handlePost: ApiHandler = async (req, res) => {
     }
   }
 
+  const data = {
+    originId: origin.id,
+    path,
+    queryParams,
+    method,
+    statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
+    timeMillis: limitValue(timeMillis, { min: 0 }),
+    requestSize: limitValue(requestSize, { min: 0 }),
+    responseSize: limitValue(responseSize, { min: 0 }),
+    browser,
+    os,
+    device,
+    cpuUsage: limitValue(cpuUsage, { min: 0, max: 1 }),
+    memoryUsage: limitValue(memoryUsage, { min: 0 }),
+    memoryTotal: limitValue(memoryTotal, { min: 0 }),
+    country,
+    countryCode,
+    region,
+    city,
+    apilyticsVersion,
+  };
+
   try {
-    await prisma.metric.create({
-      data: {
-        originId: origin.id,
-        path,
-        queryParams,
-        method,
-        statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
-        timeMillis: limitValue(timeMillis, { min: 0 }),
-        requestSize: limitValue(requestSize, { min: 0 }),
-        responseSize: limitValue(responseSize, { min: 0 }),
-        browser,
-        os,
-        device,
-        cpuUsage: limitValue(cpuUsage, { min: 0, max: 1 }),
-        memoryUsage: limitValue(memoryUsage, { min: 0 }),
-        memoryTotal: limitValue(memoryTotal, { min: 0 }),
-        country,
-        countryCode,
-        region,
-        city,
-        apilyticsVersion,
-      },
-    });
+    await prisma.metric.create({ data });
   } catch (e) {
-    console.log('`origin`:', origin.name);
-    console.log('`queryParams`:', queryParams);
+    console.log({ origin: origin.name, ...data });
     throw e;
   }
 
