@@ -109,7 +109,7 @@ const handlePost: ApiHandler = async (req, res) => {
       : _requestSize;
 
   // eslint-disable-next-line no-control-regex
-  const query = _query?.replace(/\x00/g, ''); // Remove null bytes, as Postgres cannot serialize them into JSON.
+  const query = _query?.replace(/%00/g, '%2500'); // Escape encoded null bytes, as Postgres cannot serialize them into JSON.
   const queryParams = query ? Object.fromEntries(new URLSearchParams(query)) : undefined;
 
   const apilyticsVersion =
