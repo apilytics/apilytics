@@ -195,7 +195,7 @@ const handlePost: ApiHandler = async (req, res) => {
   try {
     await prisma.metric.create({ data });
   } catch (e) {
-    console.log({ origin: origin.name, ...data });
+    console.log({ origin: origin.name, ...data, query: _query });
     throw e;
   }
 
