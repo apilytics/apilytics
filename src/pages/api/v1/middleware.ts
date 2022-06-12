@@ -54,6 +54,64 @@ function limitValue(value: number | undefined, { min, max }: Limits): number | u
   return value;
 }
 
+const fetchGeoIp = async ({
+  ip,
+  retry,
+}: {
+  ip: string;
+  retry: boolean;
+}): Promise<{
+  country: string | undefined;
+  countryCode: string | undefined;
+  region: string | undefined;
+  city: string | undefined;
+}> => {
+  let country;
+  let countryCode;
+  let region;
+  let city;
+
+  try {
+    const geoIpRes = await fetch('https://geoip.apilytics.io/geoip', {
+      method: 'POST',
+      body: JSON.stringify({ ip }),
+      headers: {
+        'X-API-Key': process.env.GEOIP_API_KEY ?? 'secret',
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // 400 signals an invalid IP address.
+    if (![200, 400].includes(geoIpRes.status)) {
+      if (retry) {
+        return fetchGeoIp({ ip, retry: false });
+      }
+
+      let message;
+      try {
+        message = await geoIpRes.clone().json();
+      } catch {
+        message = await geoIpRes.text();
+      }
+
+      console.error(
+        `Got an unexpected status code from GeoIP API: ${geoIpRes.status}, message:\n`,
+        message,
+      );
+    } else {
+      ({
+        country: { name: country, code: countryCode } = { name: undefined, code: undefined },
+        region,
+        city,
+      } = await geoIpRes.json());
+    }
+  } catch (e) {
+    console.error('Error when calling GeoIP API:\n', e);
+  }
+
+  return { country, countryCode, region, city };
+};
+
 const handlePost: ApiHandler = async (req, res) => {
   const apiKey = req.headers['x-api-key'];
 
@@ -134,40 +192,7 @@ const handlePost: ApiHandler = async (req, res) => {
   let city;
 
   if (ip) {
-    try {
-      const geoIpRes = await fetch('https://geoip.apilytics.io/geoip', {
-        method: 'POST',
-        body: JSON.stringify({ ip }),
-        headers: {
-          'X-API-Key': process.env.GEOIP_API_KEY ?? 'secret',
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // 400 signals an invalid IP address.
-      if (![200, 400].includes(geoIpRes.status)) {
-        let message;
-        try {
-          message = await geoIpRes.clone().json();
-        } catch {
-          message = await geoIpRes.text();
-        }
-
-        console.error(
-          `Got an unexpected status code from GeoIP API: ${geoIpRes.status}, message:\n`,
-          message,
-        );
-      } else {
-        ({
-          country: { name: country, code: countryCode } = { name: undefined, code: undefined },
-          region,
-          city,
-        } = await geoIpRes.json());
-      }
-    } catch (e) {
-      console.error('Error when calling GeoIP API:\n', e);
-      // Save empty location data.
-    }
+    ({ country, countryCode, region, city } = await fetchGeoIp({ ip, retry: true }));
   }
 
   const data = {
