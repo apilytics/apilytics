@@ -11,6 +11,10 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
     return;
   }
 
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const lastSundayNight = new Date(today.setDate(today.getDate() - today.getDay())).toUTCString();
+
   const origins = await prisma.origin.findMany({
     where: {
       weeklyEmailReportsEnabled: true,
@@ -24,7 +28,7 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
       OR: [
         {
           lastAutomaticWeeklyEmailReportsSentAt: {
-            lt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6), // 6 days ago.
+            lt: lastSundayNight,
           },
         },
         {
