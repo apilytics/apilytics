@@ -28,7 +28,7 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
       OR: [
         {
           lastAutomaticWeeklyEmailReportsSentAt: {
-            lt: lastSundayNight,
+            lt: new Date(lastSundayNight),
           },
         },
         {
