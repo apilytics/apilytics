@@ -6,6 +6,7 @@ import {
   makeMethodsHandler,
   routeToPattern,
 } from 'lib-server/apiHelpers';
+import { updateMetricsForExcludedRoutes } from 'lib-server/queries';
 import {
   sendConflict,
   sendInvalidInput,
@@ -16,7 +17,7 @@ import {
 import prisma from 'prisma/client';
 import { isUniqueConstraintFailed } from 'prisma/errors';
 import { withApilytics } from 'utils/apilytics';
-import { PERMISSION_ERROR } from 'utils/constants';
+import { ORIGIN_ROLES, PERMISSION_ERROR } from 'utils/constants';
 import type { ApiHandler, RouteData } from 'types';
 
 const getRoutes = async (originId: string): Promise<RouteData[]> => {
@@ -27,6 +28,7 @@ SELECT
 
 FROM excluded_routes
   LEFT JOIN metrics ON metrics.origin_id = excluded_routes.origin_id
+    AND metrics.excluded_route_id IS NOT NULL
     AND metrics.path LIKE excluded_routes.pattern
     AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
       = LENGTH(excluded_routes.pattern) - LENGTH(REPLACE(excluded_routes.pattern, '/', ''))
@@ -49,11 +51,17 @@ const handleGet: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
   });
 
   if (!originUser) {
-    sendNotFound(res, 'OriginUser');
-    return;
+    const adminUser = await prisma.user.findFirst({ where: { id: userId, isAdmin: true } });
+
+    if (!adminUser) {
+      sendNotFound(res, 'OriginUser');
+      return;
+    }
   }
 
-  if (!hasWritePermissionsForOrigin(originUser.role)) {
+  const role = originUser?.role ?? ORIGIN_ROLES.ADMIN;
+
+  if (!hasWritePermissionsForOrigin(role)) {
     sendUnauthorized(res, PERMISSION_ERROR);
     return;
   }
@@ -65,8 +73,8 @@ const handleGet: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
     return;
   }
 
-  const routes = await getRoutes(origin.id);
-  sendOk(res, { data: routes });
+  const data = await getRoutes(origin.id);
+  sendOk(res, { data });
 };
 
 const handlePut: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
@@ -114,6 +122,8 @@ const handlePut: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
       prisma.excludedRoute.deleteMany({ where: { originId } }),
       prisma.excludedRoute.createMany({ data }),
     ]);
+
+    await updateMetricsForExcludedRoutes({ originId });
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'Two or more routes map to conflicting patterns.');

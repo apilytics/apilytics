@@ -32,7 +32,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
   csrfToken,
 }) => {
   const {
-    loading,
+    submitting,
     formValues: { email },
     setFormValues,
     submitted,
@@ -104,7 +104,7 @@ export const LoginFormTemplate: React.FC<Props> = ({
           subTitle={subTitle}
           contentAfter={contentAfter}
           onSubmit={handleSubmit}
-          loading={loading}
+          submitting={submitting}
         >
           <Input
             type="email"

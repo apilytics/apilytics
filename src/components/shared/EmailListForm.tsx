@@ -7,7 +7,7 @@ import { staticApiRoutes } from 'utils/router';
 
 export const EmailListForm: React.FC = () => {
   const {
-    loading,
+    submitting,
     formValues: { email },
     onInputChange,
     submitForm,
@@ -58,7 +58,7 @@ export const EmailListForm: React.FC = () => {
             type="submit"
             className="btn-outline btn-primary mt-2 sm:mt-0 sm:ml-2"
             fullWidth="mobile"
-            loading={loading}
+            loading={submitting}
           >
             Submit
           </Button>

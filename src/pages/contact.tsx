@@ -14,7 +14,7 @@ import { usePlausible } from 'hooks/usePlausible';
 import { staticApiRoutes } from 'utils/router';
 
 const Contact: NextPage = () => {
-  const { loading, formValues, onInputChange, submitForm } = useForm({
+  const { submitting, formValues, onInputChange, submitForm } = useForm({
     email: '',
     message: '',
   });
@@ -57,7 +57,7 @@ const Contact: NextPage = () => {
           title="Send us a message"
           subTitle={renderSubTitle}
           onSubmit={handleSubmit}
-          loading={loading}
+          submitting={submitting}
         >
           <Input
             type="email"

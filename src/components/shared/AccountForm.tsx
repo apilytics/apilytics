@@ -32,14 +32,14 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
     [email, emailPermission, intendedUse, name, usedTechnologies],
   );
 
-  const { loading, onInputChange, formValues, setFormValues, submitForm } =
+  const { submitting, onInputChange, formValues, setFormValues, submitForm } =
     useForm(initialFormValues);
 
   useEffect(() => {
     setFormValues(initialFormValues);
   }, [initialFormValues, setFormValues]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     submitForm<User>({
@@ -59,7 +59,7 @@ export const AccountForm: React.FC<Props> = ({ title, isSignUp }) => {
   };
 
   return (
-    <Form title={title} onSubmit={handleSubmit} loading={loading}>
+    <Form title={title} onSubmit={handleSubmit} submitting={submitting}>
       <Input
         name="name"
         label="Account name"

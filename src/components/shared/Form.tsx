@@ -9,7 +9,7 @@ export const Form: React.FC<FormProps> = ({
   subTitle,
   onSubmit,
   contentAfter,
-  loading,
+  submitting,
   className,
   submitButtonText = 'Submit',
   children,
@@ -21,8 +21,8 @@ export const Form: React.FC<FormProps> = ({
     {children}
     <Button
       className="btn-primary mt-4"
-      loading={loading}
-      disabled={loading}
+      loading={submitting}
+      disabled={submitting}
       type="submit"
       fullWidth
     >

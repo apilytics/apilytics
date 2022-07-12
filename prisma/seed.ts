@@ -1,4 +1,9 @@
 // Ignore: `ts-node` won't find these without relative imports.
+// eslint-disable-next-line no-restricted-imports
+import {
+  updateMetricsForDynamicRoutes,
+  updateMetricsForExcludedRoutes,
+} from '../src/lib-server/queries';
 import prisma from '../src/prisma/client'; // eslint-disable-line no-restricted-imports
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -6,6 +11,7 @@ import {
   METHODS,
   MOCK_BROWSERS,
   MOCK_DYNAMIC_ROUTES,
+  MOCK_EXCLUDED_ROUTES,
   MOCK_OPERATING_SYSTEMS,
   MOCK_PATHS,
   MOCK_TOTAL_MEMORY,
@@ -32,6 +38,12 @@ const getRandomNumberBetweenOrUndefined = (min: number, max: number): number | u
   Math.random() < 0.1 ? undefined : getRandomNumberBetween(min, max);
 
 const TEST_DYNAMIC_ROUTES = MOCK_DYNAMIC_ROUTES.map(({ route, pattern }) => ({
+  originId: ORIGIN_ID,
+  route,
+  pattern,
+}));
+
+const TEST_EXCLUDED_ROUTES = MOCK_EXCLUDED_ROUTES.map(({ route, pattern }) => ({
   originId: ORIGIN_ID,
   route,
   pattern,
@@ -242,8 +254,14 @@ const main = async (): Promise<void> => {
   console.log('Metrics created.');
 
   await prisma.dynamicRoute.createMany({ data: TEST_DYNAMIC_ROUTES });
+  await updateMetricsForDynamicRoutes({ originId: ORIGIN_ID });
 
   console.log('Dynamic routes created.');
+
+  await prisma.excludedRoute.createMany({ data: TEST_EXCLUDED_ROUTES });
+  await updateMetricsForExcludedRoutes({ originId: ORIGIN_ID });
+
+  console.log('Excluded routes created.');
 };
 
 (async (): Promise<void> => {

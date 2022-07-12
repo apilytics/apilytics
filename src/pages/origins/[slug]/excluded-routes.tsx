@@ -41,6 +41,7 @@ const OriginExcludedRoutes: NextPage = () => {
     setFormValues,
     onInputChange,
     submitForm,
+    submitting,
   } = useForm(initialFormValues);
 
   const handleCloseModal = (): void => {
@@ -138,7 +139,7 @@ const OriginExcludedRoutes: NextPage = () => {
   const formProps = {
     routeName,
     onInputChange,
-    loading,
+    submitting,
     helperText: (
       <>
         The route pattern should be a relative path and it can contain wildcards in the following
@@ -210,7 +211,7 @@ const OriginExcludedRoutes: NextPage = () => {
       title="Delete route"
       name={MODAL_NAMES.DELETE_EXCLUDED_ROUTE}
       onConfirm={handleConfirmDelete}
-      loading={loading}
+      submitting={submitting}
       dangerAction
     >
       <p>

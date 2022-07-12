@@ -129,7 +129,7 @@ export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
   subTitle?: JSX.Element | string;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   contentAfter?: React.ReactNode;
-  loading: boolean;
+  submitting: boolean;
   submitButtonText?: string;
 }
 
@@ -349,7 +349,6 @@ export interface OriginData extends Origin {
 export interface OriginListItem {
   name: string;
   slug: string;
-  totalMetrics: number;
   lastDayMetrics: number;
   userRole: ORIGIN_ROLES;
   userCount: number;

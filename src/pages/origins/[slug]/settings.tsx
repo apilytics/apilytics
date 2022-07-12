@@ -32,7 +32,7 @@ const OriginSettings: NextPage = () => {
   );
 
   const {
-    loading,
+    submitting,
     formValues: { name },
     setFormValues,
     onInputChange,
@@ -96,7 +96,7 @@ const OriginSettings: NextPage = () => {
         title={`Settings for ${origin?.name}`}
         onSubmit={handleSubmit}
         contentAfter={renderDeleteOriginLink}
-        loading={loading}
+        submitting={submitting}
       >
         <Input
           name="name"
@@ -111,7 +111,7 @@ const OriginSettings: NextPage = () => {
           title="Delete origin"
           name={MODAL_NAMES.DELETE_ORIGIN}
           onConfirm={handleConfirmDelete}
-          loading={loading}
+          submitting={submitting}
           dangerAction
         >
           <p>

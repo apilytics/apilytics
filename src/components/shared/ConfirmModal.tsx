@@ -12,7 +12,7 @@ interface Props {
   name: MODAL_NAMES;
   onConfirm: () => void;
   onClose?: () => void;
-  loading: boolean;
+  submitting: boolean;
   dangerAction?: boolean;
 }
 
@@ -21,7 +21,7 @@ export const ConfirmModal: React.FC<Props> = ({
   name,
   onConfirm,
   onClose,
-  loading,
+  submitting,
   dangerAction,
   children,
 }) => {
@@ -51,12 +51,12 @@ export const ConfirmModal: React.FC<Props> = ({
         <Button
           className={clsx(
             dangerAction ? 'btn-error' : 'btn-primary',
-            !loading && 'btn-outline', // `btn-outline` won't with `disabled` attribute.
+            !submitting && 'btn-outline', // `btn-outline` won't with `disabled` attribute.
           )}
           onClick={onConfirm}
           autoFocus
-          disabled={loading}
-          loading={loading}
+          disabled={submitting}
+          loading={submitting}
         >
           Confirm
         </Button>

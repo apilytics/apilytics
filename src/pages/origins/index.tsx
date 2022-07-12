@@ -25,7 +25,7 @@ const Origins: NextPage = () => {
   } = useFetch<OriginListItem[]>({ url: staticApiRoutes.origins });
 
   const [selectedOriginInvite, setSelectedOriginInvite] = useState<OriginInviteData | null>(null);
-  const { submitForm } = useForm();
+  const { submitForm, submitting } = useForm();
   const plausible = usePlausible();
 
   const {
@@ -113,7 +113,6 @@ const Origins: NextPage = () => {
       ({
         name,
         slug,
-        totalMetrics,
         lastDayMetrics,
         userRole,
         userCount,
@@ -133,15 +132,10 @@ const Origins: NextPage = () => {
                       </div>
                     )}
                   </h6>
-                  <div className="flex gap-4 text-sm">
-                    <p>
-                      <span className="text-white">{formatCount(lastDayMetrics)}</span> requests in
-                      last 24h
-                    </p>
-                    <p>
-                      <span className="text-white">{formatCount(totalMetrics)}</span> total requests
-                    </p>
-                  </div>
+                  <p className="text-sm">
+                    <span className="text-white">{formatCount(lastDayMetrics)}</span> requests in
+                    last 24h
+                  </p>
                 </div>
                 <OriginMenu
                   slug={slug}
@@ -206,7 +200,7 @@ const Origins: NextPage = () => {
       title="Accept invite"
       name={MODAL_NAMES.ACCEPT_ORIGIN_INVITE}
       onConfirm={handleConfirmInvite(true)}
-      loading={loading}
+      submitting={submitting}
     >
       <p>
         Are you sure you want to accept invite for{' '}
@@ -224,7 +218,7 @@ const Origins: NextPage = () => {
       title="Reject invite"
       name={MODAL_NAMES.REJECT_ORIGIN_INVITE}
       onConfirm={handleConfirmInvite(false)}
-      loading={loading}
+      submitting={submitting}
       dangerAction
     >
       <p>

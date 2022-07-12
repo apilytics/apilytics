@@ -14,7 +14,7 @@ import type { OriginData } from 'types';
 
 const NewOrigin: NextPage = () => {
   const {
-    loading,
+    submitting,
     formValues: { name },
     onInputChange,
     submitForm,
@@ -51,7 +51,7 @@ const NewOrigin: NextPage = () => {
     <MainTemplate headProps={{ title: 'New origin' }}>
       <div className="card rounded-lg bg-base-100 p-4 shadow">
         <BackButton linkTo={staticRoutes.origins} text="Origins" />
-        <Form title="Add new origin" onSubmit={handleSubmit} loading={loading}>
+        <Form title="Add new origin" onSubmit={handleSubmit} submitting={submitting}>
           <Input
             name="name"
             label="Origin name"

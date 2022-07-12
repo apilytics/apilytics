@@ -30,7 +30,7 @@ const OriginEmailReports: NextPage = () => {
   const plausible = usePlausible();
   const { origin, setOrigin, handleOpenModal, handleCloseModal: _handleCloseModal } = useContext();
   const { submitForm: submitOriginSettingsForm } = useForm({});
-  const { submitForm: submitSendReports, loading: sendReportsLoading } = useForm({});
+  const { submitForm: submitSendReports, submitting: sendReportsSubmitting } = useForm({});
 
   const {
     name,
@@ -76,9 +76,10 @@ const OriginEmailReports: NextPage = () => {
     formValues: { recipient },
     onInputChange,
     submitForm,
-    loading: recipientsFormLoading,
+    submitting: recipientsFormSubmitting,
   } = useForm({ recipient: '' });
 
+  const submitting = sendReportsSubmitting || recipientsFormSubmitting;
   const sendReportsButtonDisabled = !recipients.length || metricsLoading;
 
   const handleCloseModal = (): void => {
@@ -181,7 +182,7 @@ const OriginEmailReports: NextPage = () => {
           </>
         }
         onSubmit={handleSubmitAddRecipient}
-        loading={recipientsFormLoading || recipientsLoading}
+        submitting={submitting}
         submitButtonText="Add recipient"
       >
         <Toggle
@@ -234,7 +235,7 @@ const OriginEmailReports: NextPage = () => {
         className={clsx('btn-primary mt-4', !sendReportsButtonDisabled && 'btn-outline')} // `btn-outline` won't with `disabled` attribute.
         fullWidth
         disabled={sendReportsButtonDisabled}
-        loading={sendReportsLoading || recipientsLoading}
+        loading={submitting || recipientsLoading}
       >
         Send reports now
       </Button>
@@ -243,7 +244,7 @@ const OriginEmailReports: NextPage = () => {
         name={MODAL_NAMES.DELETE_RECIPIENT}
         onConfirm={handleConfirmDeleteRecipient}
         onClose={(): void => setSelectedRecipient(null)}
-        loading={recipientsFormLoading || recipientsLoading}
+        submitting={submitting}
         dangerAction
       >
         <p>
@@ -265,7 +266,7 @@ const OriginEmailReports: NextPage = () => {
         title="Send weekly email reports"
         name={MODAL_NAMES.SEND_WEEKLY_EMAIL_REPORTS}
         onConfirm={handleConfirmSendWeeklyEmailReports}
-        loading={sendReportsLoading || recipientsLoading}
+        submitting={submitting}
       >
         <p>
           Are you sure you want to send the weekly email reports to the following recipients?
