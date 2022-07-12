@@ -176,7 +176,7 @@ model Metric {
   apilyticsVersion String? @map("apilytics_version")
 
   // Metrics are immutable so no need to store `updatedAt` info.
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(0)
+  createdAt DateTime @default(now()) @map("created_at")
 
   originId String @map("origin_id") @db.Uuid
   origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
