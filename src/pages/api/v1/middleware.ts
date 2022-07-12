@@ -1,5 +1,5 @@
 import uaParser from 'ua-parser-js';
-import type { Metric, Origin } from '@prisma/client';
+import type { Metric } from '@prisma/client';
 
 import { makeMethodsHandler } from 'lib-server/apiHelpers';
 import {
@@ -120,10 +120,28 @@ const handlePost: ApiHandler = async (req, res) => {
     return;
   }
 
-  let origin: Origin | null | undefined;
+  let origin;
 
   try {
-    origin = await prisma.origin.findUnique({ where: { apiKey } });
+    origin = await prisma.origin.findUnique({
+      where: { apiKey },
+      select: {
+        id: true,
+        name: true,
+        excludedRoutes: {
+          select: {
+            id: true,
+            pattern: true,
+          },
+        },
+        dynamicRoutes: {
+          select: {
+            id: true,
+            pattern: true,
+          },
+        },
+      },
+    });
   } catch (e) {
     if (!isInconsistentColumnData(e)) {
       throw e;
@@ -195,6 +213,12 @@ const handlePost: ApiHandler = async (req, res) => {
     ({ country, countryCode, region, city } = await fetchGeoIp({ ip, retry: true }));
   }
 
+  const matchPattern = ({ pattern }: { pattern: string }): boolean =>
+    !!path.match(pattern.replace(/%/g, '[^/]+'));
+
+  const excludedRouteId = origin.excludedRoutes.find(matchPattern)?.id;
+  const dynamicRouteId = origin.dynamicRoutes.find(matchPattern)?.id;
+
   const data = {
     originId: origin.id,
     path,
@@ -215,6 +239,8 @@ const handlePost: ApiHandler = async (req, res) => {
     region,
     city,
     apilyticsVersion,
+    excludedRouteId,
+    dynamicRouteId,
   };
 
   try {

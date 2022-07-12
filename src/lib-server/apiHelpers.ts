@@ -12,6 +12,7 @@ import { METHODS, ORIGIN_ROLES, PERCENTILE_DATA_KEYS, SAFE_METHODS } from 'utils
 import { FRONTEND_URL, staticRoutes } from 'utils/router';
 import type {
   ApiHandler,
+  ApilyticsPackage,
   CityData,
   CountryData,
   EndpointData,
@@ -316,9 +317,8 @@ interface GeneralData {
   totalRequestsGrowth: number;
   totalErrors: number;
   totalErrorsGrowth: number;
-}
-
-interface RawGeneralData extends GeneralData {
+  errorRate: number;
+  errorRateGrowth: number;
   responseTimeAvg: number;
   responseTimeP50: number;
   responseTimeP75: number;
@@ -357,6 +357,11 @@ interface RawGeneralData extends GeneralData {
   memoryTotalP99: number;
 }
 
+type RawGeneralData = Omit<
+  GeneralData,
+  'totalRequestsGrowth' | 'totalErrorsGrowth' | 'errorRate' | 'errorRateGrowth'
+>;
+
 type RawEndpointData = Omit<EndpointData, 'methodAndEndpoint'>;
 
 interface RawMiscData {
@@ -365,6 +370,20 @@ interface RawMiscData {
   device: string | null;
   statusCode: number | null;
   requests: number;
+}
+
+interface MetricsFilters {
+  from?: string;
+  to?: string;
+  endpoint?: string;
+  method?: string;
+  statusCode?: string;
+  browser?: string;
+  os?: string;
+  device?: string;
+  country?: string;
+  region?: string;
+  city?: string;
 }
 
 const extractFromMiscData = <
@@ -385,163 +404,160 @@ const extractFromMiscData = <
         }),
     );
 
-export const generateMetrics = async ({
+export const getGeneralData = async ({
   origin,
-  query: {
-    from = '',
-    to = '',
-    endpoint,
-    method,
-    statusCode,
-    browser,
-    os,
-    device,
-    country,
-    region,
-    city,
-  },
+  query: { from = '', to = '', method, statusCode, browser, os, device, country, region, city },
 }: {
   origin: Origin;
-  query: {
-    from?: string;
-    to?: string;
-    endpoint?: string;
-    method?: string;
-    statusCode?: string;
-    browser?: string;
-    os?: string;
-    device?: string;
-    country?: string;
-    region?: string;
-    city?: string;
-  };
-}): Promise<OriginMetrics> => {
+  query: MetricsFilters;
+}): Promise<GeneralData> => {
   const { id: originId } = origin;
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
+  const fromTime = fromDate.getTime();
+  const toTime = toDate.getTime();
+
+  const fromClause = Prisma.sql`
+    FROM metrics
+      JOIN origins ON metrics.origin_id = origins.id`;
+
+  const baseWhereClause = Prisma.sql`
+    WHERE origins.id = ${originId}
+      ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
+      ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
+      ${browser ? Prisma.sql`AND metrics.browser = ${browser}` : Prisma.empty}
+      ${os ? Prisma.sql`AND metrics.os = ${os}` : Prisma.empty}
+      ${device ? Prisma.sql`AND metrics.device = ${device}` : Prisma.empty}
+      ${country ? Prisma.sql`AND metrics.country = ${country}` : Prisma.empty}
+      ${region ? Prisma.sql`AND metrics.region = ${region}` : Prisma.empty}
+      ${city ? Prisma.sql`AND metrics.city = ${city}` : Prisma.empty}`;
+
+  const whereClause = Prisma.sql`
+    ${baseWhereClause}
+      AND metrics.created_at >= ${fromDate}
+      AND metrics.created_at <= ${toDate}`;
+
+  const whereClausePreviousPeriod = Prisma.sql`
+    ${baseWhereClause}
+      AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
+      AND metrics.created_at <= ${fromDate}`;
+
+  const prevGeneralDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
+    SELECT
+      COUNT(*) AS "totalRequests",
+      SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
+
+    ${fromClause}
+    ${whereClausePreviousPeriod}`;
+
+  const generalDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
+    SELECT
+      COUNT(*) AS "totalRequests",
+
+      SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors",
+
+      ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
+      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP50",
+      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP75",
+      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP90",
+      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP95",
+      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP99",
+
+      ROUND(AVG(metrics.request_size)) AS "requestSizeAvg",
+      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP50",
+      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP75",
+      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP90",
+      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP95",
+      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP99",
+
+      ROUND(AVG(metrics.response_size)) AS "responseSizeAvg",
+      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP50",
+      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP75",
+      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP90",
+      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP95",
+      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99",
+
+      ROUND(AVG(metrics.cpu_usage)) AS "cpuUsageAvg",
+      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP50",
+      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP75",
+      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP90",
+      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP95",
+      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP99",
+
+      ROUND(AVG(metrics.memory_usage)) AS "memoryUsageAvg",
+      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP50",
+      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP75",
+      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP90",
+      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP95",
+      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP99",
+
+      ROUND(AVG(metrics.memory_total)) AS "memoryTotalAvg",
+      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP50",
+      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP75",
+      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP90",
+      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP95",
+      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP99"
+
+    ${fromClause}
+    ${whereClause}`;
+
+  const [prevGeneralData, _generalData] = await Promise.all([
+    prevGeneralDataPromise,
+    generalDataPromise,
+  ]);
+
+  const { totalRequests: prevTotalRequests, totalErrors: _prevTotalErrors } = prevGeneralData[0];
+  const { totalRequests, totalErrors: _totalErrors, ...generalData } = _generalData[0];
+
+  const prevTotalErrors = _prevTotalErrors ?? 0;
+  const totalErrors = _totalErrors ?? 0;
+
+  const totalRequestsGrowth = Number((totalRequests / prevTotalRequests).toFixed(2));
+  const totalErrorsGrowth = Number((totalErrors / prevTotalErrors).toFixed(2));
+
+  const prevErrorRate = Number((prevTotalErrors / prevTotalRequests).toFixed(2));
+  const errorRate = totalErrors ? Number((totalErrors / totalRequests).toFixed(2)) : 0;
+  const errorRateGrowth = errorRate ? Number((errorRate / prevErrorRate).toFixed(2)) : 0;
+
+  return {
+    totalRequests,
+    totalRequestsGrowth,
+    totalErrors,
+    totalErrorsGrowth,
+    errorRate,
+    errorRateGrowth,
+    ...generalData,
+  };
+};
+
+export const getTimeFrameDataPromise = ({
+  fromClause,
+  whereClause,
+  query: { from = '', to = '' },
+}: {
+  fromClause: Prisma.Sql;
+  whereClause: Prisma.Sql;
+  query: MetricsFilters;
+}): Promise<TimeFrameData[]> => {
   const fromDate = new Date(from);
   const toDate = new Date(to);
   const fromTime = fromDate.getTime();
   const toTime = toDate.getTime();
   const timeFrame = toTime - fromTime;
 
-  let wherePath: Prisma.Sql | undefined;
-
-  if (endpoint) {
-    const dynamicRoute = await prisma.dynamicRoute.findFirst({
-      where: { originId, route: endpoint },
-    });
-
-    if (dynamicRoute) {
-      wherePath = Prisma.sql`AND metrics.path LIKE ${dynamicRoute.pattern}`;
-    } else {
-      wherePath = Prisma.sql`AND metrics.path = ${endpoint}`;
-    }
-  } else {
-    wherePath = Prisma.empty;
-  }
-
   // The scope indicates which time unit the metrics are grouped by.
-  let scope = 'day';
+  let scope = Prisma.sql`1 day`;
 
   if (timeFrame <= DAY_MILLIS) {
-    scope = 'hour';
+    scope = Prisma.sql`1 hour`;
   } else if (timeFrame >= THREE_MONTHS_MILLIS) {
-    scope = 'week';
+    scope = Prisma.sql`1 week`;
   }
-
-  const fromClause = Prisma.sql`
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id`;
-
-  const baseWhereClause = Prisma.sql`
-WHERE origins.id = ${originId}
-  AND NOT EXISTS (
-    SELECT 1 FROM excluded_routes
-    WHERE excluded_routes.origin_id = ${originId}
-      AND metrics.path LIKE excluded_routes.pattern
-  )
-  ${wherePath}
-  ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
-  ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
-  ${browser ? Prisma.sql`AND metrics.browser = ${browser}` : Prisma.empty}
-  ${os ? Prisma.sql`AND metrics.os = ${os}` : Prisma.empty}
-  ${device ? Prisma.sql`AND metrics.device = ${device}` : Prisma.empty}
-  ${country ? Prisma.sql`AND metrics.country = ${country}` : Prisma.empty}
-  ${region ? Prisma.sql`AND metrics.region = ${region}` : Prisma.empty}
-  ${city ? Prisma.sql`AND metrics.city = ${city}` : Prisma.empty}`;
-
-  const whereClause = Prisma.sql`
-${baseWhereClause}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}`;
-
-  const whereClausePreviousPeriod = Prisma.sql`
-${baseWhereClause}
-  AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
-  AND metrics.created_at <= ${fromDate}`;
-
-  const prevGeneralDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
-SELECT
-  COUNT(*) AS "totalRequests",
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
-
-${fromClause}
-${whereClausePreviousPeriod}`;
-
-  const generalDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
-SELECT
-  COUNT(*) AS "totalRequests",
-
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors",
-
-  ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
-  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP50",
-  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP75",
-  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP90",
-  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP95",
-  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP99",
-
-  ROUND(AVG(metrics.request_size)) AS "requestSizeAvg",
-  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP50",
-  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP75",
-  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP90",
-  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP95",
-  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP99",
-
-  ROUND(AVG(metrics.response_size)) AS "responseSizeAvg",
-  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP50",
-  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP75",
-  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP90",
-  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP95",
-  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99",
-
-  ROUND(AVG(metrics.cpu_usage)) AS "cpuUsageAvg",
-  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP50",
-  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP75",
-  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP90",
-  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP95",
-  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP99",
-
-  ROUND(AVG(metrics.memory_usage)) AS "memoryUsageAvg",
-  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP50",
-  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP75",
-  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP90",
-  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP95",
-  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP99",
-
-  ROUND(AVG(metrics.memory_total)) AS "memoryTotalAvg",
-  percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP50",
-  percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP75",
-  percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP90",
-  percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP95",
-  percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP99"
-
-${fromClause}
-${whereClause}`;
 
   const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
 SELECT
   COUNT(*) AS requests,
-  DATE_TRUNC(${scope}, metrics.created_at) AS time,
+  time_bucket('${scope}', metrics.created_at) AS time,
   SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS errors
 
 ${fromClause}
@@ -549,6 +565,20 @@ ${whereClause}
 
 GROUP BY time;`;
 
+  return timeFrameDataPromise;
+};
+
+export const getEndpointData = async ({
+  fromClause,
+  whereClause,
+  origin: { id: originId },
+  query: { endpoint },
+}: {
+  origin: Origin;
+  query: MetricsFilters;
+  fromClause: Prisma.Sql;
+  whereClause: Prisma.Sql;
+}): Promise<EndpointData[]> => {
   // If an endpoint is provided as a filter, return all paths matching that endpoint.
   // Otherwise, return all dynamic routes + other paths through `endpoint`.
   let endpointSelectClause: Prisma.Sql | undefined;
@@ -563,7 +593,7 @@ CASE
   ELSE matched_routes.route END AS endpoint`;
   }
 
-  const endpointDataPromise: Promise<RawEndpointData[]> = prisma.$queryRaw`
+  const endpointData: RawEndpointData[] = await prisma.$queryRaw`
 SELECT
   COUNT(*) AS "totalRequests",
   metrics.method,
@@ -585,7 +615,19 @@ ${whereClause}
 
 GROUP BY metrics.method, endpoint;`;
 
-  const miscDataPromise: Promise<RawMiscData[]> = prisma.$queryRaw`
+  return endpointData.map((endpoint) => ({
+    ...endpoint,
+    methodAndEndpoint: `${endpoint.method} ${endpoint.endpoint}`,
+  }));
+};
+
+export const getMiscDataPromise = async ({
+  fromClause,
+  whereClause,
+}: {
+  fromClause: Prisma.Sql;
+  whereClause: Prisma.Sql;
+}): Promise<RawMiscData[]> => prisma.$queryRaw`
 SELECT
   metrics.browser,
   metrics.os,
@@ -603,7 +645,13 @@ GROUP BY GROUPING SETS (
   metrics.status_code
 );`;
 
-  const countryDataPromise: Promise<CountryData[]> = prisma.$queryRaw`
+export const getCountryDataPromise = async ({
+  fromClause,
+  whereClause,
+}: {
+  fromClause: Prisma.Sql;
+  whereClause: Prisma.Sql;
+}): Promise<CountryData[]> => prisma.$queryRaw`
 SELECT
   metrics.country,
   metrics.country_code AS "countryCode",
@@ -615,7 +663,13 @@ ${whereClause}
 
 GROUP BY metrics.country, metrics.country_code;`;
 
-  const regionDataPromise: Promise<RegionData[]> = prisma.$queryRaw`
+export const getRegionDataPromise = async ({
+  fromClause,
+  whereClause,
+}: {
+  fromClause: Prisma.Sql;
+  whereClause: Prisma.Sql;
+}): Promise<RegionData[]> => prisma.$queryRaw`
 SELECT
   metrics.region,
   metrics.country_code AS "countryCode",
@@ -627,7 +681,13 @@ ${whereClause}
 
 GROUP BY metrics.region, metrics.country_code;`;
 
-  const cityDataPromise: Promise<CityData[]> = prisma.$queryRaw`
+export const getCityDataPromise = async ({
+  fromClause,
+  whereClause,
+}: {
+  fromClause: Prisma.Sql;
+  whereClause: Prisma.Sql;
+}): Promise<CityData[]> => prisma.$queryRaw`
 SELECT
   metrics.city,
   metrics.country_code AS "countryCode",
@@ -639,113 +699,210 @@ ${whereClause}
 
 GROUP BY metrics.city, metrics.country_code;`;
 
-  const versionDataPromise = prisma.metric.findFirst({
+export const getApilyticsPackage = async ({
+  origin: { id: originId },
+}: {
+  origin: Origin;
+}): Promise<ApilyticsPackage | undefined> => {
+  const versionData = await prisma.metric.findFirst({
     where: { originId },
     orderBy: { createdAt: 'desc' },
     select: { apilyticsVersion: true },
   });
 
+  const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
+
+  const apilyticsPackage =
+    !!identifier && !!version
+      ? {
+          identifier,
+          version,
+        }
+      : undefined;
+
+  return apilyticsPackage;
+};
+
+export const generateMetrics = async ({
+  origin,
+  query,
+}: {
+  origin: Origin;
+  query: MetricsFilters;
+}): Promise<OriginMetrics> => {
+  const { id: originId } = origin;
+
+  const {
+    from = '',
+    to = '',
+    endpoint,
+    method,
+    statusCode,
+    browser,
+    os,
+    device,
+    country,
+    region,
+    city,
+  } = query;
+
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
+
+  let wherePath: Prisma.Sql | undefined;
+
+  if (endpoint) {
+    const dynamicRoute = await prisma.dynamicRoute.findFirst({
+      where: { originId, route: endpoint },
+    });
+
+    if (dynamicRoute) {
+      wherePath = Prisma.sql`
+AND metrics.dynamic_route_id = ${dynamicRoute.id}`;
+    } else {
+      wherePath = Prisma.sql`
+AND metrics.dynamic_route_id IS NULL
+AND metrics.path = ${endpoint}`;
+    }
+  } else {
+    wherePath = Prisma.sql`AND metrics.dynamic_route_id IS NULL`;
+  }
+
+  const fromClause = Prisma.sql`
+FROM metrics
+  JOIN origins ON metrics.origin_id = origins.id`;
+
+  const baseWhereClause = Prisma.sql`
+WHERE origins.id = ${originId}
+  AND metrics.excluded_route_id IS NULL
+  ${wherePath}
+  ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
+  ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
+  ${browser ? Prisma.sql`AND metrics.browser = ${browser}` : Prisma.empty}
+  ${os ? Prisma.sql`AND metrics.os = ${os}` : Prisma.empty}
+  ${device ? Prisma.sql`AND metrics.device = ${device}` : Prisma.empty}
+  ${country ? Prisma.sql`AND metrics.country = ${country}` : Prisma.empty}
+  ${region ? Prisma.sql`AND metrics.region = ${region}` : Prisma.empty}
+  ${city ? Prisma.sql`AND metrics.city = ${city}` : Prisma.empty}`;
+
+  const whereClause = Prisma.sql`
+${baseWhereClause}
+  AND metrics.created_at >= ${fromDate}
+  AND metrics.created_at <= ${toDate}`;
+
+  const metricsParams = { origin, query, fromClause, whereClause };
+
   const [
-    prevGeneralData,
-    _generalData,
+    generalData,
     timeFrameData,
-    _endpointData,
+    endpointData,
     miscData,
     countryData,
     regionData,
     cityData,
-    versionData,
+    apilyticsPackage,
   ] = await Promise.all([
-    prevGeneralDataPromise,
-    generalDataPromise,
-    timeFrameDataPromise,
-    endpointDataPromise,
-    miscDataPromise,
-    countryDataPromise,
-    regionDataPromise,
-    cityDataPromise,
-    versionDataPromise,
+    getGeneralData(metricsParams),
+    getTimeFrameDataPromise(metricsParams),
+    getEndpointData(metricsParams),
+    getMiscDataPromise(metricsParams),
+    getCountryDataPromise(metricsParams),
+    getRegionDataPromise(metricsParams),
+    getCityDataPromise(metricsParams),
+    getApilyticsPackage(metricsParams),
   ]);
 
-  const { totalRequests: prevTotalRequests, totalErrors: _prevTotalErrors } = prevGeneralData[0];
-  const { totalRequests, totalErrors: _totalErrors, ...g } = _generalData[0];
-
-  const prevTotalErrors = _prevTotalErrors ?? 0;
-  const totalErrors = _totalErrors ?? 0;
-
-  const totalRequestsGrowth = Number((totalRequests / prevTotalRequests).toFixed(2));
-  const totalErrorsGrowth = Number((totalErrors / prevTotalErrors).toFixed(2));
-
-  const prevErrorRate = Number((prevTotalErrors / prevTotalRequests).toFixed(2));
-  const errorRate = totalErrors ? Number((totalErrors / totalRequests).toFixed(2)) : 0;
-  const errorRateGrowth = errorRate ? Number((errorRate / prevErrorRate).toFixed(2)) : 0;
-
-  const endpointData = _endpointData.map((endpoint) => ({
-    ...endpoint,
-    methodAndEndpoint: `${endpoint.method} ${endpoint.endpoint}`,
-  }));
-
-  const generalData = {
-    totalRequests,
-    totalRequestsGrowth,
-    totalErrors,
-    totalErrorsGrowth,
-    errorRate,
-    errorRateGrowth,
-  };
+  const {
+    responseTimeAvg,
+    responseTimeP50,
+    responseTimeP75,
+    responseTimeP90,
+    responseTimeP95,
+    responseTimeP99,
+    requestSizeAvg,
+    requestSizeP50,
+    requestSizeP75,
+    requestSizeP90,
+    requestSizeP95,
+    requestSizeP99,
+    responseSizeAvg,
+    responseSizeP50,
+    responseSizeP75,
+    responseSizeP90,
+    responseSizeP95,
+    responseSizeP99,
+    cpuUsageAvg,
+    cpuUsageP50,
+    cpuUsageP75,
+    cpuUsageP90,
+    cpuUsageP95,
+    cpuUsageP99,
+    memoryUsageAvg,
+    memoryUsageP50,
+    memoryUsageP75,
+    memoryUsageP90,
+    memoryUsageP95,
+    memoryUsageP99,
+    memoryTotalAvg,
+    memoryTotalP50,
+    memoryTotalP75,
+    memoryTotalP90,
+    memoryTotalP95,
+    memoryTotalP99,
+  } = generalData;
 
   const responseTimes = {
-    avg: g.responseTimeAvg,
-    p50: g.responseTimeP50,
-    p75: g.responseTimeP75,
-    p90: g.responseTimeP90,
-    p95: g.responseTimeP95,
-    p99: g.responseTimeP99,
+    avg: responseTimeAvg,
+    p50: responseTimeP50,
+    p75: responseTimeP75,
+    p90: responseTimeP90,
+    p95: responseTimeP95,
+    p99: responseTimeP99,
   };
 
   const requestSizes = {
-    avg: g.requestSizeAvg,
-    p50: g.requestSizeP50,
-    p75: g.requestSizeP75,
-    p90: g.requestSizeP90,
-    p95: g.requestSizeP95,
-    p99: g.requestSizeP99,
+    avg: requestSizeAvg,
+    p50: requestSizeP50,
+    p75: requestSizeP75,
+    p90: requestSizeP90,
+    p95: requestSizeP95,
+    p99: requestSizeP99,
   };
 
   const responseSizes = {
-    avg: g.responseSizeAvg,
-    p50: g.responseSizeP50,
-    p75: g.responseSizeP75,
-    p90: g.responseSizeP90,
-    p95: g.responseSizeP95,
-    p99: g.responseSizeP99,
+    avg: responseSizeAvg,
+    p50: responseSizeP50,
+    p75: responseSizeP75,
+    p90: responseSizeP90,
+    p95: responseSizeP95,
+    p99: responseSizeP99,
   };
 
   const cpuUsage = {
-    avg: g.cpuUsageAvg,
-    p50: g.cpuUsageP50,
-    p75: g.cpuUsageP75,
-    p90: g.cpuUsageP90,
-    p95: g.cpuUsageP95,
-    p99: g.cpuUsageP99,
+    avg: cpuUsageAvg,
+    p50: cpuUsageP50,
+    p75: cpuUsageP75,
+    p90: cpuUsageP90,
+    p95: cpuUsageP95,
+    p99: cpuUsageP99,
   };
 
   const memoryUsage = {
-    avg: g.memoryUsageAvg,
-    p50: g.memoryUsageP50,
-    p75: g.memoryUsageP75,
-    p90: g.memoryUsageP90,
-    p95: g.memoryUsageP95,
-    p99: g.memoryUsageP99,
+    avg: memoryUsageAvg,
+    p50: memoryUsageP50,
+    p75: memoryUsageP75,
+    p90: memoryUsageP90,
+    p95: memoryUsageP95,
+    p99: memoryUsageP99,
   };
 
   const totalMemory = {
-    avg: g.memoryTotalAvg,
-    p50: g.memoryTotalP50,
-    p75: g.memoryTotalP75,
-    p90: g.memoryTotalP90,
-    p95: g.memoryTotalP95,
-    p99: g.memoryTotalP99,
+    avg: memoryTotalAvg,
+    p50: memoryTotalP50,
+    p75: memoryTotalP75,
+    p90: memoryTotalP90,
+    p95: memoryTotalP95,
+    p99: memoryTotalP99,
   };
 
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
@@ -757,6 +914,8 @@ GROUP BY metrics.city, metrics.country_code;`;
     memoryUsage: memoryUsage[key],
     memoryTotal: totalMemory[key],
   }));
+
+  const statusCodeData = extractFromMiscData(miscData, 'statusCode');
 
   const userAgentData = {
     browserData: extractFromMiscData(miscData, 'browser'),
@@ -770,22 +929,12 @@ GROUP BY metrics.city, metrics.country_code;`;
     cityData,
   };
 
-  const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
-
-  const apilyticsPackage =
-    !!identifier && !!version
-      ? {
-          identifier,
-          version,
-        }
-      : undefined;
-
   return {
     generalData,
     timeFrameData,
     endpointData,
     percentileData,
-    statusCodeData: extractFromMiscData(miscData, 'statusCode'),
+    statusCodeData,
     userAgentData,
     geoLocationData,
     apilyticsPackage,

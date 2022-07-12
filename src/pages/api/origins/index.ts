@@ -29,38 +29,27 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     : Prisma.empty;
 
   const data: OriginListItem[] = await prisma.$queryRaw`
-SELECT DISTINCT
-  origins.name,
-  origins.slug,
-  metrics.count AS "totalMetrics",
-  metrics.last_day_metrics as "lastDayMetrics",
-  ${!user?.isAdmin ? Prisma.sql`origin_users.role` : Prisma.sql`'admin'`} AS "userRole",
-  COUNT(origin_users) AS "userCount",
-  COUNT(dynamic_routes) AS "dynamicRouteCount",
-  COUNT(excluded_routes) AS "excludedRouteCount"
+  SELECT
+    origins.name,
+    origins.slug,
+    COUNT(DISTINCT metrics) AS "lastDayMetrics",
+    ${!user?.isAdmin ? Prisma.sql`origin_users.role` : Prisma.sql`'admin'`} AS "userRole",
+    COUNT(DISTINCT origin_users) AS "userCount",
+    COUNT(DISTINCT dynamic_routes) AS "dynamicRouteCount",
+    COUNT(DISTINCT excluded_routes) AS "excludedRouteCount"
 
-FROM origins
-  LEFT JOIN origin_users ON origin_users.origin_id = origins.id
-  LEFT JOIN dynamic_routes ON dynamic_routes.origin_id = origins.id
-  LEFT JOIN excluded_routes ON excluded_routes.origin_id = origins.id
+  FROM origins
+    LEFT JOIN origin_users ON origin_users.origin_id = origins.id
+    LEFT JOIN dynamic_routes ON dynamic_routes.origin_id = origins.id
+    LEFT JOIN excluded_routes ON excluded_routes.origin_id = origins.id
+    LEFT JOIN metrics ON metrics.origin_id = origins.id
+      AND metrics.excluded_route_id IS NULL
+      AND metrics.created_at >= NOW() - INTERVAL '1 DAY'
 
-  LEFT JOIN LATERAL (
-    SELECT
-      COUNT(*),
-      SUM(CASE WHEN metrics.created_at >= NOW() - INTERVAL '1 DAY' THEN 1 ELSE 0 END) AS last_day_metrics
-    FROM metrics
-    WHERE metrics.origin_id = origins.id
-      AND NOT EXISTS (
-        SELECT 1 FROM excluded_routes
-        WHERE excluded_routes.origin_id = origins.id
-          AND metrics.path LIKE excluded_routes.pattern
-      )
-  ) AS metrics ON TRUE
+  ${whereClause}
 
-${whereClause}
-
-GROUP BY origins.name, origins.slug, origin_users.role, metrics.count, metrics.last_day_metrics
-ORDER BY "totalMetrics" DESC;`;
+  GROUP BY origins.name, origins.slug, origin_users.role
+  ORDER BY "lastDayMetrics" DESC;`;
 
   sendOk(res, { data });
 };

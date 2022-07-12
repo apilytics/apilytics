@@ -62,6 +62,9 @@ export const MOCK_PATHS = [
   '/blogs/123',
   '/blogs/456',
   '/blogs/789',
+  '/excluded/123',
+  '/excluded/456',
+  '/excluded/789',
 ];
 
 export const MOCK_TOTAL_MEMORY = 4_000_000_000; // 4 GB.
@@ -77,15 +80,20 @@ export const MOCK_OPERATING_SYSTEMS = [
   'Mac OS',
   'Windows',
 ];
-interface MockDynamicRoute {
+
+interface MockRoute {
   route: string;
   pattern: string;
 }
 
-export const MOCK_DYNAMIC_ROUTES: MockDynamicRoute[] = [
+export const MOCK_DYNAMIC_ROUTES: MockRoute[] = [
   { route: '/blogs/<id>', pattern: '/blogs/%' },
   { route: '/posts/<id>', pattern: '/posts/%' },
   { route: '/users/<slug>', pattern: '/users/%' },
+];
+
+export const MOCK_EXCLUDED_ROUTES: MockRoute[] = [
+  { route: '/excluded/<id>', pattern: '/excluded/%' },
 ];
 
 export const MOCK_ORIGIN = {

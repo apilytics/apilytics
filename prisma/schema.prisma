@@ -37,8 +37,7 @@ model OriginUser {
   originId String @map("origin_id") @db.Uuid
   origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
-  @@index([originId])
+  @@index([userId, originId])
   @@map("origin_users")
 }
 
@@ -53,6 +52,7 @@ model WeeklyEmailReportRecipient {
   originId String? @map("origin_id") @db.Uuid
 
   @@unique([email, originId])
+  @@index([email, originId])
   @@map("weekly_email_report_recipients")
 }
 
@@ -128,9 +128,10 @@ model DynamicRoute {
   originId String @map("origin_id") @db.Uuid
   origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
 
+  metrics Metric[]
+
   @@unique([route, originId])
-  @@unique([pattern, originId])
-  @@index([originId])
+  @@index([originId, pattern])
   @@map("dynamic_routes")
 }
 
@@ -142,9 +143,10 @@ model ExcludedRoute {
   originId String @map("origin_id") @db.Uuid
   origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
 
+  metrics Metric[]
+
   @@unique([route, originId])
-  @@unique([pattern, originId])
-  @@index([originId])
+  @@index([originId, pattern])
   @@map("excluded_routes")
 }
 
@@ -174,14 +176,19 @@ model Metric {
   apilyticsVersion String? @map("apilytics_version")
 
   // Metrics are immutable so no need to store `updatedAt` info.
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(0)
 
   originId String @map("origin_id") @db.Uuid
   origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
 
-  @@unique([id, createdAt])
-  @@index([originId])
-  @@index([createdAt])
+  dynamicRouteId String?       @map("dynamic_route_id") @db.Uuid
+  dynamicRoute   DynamicRoute? @relation(fields: [dynamicRouteId], references: [id])
+
+  excludedRouteId String?        @map("excluded_route_id") @db.Uuid
+  excludedRoute   ExcludedRoute? @relation(fields: [excludedRouteId], references: [id])
+
+  @@unique([id, originId, createdAt])
+  @@index([originId, path, method, statusCode, browser, os, device, country, region, city, dynamicRouteId, excludedRouteId, createdAt])
   @@map("metrics")
 }
 

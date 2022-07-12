@@ -349,7 +349,6 @@ export interface OriginData extends Origin {
 export interface OriginListItem {
   name: string;
   slug: string;
-  totalMetrics: number;
   lastDayMetrics: number;
   userRole: ORIGIN_ROLES;
   userCount: number;
