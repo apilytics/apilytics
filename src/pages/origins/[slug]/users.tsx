@@ -52,7 +52,7 @@ const OriginUsers: NextPage = () => {
   } = useFetch<OriginInviteData[]>({ url: originInvitesUrl });
 
   const loading = originUsersLoading || originInvitesLoading;
-  const { formValues, setFormValues, submitForm } = useForm(initialFormValues);
+  const { formValues, setFormValues, submitForm, submitting } = useForm(initialFormValues);
   const [selectedOriginUser, setSelectedOriginUser] = useState<OriginUserData | null>(null);
   const originUserId = selectedOriginUser?.id ?? '';
   const [selectedOriginInvite, setSelectedOriginInvite] = useState<OriginInviteData | null>(null);
@@ -341,7 +341,7 @@ const OriginUsers: NextPage = () => {
       title="Remove user from origin"
       name={MODAL_NAMES.DELETE_ORIGIN_USER}
       onConfirm={handleConfirmDeleteOriginUser}
-      loading={loading}
+      submitting={submitting}
       dangerAction
     >
       <p>
@@ -359,7 +359,7 @@ const OriginUsers: NextPage = () => {
       title="Delete invite"
       name={MODAL_NAMES.DELETE_ORIGIN_INVITE}
       onConfirm={handleConfirmDeleteInvite}
-      loading={loading}
+      submitting={submitting}
       dangerAction
     >
       <p>
@@ -374,7 +374,7 @@ const OriginUsers: NextPage = () => {
       title="Resend invite"
       name={MODAL_NAMES.RESEND_ORIGIN_INVITE}
       onConfirm={handleConfirmResendInvite}
-      loading={loading}
+      submitting={submitting}
     >
       <p>
         Are you sure you want to resend invite for{' '}

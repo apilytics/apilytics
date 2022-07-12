@@ -38,6 +38,7 @@ const OriginDynamicRoutes: NextPage = () => {
     setFormValues,
     onInputChange,
     submitForm,
+    submitting,
   } = useForm(initialFormValues);
 
   const url = slug ? dynamicApiRoutes.dynamicRoutes({ slug }) : undefined;
@@ -139,7 +140,7 @@ const OriginDynamicRoutes: NextPage = () => {
   const formProps = {
     routeName,
     onInputChange,
-    loading,
+    submitting,
     helperText: (
       <>
         The route pattern should be in the following kind format:
@@ -211,7 +212,7 @@ const OriginDynamicRoutes: NextPage = () => {
       title="Delete route"
       name={MODAL_NAMES.DELETE_DYNAMIC_ROUTE}
       onConfirm={handleConfirmDelete}
-      loading={loading}
+      submitting={submitting}
       dangerAction
     >
       <p>

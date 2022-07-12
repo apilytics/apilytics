@@ -6,7 +6,7 @@ import { useFetch } from 'hooks/useFetch';
 import type { SuccessCallbackParams } from 'types';
 
 interface UseForm<T> {
-  loading: boolean;
+  submitting: boolean;
   formValues: T;
   setFormValues: Dispatch<SetStateAction<T>>;
   submitted: boolean;
@@ -26,7 +26,7 @@ export const useForm = <T extends Record<string, unknown>>(
   initialFormValues: T = {} as T,
 ): UseForm<T> => {
   const { setSuccessMessage } = useContext();
-  const { loading, fetcher } = useFetch<T>();
+  const { loading: submitting, fetcher } = useFetch<T>();
   const [formValues, setFormValues] = useState<T>(initialFormValues);
   const [submitted, setSubmitted] = useState(false);
 
@@ -76,7 +76,7 @@ export const useForm = <T extends Record<string, unknown>>(
   };
 
   return {
-    loading,
+    submitting,
     formValues,
     setFormValues,
     submitted,

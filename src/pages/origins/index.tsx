@@ -25,7 +25,7 @@ const Origins: NextPage = () => {
   } = useFetch<OriginListItem[]>({ url: staticApiRoutes.origins });
 
   const [selectedOriginInvite, setSelectedOriginInvite] = useState<OriginInviteData | null>(null);
-  const { submitForm } = useForm();
+  const { submitForm, submitting } = useForm();
   const plausible = usePlausible();
 
   const {
@@ -200,7 +200,7 @@ const Origins: NextPage = () => {
       title="Accept invite"
       name={MODAL_NAMES.ACCEPT_ORIGIN_INVITE}
       onConfirm={handleConfirmInvite(true)}
-      loading={loading}
+      submitting={submitting}
     >
       <p>
         Are you sure you want to accept invite for{' '}
@@ -218,7 +218,7 @@ const Origins: NextPage = () => {
       title="Reject invite"
       name={MODAL_NAMES.REJECT_ORIGIN_INVITE}
       onConfirm={handleConfirmInvite(false)}
-      loading={loading}
+      submitting={submitting}
       dangerAction
     >
       <p>
