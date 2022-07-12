@@ -27,8 +27,7 @@ DROP INDEX "origin_users_user_id_idx";
 
 -- AlterTable
 ALTER TABLE "metrics" ADD COLUMN     "dynamic_route_id" UUID,
-ADD COLUMN     "excluded_route_id" UUID,
-ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMPTZ(0);
+ADD COLUMN     "excluded_route_id" UUID;
 
 -- CreateIndex
 CREATE INDEX "dynamic_routes_origin_id_pattern_idx" ON "dynamic_routes"("origin_id", "pattern");
