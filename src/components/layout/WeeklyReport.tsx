@@ -103,13 +103,37 @@ export const WeeklyReport: React.FC<Props> = ({
         .list-header {
           display: flex;
           justify-content: space-between;
-          font-size: 14px;
           gap: 1rem;
           white-space: nowrap;
         }
 
         .responsive-grid {
           grid-template-columns: 1fr;
+        }
+
+        .responsive-grid div {
+          overflow: hidden;
+        }
+
+        .responsive-grid li {
+          display: flex;
+          justify-content: space-between;
+          gap: 5px;
+        }
+
+        ul {
+          margin: 0;
+          padding: 0;
+        }
+
+        span {
+          color: white;
+          white-space: nowrap;
+        }
+
+        .truncate {
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         @media (min-width: 850px) {
@@ -162,9 +186,9 @@ export const WeeklyReport: React.FC<Props> = ({
           </div>
         </div>
 
-        <ul style={{ listStyle: 'none', margin: 0, padding: 0, marginTop: '1rem' }}>
+        <ul style={{ listStyle: 'none', marginTop: '1rem' }}>
           <li>
-            Total requests: <span style={{ color: 'white' }}>{formatCount(totalRequests)}</span>{' '}
+            Total requests: <span>{formatCount(totalRequests)}</span>{' '}
             {isFinite(totalRequestsGrowth) && (
               <span
                 style={{
@@ -178,7 +202,7 @@ export const WeeklyReport: React.FC<Props> = ({
             )}
           </li>
           <li>
-            Total errors: <span style={{ color: 'white' }}>{formatCount(totalErrors)}</span>
+            Total errors: <span>{formatCount(totalErrors)}</span>
             {isFinite(totalErrorsGrowth) && (
               <span
                 style={{
@@ -220,22 +244,21 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Endpoint</p>
               <p>Requests</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {requestsData.length
                 ? requestsData.map(({ method, endpoint, totalRequests }) => (
-                    <li key={endpoint} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <li key={endpoint}>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         <span
                           style={{
                             color: HTTP_METHOD_COLORS[method as keyof typeof HTTP_METHOD_COLORS],
-                            whiteSpace: 'nowrap',
                           }}
                         >
                           {method}
                         </span>
-                        <span style={{ color: 'white' }}>{endpoint}</span>
+                        <span className="truncate">{endpoint}</span>
                       </div>
-                      <span style={{ color: 'white' }}>{formatCount(totalRequests)}</span>
+                      <span>{formatCount(totalRequests)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
@@ -247,22 +270,21 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Endpoint</p>
               <p>Response times</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {responseTimeData.length
                 ? responseTimeData.map(({ method, endpoint, responseTimeAvg }) => (
-                    <li key={endpoint} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <li key={endpoint}>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         <span
                           style={{
                             color: HTTP_METHOD_COLORS[method as keyof typeof HTTP_METHOD_COLORS],
-                            whiteSpace: 'nowrap',
                           }}
                         >
                           {method}
                         </span>
-                        <span style={{ color: 'white' }}>{endpoint}</span>
+                        <span className="truncate">{endpoint}</span>
                       </div>
-                      <span style={{ color: 'white' }}>{formatCount(responseTimeAvg)}</span>
+                      <span>{formatMilliseconds(responseTimeAvg)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
@@ -274,15 +296,12 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Status codes</p>
               <p>Requests</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {statusCodeData.length
                 ? statusCodeData.map(({ statusCode, requests }) => (
-                    <li
-                      key={statusCode}
-                      style={{ display: 'flex', justifyContent: 'space-between' }}
-                    >
-                      <span style={{ color: 'white' }}>{statusCode}</span>
-                      <span style={{ color: 'white' }}>{formatCount(requests)}</span>
+                    <li key={statusCode}>
+                      <span>{statusCode}</span>
+                      <span>{formatCount(requests)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
@@ -294,21 +313,15 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Country</p>
               <p>Requests</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {countryData.length
                 ? countryData.map(({ country, countryCode, requests }) => (
-                    <li
-                      key={countryCode}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                      }}
-                    >
+                    <li key={countryCode}>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         {countryCode && <span>{getFlagEmoji(countryCode)}</span>}
-                        <span style={{ color: 'white' }}>{country}</span>
+                        <span className="truncate">{country}</span>
                       </div>
-                      <span style={{ color: 'white' }}>{formatCount(requests)}</span>
+                      <span>{formatCount(requests)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
@@ -320,18 +333,15 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Region</p>
               <p>Requests</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {regionData.length
                 ? regionData.map(({ region, countryCode, requests }) => (
-                    <li
-                      key={countryCode}
-                      style={{ display: 'flex', justifyContent: 'space-between' }}
-                    >
+                    <li key={countryCode}>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         {countryCode && <span>{getFlagEmoji(countryCode)}</span>}
-                        <span style={{ color: 'white' }}>{region}</span>
+                        <span className="truncate">{region}</span>
                       </div>
-                      <span style={{ color: 'white' }}>{formatCount(requests)}</span>
+                      <span>{formatCount(requests)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
@@ -343,18 +353,15 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>City</p>
               <p>Requests</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {cityData.length
                 ? cityData.map(({ city, countryCode, requests }) => (
-                    <li
-                      key={countryCode}
-                      style={{ display: 'flex', justifyContent: 'space-between' }}
-                    >
+                    <li key={countryCode}>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                         {countryCode && <span>{getFlagEmoji(countryCode)}</span>}
-                        <span style={{ color: 'white' }}>{city}</span>
+                        <span className="truncate">{city}</span>
                       </div>
-                      <span style={{ color: 'white' }}>{formatCount(requests)}</span>
+                      <span>{formatCount(requests)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
@@ -366,42 +373,30 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Value</p>
               <p>Response times</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>avg</span>
-                <span style={{ color: 'white' }}>
-                  {formatMilliseconds(avgPercentileData?.responseTime)}
-                </span>
+            <ul>
+              <li>
+                <span>avg</span>
+                <span>{formatMilliseconds(avgPercentileData?.responseTime)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p50</span>
-                <span style={{ color: 'white' }}>
-                  {formatMilliseconds(p50PercentileData?.responseTime)}
-                </span>
+              <li>
+                <span>p50</span>
+                <span>{formatMilliseconds(p50PercentileData?.responseTime)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p75</span>
-                <span style={{ color: 'white' }}>
-                  {formatMilliseconds(p75PercentileData?.responseTime)}
-                </span>
+              <li>
+                <span>p75</span>
+                <span>{formatMilliseconds(p75PercentileData?.responseTime)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p90</span>
-                <span style={{ color: 'white' }}>
-                  {formatMilliseconds(p90PercentileData?.responseTime)}
-                </span>
+              <li>
+                <span>p90</span>
+                <span>{formatMilliseconds(p90PercentileData?.responseTime)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p95</span>
-                <span style={{ color: 'white' }}>
-                  {formatMilliseconds(p95PercentileData?.responseTime)}
-                </span>
+              <li>
+                <span>p95</span>
+                <span>{formatMilliseconds(p95PercentileData?.responseTime)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p99</span>
-                <span style={{ color: 'white' }}>
-                  {formatMilliseconds(p99PercentileData?.responseTime)}
-                </span>
+              <li>
+                <span>p99</span>
+                <span>{formatMilliseconds(p99PercentileData?.responseTime)}</span>
               </li>
             </ul>
           </div>
@@ -411,42 +406,30 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Value</p>
               <p>Request sizes</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>avg</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(avgPercentileData?.requestSize)}
-                </span>
+            <ul>
+              <li>
+                <span>avg</span>
+                <span>{formatBytes(avgPercentileData?.requestSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p50</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p50PercentileData?.requestSize)}
-                </span>
+              <li>
+                <span>p50</span>
+                <span>{formatBytes(p50PercentileData?.requestSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p75</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p75PercentileData?.requestSize)}
-                </span>
+              <li>
+                <span>p75</span>
+                <span>{formatBytes(p75PercentileData?.requestSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p90</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p90PercentileData?.requestSize)}
-                </span>
+              <li>
+                <span>p90</span>
+                <span>{formatBytes(p90PercentileData?.requestSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p95</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p95PercentileData?.requestSize)}
-                </span>
+              <li>
+                <span>p95</span>
+                <span>{formatBytes(p95PercentileData?.requestSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p99</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p99PercentileData?.requestSize)}
-                </span>
+              <li>
+                <span>p99</span>
+                <span>{formatBytes(p99PercentileData?.requestSize)}</span>
               </li>
             </ul>
           </div>
@@ -456,42 +439,30 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Value</p>
               <p>Response sizes</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>avg</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(avgPercentileData?.responseSize)}
-                </span>
+            <ul>
+              <li>
+                <span>avg</span>
+                <span>{formatBytes(avgPercentileData?.responseSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p50</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p50PercentileData?.responseSize)}
-                </span>
+              <li>
+                <span>p50</span>
+                <span>{formatBytes(p50PercentileData?.responseSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p75</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p75PercentileData?.responseSize)}
-                </span>
+              <li>
+                <span>p75</span>
+                <span>{formatBytes(p75PercentileData?.responseSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p90</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p90PercentileData?.responseSize)}
-                </span>
+              <li>
+                <span>p90</span>
+                <span>{formatBytes(p90PercentileData?.responseSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p95</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p95PercentileData?.responseSize)}
-                </span>
+              <li>
+                <span>p95</span>
+                <span>{formatBytes(p95PercentileData?.responseSize)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p99</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p99PercentileData?.responseSize)}
-                </span>
+              <li>
+                <span>p99</span>
+                <span>{formatBytes(p99PercentileData?.responseSize)}</span>
               </li>
             </ul>
           </div>
@@ -501,42 +472,30 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Value</p>
               <p>CPU usage</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>avg</span>
-                <span style={{ color: 'white' }}>
-                  {formatCpuUsage(avgPercentileData?.cpuUsage)}
-                </span>
+            <ul>
+              <li>
+                <span>avg</span>
+                <span>{formatCpuUsage(avgPercentileData?.cpuUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p50</span>
-                <span style={{ color: 'white' }}>
-                  {formatCpuUsage(p50PercentileData?.cpuUsage)}
-                </span>
+              <li>
+                <span>p50</span>
+                <span>{formatCpuUsage(p50PercentileData?.cpuUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p75</span>
-                <span style={{ color: 'white' }}>
-                  {formatCpuUsage(p75PercentileData?.cpuUsage)}
-                </span>
+              <li>
+                <span>p75</span>
+                <span>{formatCpuUsage(p75PercentileData?.cpuUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p90</span>
-                <span style={{ color: 'white' }}>
-                  {formatCpuUsage(p90PercentileData?.cpuUsage)}
-                </span>
+              <li>
+                <span>p90</span>
+                <span>{formatCpuUsage(p90PercentileData?.cpuUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p95</span>
-                <span style={{ color: 'white' }}>
-                  {formatCpuUsage(p95PercentileData?.cpuUsage)}
-                </span>
+              <li>
+                <span>p95</span>
+                <span>{formatCpuUsage(p95PercentileData?.cpuUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p99</span>
-                <span style={{ color: 'white' }}>
-                  {formatCpuUsage(p99PercentileData?.cpuUsage)}
-                </span>
+              <li>
+                <span>p99</span>
+                <span>{formatCpuUsage(p99PercentileData?.cpuUsage)}</span>
               </li>
             </ul>
           </div>
@@ -546,42 +505,30 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Value</p>
               <p>Memory usage</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>avg</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(avgPercentileData?.memoryUsage)}
-                </span>
+            <ul>
+              <li>
+                <span>avg</span>
+                <span>{formatBytes(avgPercentileData?.memoryUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p50</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p50PercentileData?.memoryUsage)}
-                </span>
+              <li>
+                <span>p50</span>
+                <span>{formatBytes(p50PercentileData?.memoryUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p75</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p75PercentileData?.memoryUsage)}
-                </span>
+              <li>
+                <span>p75</span>
+                <span>{formatBytes(p75PercentileData?.memoryUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p90</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p90PercentileData?.memoryUsage)}
-                </span>
+              <li>
+                <span>p90</span>
+                <span>{formatBytes(p90PercentileData?.memoryUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p95</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p95PercentileData?.memoryUsage)}
-                </span>
+              <li>
+                <span>p95</span>
+                <span>{formatBytes(p95PercentileData?.memoryUsage)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p99</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p99PercentileData?.memoryUsage)}
-                </span>
+              <li>
+                <span>p99</span>
+                <span>{formatBytes(p99PercentileData?.memoryUsage)}</span>
               </li>
             </ul>
           </div>
@@ -591,42 +538,30 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Value</p>
               <p>Total memory</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>avg</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(avgPercentileData?.memoryTotal)}
-                </span>
+            <ul>
+              <li>
+                <span>avg</span>
+                <span>{formatBytes(avgPercentileData?.memoryTotal)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p50</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p50PercentileData?.memoryTotal)}
-                </span>
+              <li>
+                <span>p50</span>
+                <span>{formatBytes(p50PercentileData?.memoryTotal)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p75</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p75PercentileData?.memoryTotal)}
-                </span>
+              <li>
+                <span>p75</span>
+                <span>{formatBytes(p75PercentileData?.memoryTotal)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p90</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p90PercentileData?.memoryTotal)}
-                </span>
+              <li>
+                <span>p90</span>
+                <span>{formatBytes(p90PercentileData?.memoryTotal)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p95</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p95PercentileData?.memoryTotal)}
-                </span>
+              <li>
+                <span>p95</span>
+                <span>{formatBytes(p95PercentileData?.memoryTotal)}</span>
               </li>
-              <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'white' }}>p99</span>
-                <span style={{ color: 'white' }}>
-                  {formatBytes(p99PercentileData?.memoryTotal)}
-                </span>
+              <li>
+                <span>p99</span>
+                <span>{formatBytes(p99PercentileData?.memoryTotal)}</span>
               </li>
             </ul>
           </div>
@@ -636,12 +571,12 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Browser</p>
               <p>Requests</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {browserData.length
                 ? browserData.map(({ browser, requests }) => (
-                    <li key={browser} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'white' }}>{browser}</span>
-                      <span style={{ color: 'white' }}>{formatCount(requests)}</span>
+                    <li key={browser}>
+                      <span className="truncate">{browser}</span>
+                      <span>{formatCount(requests)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
@@ -653,12 +588,12 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>OS</p>
               <p>Requests</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {osData.length
                 ? osData.map(({ os, requests }) => (
-                    <li key={os} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'white' }}>{os}</span>
-                      <span style={{ color: 'white' }}>{formatCount(requests)}</span>
+                    <li key={os}>
+                      <span className="truncate">{os}</span>
+                      <span>{formatCount(requests)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
@@ -670,12 +605,12 @@ export const WeeklyReport: React.FC<Props> = ({
               <p>Device</p>
               <p>Requests</p>
             </div>
-            <ul style={{ margin: 0, padding: 0 }}>
+            <ul>
               {deviceData.length
                 ? deviceData.map(({ device, requests }) => (
-                    <li key={device} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'white' }}>{device}</span>
-                      <span style={{ color: 'white' }}>{formatCount(requests)}</span>
+                    <li key={device}>
+                      <span className="truncate">{device}</span>
+                      <span>{formatCount(requests)}</span>
                     </li>
                   ))
                 : renderNoMetrics}
