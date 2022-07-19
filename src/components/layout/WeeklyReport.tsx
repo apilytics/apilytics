@@ -89,7 +89,6 @@ export const WeeklyReport: React.FC<Props> = ({
         justifyContent: 'center',
         alignItems: 'center',
         color: 'white',
-        fontSize: 14,
         height: '10rem',
       }}
     >
@@ -100,6 +99,10 @@ export const WeeklyReport: React.FC<Props> = ({
   return (
     <>
       <style type="text/css">{`
+        * {
+          font-size: 14px;
+        }
+
         .list-header {
           display: flex;
           justify-content: space-between;
@@ -147,7 +150,6 @@ export const WeeklyReport: React.FC<Props> = ({
           padding: '1rem',
           backgroundColor: BACKGROUND_COLOR,
           color: BASE_CONTENT_COLOR,
-          fontSize: 16,
           width: 'auto',
           maxWidth: '850px',
           margin: '0 auto',
