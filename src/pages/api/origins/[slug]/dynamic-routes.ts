@@ -6,7 +6,7 @@ import {
   makeMethodsHandler,
   routeToPattern,
 } from 'lib-server/apiHelpers';
-import { updateMetricsForDynamicRoutes } from 'lib-server/queries';
+import { updateMetricsForDynamicRoute } from 'lib-server/queries';
 import {
   sendConflict,
   sendInvalidInput,
@@ -123,7 +123,17 @@ const handlePut: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
       prisma.dynamicRoute.createMany({ data }),
     ]);
 
-    await updateMetricsForDynamicRoutes({ originId });
+    const newDynamicRoutes = await prisma.dynamicRoute.findMany({ where: { originId } });
+
+    const queriesForNewDynamicRoutes = newDynamicRoutes.map(({ originId, pattern, id }) =>
+      updateMetricsForDynamicRoute({
+        originId,
+        pattern,
+        id,
+      }),
+    );
+
+    await Promise.all(queriesForNewDynamicRoutes);
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'Two or more routes map to conflicting patterns.');

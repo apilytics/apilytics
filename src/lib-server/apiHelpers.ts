@@ -419,7 +419,7 @@ export const getGeneralData = async ({
 
   const fromClause = Prisma.sql`
     FROM metrics
-      JOIN origins ON metrics.origin_id = origins.id`;
+      LEFT JOIN origins ON metrics.origin_id = origins.id`;
 
   const baseWhereClause = Prisma.sql`
     WHERE origins.id = ${originId}
@@ -770,7 +770,7 @@ AND metrics.path = ${endpoint}`;
 
   const fromClause = Prisma.sql`
 FROM metrics
-  JOIN origins ON metrics.origin_id = origins.id`;
+  LEFT JOIN origins ON metrics.origin_id = origins.id`;
 
   const baseWhereClause = Prisma.sql`
 WHERE origins.id = ${originId}

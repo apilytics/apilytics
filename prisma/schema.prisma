@@ -182,10 +182,10 @@ model Metric {
   origin   Origin @relation(fields: [originId], references: [id], onDelete: Cascade)
 
   dynamicRouteId String?       @map("dynamic_route_id") @db.Uuid
-  dynamicRoute   DynamicRoute? @relation(fields: [dynamicRouteId], references: [id])
+  dynamicRoute   DynamicRoute? @relation(fields: [dynamicRouteId], references: [id], onDelete: SetNull)
 
   excludedRouteId String?        @map("excluded_route_id") @db.Uuid
-  excludedRoute   ExcludedRoute? @relation(fields: [excludedRouteId], references: [id])
+  excludedRoute   ExcludedRoute? @relation(fields: [excludedRouteId], references: [id], onDelete: SetNull)
 
   @@unique([id, originId, createdAt])
   @@index([originId, path, method, statusCode, browser, os, device, country, region, city, dynamicRouteId, excludedRouteId, createdAt])

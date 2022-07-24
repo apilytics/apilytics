@@ -1,8 +1,8 @@
 // Ignore: `ts-node` won't find these without relative imports.
 // eslint-disable-next-line no-restricted-imports
 import {
-  updateMetricsForDynamicRoutes,
-  updateMetricsForExcludedRoutes,
+  updateMetricsForDynamicRoute,
+  updateMetricsForExcludedRoute,
 } from '../src/lib-server/queries';
 import prisma from '../src/prisma/client'; // eslint-disable-line no-restricted-imports
 // eslint-disable-next-line no-restricted-imports
@@ -254,12 +254,24 @@ const main = async (): Promise<void> => {
   console.log('Metrics created.');
 
   await prisma.dynamicRoute.createMany({ data: TEST_DYNAMIC_ROUTES });
-  await updateMetricsForDynamicRoutes({ originId: ORIGIN_ID });
+  const dynamicRoutes = await prisma.dynamicRoute.findMany({ where: { originId: ORIGIN_ID } });
+
+  const metricUpdateQueriesForDynamicRoutes = dynamicRoutes.map(({ originId, pattern, id }) =>
+    updateMetricsForDynamicRoute({ originId, pattern, id }),
+  );
+
+  await Promise.all(metricUpdateQueriesForDynamicRoutes);
 
   console.log('Dynamic routes created.');
 
   await prisma.excludedRoute.createMany({ data: TEST_EXCLUDED_ROUTES });
-  await updateMetricsForExcludedRoutes({ originId: ORIGIN_ID });
+  const excludedRoutes = await prisma.excludedRoute.findMany({ where: { originId: ORIGIN_ID } });
+
+  const metricUpdateQueriesForExcludedRoutes = excludedRoutes.map(({ originId, pattern, id }) =>
+    updateMetricsForExcludedRoute({ originId, pattern, id }),
+  );
+
+  await Promise.all(metricUpdateQueriesForExcludedRoutes);
 
   console.log('Excluded routes created.');
 };
