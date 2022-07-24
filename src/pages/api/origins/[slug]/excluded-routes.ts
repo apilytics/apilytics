@@ -6,7 +6,7 @@ import {
   makeMethodsHandler,
   routeToPattern,
 } from 'lib-server/apiHelpers';
-import { updateMetricsForExcludedRoutes } from 'lib-server/queries';
+import { updateMetricsForExcludedRoute } from 'lib-server/queries';
 import {
   sendConflict,
   sendInvalidInput,
@@ -123,7 +123,17 @@ const handlePut: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
       prisma.excludedRoute.createMany({ data }),
     ]);
 
-    await updateMetricsForExcludedRoutes({ originId });
+    const newExcludedRoutes = await prisma.excludedRoute.findMany({ where: { originId } });
+
+    const queriesForNewExcludedRoutes = newExcludedRoutes.map(({ originId, pattern, id }) =>
+      updateMetricsForExcludedRoute({
+        originId,
+        pattern,
+        id,
+      }),
+    );
+
+    await Promise.all(queriesForNewExcludedRoutes);
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'Two or more routes map to conflicting patterns.');
