@@ -405,56 +405,40 @@ const extractFromMiscData = <
     );
 
 export const getGeneralData = async ({
-  origin,
-  query: { from = '', to = '', method, statusCode, browser, os, device, country, region, city },
+  fromClause,
+  baseWhereClause,
+  whereClause,
+  query: { from = '', to = '' },
 }: {
-  origin: Origin;
+  fromClause: Prisma.Sql;
+  baseWhereClause: Prisma.Sql;
+  whereClause: Prisma.Sql;
   query: MetricsFilters;
 }): Promise<GeneralData> => {
-  const { id: originId } = origin;
   const fromDate = new Date(from);
   const toDate = new Date(to);
   const fromTime = fromDate.getTime();
   const toTime = toDate.getTime();
 
-  const fromClause = Prisma.sql`
-    FROM metrics
-      LEFT JOIN origins ON metrics.origin_id = origins.id`;
+  const whereClausePrev = Prisma.sql`
+${baseWhereClause}
+  AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
+  AND metrics.created_at <= ${fromDate}`;
 
-  const baseWhereClause = Prisma.sql`
-    WHERE origins.id = ${originId}
-      ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
-      ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
-      ${browser ? Prisma.sql`AND metrics.browser = ${browser}` : Prisma.empty}
-      ${os ? Prisma.sql`AND metrics.os = ${os}` : Prisma.empty}
-      ${device ? Prisma.sql`AND metrics.device = ${device}` : Prisma.empty}
-      ${country ? Prisma.sql`AND metrics.country = ${country}` : Prisma.empty}
-      ${region ? Prisma.sql`AND metrics.region = ${region}` : Prisma.empty}
-      ${city ? Prisma.sql`AND metrics.city = ${city}` : Prisma.empty}`;
-
-  const whereClause = Prisma.sql`
-    ${baseWhereClause}
-      AND metrics.created_at >= ${fromDate}
-      AND metrics.created_at <= ${toDate}`;
-
-  const whereClausePreviousPeriod = Prisma.sql`
-    ${baseWhereClause}
-      AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
-      AND metrics.created_at <= ${fromDate}`;
+  const selectTotalRequestsAndErrors = Prisma.sql`
+COUNT(*) AS "totalRequests",
+SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 END) AS "totalErrors"`;
 
   const prevGeneralDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
     SELECT
-      COUNT(*) AS "totalRequests",
-      SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors"
+      ${selectTotalRequestsAndErrors}
 
     ${fromClause}
-    ${whereClausePreviousPeriod}`;
+    ${whereClausePrev}`;
 
   const generalDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
     SELECT
-      COUNT(*) AS "totalRequests",
-
-      SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS "totalErrors",
+      ${selectTotalRequestsAndErrors},
 
       ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
       percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP50",
@@ -558,7 +542,7 @@ export const getTimeFrameDataPromise = ({
 SELECT
   COUNT(*) AS requests,
   time_bucket('${scope}', metrics.created_at) AS time,
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 ELSE 0 END) AS errors
+  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 END) AS errors
 
 ${fromClause}
 ${whereClause}
@@ -571,46 +555,19 @@ GROUP BY time;`;
 export const getEndpointData = async ({
   fromClause,
   whereClause,
-  origin: { id: originId },
-  query: { endpoint },
 }: {
-  origin: Origin;
-  query: MetricsFilters;
   fromClause: Prisma.Sql;
   whereClause: Prisma.Sql;
 }): Promise<EndpointData[]> => {
-  // If an endpoint is provided as a filter, return all paths matching that endpoint.
-  // Otherwise, return all dynamic routes + other paths through `endpoint`.
-  let endpointSelectClause: Prisma.Sql | undefined;
-
-  if (endpoint) {
-    endpointSelectClause = Prisma.sql`metrics.path AS endpoint`;
-  } else {
-    endpointSelectClause = Prisma.sql`
-CASE
-  WHEN matched_routes.route IS NULL
-  THEN metrics.path
-  ELSE matched_routes.route END AS endpoint`;
-  }
-
   const endpointData: RawEndpointData[] = await prisma.$queryRaw`
 SELECT
   COUNT(*) AS "totalRequests",
+  CASE WHEN metrics.dynamic_route_id IS NULL THEN metrics.path ELSE dynamic_routes.route END AS endpoint,
   metrics.method,
-  ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
-  ${endpointSelectClause}
+  ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg"
 
 ${fromClause}
-
-  LEFT JOIN LATERAL (
-    SELECT dynamic_routes.route
-    FROM dynamic_routes
-    WHERE dynamic_routes.origin_id = ${originId}
-      AND metrics.path LIKE dynamic_routes.pattern
-      AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
-        = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
-  ) AS matched_routes ON TRUE
-
+  LEFT JOIN dynamic_routes ON metrics.dynamic_route_id = dynamic_routes.id
 ${whereClause}
 
 GROUP BY metrics.method, endpoint;`;
@@ -764,8 +721,6 @@ AND metrics.dynamic_route_id = ${dynamicRoute.id}`;
 AND metrics.dynamic_route_id IS NULL
 AND metrics.path = ${endpoint}`;
     }
-  } else {
-    wherePath = Prisma.sql`AND metrics.dynamic_route_id IS NULL`;
   }
 
   const fromClause = Prisma.sql`
@@ -775,7 +730,7 @@ FROM metrics
   const baseWhereClause = Prisma.sql`
 WHERE origins.id = ${originId}
   AND metrics.excluded_route_id IS NULL
-  ${wherePath}
+  ${wherePath ?? Prisma.empty}
   ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
   ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
   ${browser ? Prisma.sql`AND metrics.browser = ${browser}` : Prisma.empty}
@@ -790,7 +745,7 @@ ${baseWhereClause}
   AND metrics.created_at >= ${fromDate}
   AND metrics.created_at <= ${toDate}`;
 
-  const metricsParams = { origin, query, fromClause, whereClause };
+  const metricsParams = { origin, query, fromClause, baseWhereClause, whereClause };
 
   const [
     generalData,
