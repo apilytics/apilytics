@@ -2,7 +2,6 @@ import React from 'react';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
 import { DocsTemplate } from 'components/layout/DocsTemplate';
-import { withUser } from 'hocs/withUser';
 import { DOCS_PATH, getDocsData, getFilePaths, getMDXContent } from 'utils/mdx';
 import type { DocsPageProps } from 'types';
 
@@ -35,4 +34,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default withUser(Docs);
+export default Docs;

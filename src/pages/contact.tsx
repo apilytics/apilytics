@@ -8,7 +8,6 @@ import { EmailLink } from 'components/shared/EmailLink';
 import { Form } from 'components/shared/Form';
 import { Input } from 'components/shared/Input';
 import { TextArea } from 'components/shared/TextArea';
-import { withUser } from 'hocs/withUser';
 import { useForm } from 'hooks/useForm';
 import { usePlausible } from 'hooks/usePlausible';
 import { staticApiRoutes } from 'utils/router';
@@ -81,4 +80,4 @@ const Contact: NextPage = () => {
   );
 };
 
-export default withUser(Contact);
+export default Contact;

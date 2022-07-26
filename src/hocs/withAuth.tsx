@@ -7,7 +7,6 @@ import type { NextPage } from 'next';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { AccountForm } from 'components/shared/AccountForm';
 import { Button } from 'components/shared/Button';
-import { withUser } from 'hocs/withUser';
 import { useContext } from 'hooks/useContext';
 import { staticRoutes } from 'utils/router';
 
@@ -57,5 +56,5 @@ export const withAuth = <T extends Record<string, unknown>>(
     return <PageComponent {...pageProps} />;
   };
 
-  return withUser(WithAuth);
+  return WithAuth;
 };
