@@ -20,21 +20,39 @@ export const METHODS = [
 export const METHODS_WITHOUT_BODY = ['GET', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'];
 export const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS', 'TRACE'];
 
-export const DAY = 1;
+export const ONE_DAY = 1;
 export const WEEK_DAYS = 7;
 export const MONTH_DAYS = 30;
 export const THREE_MONTHS_DAYS = 90;
 export const SIX_MONTHS_DAYS = 180;
 export const YEAR_DAYS = 365;
 
-export const TIME_FRAME_OPTIONS = {
-  [DAY]: 'Last 24 hours',
-  [WEEK_DAYS]: 'Last 7 days',
-  [MONTH_DAYS]: 'Last 30 days',
-  [THREE_MONTHS_DAYS]: 'Last 3 months',
-  [SIX_MONTHS_DAYS]: 'Last 6 months',
-  [YEAR_DAYS]: 'Last 12 months',
-};
+export const INTERVAL_DAYS = [
+  {
+    label: 'Last 24 hours',
+    value: ONE_DAY,
+  },
+  {
+    label: 'Last 7 days',
+    value: WEEK_DAYS,
+  },
+  {
+    label: 'Last 30 days',
+    value: MONTH_DAYS,
+  },
+  {
+    label: 'Last 3 months',
+    value: THREE_MONTHS_DAYS,
+  },
+  {
+    label: 'Last 6 months',
+    value: SIX_MONTHS_DAYS,
+  },
+  {
+    label: 'Last 12 months',
+    value: YEAR_DAYS,
+  },
+];
 
 export const UNEXPECTED_ERROR = 'Unexpected error.';
 export const PERMISSION_ERROR = 'You do not have permission to do this action.';

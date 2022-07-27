@@ -57,7 +57,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
                 )}
               >
                 {totalRequestsGrowth < 0 ? '-' : '+'}
-                {(totalRequestsGrowth * 100).toFixed()}%
+                {totalRequestsGrowth}%
               </span>
             )}
           </div>
@@ -69,7 +69,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
                 className={clsx('ml-2', positiveTotalErrorsGrowth ? 'text-success' : 'text-error')}
               >
                 {totalErrorsGrowth < 0 ? '-' : '+'}
-                {(totalErrorsGrowth * 100).toFixed()}%
+                {totalErrorsGrowth}%
               </span>
             )}
           </div>
@@ -81,7 +81,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
                 className={clsx('ml-2', positiveErrorRateGrowth ? 'text-success' : 'text-error')}
               >
                 {errorRateGrowth < 0 ? '-' : '+'}
-                {(errorRateGrowth * 100).toFixed()}%
+                {errorRateGrowth}%
               </span>
             )}
           </div>

@@ -1,17 +1,15 @@
-import type { ParsedUrlQuery } from 'querystring';
-
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import { useContext } from 'hooks/useContext';
-import { TIME_FRAME_OPTIONS, WEEK_DAYS } from 'utils/constants';
-import type { TimeFrame } from 'types';
+import { ONE_DAY } from 'utils/constants';
+import { isValidIntervalDays } from 'utils/helpers';
 
 export const useDashboardQuery = (requireSlug?: boolean): void => {
   const { pathname, query, replace } = useRouter();
 
   const {
-    setTimeFrame,
+    setIntervalDays,
     selectedMethod,
     setSelectedMethod,
     selectedEndpoint,
@@ -28,19 +26,22 @@ export const useDashboardQuery = (requireSlug?: boolean): void => {
 
   // Initialize filters from existing URL parameters.
   useEffect(() => {
-    const { timeFrame, method, endpoint, statusCode, browser, os, device } =
-      query as ParsedUrlQuery;
+    const {
+      'interval-days': _intervalDays,
+      method,
+      endpoint,
+      statusCode,
+      browser,
+      os,
+      device,
+    } = query;
 
-    if (timeFrame && typeof timeFrame === 'string') {
-      const _timeFrame = Object.entries(TIME_FRAME_OPTIONS).find(
-        ([_, val]) => val === timeFrame,
-      )?.[0];
+    const intervalDays = Number(_intervalDays);
 
-      if (_timeFrame) {
-        setTimeFrame(Number(_timeFrame) as TimeFrame);
-      }
+    if (isValidIntervalDays(intervalDays)) {
+      setIntervalDays(intervalDays);
     } else {
-      setTimeFrame(WEEK_DAYS);
+      setIntervalDays(ONE_DAY);
     }
 
     if (method && typeof method === 'string') {

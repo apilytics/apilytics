@@ -101,9 +101,8 @@ const handlePost: ApiHandler<MessageResponse> = async (req, res) => {
 
   const metrics = await generateMetrics({
     origin,
-    query: {
-      from,
-      to,
+    filters: {
+      intervalDays: WEEK_DAYS,
     },
   });
 

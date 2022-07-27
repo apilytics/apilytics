@@ -6,7 +6,7 @@ import {
   makeMethodsHandler,
   routeToPattern,
 } from 'lib-server/apiHelpers';
-import { updateMetricsForExcludedRoute } from 'lib-server/queries';
+import { updateMetricsForNewExcludedRoute } from 'lib-server/queries';
 import {
   sendConflict,
   sendInvalidInput,
@@ -24,7 +24,7 @@ const getRoutes = async (originId: string): Promise<RouteData[]> => {
   const result: RouteData[] = await prisma.$queryRaw`
 SELECT
   excluded_routes.route,
-  COUNT(DISTINCT metrics.path) AS "matchingPaths"
+  COUNT(DISTINCT metrics.path)::INTEGER AS "matchingPaths"
 
 FROM excluded_routes
   LEFT JOIN metrics ON metrics.origin_id = excluded_routes.origin_id
@@ -33,7 +33,7 @@ FROM excluded_routes
     AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
       = LENGTH(excluded_routes.pattern) - LENGTH(REPLACE(excluded_routes.pattern, '/', ''))
 
-WHERE excluded_routes.origin_id = ${originId}
+WHERE excluded_routes.origin_id = ${originId}::UUID
 
 GROUP BY excluded_routes.route
 ORDER BY excluded_routes.route;`;
@@ -118,22 +118,45 @@ const handlePut: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
   }));
 
   try {
-    await prisma.$transaction([
-      prisma.excludedRoute.deleteMany({ where: { originId } }),
-      prisma.excludedRoute.createMany({ data }),
-    ]);
+    const existingExcludedRoutes = await prisma.excludedRoute.findMany({
+      where: { originId },
+      select: { route: true, id: true },
+    });
 
-    const newExcludedRoutes = await prisma.excludedRoute.findMany({ where: { originId } });
+    const newExcludedRoutes = data.filter(
+      ({ route }) =>
+        !existingExcludedRoutes.some(({ route: existingRoute }) => existingRoute === route),
+    );
 
-    const queriesForNewExcludedRoutes = newExcludedRoutes.map(({ originId, pattern, id }) =>
-      updateMetricsForExcludedRoute({
+    const deletedExcludedRouteIds = existingExcludedRoutes
+      .filter(({ route }) => !data.some(({ route: newRoute }) => newRoute === route))
+      .map(({ id }) => id);
+
+    const queriesForNewExcludedRoutes = newExcludedRoutes.map(({ originId, pattern, route }) =>
+      updateMetricsForNewExcludedRoute({
         originId,
         pattern,
-        id,
+        route,
       }),
     );
 
-    await Promise.all(queriesForNewExcludedRoutes);
+    const queryForDeletedExcludedRoutes = prisma.$queryRaw`
+UPDATE metrics
+
+SET excluded_route_id = NULL,
+endpoint = NULL
+
+WHERE origin_id = ${originId}::UUID
+  AND excluded_route_id = ANY(${deletedExcludedRouteIds}::UUID[]);`;
+
+    await prisma.$transaction([
+      prisma.excludedRoute.deleteMany({
+        where: { id: { in: deletedExcludedRouteIds } },
+      }),
+      prisma.excludedRoute.createMany({ data: newExcludedRoutes }),
+      ...queriesForNewExcludedRoutes,
+      queryForDeletedExcludedRoutes,
+    ]);
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'Two or more routes map to conflicting patterns.');

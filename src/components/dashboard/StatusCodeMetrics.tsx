@@ -71,13 +71,13 @@ export const StatusCodeMetrics: React.FC<Props> = ({ data: _data }) => {
   return (
     <DashboardCard>
       <div className="flex flex-wrap gap-4 px-2">
-        <p className="mr-auto text-white">Status codes</p>
+        <p className="mr-auto text-white">Status codes (top {truncatedData.length})</p>
       </div>
       <div className="mt-4 flex grow flex-col">{renderMetrics}</div>
       <Modal name={MODAL_NAMES.STATUS_CODES} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="pl-4 text-white">Status codes</p>
+            <p className="pl-4 text-white">Status codes (top {data.length})</p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="overflow-y-auto px-4">

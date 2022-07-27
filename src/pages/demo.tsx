@@ -26,7 +26,7 @@ const Demo: NextPage = () => {
   const maxWidth = 'max-w-6xl';
 
   const {
-    timeFrame,
+    intervalDays,
     selectedMethod: method,
     selectedEndpoint: endpoint,
     selectedStatusCode: statusCode,
@@ -50,7 +50,7 @@ const Demo: NextPage = () => {
     userAgentData,
     geoLocationData,
   } = getMockMetrics({
-    timeFrame,
+    intervalDays,
     method,
     endpoint,
     statusCode,

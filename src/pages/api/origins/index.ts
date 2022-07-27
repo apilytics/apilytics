@@ -25,18 +25,18 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const user = await prisma.user.findFirst({ where: { id: userId }, select: { isAdmin: true } });
 
   const whereClause = !user?.isAdmin
-    ? Prisma.sql`WHERE origin_users.user_id = ${userId}`
+    ? Prisma.sql`WHERE origin_users.user_id = ${userId}::UUID`
     : Prisma.empty;
 
   const data: OriginListItem[] = await prisma.$queryRaw`
-  SELECT
+  SELECT DISTINCT
     origins.name,
     origins.slug,
-    COUNT(DISTINCT metrics) AS "lastDayMetrics",
+    COUNT(metrics)::INTEGER AS "lastDayMetrics",
     ${!user?.isAdmin ? Prisma.sql`origin_users.role` : Prisma.sql`'admin'`} AS "userRole",
-    COUNT(DISTINCT origin_users) AS "userCount",
-    COUNT(DISTINCT dynamic_routes) AS "dynamicRouteCount",
-    COUNT(DISTINCT excluded_routes) AS "excludedRouteCount"
+    COUNT(DISTINCT origin_users)::INTEGER AS "userCount",
+    COUNT(DISTINCT dynamic_routes)::INTEGER AS "dynamicRouteCount",
+    COUNT(DISTINCT excluded_routes)::INTEGER AS "excludedRouteCount"
 
   FROM origins
     LEFT JOIN origin_users ON origin_users.origin_id = origins.id
@@ -44,11 +44,11 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
     LEFT JOIN excluded_routes ON excluded_routes.origin_id = origins.id
     LEFT JOIN metrics ON metrics.origin_id = origins.id
       AND metrics.excluded_route_id IS NULL
-      AND metrics.created_at >= NOW() - INTERVAL '1 DAY'
+      AND metrics.created_at >= NOW() - INTERVAL '1 day'
 
   ${whereClause}
 
-  GROUP BY origins.name, origins.slug, origin_users.role
+  GROUP BY origins.id
   ORDER BY "lastDayMetrics" DESC;`;
 
   sendOk(res, { data });

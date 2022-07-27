@@ -1,4 +1,7 @@
 // `NEXT_PUBLIC_APP_URL` is defined everywhere except in preview environments
+
+import type { IntervalDays } from 'types';
+
 // (where the URL changes always), there we'll use `VERCEL_URL`.
 export const FRONTEND_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${process.env.VERCEL_URL}`;
 
@@ -99,11 +102,10 @@ type OriginUserId = { originUserId: string };
 type OriginInviteId = { originInviteId: string };
 
 interface OriginMetricParams extends Slug {
-  from?: string;
-  to?: string;
+  'interval-days': IntervalDays;
   method?: string;
   endpoint?: string;
-  statusCode?: string;
+  'status-code'?: string;
   browser?: string;
   os?: string;
   device?: string;

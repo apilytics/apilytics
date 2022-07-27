@@ -26,32 +26,33 @@ export const PercentileMetrics: React.FC<Props> = ({ data }) => {
 
   const attributes = {
     responseTimes: {
-      renderValue: ({ responseTime }: Partial<PercentileData>) => formatMilliseconds(responseTime),
+      renderValue: ({ responseTime }: Partial<PercentileData>) =>
+        formatMilliseconds(responseTime ?? 0),
       valueKey: 'responseTime',
       label: 'Response times',
     },
     requestSizes: {
-      renderValue: ({ requestSize }: Partial<PercentileData>) => formatBytes(requestSize),
+      renderValue: ({ requestSize }: Partial<PercentileData>) => formatBytes(requestSize ?? 0),
       valueKey: 'requestSize',
       label: 'Requests sizes',
     },
     responseSizes: {
-      renderValue: ({ responseSize }: Partial<PercentileData>) => formatBytes(responseSize),
+      renderValue: ({ responseSize }: Partial<PercentileData>) => formatBytes(responseSize ?? 0),
       valueKey: 'responseSize',
       label: 'Response sizes',
     },
     cpuUsage: {
-      renderValue: ({ cpuUsage }: Partial<PercentileData>) => formatCpuUsage(cpuUsage),
+      renderValue: ({ cpuUsage }: Partial<PercentileData>) => formatCpuUsage(cpuUsage ?? 0),
       valueKey: 'cpuUsage',
       label: 'CPU usage',
     },
     memoryUsage: {
-      renderValue: ({ memoryUsage }: Partial<PercentileData>) => formatBytes(memoryUsage),
+      renderValue: ({ memoryUsage }: Partial<PercentileData>) => formatBytes(memoryUsage ?? 0),
       valueKey: 'memoryUsage',
       label: 'Memory usage',
     },
     memoryTotal: {
-      renderValue: ({ memoryTotal }: Partial<PercentileData>) => formatBytes(memoryTotal),
+      renderValue: ({ memoryTotal }: Partial<PercentileData>) => formatBytes(memoryTotal ?? 0),
       valueKey: 'memoryTotal',
       label: 'Total memory',
     },

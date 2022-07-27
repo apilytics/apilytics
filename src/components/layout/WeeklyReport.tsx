@@ -199,7 +199,7 @@ export const WeeklyReport: React.FC<Props> = ({
                 }}
               >
                 {totalRequestsGrowth < 0 ? '-' : '+'}
-                {(totalRequestsGrowth * 100).toFixed()}%
+                {totalRequestsGrowth}%
               </span>
             )}
           </li>
@@ -213,7 +213,7 @@ export const WeeklyReport: React.FC<Props> = ({
                 }}
               >
                 {totalErrorsGrowth < 0 ? '-' : '+'}
-                {(totalErrorsGrowth * 100).toFixed()}%
+                {totalErrorsGrowth}%
               </span>
             )}
           </li>
@@ -227,7 +227,7 @@ export const WeeklyReport: React.FC<Props> = ({
                 }}
               >
                 {errorRateGrowth < 0 ? '-' : '+'}
-                {(errorRateGrowth * 100).toFixed()}%
+                {errorRateGrowth}%
               </span>
             )}
           </li>
@@ -378,27 +378,27 @@ export const WeeklyReport: React.FC<Props> = ({
             <ul>
               <li>
                 <span>avg</span>
-                <span>{formatMilliseconds(avgPercentileData?.responseTime)}</span>
+                <span>{formatMilliseconds(avgPercentileData?.responseTime ?? 0)}</span>
               </li>
               <li>
                 <span>p50</span>
-                <span>{formatMilliseconds(p50PercentileData?.responseTime)}</span>
+                <span>{formatMilliseconds(p50PercentileData?.responseTime ?? 0)}</span>
               </li>
               <li>
                 <span>p75</span>
-                <span>{formatMilliseconds(p75PercentileData?.responseTime)}</span>
+                <span>{formatMilliseconds(p75PercentileData?.responseTime ?? 0)}</span>
               </li>
               <li>
                 <span>p90</span>
-                <span>{formatMilliseconds(p90PercentileData?.responseTime)}</span>
+                <span>{formatMilliseconds(p90PercentileData?.responseTime ?? 0)}</span>
               </li>
               <li>
                 <span>p95</span>
-                <span>{formatMilliseconds(p95PercentileData?.responseTime)}</span>
+                <span>{formatMilliseconds(p95PercentileData?.responseTime ?? 0)}</span>
               </li>
               <li>
                 <span>p99</span>
-                <span>{formatMilliseconds(p99PercentileData?.responseTime)}</span>
+                <span>{formatMilliseconds(p99PercentileData?.responseTime ?? 0)}</span>
               </li>
             </ul>
           </div>
@@ -411,27 +411,27 @@ export const WeeklyReport: React.FC<Props> = ({
             <ul>
               <li>
                 <span>avg</span>
-                <span>{formatBytes(avgPercentileData?.requestSize)}</span>
+                <span>{formatBytes(avgPercentileData?.requestSize ?? 0)}</span>
               </li>
               <li>
                 <span>p50</span>
-                <span>{formatBytes(p50PercentileData?.requestSize)}</span>
+                <span>{formatBytes(p50PercentileData?.requestSize ?? 0)}</span>
               </li>
               <li>
                 <span>p75</span>
-                <span>{formatBytes(p75PercentileData?.requestSize)}</span>
+                <span>{formatBytes(p75PercentileData?.requestSize ?? 0)}</span>
               </li>
               <li>
                 <span>p90</span>
-                <span>{formatBytes(p90PercentileData?.requestSize)}</span>
+                <span>{formatBytes(p90PercentileData?.requestSize ?? 0)}</span>
               </li>
               <li>
                 <span>p95</span>
-                <span>{formatBytes(p95PercentileData?.requestSize)}</span>
+                <span>{formatBytes(p95PercentileData?.requestSize ?? 0)}</span>
               </li>
               <li>
                 <span>p99</span>
-                <span>{formatBytes(p99PercentileData?.requestSize)}</span>
+                <span>{formatBytes(p99PercentileData?.requestSize ?? 0)}</span>
               </li>
             </ul>
           </div>
@@ -444,27 +444,27 @@ export const WeeklyReport: React.FC<Props> = ({
             <ul>
               <li>
                 <span>avg</span>
-                <span>{formatBytes(avgPercentileData?.responseSize)}</span>
+                <span>{formatBytes(avgPercentileData?.responseSize ?? 0)}</span>
               </li>
               <li>
                 <span>p50</span>
-                <span>{formatBytes(p50PercentileData?.responseSize)}</span>
+                <span>{formatBytes(p50PercentileData?.responseSize ?? 0)}</span>
               </li>
               <li>
                 <span>p75</span>
-                <span>{formatBytes(p75PercentileData?.responseSize)}</span>
+                <span>{formatBytes(p75PercentileData?.responseSize ?? 0)}</span>
               </li>
               <li>
                 <span>p90</span>
-                <span>{formatBytes(p90PercentileData?.responseSize)}</span>
+                <span>{formatBytes(p90PercentileData?.responseSize ?? 0)}</span>
               </li>
               <li>
                 <span>p95</span>
-                <span>{formatBytes(p95PercentileData?.responseSize)}</span>
+                <span>{formatBytes(p95PercentileData?.responseSize ?? 0)}</span>
               </li>
               <li>
                 <span>p99</span>
-                <span>{formatBytes(p99PercentileData?.responseSize)}</span>
+                <span>{formatBytes(p99PercentileData?.responseSize ?? 0)}</span>
               </li>
             </ul>
           </div>
@@ -477,27 +477,27 @@ export const WeeklyReport: React.FC<Props> = ({
             <ul>
               <li>
                 <span>avg</span>
-                <span>{formatCpuUsage(avgPercentileData?.cpuUsage)}</span>
+                <span>{formatCpuUsage(avgPercentileData?.cpuUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p50</span>
-                <span>{formatCpuUsage(p50PercentileData?.cpuUsage)}</span>
+                <span>{formatCpuUsage(p50PercentileData?.cpuUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p75</span>
-                <span>{formatCpuUsage(p75PercentileData?.cpuUsage)}</span>
+                <span>{formatCpuUsage(p75PercentileData?.cpuUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p90</span>
-                <span>{formatCpuUsage(p90PercentileData?.cpuUsage)}</span>
+                <span>{formatCpuUsage(p90PercentileData?.cpuUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p95</span>
-                <span>{formatCpuUsage(p95PercentileData?.cpuUsage)}</span>
+                <span>{formatCpuUsage(p95PercentileData?.cpuUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p99</span>
-                <span>{formatCpuUsage(p99PercentileData?.cpuUsage)}</span>
+                <span>{formatCpuUsage(p99PercentileData?.cpuUsage ?? 0)}</span>
               </li>
             </ul>
           </div>
@@ -510,27 +510,27 @@ export const WeeklyReport: React.FC<Props> = ({
             <ul>
               <li>
                 <span>avg</span>
-                <span>{formatBytes(avgPercentileData?.memoryUsage)}</span>
+                <span>{formatBytes(avgPercentileData?.memoryUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p50</span>
-                <span>{formatBytes(p50PercentileData?.memoryUsage)}</span>
+                <span>{formatBytes(p50PercentileData?.memoryUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p75</span>
-                <span>{formatBytes(p75PercentileData?.memoryUsage)}</span>
+                <span>{formatBytes(p75PercentileData?.memoryUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p90</span>
-                <span>{formatBytes(p90PercentileData?.memoryUsage)}</span>
+                <span>{formatBytes(p90PercentileData?.memoryUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p95</span>
-                <span>{formatBytes(p95PercentileData?.memoryUsage)}</span>
+                <span>{formatBytes(p95PercentileData?.memoryUsage ?? 0)}</span>
               </li>
               <li>
                 <span>p99</span>
-                <span>{formatBytes(p99PercentileData?.memoryUsage)}</span>
+                <span>{formatBytes(p99PercentileData?.memoryUsage ?? 0)}</span>
               </li>
             </ul>
           </div>
@@ -543,27 +543,27 @@ export const WeeklyReport: React.FC<Props> = ({
             <ul>
               <li>
                 <span>avg</span>
-                <span>{formatBytes(avgPercentileData?.memoryTotal)}</span>
+                <span>{formatBytes(avgPercentileData?.memoryTotal ?? 0)}</span>
               </li>
               <li>
                 <span>p50</span>
-                <span>{formatBytes(p50PercentileData?.memoryTotal)}</span>
+                <span>{formatBytes(p50PercentileData?.memoryTotal ?? 0)}</span>
               </li>
               <li>
                 <span>p75</span>
-                <span>{formatBytes(p75PercentileData?.memoryTotal)}</span>
+                <span>{formatBytes(p75PercentileData?.memoryTotal ?? 0)}</span>
               </li>
               <li>
                 <span>p90</span>
-                <span>{formatBytes(p90PercentileData?.memoryTotal)}</span>
+                <span>{formatBytes(p90PercentileData?.memoryTotal ?? 0)}</span>
               </li>
               <li>
                 <span>p95</span>
-                <span>{formatBytes(p95PercentileData?.memoryTotal)}</span>
+                <span>{formatBytes(p95PercentileData?.memoryTotal ?? 0)}</span>
               </li>
               <li>
                 <span>p99</span>
-                <span>{formatBytes(p99PercentileData?.memoryTotal)}</span>
+                <span>{formatBytes(p99PercentileData?.memoryTotal ?? 0)}</span>
               </li>
             </ul>
           </div>
