@@ -172,6 +172,7 @@ model Metric {
   countryCode  String? @map("country_code")
   region       String?
   city         String?
+  isError      Boolean @default(false) @map("is_error")
 
   apilyticsVersion String? @map("apilytics_version")
 
