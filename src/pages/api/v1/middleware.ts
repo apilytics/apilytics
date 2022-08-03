@@ -132,12 +132,14 @@ const handlePost: ApiHandler = async (req, res) => {
           select: {
             id: true,
             pattern: true,
+            route: true,
           },
         },
         dynamicRoutes: {
           select: {
             id: true,
             pattern: true,
+            route: true,
           },
         },
       },
@@ -217,11 +219,12 @@ const handlePost: ApiHandler = async (req, res) => {
     !!path.match(pattern.replace(/%/g, '[^/]+'));
 
   const excludedRouteId = origin.excludedRoutes.find(matchPattern)?.id;
-  const dynamicRouteId = origin.dynamicRoutes.find(matchPattern)?.id;
+  const dynamicRoute = origin.dynamicRoutes.find(matchPattern);
 
   const data = {
     originId: origin.id,
     path,
+    endpoint: dynamicRoute?.route ?? path,
     queryParams,
     method,
     statusCode: statusCode ?? UNKNOWN_STATUS_CODE,
@@ -240,7 +243,7 @@ const handlePost: ApiHandler = async (req, res) => {
     city,
     apilyticsVersion,
     excludedRouteId,
-    dynamicRouteId,
+    dynamicRouteId: dynamicRoute?.id,
   };
 
   try {

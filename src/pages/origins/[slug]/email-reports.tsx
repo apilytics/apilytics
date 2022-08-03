@@ -44,8 +44,7 @@ const OriginEmailReports: NextPage = () => {
   const metricsUrl = slug
     ? dynamicApiRoutes.originMetrics({
         slug,
-        from,
-        to,
+        'interval-days': WEEK_DAYS,
       })
     : undefined;
 

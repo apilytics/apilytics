@@ -9,10 +9,10 @@ import { OriginMenu } from 'components/shared/OriginMenu';
 import { Select } from 'components/shared/Select';
 import { useContext } from 'hooks/useContext';
 import { usePlausible } from 'hooks/usePlausible';
-import { ORIGIN_ROLES, TIME_FRAME_OPTIONS } from 'utils/constants';
+import { INTERVAL_DAYS, ORIGIN_ROLES } from 'utils/constants';
 import { getFlagEmoji, truncateString } from 'utils/helpers';
 import { dynamicRoutes, staticRoutes } from 'utils/router';
-import type { ApilyticsPackage, TimeFrame } from 'types';
+import type { ApilyticsPackage, IntervalDays } from 'types';
 
 interface Props {
   apilyticsPackage?: ApilyticsPackage;
@@ -26,8 +26,8 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
   const {
     slug,
     origin,
-    timeFrame,
-    setTimeFrame,
+    intervalDays,
+    setIntervalDays,
     selectedMethod,
     setSelectedMethod,
     selectedEndpoint,
@@ -52,10 +52,10 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
 
   const { name, userRole, userCount, dynamicRouteCount, excludedRouteCount } = origin ?? {};
 
-  const handleTimeFrameChange = ({ target }: ChangeEvent<HTMLSelectElement>): void => {
-    const val = Number(target.value) as TimeFrame;
-    setTimeFrame(val);
-    query.timeFrame = TIME_FRAME_OPTIONS[val];
+  const handleIntervalDaysChange = ({ target }: ChangeEvent<HTMLSelectElement>): void => {
+    const val = Number(target.value) as IntervalDays;
+    setIntervalDays(val);
+    query['interval-days'] = String(val);
     replace({ pathname, query });
   };
 
@@ -135,12 +135,12 @@ export const DashboardOptions: React.FC<Props> = ({ apilyticsPackage }) => {
         </Button>
       )}
       <Select
-        value={timeFrame}
-        onChange={handleTimeFrameChange}
+        value={intervalDays}
+        onChange={handleIntervalDaysChange}
         onClick={(): void => plausible('time-frame-selector-click')}
         className="ml-auto"
       >
-        {Object.entries(TIME_FRAME_OPTIONS).map(([value, label]) => (
+        {INTERVAL_DAYS.map(({ value, label }) => (
           <option value={value} key={label}>
             {label}
           </option>

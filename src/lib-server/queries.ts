@@ -4,30 +4,42 @@ import type { DynamicRoute, ExcludedRoute, PrismaPromise } from '@prisma/client'
 // eslint-disable-next-line no-restricted-imports
 import prisma from '../prisma/client';
 
-export const updateMetricsForDynamicRoute = ({
+export const updateMetricsForNewDynamicRoute = ({
   originId,
   pattern,
-  id: dynamicRouteId,
-}: Pick<DynamicRoute, 'originId' | 'pattern' | 'id'>): PrismaPromise<void> => prisma.$queryRaw`
+  route,
+}: Omit<DynamicRoute, 'id'>): PrismaPromise<void> => prisma.$queryRaw`
 UPDATE metrics
 
-SET dynamic_route_id = ${dynamicRouteId}
+SET
+  dynamic_route_id = dynamic_routes.id,
+  endpoint = ${route}
 
-WHERE metrics.origin_id = ${originId}
+FROM dynamic_routes
+
+WHERE dynamic_routes.origin_id = ${originId}::UUID
+  AND dynamic_routes.route = ${route}
+  AND metrics.origin_id = ${originId}::UUID
   AND metrics.path LIKE ${pattern}
   AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
     = LENGTH(${pattern}) - LENGTH(REPLACE(${pattern}, '/', ''))`;
 
-export const updateMetricsForExcludedRoute = ({
+export const updateMetricsForNewExcludedRoute = ({
   originId,
   pattern,
-  id: excludedRouteId,
-}: Pick<ExcludedRoute, 'originId' | 'pattern' | 'id'>): PrismaPromise<void> => prisma.$queryRaw`
+  route,
+}: Omit<ExcludedRoute, 'id'>): PrismaPromise<void> => prisma.$queryRaw`
 UPDATE metrics
 
-SET excluded_route_id = ${excludedRouteId}
+SET
+  excluded_route_id = excluded_routes.id,
+  endpoint = ${route}
 
-WHERE metrics.origin_id = ${originId}
+FROM excluded_routes
+
+WHERE excluded_routes.origin_id = ${originId}::UUID
+  AND excluded_routes.route = ${route}
+  AND metrics.origin_id = ${originId}::UUID
   AND metrics.path LIKE ${pattern}
   AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
     = LENGTH(${pattern}) - LENGTH(REPLACE(${pattern}, '/', ''))`;

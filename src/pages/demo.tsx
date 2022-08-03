@@ -12,7 +12,6 @@ import { UserAgentMetrics } from 'components/dashboard/UserAgentMetrics';
 import { Layout } from 'components/layout/Layout';
 import { Button } from 'components/shared/Button';
 import { EmailListForm } from 'components/shared/EmailListForm';
-import { withUser } from 'hocs/withUser';
 import { useContext } from 'hooks/useContext';
 import { useDashboardQuery } from 'hooks/useDashboardQuery';
 import { usePlausible } from 'hooks/usePlausible';
@@ -27,7 +26,7 @@ const Demo: NextPage = () => {
   const maxWidth = 'max-w-6xl';
 
   const {
-    timeFrame,
+    intervalDays,
     selectedMethod: method,
     selectedEndpoint: endpoint,
     selectedStatusCode: statusCode,
@@ -51,7 +50,7 @@ const Demo: NextPage = () => {
     userAgentData,
     geoLocationData,
   } = getMockMetrics({
-    timeFrame,
+    intervalDays,
     method,
     endpoint,
     statusCode,
@@ -128,4 +127,4 @@ const Demo: NextPage = () => {
   );
 };
 
-export default withUser(Demo);
+export default Demo;

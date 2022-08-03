@@ -199,7 +199,9 @@ export const GeoLocationMetrics: React.FC<Props> = ({
   return (
     <DashboardCard>
       <div className="flex flex-wrap gap-4 px-2">
-        <p className="mr-auto text-white">{attributes[metricType].label}</p>
+        <p className="mr-auto text-white">
+          {attributes[metricType].label} (top {truncatedData.length})
+        </p>
         <div className="tabs">
           {Object.values(METRIC_TYPES).map((type) => (
             <p
@@ -219,7 +221,9 @@ export const GeoLocationMetrics: React.FC<Props> = ({
       <Modal name={MODAL_NAMES.GEO_LOCATION} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-auto sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="pl-4 text-white">{attributes[activeTab].label}</p>
+            <p className="pl-4 text-white">
+              {attributes[activeTab].label} (top {data.length})
+            </p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="tabs my-2 px-6">

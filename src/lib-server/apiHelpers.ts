@@ -8,20 +8,9 @@ import type { EmailConfig } from 'next-auth/providers';
 import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { AWS_SES } from 'ses';
-import { METHODS, ORIGIN_ROLES, PERCENTILE_DATA_KEYS, SAFE_METHODS } from 'utils/constants';
+import { METHODS, ORIGIN_ROLES, SAFE_METHODS } from 'utils/constants';
 import { FRONTEND_URL, staticRoutes } from 'utils/router';
-import type {
-  ApiHandler,
-  ApilyticsPackage,
-  CityData,
-  CountryData,
-  EndpointData,
-  Method,
-  OriginData,
-  OriginMetrics,
-  RegionData,
-  TimeFrameData,
-} from 'types';
+import type { ApiHandler, IntervalDays, Method, OriginData, OriginMetrics } from 'types';
 
 class UnauthorizedApiError extends Error {}
 
@@ -309,72 +298,8 @@ export const sendVerificationRequest = async ({
   }
 };
 
-const DAY_MILLIS = 24 * 60 * 60 * 1000;
-const THREE_MONTHS_MILLIS = 3 * 30 * DAY_MILLIS;
-
-interface GeneralData {
-  totalRequests: number;
-  totalRequestsGrowth: number;
-  totalErrors: number;
-  totalErrorsGrowth: number;
-  errorRate: number;
-  errorRateGrowth: number;
-  responseTimeAvg: number;
-  responseTimeP50: number;
-  responseTimeP75: number;
-  responseTimeP90: number;
-  responseTimeP95: number;
-  responseTimeP99: number;
-  requestSizeAvg: number;
-  requestSizeP50: number;
-  requestSizeP75: number;
-  requestSizeP90: number;
-  requestSizeP95: number;
-  requestSizeP99: number;
-  responseSizeAvg: number;
-  responseSizeP50: number;
-  responseSizeP75: number;
-  responseSizeP90: number;
-  responseSizeP95: number;
-  responseSizeP99: number;
-  cpuUsageAvg: number;
-  cpuUsageP50: number;
-  cpuUsageP75: number;
-  cpuUsageP90: number;
-  cpuUsageP95: number;
-  cpuUsageP99: number;
-  memoryUsageAvg: number;
-  memoryUsageP50: number;
-  memoryUsageP75: number;
-  memoryUsageP90: number;
-  memoryUsageP95: number;
-  memoryUsageP99: number;
-  memoryTotalAvg: number;
-  memoryTotalP50: number;
-  memoryTotalP75: number;
-  memoryTotalP90: number;
-  memoryTotalP95: number;
-  memoryTotalP99: number;
-}
-
-type RawGeneralData = Omit<
-  GeneralData,
-  'totalRequestsGrowth' | 'totalErrorsGrowth' | 'errorRate' | 'errorRateGrowth'
->;
-
-type RawEndpointData = Omit<EndpointData, 'methodAndEndpoint'>;
-
-interface RawMiscData {
-  browser: string | null;
-  os: string | null;
-  device: string | null;
-  statusCode: number | null;
-  requests: number;
-}
-
 interface MetricsFilters {
-  from?: string;
-  to?: string;
+  intervalDays?: IntervalDays;
   endpoint?: string;
   method?: string;
   statusCode?: string;
@@ -386,312 +311,28 @@ interface MetricsFilters {
   city?: string;
 }
 
-const extractFromMiscData = <
-  T extends RawMiscData,
-  K extends Exclude<keyof RawMiscData, 'requests'>,
->(
-  arr: T[],
-  key: K,
-): ({ [Key in K]: NonNullable<T[Key]> } & { requests: number })[] =>
-  arr
-    .filter(({ [key]: val }) => val !== null)
-    .map(
-      ({ [key]: val, requests }) =>
-        // Assertion is needed because of computed property key type widening:
-        // https://github.com/microsoft/TypeScript/issues/13948
-        ({ [key]: val, requests } as { [Key in K]: NonNullable<T[Key]> } & {
-          requests: number;
-        }),
-    );
+interface Percentiles {
+  avg: number;
+  p50: number;
+  p75: number;
+  p90: number;
+  p95: number;
+  p99: number;
+}
 
-export const getGeneralData = async ({
-  fromClause,
-  baseWhereClause,
-  whereClause,
-  query: { from = '', to = '' },
-}: {
-  fromClause: Prisma.Sql;
-  baseWhereClause: Prisma.Sql;
-  whereClause: Prisma.Sql;
-  query: MetricsFilters;
-}): Promise<GeneralData> => {
-  const fromDate = new Date(from);
-  const toDate = new Date(to);
-  const fromTime = fromDate.getTime();
-  const toTime = toDate.getTime();
-
-  const whereClausePrev = Prisma.sql`
-${baseWhereClause}
-  AND metrics.created_at >= ${new Date(fromTime - (toTime - fromTime))}
-  AND metrics.created_at <= ${fromDate}`;
-
-  const selectTotalRequestsAndErrors = Prisma.sql`
-COUNT(*) AS "totalRequests",
-SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 END) AS "totalErrors"`;
-
-  const prevGeneralDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
-    SELECT
-      ${selectTotalRequestsAndErrors}
-
-    ${fromClause}
-    ${whereClausePrev}`;
-
-  const generalDataPromise: Promise<RawGeneralData[]> = prisma.$queryRaw`
-    SELECT
-      ${selectTotalRequestsAndErrors},
-
-      ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg",
-      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP50",
-      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP75",
-      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP90",
-      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP95",
-      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.time_millis) AS "responseTimeP99",
-
-      ROUND(AVG(metrics.request_size)) AS "requestSizeAvg",
-      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP50",
-      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP75",
-      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP90",
-      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP95",
-      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.request_size) AS "requestSizeP99",
-
-      ROUND(AVG(metrics.response_size)) AS "responseSizeAvg",
-      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP50",
-      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP75",
-      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP90",
-      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP95",
-      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.response_size) AS "responseSizeP99",
-
-      ROUND(AVG(metrics.cpu_usage)) AS "cpuUsageAvg",
-      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP50",
-      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP75",
-      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP90",
-      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP95",
-      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.cpu_usage) AS "cpuUsageP99",
-
-      ROUND(AVG(metrics.memory_usage)) AS "memoryUsageAvg",
-      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP50",
-      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP75",
-      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP90",
-      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP95",
-      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.memory_usage) AS "memoryUsageP99",
-
-      ROUND(AVG(metrics.memory_total)) AS "memoryTotalAvg",
-      percentile_cont(0.5) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP50",
-      percentile_cont(0.75) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP75",
-      percentile_cont(0.9) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP90",
-      percentile_cont(0.95) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP95",
-      percentile_cont(0.99) WITHIN GROUP (ORDER BY metrics.memory_total) AS "memoryTotalP99"
-
-    ${fromClause}
-    ${whereClause}`;
-
-  const [prevGeneralData, _generalData] = await Promise.all([
-    prevGeneralDataPromise,
-    generalDataPromise,
-  ]);
-
-  const { totalRequests: prevTotalRequests, totalErrors: _prevTotalErrors } = prevGeneralData[0];
-  const { totalRequests, totalErrors: _totalErrors, ...generalData } = _generalData[0];
-
-  const prevTotalErrors = _prevTotalErrors ?? 0;
-  const totalErrors = _totalErrors ?? 0;
-
-  const totalRequestsGrowth = Number((totalRequests / prevTotalRequests).toFixed(2));
-  const totalErrorsGrowth = Number((totalErrors / prevTotalErrors).toFixed(2));
-
-  const prevErrorRate = Number((prevTotalErrors / prevTotalRequests).toFixed(2));
-  const errorRate = totalErrors ? Number((totalErrors / totalRequests).toFixed(2)) : 0;
-  const errorRateGrowth = errorRate ? Number((errorRate / prevErrorRate).toFixed(2)) : 0;
-
-  return {
-    totalRequests,
-    totalRequestsGrowth,
-    totalErrors,
-    totalErrorsGrowth,
-    errorRate,
-    errorRateGrowth,
-    ...generalData,
-  };
-};
-
-export const getTimeFrameDataPromise = ({
-  fromClause,
-  whereClause,
-  query: { from = '', to = '' },
-}: {
-  fromClause: Prisma.Sql;
-  whereClause: Prisma.Sql;
-  query: MetricsFilters;
-}): Promise<TimeFrameData[]> => {
-  const fromDate = new Date(from);
-  const toDate = new Date(to);
-  const fromTime = fromDate.getTime();
-  const toTime = toDate.getTime();
-  const timeFrame = toTime - fromTime;
-
-  // The scope indicates which time unit the metrics are grouped by.
-  let scope = Prisma.sql`1 day`;
-
-  if (timeFrame <= DAY_MILLIS) {
-    scope = Prisma.sql`1 hour`;
-  } else if (timeFrame >= THREE_MONTHS_MILLIS) {
-    scope = Prisma.sql`1 week`;
-  }
-
-  const timeFrameDataPromise: Promise<TimeFrameData[]> = prisma.$queryRaw`
-SELECT
-  COUNT(*) AS requests,
-  time_bucket('${scope}', metrics.created_at) AS time,
-  SUM(CASE WHEN CAST(metrics.status_code AS TEXT) ~ '^[45]' THEN 1 END) AS errors
-
-${fromClause}
-${whereClause}
-
-GROUP BY time;`;
-
-  return timeFrameDataPromise;
-};
-
-export const getEndpointData = async ({
-  fromClause,
-  whereClause,
-}: {
-  fromClause: Prisma.Sql;
-  whereClause: Prisma.Sql;
-}): Promise<EndpointData[]> => {
-  const endpointData: RawEndpointData[] = await prisma.$queryRaw`
-SELECT
-  COUNT(*) AS "totalRequests",
-  CASE WHEN metrics.dynamic_route_id IS NULL THEN metrics.path ELSE dynamic_routes.route END AS endpoint,
-  metrics.method,
-  ROUND(AVG(metrics.time_millis)) AS "responseTimeAvg"
-
-${fromClause}
-  LEFT JOIN dynamic_routes ON metrics.dynamic_route_id = dynamic_routes.id
-${whereClause}
-
-GROUP BY metrics.method, endpoint;`;
-
-  return endpointData.map((endpoint) => ({
-    ...endpoint,
-    methodAndEndpoint: `${endpoint.method} ${endpoint.endpoint}`,
-  }));
-};
-
-export const getMiscDataPromise = async ({
-  fromClause,
-  whereClause,
-}: {
-  fromClause: Prisma.Sql;
-  whereClause: Prisma.Sql;
-}): Promise<RawMiscData[]> => prisma.$queryRaw`
-SELECT
-  metrics.browser,
-  metrics.os,
-  metrics.device,
-  metrics.status_code as "statusCode",
-  COUNT(*) AS requests
-
-${fromClause}
-${whereClause}
-
-GROUP BY GROUPING SETS (
-  metrics.browser,
-  metrics.os,
-  metrics.device,
-  metrics.status_code
-);`;
-
-export const getCountryDataPromise = async ({
-  fromClause,
-  whereClause,
-}: {
-  fromClause: Prisma.Sql;
-  whereClause: Prisma.Sql;
-}): Promise<CountryData[]> => prisma.$queryRaw`
-SELECT
-  metrics.country,
-  metrics.country_code AS "countryCode",
-  COUNT(*) AS requests
-
-${fromClause}
-${whereClause}
-  AND metrics.country IS NOT NULL
-
-GROUP BY metrics.country, metrics.country_code;`;
-
-export const getRegionDataPromise = async ({
-  fromClause,
-  whereClause,
-}: {
-  fromClause: Prisma.Sql;
-  whereClause: Prisma.Sql;
-}): Promise<RegionData[]> => prisma.$queryRaw`
-SELECT
-  metrics.region,
-  metrics.country_code AS "countryCode",
-  COUNT(*) AS requests
-
-${fromClause}
-${whereClause}
-  AND metrics.region IS NOT NULL
-
-GROUP BY metrics.region, metrics.country_code;`;
-
-export const getCityDataPromise = async ({
-  fromClause,
-  whereClause,
-}: {
-  fromClause: Prisma.Sql;
-  whereClause: Prisma.Sql;
-}): Promise<CityData[]> => prisma.$queryRaw`
-SELECT
-  metrics.city,
-  metrics.country_code AS "countryCode",
-  COUNT(*) AS requests
-
-${fromClause}
-${whereClause}
-  AND metrics.city IS NOT NULL
-
-GROUP BY metrics.city, metrics.country_code;`;
-
-export const getApilyticsPackage = async ({
-  origin: { id: originId },
-}: {
-  origin: Origin;
-}): Promise<ApilyticsPackage | undefined> => {
-  const versionData = await prisma.metric.findFirst({
-    where: { originId },
-    orderBy: { createdAt: 'desc' },
-    select: { apilyticsVersion: true },
-  });
-
-  const [identifier, version] = versionData?.apilyticsVersion?.split(';')[0].split('/') ?? [];
-
-  const apilyticsPackage =
-    !!identifier && !!version
-      ? {
-          identifier,
-          version,
-        }
-      : undefined;
-
-  return apilyticsPackage;
-};
+interface RawPercentileData {
+  responseTime: Percentiles;
+  requestSize: Percentiles;
+  responseSize: Percentiles;
+  cpuUsage: Percentiles;
+  memoryUsage: Percentiles;
+  memoryTotal: Percentiles;
+}
 
 export const generateMetrics = async ({
-  origin,
-  query,
-}: {
-  origin: Origin;
-  query: MetricsFilters;
-}): Promise<OriginMetrics> => {
-  const { id: originId } = origin;
-
-  const {
-    from = '',
-    to = '',
+  origin: { id: originId },
+  filters: {
+    intervalDays,
     endpoint,
     method,
     statusCode,
@@ -701,12 +342,13 @@ export const generateMetrics = async ({
     country,
     region,
     city,
-  } = query;
-
-  const fromDate = new Date(from);
-  const toDate = new Date(to);
-
-  let wherePath: Prisma.Sql | undefined;
+  },
+}: {
+  origin: Origin;
+  filters: MetricsFilters;
+}): Promise<OriginMetrics> => {
+  const interval = `'${intervalDays} days'`;
+  let wherePath = Prisma.empty;
 
   if (endpoint) {
     const dynamicRoute = await prisma.dynamicRoute.findFirst({
@@ -715,7 +357,7 @@ export const generateMetrics = async ({
 
     if (dynamicRoute) {
       wherePath = Prisma.sql`
-AND metrics.dynamic_route_id = ${dynamicRoute.id}`;
+AND metrics.dynamic_route_id = ${dynamicRoute.id}::UUID`;
     } else {
       wherePath = Prisma.sql`
 AND metrics.dynamic_route_id IS NULL
@@ -723,14 +365,10 @@ AND metrics.path = ${endpoint}`;
     }
   }
 
-  const fromClause = Prisma.sql`
-FROM metrics
-  LEFT JOIN origins ON metrics.origin_id = origins.id`;
-
   const baseWhereClause = Prisma.sql`
-WHERE origins.id = ${originId}
+WHERE origins.id = ${originId}::UUID
   AND metrics.excluded_route_id IS NULL
-  ${wherePath ?? Prisma.empty}
+  ${wherePath}
   ${method ? Prisma.sql`AND metrics.method = ${method}` : Prisma.empty}
   ${statusCode ? Prisma.sql`AND metrics.status_code = ${Number(statusCode)}` : Prisma.empty}
   ${browser ? Prisma.sql`AND metrics.browser = ${browser}` : Prisma.empty}
@@ -740,158 +378,357 @@ WHERE origins.id = ${originId}
   ${region ? Prisma.sql`AND metrics.region = ${region}` : Prisma.empty}
   ${city ? Prisma.sql`AND metrics.city = ${city}` : Prisma.empty}`;
 
-  const whereClause = Prisma.sql`
-${baseWhereClause}
-  AND metrics.created_at >= ${fromDate}
-  AND metrics.created_at <= ${toDate}`;
+  const data: Array<OriginMetrics & { percentileData: RawPercentileData }> = await prisma.$queryRaw`
+WITH all_metrics AS (
+  SELECT
+    metrics.*
 
-  const metricsParams = { origin, query, fromClause, baseWhereClause, whereClause };
+  FROM metrics
+    LEFT JOIN origins ON metrics.origin_id = origins.id
 
-  const [
-    generalData,
-    timeFrameData,
-    endpointData,
-    miscData,
-    countryData,
-    regionData,
-    cityData,
-    apilyticsPackage,
-  ] = await Promise.all([
-    getGeneralData(metricsParams),
-    getTimeFrameDataPromise(metricsParams),
-    getEndpointData(metricsParams),
-    getMiscDataPromise(metricsParams),
-    getCountryDataPromise(metricsParams),
-    getRegionDataPromise(metricsParams),
-    getCityDataPromise(metricsParams),
-    getApilyticsPackage(metricsParams),
-  ]);
+  ${baseWhereClause}
+    AND metrics.created_at >= NOW() - ${interval}::INTERVAL
+),
+
+prev_general_data AS (
+  SELECT
+    COUNT(metrics) AS "totalRequests",
+    COUNT(metrics) FILTER (WHERE is_error) AS "totalErrors"
+
+  FROM metrics
+    LEFT JOIN origins ON metrics.origin_id = origins.id
+
+  ${baseWhereClause}
+    AND metrics.created_at >= NOW() - ${interval}::INTERVAL * 2
+    AND metrics.created_at <= NOW() - ${interval}::INTERVAL
+),
+
+general_data AS (
+  SELECT
+    COUNT(*) AS "totalRequests",
+    COUNT(*) FILTER (WHERE is_error) AS "totalErrors"
+
+  FROM all_metrics
+),
+
+error_rate_data AS (
+  SELECT
+    CASE WHEN prev_general_data."totalRequests" > 0 THEN ROUND(prev_general_data."totalErrors"::DECIMAL / prev_general_data."totalRequests"::DECIMAL, 2) ELSE '0.00'::DECIMAL END AS "prevErrorRate",
+    CASE WHEN general_data."totalRequests" > 0 THEN ROUND(general_data."totalErrors"::DECIMAL / general_data."totalRequests"::DECIMAL, 2) ELSE '0.00'::DECIMAL END AS "errorRate"
+
+  FROM general_data, prev_general_data
+),
+
+agg_general_data AS (
+  SELECT
+    general_data."totalRequests",
+    general_data."totalErrors",
+    error_rate_data."errorRate",
+    CASE WHEN prev_general_data."totalRequests" > 0 THEN ROUND(((general_data."totalRequests"::DECIMAL - prev_general_data."totalRequests"::DECIMAL) / prev_general_data."totalRequests"::DECIMAL), 2) ELSE '0.00'::DECIMAL END AS "totalRequestsGrowth",
+    CASE WHEN prev_general_data."totalErrors" > 0 THEN ROUND(((general_data."totalErrors"::DECIMAL - prev_general_data."totalErrors"::DECIMAL) / prev_general_data."totalErrors"::DECIMAL), 2) ELSE '0.00'::DECIMAL END AS "totalErrorsGrowth",
+    CASE WHEN error_rate_data."prevErrorRate" != 0.00 THEN ROUND(((error_rate_data."errorRate"::DECIMAL - error_rate_data."prevErrorRate"::DECIMAL) / error_rate_data."prevErrorRate"::DECIMAL), 2) ELSE '0.00'::DECIMAL END AS "errorRateGrowth"
+
+  FROM general_data, prev_general_data, error_rate_data
+),
+
+percentile_data AS (
+  SELECT
+    JSON_BUILD_OBJECT(
+      'avg', ROUND(AVG(time_millis)::NUMERIC, 2),
+      'p50', ROUND(percentile_cont(0.5) WITHIN GROUP (ORDER BY time_millis)::NUMERIC, 2),
+      'p75', ROUND(percentile_cont(0.75) WITHIN GROUP (ORDER BY time_millis)::NUMERIC, 2),
+      'p90', ROUND(percentile_cont(0.9) WITHIN GROUP (ORDER BY time_millis)::NUMERIC, 2),
+      'p95', ROUND(percentile_cont(0.95) WITHIN GROUP (ORDER BY time_millis)::NUMERIC, 2),
+      'p99', ROUND(percentile_cont(0.99) WITHIN GROUP (ORDER BY time_millis)::NUMERIC, 2)
+    ) AS "responseTime",
+
+    JSON_BUILD_OBJECT(
+      'avg', ROUND(AVG(request_size)::NUMERIC, 2),
+      'p50', ROUND(percentile_cont(0.5) WITHIN GROUP (ORDER BY request_size)::NUMERIC, 2),
+      'p75', ROUND(percentile_cont(0.75) WITHIN GROUP (ORDER BY request_size)::NUMERIC, 2),
+      'p90', ROUND(percentile_cont(0.9) WITHIN GROUP (ORDER BY request_size)::NUMERIC, 2),
+      'p95', ROUND(percentile_cont(0.95) WITHIN GROUP (ORDER BY request_size)::NUMERIC, 2),
+      'p99', ROUND(percentile_cont(0.99) WITHIN GROUP (ORDER BY request_size)::NUMERIC, 2)
+    ) AS "requestSize",
+
+    JSON_BUILD_OBJECT(
+      'avg', ROUND(AVG(response_size)::NUMERIC, 2),
+      'p50', ROUND(percentile_cont(0.5) WITHIN GROUP (ORDER BY response_size)::NUMERIC, 2),
+      'p75', ROUND(percentile_cont(0.75) WITHIN GROUP (ORDER BY response_size)::NUMERIC, 2),
+      'p90', ROUND(percentile_cont(0.9) WITHIN GROUP (ORDER BY response_size)::NUMERIC, 2),
+      'p95', ROUND(percentile_cont(0.95) WITHIN GROUP (ORDER BY response_size)::NUMERIC, 2),
+      'p99', ROUND(percentile_cont(0.99) WITHIN GROUP (ORDER BY response_size)::NUMERIC, 2)
+    ) AS "responseSize",
+
+    JSON_BUILD_OBJECT(
+      'avg', ROUND(AVG(cpu_usage)::NUMERIC, 2),
+      'p50', ROUND(percentile_cont(0.5) WITHIN GROUP (ORDER BY cpu_usage)::NUMERIC, 2),
+      'p75', ROUND(percentile_cont(0.75) WITHIN GROUP (ORDER BY cpu_usage)::NUMERIC, 2),
+      'p90', ROUND(percentile_cont(0.9) WITHIN GROUP (ORDER BY cpu_usage)::NUMERIC, 2),
+      'p95', ROUND(percentile_cont(0.95) WITHIN GROUP (ORDER BY cpu_usage)::NUMERIC, 2),
+      'p99', ROUND(percentile_cont(0.99) WITHIN GROUP (ORDER BY cpu_usage)::NUMERIC, 2)
+    ) AS "cpuUsage",
+
+    JSON_BUILD_OBJECT(
+      'avg', ROUND(AVG(memory_usage)::NUMERIC, 2),
+      'p50', ROUND(percentile_cont(0.5) WITHIN GROUP (ORDER BY memory_usage)::NUMERIC, 2),
+      'p75', ROUND(percentile_cont(0.75) WITHIN GROUP (ORDER BY memory_usage)::NUMERIC, 2),
+      'p90', ROUND(percentile_cont(0.9) WITHIN GROUP (ORDER BY memory_usage)::NUMERIC, 2),
+      'p95', ROUND(percentile_cont(0.95) WITHIN GROUP (ORDER BY memory_usage)::NUMERIC, 2),
+      'p99', ROUND(percentile_cont(0.99) WITHIN GROUP (ORDER BY memory_usage)::NUMERIC, 2)
+    ) AS "memoryUsage",
+
+    JSON_BUILD_OBJECT(
+      'avg', ROUND(AVG(memory_total)::NUMERIC, 2),
+      'p50', ROUND(percentile_cont(0.5) WITHIN GROUP (ORDER BY memory_total)::NUMERIC, 2),
+      'p75', ROUND(percentile_cont(0.75) WITHIN GROUP (ORDER BY memory_total)::NUMERIC, 2),
+      'p90', ROUND(percentile_cont(0.9) WITHIN GROUP (ORDER BY memory_total)::NUMERIC, 2),
+      'p95', ROUND(percentile_cont(0.95) WITHIN GROUP (ORDER BY memory_total)::NUMERIC, 2),
+      'p99', ROUND(percentile_cont(0.99) WITHIN GROUP (ORDER BY memory_total)::NUMERIC, 2)
+    ) AS "memoryTotal"
+
+  FROM all_metrics
+),
+
+endpoint_data AS (
+  SELECT
+    COUNT(*) AS "totalRequests",
+    method,
+    endpoint,
+    CONCAT(method, ' ', endpoint) AS "methodAndEndpoint",
+    ROUND(AVG(time_millis)::NUMERIC, 2) AS "responseTimeAvg"
+
+  FROM all_metrics
+
+  GROUP BY method, endpoint
+  ORDER BY "totalRequests" DESC
+  LIMIT 25
+),
+
+agg_endpoint_data AS (
+  SELECT
+    JSON_AGG(endpoint_data.*) AS "endpointData"
+
+  FROM endpoint_data
+),
+
+time_frame_data AS (
+  SELECT
+    COUNT(*) AS requests,
+    time_bucket('1 day', metrics.created_at) AS time,
+    COUNT(*) FILTER (WHERE is_error) AS errors
+
+  FROM metrics
+    LEFT JOIN origins ON metrics.origin_id = origins.id
+
+  ${baseWhereClause}
+    AND metrics.created_at >= NOW() - ${interval}::INTERVAL
+
+  GROUP BY time
+  ORDER BY time DESC
+),
+
+agg_time_frame_data AS (
+  SELECT
+    JSON_AGG(time_frame_data.*) AS "timeFrameData"
+
+  FROM time_frame_data
+),
+
+browser_data AS (
+  SELECT
+    browser,
+    COUNT(*) AS requests
+
+  FROM all_metrics
+  WHERE browser IS NOT NULL
+  GROUP BY browser
+  ORDER BY requests DESC
+  LIMIT 25
+),
+
+os_data AS (
+  SELECT
+    os,
+    COUNT(*) AS requests
+
+  FROM all_metrics
+  WHERE os IS NOT NULL
+  GROUP BY os
+  ORDER BY requests DESC
+  LIMIT 25
+),
+
+device_data AS (
+  SELECT
+    device,
+    COUNT(*) AS requests
+
+  FROM all_metrics
+  WHERE device IS NOT NULL
+  GROUP BY device
+  ORDER BY requests DESC
+  LIMIT 25
+),
+
+agg_user_agent_data AS (
+  SELECT
+    JSON_AGG(DISTINCT browser_data.*) AS "browserData",
+    JSON_AGG(DISTINCT os_data.*) AS "osData",
+    JSON_AGG(DISTINCT device_data.*) AS "deviceData"
+
+  FROM browser_data, os_data, device_data
+),
+
+status_code_data AS (
+  SELECT
+    status_code AS "statusCode",
+    COUNT(*) AS requests
+
+  FROM all_metrics
+  WHERE status_code IS NOT NULL
+  GROUP BY status_code
+  ORDER BY requests DESC
+  LIMIT 25
+),
+
+agg_status_code_data AS (
+  SELECT
+    JSON_AGG(status_code_data.*) AS "statusCodeData"
+
+  FROM status_code_data
+),
+
+country_data AS (
+  SELECT
+    country,
+    country_code AS "countryCode",
+    COUNT(*) AS requests
+
+  FROM all_metrics
+  WHERE country IS NOT NULL
+  GROUP BY country, country_code
+  ORDER BY requests DESC
+  LIMIT 25
+),
+
+region_data AS (
+  SELECT
+    region,
+    country_code AS "countryCode",
+    COUNT(*) AS requests
+
+  FROM all_metrics
+  WHERE region IS NOT NULL
+  GROUP BY region, country_code
+  ORDER BY requests DESC
+  LIMIT 25
+),
+
+city_data AS (
+  SELECT
+    city,
+    country_code AS "countryCode",
+    COUNT(*) AS requests
+
+  FROM all_metrics
+  WHERE city IS NOT NULL
+  GROUP BY city, country_code
+  ORDER BY requests DESC
+  LIMIT 25
+),
+
+agg_geo_location_data AS (
+  SELECT
+    JSON_AGG(DISTINCT country_data.*) AS "countryData",
+    JSON_AGG(DISTINCT region_data.*) AS "regionData",
+    JSON_AGG(DISTINCT city_data.*) AS "cityData"
+
+  FROM country_data, region_data, city_data
+),
+
+version_data AS (
+  SELECT
+    SPLIT_PART(SPLIT_PART(apilytics_version, ';', 1)::TEXT, '/', 1) AS identifier,
+    SPLIT_PART(SPLIT_PART(apilytics_version, ';', 1)::TEXT, '/', 2) AS version
+
+  FROM metrics
+  WHERE origin_id = ${originId}::UUID
+    AND apilytics_version IS NOT NULL
+
+  ORDER BY created_at DESC
+  LIMIT 1
+),
+
+json_data AS (
+  SELECT
+    TO_JSONB(agg_general_data.*) AS "generalData",
+    agg_endpoint_data.*,
+    TO_JSONB(percentile_data.*) AS "percentileData",
+    agg_time_frame_data.*,
+    TO_JSONB(agg_user_agent_data.*) AS "userAgentData",
+    agg_status_code_data.*,
+    TO_JSONB(agg_geo_location_data.*) AS "geoLocationData",
+    TO_JSONB(version_data.*) AS "apilyticsPackage"
+
+  FROM agg_general_data,
+    agg_endpoint_data,
+    percentile_data,
+    agg_time_frame_data,
+    agg_user_agent_data,
+    agg_status_code_data,
+    agg_geo_location_data,
+    version_data
+)
+
+SELECT * FROM json_data;`;
 
   const {
-    responseTimeAvg,
-    responseTimeP50,
-    responseTimeP75,
-    responseTimeP90,
-    responseTimeP95,
-    responseTimeP99,
-    requestSizeAvg,
-    requestSizeP50,
-    requestSizeP75,
-    requestSizeP90,
-    requestSizeP95,
-    requestSizeP99,
-    responseSizeAvg,
-    responseSizeP50,
-    responseSizeP75,
-    responseSizeP90,
-    responseSizeP95,
-    responseSizeP99,
-    cpuUsageAvg,
-    cpuUsageP50,
-    cpuUsageP75,
-    cpuUsageP90,
-    cpuUsageP95,
-    cpuUsageP99,
-    memoryUsageAvg,
-    memoryUsageP50,
-    memoryUsageP75,
-    memoryUsageP90,
-    memoryUsageP95,
-    memoryUsageP99,
-    memoryTotalAvg,
-    memoryTotalP50,
-    memoryTotalP75,
-    memoryTotalP90,
-    memoryTotalP95,
-    memoryTotalP99,
-  } = generalData;
+    timeFrameData: _timeFrameData,
+    endpointData: _endpointData,
+    percentileData: { responseTime, requestSize, responseSize, cpuUsage, memoryUsage, memoryTotal },
+    statusCodeData: _statusCodeData,
+    userAgentData: { browserData: _browserData, osData: _osData, deviceData: _deviceData },
+    geoLocationData: { countryData: _countryData, regionData: _regionData, cityData: _cityData },
+    ...rest
+  } = data[0];
 
-  const responseTimes = {
-    avg: responseTimeAvg,
-    p50: responseTimeP50,
-    p75: responseTimeP75,
-    p90: responseTimeP90,
-    p95: responseTimeP95,
-    p99: responseTimeP99,
-  };
+  const timeFrameData = _timeFrameData ?? [];
+  const endpointData = _endpointData ?? [];
 
-  const requestSizes = {
-    avg: requestSizeAvg,
-    p50: requestSizeP50,
-    p75: requestSizeP75,
-    p90: requestSizeP90,
-    p95: requestSizeP95,
-    p99: requestSizeP99,
-  };
-
-  const responseSizes = {
-    avg: responseSizeAvg,
-    p50: responseSizeP50,
-    p75: responseSizeP75,
-    p90: responseSizeP90,
-    p95: responseSizeP95,
-    p99: responseSizeP99,
-  };
-
-  const cpuUsage = {
-    avg: cpuUsageAvg,
-    p50: cpuUsageP50,
-    p75: cpuUsageP75,
-    p90: cpuUsageP90,
-    p95: cpuUsageP95,
-    p99: cpuUsageP99,
-  };
-
-  const memoryUsage = {
-    avg: memoryUsageAvg,
-    p50: memoryUsageP50,
-    p75: memoryUsageP75,
-    p90: memoryUsageP90,
-    p95: memoryUsageP95,
-    p99: memoryUsageP99,
-  };
-
-  const totalMemory = {
-    avg: memoryTotalAvg,
-    p50: memoryTotalP50,
-    p75: memoryTotalP75,
-    p90: memoryTotalP90,
-    p95: memoryTotalP95,
-    p99: memoryTotalP99,
-  };
+  const PERCENTILE_DATA_KEYS = ['avg', 'p50', 'p75', 'p90', 'p95', 'p99'] as const;
 
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
     key,
-    responseTime: responseTimes[key],
-    requestSize: requestSizes[key],
-    responseSize: responseSizes[key],
+    responseTime: responseTime[key],
+    requestSize: requestSize[key],
+    responseSize: responseSize[key],
     cpuUsage: cpuUsage[key],
     memoryUsage: memoryUsage[key],
-    memoryTotal: totalMemory[key],
+    memoryTotal: memoryTotal[key],
   }));
 
-  const statusCodeData = extractFromMiscData(miscData, 'statusCode');
+  const statusCodeData = _statusCodeData ?? [];
 
   const userAgentData = {
-    browserData: extractFromMiscData(miscData, 'browser'),
-    osData: extractFromMiscData(miscData, 'os'),
-    deviceData: extractFromMiscData(miscData, 'device'),
+    browserData: _browserData ?? [],
+    osData: _osData ?? [],
+    deviceData: _deviceData ?? [],
   };
 
   const geoLocationData = {
-    countryData,
-    regionData,
-    cityData,
+    countryData: _countryData ?? [],
+    regionData: _regionData ?? [],
+    cityData: _cityData ?? [],
   };
 
   return {
-    generalData,
     timeFrameData,
     endpointData,
     percentileData,
     statusCodeData,
     userAgentData,
     geoLocationData,
-    apilyticsPackage,
+    ...rest,
   };
 };

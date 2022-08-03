@@ -6,7 +6,7 @@ import {
   makeMethodsHandler,
   routeToPattern,
 } from 'lib-server/apiHelpers';
-import { updateMetricsForDynamicRoute } from 'lib-server/queries';
+import { updateMetricsForNewDynamicRoute } from 'lib-server/queries';
 import {
   sendConflict,
   sendInvalidInput,
@@ -24,7 +24,7 @@ const getRoutes = async (originId: string): Promise<RouteData[]> => {
   const result: RouteData[] = await prisma.$queryRaw`
 SELECT
   dynamic_routes.route,
-  COUNT(DISTINCT metrics.path) AS "matchingPaths"
+  COUNT(DISTINCT metrics.path)::INTEGER AS "matchingPaths"
 
 FROM dynamic_routes
   LEFT JOIN metrics ON metrics.origin_id = dynamic_routes.origin_id
@@ -33,7 +33,7 @@ FROM dynamic_routes
     AND LENGTH(metrics.path) - LENGTH(REPLACE(metrics.path, '/', ''))
       = LENGTH(dynamic_routes.pattern) - LENGTH(REPLACE(dynamic_routes.pattern, '/', ''))
 
-WHERE dynamic_routes.origin_id = ${originId}
+WHERE dynamic_routes.origin_id = ${originId}::UUID
 
 GROUP BY dynamic_routes.route
 ORDER BY dynamic_routes.route;`;
@@ -118,22 +118,45 @@ const handlePut: ApiHandler<{ data: RouteData[] }> = async (req, res) => {
   }));
 
   try {
-    await prisma.$transaction([
-      prisma.dynamicRoute.deleteMany({ where: { originId } }),
-      prisma.dynamicRoute.createMany({ data }),
-    ]);
+    const existingDynamicRoutes = await prisma.dynamicRoute.findMany({
+      where: { originId },
+      select: { route: true, id: true },
+    });
 
-    const newDynamicRoutes = await prisma.dynamicRoute.findMany({ where: { originId } });
+    const newDynamicRoutes = data.filter(
+      ({ route }) =>
+        !existingDynamicRoutes.some(({ route: existingRoute }) => existingRoute === route),
+    );
 
-    const queriesForNewDynamicRoutes = newDynamicRoutes.map(({ originId, pattern, id }) =>
-      updateMetricsForDynamicRoute({
+    const deletedDynamicRouteIds = existingDynamicRoutes
+      .filter(({ route }) => !data.some(({ route: newRoute }) => newRoute === route))
+      .map(({ id }) => id);
+
+    const queriesForNewDynamicRoutes = newDynamicRoutes.map(({ originId, pattern, route }) =>
+      updateMetricsForNewDynamicRoute({
         originId,
         pattern,
-        id,
+        route,
       }),
     );
 
-    await Promise.all(queriesForNewDynamicRoutes);
+    const queryForDeletedDynamicRoutes = prisma.$queryRaw`
+UPDATE metrics
+
+SET dynamic_route_id = NULL,
+endpoint = NULL
+
+WHERE origin_id = ${originId}::UUID
+  AND dynamic_route_id = ANY(${deletedDynamicRouteIds}::UUID[]);`;
+
+    await prisma.$transaction([
+      prisma.dynamicRoute.deleteMany({
+        where: { id: { in: deletedDynamicRouteIds } },
+      }),
+      prisma.dynamicRoute.createMany({ data: newDynamicRoutes }),
+      ...queriesForNewDynamicRoutes,
+      queryForDeletedDynamicRoutes,
+    ]);
   } catch (e) {
     if (isUniqueConstraintFailed(e)) {
       sendConflict(res, 'Two or more routes map to conflicting patterns.');

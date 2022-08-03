@@ -1,7 +1,7 @@
 _type: export
 __export_format: 4
-__export_date: 2022-02-27T16:35:47.668Z
-__export_source: insomnia.desktop.app:v2021.7.2
+__export_date: 2022-07-30T10:53:33.784Z
+__export_source: insomnia.desktop.app:v2022.4.0
 resources:
   - _id: req_adc825807b5a4a38bb00d10c418f174b
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
@@ -55,7 +55,7 @@ resources:
     _type: request
   - _id: req_d2de2652fff24380b369538a419bca49
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1642958897804
+    modified: 1645981293652
     created: 1640728892359
     url: "{{ _.url }}/api/origins"
     name: /api/origins
@@ -258,7 +258,7 @@ resources:
     _type: request
   - _id: req_0e743e6d79f44a8f94781b4b22c8333f
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1645789460545
+    modified: 1659176503471
     created: 1640728892375
     url: "{{ _.url }}/api/v1/middleware"
     name: /api/v1/middleware
@@ -269,7 +269,7 @@ resources:
       text: >-
         {
           "path": "/foo/bar",
-          "query": "key=val&other=123",
+          "query": "key=val&other=123%00",
           "method": "GET",
           "timeMillis": 123,
           "statusCode": 200,
@@ -338,7 +338,7 @@ resources:
     _type: environment
   - _id: jar_de000d18f5904aff9a14bda8d33ad992
     parentId: wrk_3806cc3fdbc84cb3adf932ba1e391541
-    modified: 1645979726648
+    modified: 1659178375710
     created: 1640728892348
     name: Default Jar
     cookies:
@@ -370,14 +370,14 @@ resources:
     _type: api_spec
   - _id: env_3b986c752a0e4f40a30a9e80c68a8d09
     parentId: env_32ce5cfd6d7243678bb30f5a859267ed
-    modified: 1645979634729
+    modified: 1659178388525
     created: 1640728892342
     name: local
     data:
       url: http://localhost:3000
       domain: localhost
       originSlug: api-example-com
-      sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..-5wkCCWq57NDPO1h.3iw9HM-k64upCu7-doPHLdQvkTmGbYa9LlJRpHsHv1sq7sQJgnhbiCm8yh97nGWeg3m1vveNuw5Qkj3xHbIWoC2JCb1EyKd9pdrdfk3lkXDfqTrtq9ZqMhjJTohpQl-G0tV0ELVXhXbGY2e2GNKTZuGWMDDYQOl8UJ2_VvsfE9lEO1A1wGfp0xJyCoCThGHpmzsS2RLIEtWmXndp0iGjE5-H3DQPX4ZyHGFqxthRwNM.xmsJRu2QtFnBAEbPuI1v6g
+      sessionCookie: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..CVuB07nPSNU0GO-f.garWhm0rmooEITghtU1VfVlGbgEWMvoZIf9vsq3nyOV7HtdxWQBJAvgFtYhAZjcmfe6JWPfFjIkTy33vi7ys_xpCrpu-6ZIJO9wZKb-4SZMLsnAvp8_Von3tobtExLAEIwobGWn7I3W7BW5bmF10eIkVPrxbeQF8KEq4NbzXX_EOwpcyVJotMokwzR19znsMbtlD-kX3wig7DKrnFz8HPYKZapSFDDdnTKqF8yGjLZw.SUa_K07oOKtylvVONGM5GQ
       apiKey: 0648c69d-4b42-4642-b125-0959619837cf
     dataPropertyOrder:
       "&":

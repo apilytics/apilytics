@@ -1,4 +1,7 @@
-import type { Method, ValueOf } from 'types';
+import type { IntervalDays, Method, ValueOf } from 'types';
+
+// eslint-disable-next-line no-restricted-imports
+import { INTERVAL_DAYS } from './constants';
 
 export const truncateString = (str: string, maxLength: number): string =>
   str.length > maxLength ? `${str.slice(0, maxLength - 3)}...` : str;
@@ -57,3 +60,6 @@ export const safeGet = <T extends Record<keyof any, any>>(
     return undefined;
   }
 };
+
+export const isValidIntervalDays = (intervalDays: number): intervalDays is IntervalDays =>
+  INTERVAL_DAYS.map(({ value }) => value).includes(intervalDays);

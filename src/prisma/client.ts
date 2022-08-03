@@ -4,6 +4,16 @@ import { PrismaClient } from '@prisma/client';
 // @ts-ignore
 const prisma: PrismaClient = global.prisma || new PrismaClient();
 
+if (process.env.LOG_PRISMA_QUERIES) {
+  prisma.$use(async (params, next) => {
+    const before = Date.now();
+    const result = await next(params);
+    const after = Date.now();
+    console.log(`Query ${params.action} took ${after - before}ms`);
+    return result;
+  });
+}
+
 if (process.env.NODE_ENV === 'development') {
   // Ignore: Same as above.
   // @ts-ignore

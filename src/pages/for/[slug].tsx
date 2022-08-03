@@ -7,7 +7,6 @@ import { MDX } from 'components/shared/MDX';
 import { SetupSection } from 'components/shared/SetupSection';
 import { TopSection } from 'components/shared/TopSection';
 import { WhySection } from 'components/shared/WhySection';
-import { withUser } from 'hocs/withUser';
 import {
   FOR_PATH,
   getFilePaths,
@@ -85,4 +84,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default withUser(ForPage);
+export default ForPage;

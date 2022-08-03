@@ -5,7 +5,6 @@ import type { GetStaticProps, NextPage } from 'next';
 import { MainTemplate } from 'components/layout/MainTemplate';
 import { BlogCard } from 'components/shared/BlogCard';
 import { CTASection } from 'components/shared/CTASection';
-import { withUser } from 'hocs/withUser';
 import { getBlogsData } from 'utils/mdx';
 import type { BlogPageProps } from 'types';
 
@@ -43,4 +42,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default withUser(Blogs);
+export default Blogs;

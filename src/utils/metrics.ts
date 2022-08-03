@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import type { OpUnitType } from 'dayjs';
 
 import {
-  DAY,
   DEVICES,
   METHODS,
   MOCK_BROWSERS,
@@ -10,6 +9,7 @@ import {
   MOCK_OPERATING_SYSTEMS,
   MOCK_PATHS,
   MOCK_TOTAL_MEMORY,
+  ONE_DAY,
   PERCENTILE_DATA_KEYS,
   THREE_MONTHS_DAYS,
   WEEK_DAYS,
@@ -20,27 +20,27 @@ import {
   getRandomStatusCodeForMethod,
 } from 'utils/helpers';
 import MOCK_COUNTRIES from 'utils/mock-countries.json';
-import type { EndpointData, OriginMetrics, TimeFrame } from 'types';
+import type { EndpointData, IntervalDays, OriginMetrics } from 'types';
 
-export const getTimeFrameScope = (timeFrame: TimeFrame = WEEK_DAYS): OpUnitType => {
+export const getIntervalDaysScope = (intervalDays: IntervalDays = WEEK_DAYS): OpUnitType => {
   let scope: OpUnitType = 'day';
 
-  if (timeFrame <= DAY) {
+  if (intervalDays <= ONE_DAY) {
     scope = 'hour';
   }
 
-  if (timeFrame >= THREE_MONTHS_DAYS) {
+  if (intervalDays >= THREE_MONTHS_DAYS) {
     scope = 'week';
   }
 
   return scope;
 };
 
-export const getDataPointsBetweenTimeFrame = (timeFrame: TimeFrame = WEEK_DAYS): string[] => {
-  const scope = getTimeFrameScope(timeFrame);
+export const getDataPointsBetweenTimeFrame = (intervalDays: IntervalDays = WEEK_DAYS): string[] => {
+  const scope = getIntervalDaysScope(intervalDays);
   const dates = [];
 
-  let currentDateTime = dayjs().subtract(timeFrame, 'day');
+  let currentDateTime = dayjs().subtract(intervalDays, 'day');
   const endDateTime = dayjs();
 
   while (currentDateTime <= endDateTime) {
@@ -84,7 +84,7 @@ const initialMockMetrics = MOCK_PATHS.map((path) => {
 });
 
 interface MockMetricsParams {
-  timeFrame?: TimeFrame;
+  intervalDays?: IntervalDays;
   method?: string;
   endpoint?: string;
   statusCode?: string;
@@ -97,7 +97,7 @@ interface MockMetricsParams {
 }
 
 export const getMockMetrics = ({
-  timeFrame = WEEK_DAYS,
+  intervalDays = WEEK_DAYS,
   method,
   endpoint,
   statusCode,
@@ -110,16 +110,16 @@ export const getMockMetrics = ({
 }: MockMetricsParams): OriginMetrics => {
   let requestsMultiplier = 24;
 
-  if (timeFrame <= DAY) {
+  if (intervalDays <= ONE_DAY) {
     requestsMultiplier = 1;
   }
 
-  if (timeFrame >= THREE_MONTHS_DAYS) {
+  if (intervalDays >= THREE_MONTHS_DAYS) {
     requestsMultiplier = 24 * 7;
   }
 
   const errorsMultiplier = requestsMultiplier * 0.1;
-  const dataPoints = getDataPointsBetweenTimeFrame(timeFrame);
+  const dataPoints = getDataPointsBetweenTimeFrame(intervalDays);
 
   let mockMetrics = initialMockMetrics;
 
@@ -186,9 +186,9 @@ export const getMockMetrics = ({
   const totalErrors = timeFrameData.reduce((prev, curr) => prev + curr.errors, 0);
   const errorRate = Number((totalErrors / totalRequests || 0).toFixed(2));
 
-  const totalRequestsGrowth = Number(Math.random().toFixed(2));
-  const totalErrorsGrowth = Number(Math.random().toFixed(2));
-  const errorRateGrowth = Number(Math.random().toFixed(2));
+  const totalRequestsGrowth = Number((Math.random() * 100).toFixed(2));
+  const totalErrorsGrowth = Number((Math.random() * 100).toFixed(2));
+  const errorRateGrowth = Number((Math.random() * 100).toFixed(2));
 
   const generalData = {
     totalRequests,

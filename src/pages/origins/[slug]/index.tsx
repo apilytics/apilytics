@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
@@ -23,7 +22,7 @@ import { withOrigin } from 'hocs/withOrigin';
 import { useContext } from 'hooks/useContext';
 import { useDashboardQuery } from 'hooks/useDashboardQuery';
 import { useFetch } from 'hooks/useFetch';
-import { MODAL_NAMES, REQUEST_TIME_FORMAT } from 'utils/constants';
+import { MODAL_NAMES } from 'utils/constants';
 import { dynamicApiRoutes, staticRoutes } from 'utils/router';
 import type { OriginMetrics } from 'types';
 
@@ -32,7 +31,7 @@ const Origin: NextPage = () => {
     slug,
     showApiKey,
     origin,
-    timeFrame,
+    intervalDays,
     selectedMethod: method = '',
     setSelectedMethod,
     selectedEndpoint: endpoint = '',
@@ -62,17 +61,13 @@ const Origin: NextPage = () => {
   useDashboardQuery(true);
 
   useEffect(() => {
-    if (slug && timeFrame) {
-      const from = dayjs().subtract(timeFrame, 'day').format(REQUEST_TIME_FORMAT);
-      const to = dayjs().format(REQUEST_TIME_FORMAT);
-
+    if (slug && intervalDays) {
       const url = dynamicApiRoutes.originMetrics({
         slug,
-        from,
-        to,
+        'interval-days': intervalDays,
         method,
         endpoint,
-        statusCode,
+        'status-code': statusCode,
         browser,
         os,
         device,
@@ -88,7 +83,7 @@ const Origin: NextPage = () => {
     method,
     slug,
     statusCode,
-    timeFrame,
+    intervalDays,
     browser,
     os,
     device,

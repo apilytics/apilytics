@@ -11,6 +11,7 @@ import PlausibleProvider from 'next-plausible';
 import type { AppProps } from 'next/app';
 
 import { RootContextProvider } from 'context';
+import { CommonDataProvider } from 'context/data';
 import { FRONTEND_URL } from 'utils/router';
 
 dayjs.extend(localizedFormat);
@@ -21,7 +22,9 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => (
   <PlausibleProvider domain={FRONTEND_DOMAIN} enabled={process.env.VERCEL_ENV === 'production'}>
     <SessionProvider>
       <RootContextProvider>
-        <Component {...pageProps} />
+        <CommonDataProvider>
+          <Component {...pageProps} />
+        </CommonDataProvider>
       </RootContextProvider>
     </SessionProvider>
   </PlausibleProvider>

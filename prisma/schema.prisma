@@ -153,11 +153,9 @@ model ExcludedRoute {
 model Metric {
   id           String  @default(uuid()) @db.Uuid
   path         String
+  endpoint     String
   queryParams  Json?   @map("query_params")
   method       String
-  // Can't be nullable because we need to use `ARRAY_AGG` on this: https://github.com/prisma/prisma/issues/11339
-  // Value 0 indicates that we didn't get a response status code from the middleware, can happen
-  // e.g. when an inner request handler function that the middleware wraps throws an error.
   statusCode   Int     @default(0) @map("status_code")
   timeMillis   Int     @map("time_millis")
   requestSize  BigInt? @map("request_size")
@@ -172,6 +170,7 @@ model Metric {
   countryCode  String? @map("country_code")
   region       String?
   city         String?
+  isError      Boolean @default(false) @map("is_error")
 
   apilyticsVersion String? @map("apilytics_version")
 

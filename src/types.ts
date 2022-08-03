@@ -12,10 +12,10 @@ import type {
 } from 'react';
 
 import type {
-  DAY,
   METHODS,
   MODAL_NAMES,
   MONTH_DAYS,
+  ONE_DAY,
   ORIGIN_ROLES,
   SIX_MONTHS_DAYS,
   THREE_MONTHS_DAYS,
@@ -23,8 +23,8 @@ import type {
   YEAR_DAYS,
 } from 'utils/constants';
 
-export type TimeFrame =
-  | typeof DAY
+export type IntervalDays =
+  | typeof ONE_DAY
   | typeof WEEK_DAYS
   | typeof MONTH_DAYS
   | typeof THREE_MONTHS_DAYS
@@ -190,8 +190,8 @@ export interface OriginContextType {
   showApiKey: string;
   origin: OriginData | null;
   setOrigin: Dispatch<SetStateAction<OriginData | null>>;
-  timeFrame: TimeFrame | undefined;
-  setTimeFrame: Dispatch<SetStateAction<TimeFrame | undefined>>;
+  intervalDays: IntervalDays | undefined;
+  setIntervalDays: Dispatch<SetStateAction<IntervalDays | undefined>>;
   selectedMethod: string | undefined;
   setSelectedMethod: Dispatch<SetStateAction<string | undefined>>;
   selectedEndpoint: string | undefined;
@@ -276,15 +276,15 @@ export interface UserAgentData {
   deviceData: DeviceData[];
 }
 
-export interface PercentileData {
+export type PercentileData = {
   key: string;
-  responseTime: number;
-  requestSize: number;
-  responseSize: number;
-  cpuUsage: number;
-  memoryUsage: number;
-  memoryTotal: number;
-}
+  responseTime: number | null;
+  requestSize: number | null;
+  responseSize: number | null;
+  cpuUsage: number | null;
+  memoryUsage: number | null;
+  memoryTotal: number | null;
+};
 
 export interface EndpointData {
   totalRequests: number;
@@ -294,21 +294,23 @@ export interface EndpointData {
   responseTimeAvg: number;
 }
 
+type CountryCode = string | null;
+
 export interface CountryData {
   country: string;
-  countryCode: string | null;
+  countryCode: CountryCode;
   requests: number;
 }
 
 export interface RegionData {
   region: string;
-  countryCode: string | null;
+  countryCode: CountryCode;
   requests: number;
 }
 
 export interface CityData {
   city: string;
-  countryCode: string | null;
+  countryCode: CountryCode;
   requests: number;
 }
 

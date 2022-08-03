@@ -6,14 +6,14 @@ import type { NameType, ValueType } from 'recharts/types/component/DefaultToolti
 
 import { useContext } from 'hooks/useContext';
 import {
-  DAY,
   MONTH_DAYS,
+  ONE_DAY,
   SIX_MONTHS_DAYS,
   THREE_MONTHS_DAYS,
   WEEK_DAYS,
   YEAR_DAYS,
 } from 'utils/constants';
-import { formatCount, getDataPointsBetweenTimeFrame, getTimeFrameScope } from 'utils/metrics';
+import { formatCount, getDataPointsBetweenTimeFrame, getIntervalDaysScope } from 'utils/metrics';
 import type { TimeFrameData } from 'types';
 
 const HOUR_FORMAT = 'h A';
@@ -27,11 +27,11 @@ interface Props {
 }
 
 export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, color }) => {
-  const { timeFrame } = useContext();
-  const scope = getTimeFrameScope(timeFrame);
+  const { intervalDays } = useContext();
+  const scope = getIntervalDaysScope(intervalDays);
 
   // Make sure the data contains points in time for the whole specified time frame.
-  const data: TimeFrameData[] = getDataPointsBetweenTimeFrame(timeFrame).map((time) => {
+  const data: TimeFrameData[] = getDataPointsBetweenTimeFrame(intervalDays).map((time) => {
     const data = _data.find((data) => dayjs(data.time).startOf(scope).format() === time);
 
     return {
@@ -42,9 +42,9 @@ export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, colo
   });
 
   const tickFormatter = (date: string, index: number): string => {
-    switch (timeFrame) {
+    switch (intervalDays) {
       // Display label for every fourth hour.
-      case DAY: {
+      case ONE_DAY: {
         if (index % 4 === 0) {
           return dayjs(date).format(HOUR_FORMAT);
         } else {
@@ -106,8 +106,8 @@ export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, colo
       const { requests, errors, time } = payload[0].payload;
       let format: string | undefined;
 
-      switch (timeFrame) {
-        case DAY: {
+      switch (intervalDays) {
+        case ONE_DAY: {
           format = HOUR_FORMAT;
           break;
         }

@@ -135,7 +135,9 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   return (
     <DashboardCard>
       <div className="flex flex-wrap gap-4 px-2">
-        <p className="mr-auto text-white">{attributes[metricType].label}</p>
+        <p className="mr-auto text-white">
+          {attributes[metricType].label} (top {truncatedData.length} endpoints)
+        </p>
         <div className="tabs">
           {Object.values(METRIC_TYPES).map((type) => (
             <p
@@ -155,7 +157,9 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
       <Modal name={MODAL_NAMES.ENDPOINTS} mobileFullscreen>
         <div className="w-screen overflow-y-auto sm:w-128 sm:min-w-96">
           <div className="flex justify-between p-2">
-            <p className="pl-4 text-white">{attributes[activeTab].label}</p>
+            <p className="pl-4 text-white">
+              {attributes[activeTab].label} (top {data.length} endpoints)
+            </p>
             <ModalCloseButton onClick={handleCloseModal} />
           </div>
           <div className="tabs my-2 px-6">
