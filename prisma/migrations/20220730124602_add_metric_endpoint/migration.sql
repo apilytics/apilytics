@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "metrics" ADD COLUMN     "endpoint" TEXT NOT NULL;
+ALTER TABLE "metrics" ADD COLUMN     "endpoint" TEXT NOT NULL DEFAULT E'';
 
 UPDATE metrics
 
