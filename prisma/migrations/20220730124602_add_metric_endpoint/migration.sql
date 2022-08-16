@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "metrics" ADD COLUMN     "endpoint" TEXT NOT NULL DEFAULT E'';
+ALTER TABLE "metrics" ADD COLUMN     "endpoint" TEXT;
 
 UPDATE metrics
 
@@ -10,6 +10,8 @@ SET endpoint = (
         AND metrics.path IS NOT NULL
         AND metrics.dynamic_route_id IS NOT NULL
 );
+
+ALTER TABLE "metrics" ALTER COLUMN "endpoint" SET NOT NULL;
 
 -- DropIndex
 DROP INDEX "metrics_origin_id_path_method_status_code_browser_os_device_idx";
