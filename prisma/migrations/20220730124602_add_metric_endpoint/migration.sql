@@ -8,6 +8,7 @@ SET endpoint = (
     FROM dynamic_routes
     WHERE dynamic_routes.id = metrics.dynamic_route_id
         AND metrics.path IS NOT NULL
+        AND metrics.dynamic_route_id IS NOT NULL
 );
 
 -- DropIndex
