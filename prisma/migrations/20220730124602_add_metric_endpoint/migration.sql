@@ -1,5 +1,7 @@
 -- AlterTable
-ALTER TABLE "metrics" ADD COLUMN     "endpoint" TEXT NOT NULL;
+ALTER TABLE "metrics" ADD COLUMN     "endpoint" TEXT;
+
+ALTER TABLE "metrics" ALTER COLUMN "endpoint" SET NOT NULL;
 
 -- DropIndex
 DROP INDEX "metrics_origin_id_path_method_status_code_browser_os_device_idx";
