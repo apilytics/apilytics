@@ -684,42 +684,44 @@ json_data AS (
 SELECT * FROM json_data;`;
 
   const {
-    timeFrameData: _timeFrameData,
-    endpointData: _endpointData,
-    percentileData: { responseTime, requestSize, responseSize, cpuUsage, memoryUsage, memoryTotal },
-    statusCodeData: _statusCodeData,
-    userAgentData: { browserData: _browserData, osData: _osData, deviceData: _deviceData },
-    geoLocationData: { countryData: _countryData, regionData: _regionData, cityData: _cityData },
+    timeFrameData = [],
+    endpointData = [],
+    percentileData: {
+      responseTime = null,
+      requestSize = null,
+      responseSize = null,
+      cpuUsage = null,
+      memoryUsage = null,
+      memoryTotal = null,
+    } = {},
+    statusCodeData = [],
+    userAgentData: { browserData = [], osData = [], deviceData = [] } = {},
+    geoLocationData: { countryData = [], regionData = [], cityData = [] } = {},
     ...rest
-  } = data[0];
-
-  const timeFrameData = _timeFrameData ?? [];
-  const endpointData = _endpointData ?? [];
+  } = data[0] ?? {};
 
   const PERCENTILE_DATA_KEYS = ['avg', 'p50', 'p75', 'p90', 'p95', 'p99'] as const;
 
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
     key,
-    responseTime: responseTime[key],
-    requestSize: requestSize[key],
-    responseSize: responseSize[key],
-    cpuUsage: cpuUsage[key],
-    memoryUsage: memoryUsage[key],
-    memoryTotal: memoryTotal[key],
+    responseTime: responseTime && responseTime[key],
+    requestSize: requestSize && requestSize[key],
+    responseSize: responseSize && responseSize[key],
+    cpuUsage: cpuUsage && cpuUsage[key],
+    memoryUsage: memoryUsage && memoryUsage[key],
+    memoryTotal: memoryTotal && memoryTotal[key],
   }));
 
-  const statusCodeData = _statusCodeData ?? [];
-
   const userAgentData = {
-    browserData: _browserData ?? [],
-    osData: _osData ?? [],
-    deviceData: _deviceData ?? [],
+    browserData,
+    osData,
+    deviceData,
   };
 
   const geoLocationData = {
-    countryData: _countryData ?? [],
-    regionData: _regionData ?? [],
-    cityData: _cityData ?? [],
+    countryData,
+    regionData,
+    cityData,
   };
 
   return {
