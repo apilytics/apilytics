@@ -6,8 +6,13 @@ import { INTERVAL_DAYS } from './constants';
 export const truncateString = (str: string, maxLength: number): string =>
   str.length > maxLength ? `${str.slice(0, maxLength - 3)}...` : str;
 
-export const getRandomArrayItem = <T>(arr: readonly T[]): T =>
-  arr[Math.floor(Math.random() * arr.length)];
+export const getRandomArrayItem = <T>(arr: readonly T[]): T => {
+  if (!arr.length) {
+    throw new Error('Argument array cannot be empty.');
+  }
+  // @ts-expect-error: Array length checked above.
+  return arr[Math.floor(Math.random() * arr.length)];
+};
 
 export const getRandomNumberBetween = (min: number, max: number): number =>
   Math.floor(Math.random() * max) + min;

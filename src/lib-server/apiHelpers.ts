@@ -395,8 +395,7 @@ WHERE origins.id = ${originId}::UUID
   ${region ? Prisma.sql`AND metrics.region = ${region}` : Prisma.empty}
   ${city ? Prisma.sql`AND metrics.city = ${city}` : Prisma.empty}`;
 
-  const _data: Array<OriginMetrics & { percentileData: RawPercentileData }> =
-    await prisma.$queryRaw`
+  const data: Array<OriginMetrics & { percentileData: RawPercentileData }> = await prisma.$queryRaw`
 WITH all_metrics AS (
   SELECT
     metrics.*
@@ -701,7 +700,6 @@ json_data AS (
 
 SELECT * FROM json_data;`;
 
-  const data = _data[0] as typeof _data[number] | undefined; // Improve type-checking.
   const {
     timeFrameData: _timeFrameData,
     endpointData: _endpointData,
@@ -711,7 +709,7 @@ SELECT * FROM json_data;`;
     geoLocationData: _geoLocationData,
     generalData: _generalData,
     apilyticsPackage,
-  } = data ?? {};
+  } = data[0] ?? {};
 
   const timeFrameData = _timeFrameData ?? [];
   const endpointData = _endpointData ?? [];

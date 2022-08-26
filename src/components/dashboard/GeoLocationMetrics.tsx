@@ -33,6 +33,8 @@ const METRIC_TYPES = {
   cities: 'cities',
 } as const;
 
+type MetricType = ValueOf<typeof METRIC_TYPES>;
+
 interface Props {
   data: GeoLocationData;
 }
@@ -51,11 +53,9 @@ export const GeoLocationMetrics: React.FC<Props> = ({
     handleCloseModal,
   } = useContext();
 
-  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(
-    METRIC_TYPES.countries,
-  );
+  const [metricType, setMetricType] = useState<MetricType>(METRIC_TYPES.countries);
 
-  const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.countries);
+  const [activeTab, setActiveTab] = useState<MetricType>(METRIC_TYPES.countries);
 
   const sortData = (a: CombinedGeoLocationData, b: CombinedGeoLocationData): number =>
     b.requests - a.requests;
@@ -141,10 +141,10 @@ export const GeoLocationMetrics: React.FC<Props> = ({
       setSelectedCountryCode(countryCode);
     }
 
-    const events: Record<string, keyof PlausibleEvents> = {
-      country: 'country-click',
-      region: 'region-click',
-      city: 'city-click',
+    const events: Record<MetricType, keyof PlausibleEvents> = {
+      countries: 'country-click',
+      regions: 'region-click',
+      cities: 'city-click',
     };
 
     plausible(events[metricType]);
@@ -153,11 +153,11 @@ export const GeoLocationMetrics: React.FC<Props> = ({
   const handleShowAllClick = (): void => {
     handleOpenModal(MODAL_NAMES.GEO_LOCATION);
 
-    const events: Record<string, keyof PlausibleEvents> = {
-      country: 'show-all-countries-click',
-      region: 'show-all-regions-click',
-      city: 'show-all-cities-click',
-    };
+    const events: Record<MetricType, keyof PlausibleEvents> = {
+      countries: 'show-all-countries-click',
+      regions: 'show-all-regions-click',
+      cities: 'show-all-cities-click',
+    } as const;
 
     plausible(events[metricType]);
   };

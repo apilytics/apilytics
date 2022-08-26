@@ -23,6 +23,8 @@ const METRIC_TYPES = {
   responseTimes: 'responseTimes',
 } as const;
 
+type MetricType = ValueOf<typeof METRIC_TYPES>;
+
 interface Props {
   data: EndpointData[];
 }
@@ -38,8 +40,8 @@ export const EndpointMetrics: React.FC<Props> = ({ data: _data }) => {
   } = useContext();
 
   const plausible = usePlausible();
-  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
-  const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
+  const [metricType, setMetricType] = useState<MetricType>(METRIC_TYPES.requests);
+  const [activeTab, setActiveTab] = useState<MetricType>(METRIC_TYPES.requests);
   const requestsData = [..._data.sort((a, b) => b.totalRequests - a.totalRequests)];
   const responseTimeData = [..._data.sort((a, b) => b.responseTimeAvg - a.responseTimeAvg)];
   const { pathname } = useRouter();

@@ -29,6 +29,8 @@ const METRIC_TYPES = {
   devices: 'devices',
 } as const;
 
+type MetricType = ValueOf<typeof METRIC_TYPES>;
+
 interface Props {
   data: UserAgentData;
 }
@@ -45,8 +47,8 @@ export const UserAgentMetrics: React.FC<Props> = ({
   } = useContext();
 
   const plausible = usePlausible();
-  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.browsers);
-  const [activeTab, setActiveTab] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.browsers);
+  const [metricType, setMetricType] = useState<MetricType>(METRIC_TYPES.browsers);
+  const [activeTab, setActiveTab] = useState<MetricType>(METRIC_TYPES.browsers);
 
   const sortData = (a: CombinedUserAgentData, b: CombinedUserAgentData): number =>
     b.requests - a.requests;
@@ -100,10 +102,10 @@ export const UserAgentMetrics: React.FC<Props> = ({
       dispatcher(newState);
     }
 
-    const events: Record<string, keyof PlausibleEvents> = {
-      browser: 'browser-click',
+    const events: Record<MetricType, keyof PlausibleEvents> = {
+      browsers: 'browser-click',
       os: 'os-click',
-      device: 'device-click',
+      devices: 'device-click',
     };
 
     plausible(events[metricType]);
@@ -112,10 +114,10 @@ export const UserAgentMetrics: React.FC<Props> = ({
   const handleShowAllClick = (): void => {
     handleOpenModal(MODAL_NAMES.USER_AGENTS);
 
-    const events: Record<string, keyof PlausibleEvents> = {
-      browser: 'show-all-browsers-click',
+    const events: Record<MetricType, keyof PlausibleEvents> = {
+      browsers: 'show-all-browsers-click',
       os: 'show-all-operating-systems-click',
-      device: 'show-all-devices-click',
+      devices: 'show-all-devices-click',
     };
 
     plausible(events[metricType]);

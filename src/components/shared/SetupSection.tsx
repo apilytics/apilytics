@@ -23,7 +23,7 @@ export const SetupSection: React.FC<Props> = ({
     : _snippets;
 
   const [selectedIntegration, setSelectedIntegration] = useState(
-    frameworks[0] ?? _snippets[0].name,
+    frameworks[0] ?? _snippets[0]?.name,
   );
 
   const snippet = _snippets.find(({ name }) => selectedIntegration === name);

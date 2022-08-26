@@ -62,9 +62,9 @@ const initialMockMetrics = MOCK_PATHS.map((path) => {
   const _country = getRandomArrayItem(MOCK_COUNTRIES);
   const country = _country.name;
   const countryCode = _country.code;
-  const _region = getRandomArrayItem(_country.regions);
-  const region = _region?.name ?? null;
-  const city = _region ? getRandomArrayItem(_region.cities) : null;
+  const _region = _country?.regions.length ? getRandomArrayItem(_country.regions) : null;
+  const region = _region?.name ?? '';
+  const city = _region?.cities.length ? getRandomArrayItem(_region.cities) : null;
 
   return {
     path,

@@ -23,7 +23,9 @@ export const VerticalBarChart: React.FC<Props> = ({
   onBarClick,
 }) => {
   const maxValue = data.length
-    ? Number(data.concat().sort((a, b) => Number(b[valueKey]) - Number(a[valueKey]))[0][valueKey])
+    ? Number(
+        data.concat().sort((a, b) => Number(b[valueKey]) - Number(a[valueKey]))[0]?.[valueKey] ?? 0,
+      )
     : 0;
 
   return (

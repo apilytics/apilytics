@@ -103,6 +103,7 @@ export const TimeFrameAreaChart: React.FC<Props> = ({ data: _data, dataKey, colo
     payload,
   }: TooltipProps<ValueType, NameType>): JSX.Element | null => {
     if (payload?.length) {
+      // @ts-expect-error: Array length checked above.
       const { requests, errors, time } = payload[0].payload;
       let format: string | undefined;
 
