@@ -25,7 +25,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
   const user = await prisma.user.findFirst({ where: { id: userId }, select: { isAdmin: true } });
 
   const whereClause = !user?.isAdmin
-    ? Prisma.sql`WHERE origin_users.user_id = ${userId}::UUID`
+    ? Prisma.sql`WHERE origin_users.user_id = ${userId}`
     : Prisma.empty;
 
   const data: OriginListItem[] = await prisma.$queryRaw`
@@ -48,7 +48,7 @@ const handleGet: ApiHandler<GetResponse> = async (req, res) => {
 
   ${whereClause}
 
-  GROUP BY origins.id
+  GROUP BY origins.id, origin_users.role
   ORDER BY "lastDayMetrics" DESC;`;
 
   sendOk(res, { data });

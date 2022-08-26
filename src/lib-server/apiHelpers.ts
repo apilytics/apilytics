@@ -8,7 +8,14 @@ import type { EmailConfig } from 'next-auth/providers';
 import { sendMethodNotAllowed, sendUnauthorized, sendUnknownError } from 'lib-server/responses';
 import prisma from 'prisma/client';
 import { AWS_SES } from 'ses';
-import { METHODS, ORIGIN_ROLES, SAFE_METHODS } from 'utils/constants';
+import {
+  METHODS,
+  ONE_DAY,
+  ORIGIN_ROLES,
+  SAFE_METHODS,
+  THREE_MONTHS_DAYS,
+  WEEK_DAYS,
+} from 'utils/constants';
 import { FRONTEND_URL, staticRoutes } from 'utils/router';
 import type { ApiHandler, IntervalDays, Method, OriginData, OriginMetrics } from 'types';
 
@@ -332,7 +339,7 @@ interface RawPercentileData {
 export const generateMetrics = async ({
   origin: { id: originId },
   filters: {
-    intervalDays,
+    intervalDays = WEEK_DAYS,
     endpoint,
     method,
     statusCode,
@@ -348,6 +355,16 @@ export const generateMetrics = async ({
   filters: MetricsFilters;
 }): Promise<OriginMetrics> => {
   const interval = `'${intervalDays} days'`;
+
+  let timeBucket;
+  if (intervalDays === ONE_DAY) {
+    timeBucket = Prisma.sql`'1 hour'`;
+  } else if (intervalDays < THREE_MONTHS_DAYS) {
+    timeBucket = Prisma.sql`'1 day'`;
+  } else {
+    timeBucket = Prisma.sql`'1 week'`;
+  }
+
   let wherePath = Prisma.empty;
 
   if (endpoint) {
@@ -515,7 +532,7 @@ agg_endpoint_data AS (
 time_frame_data AS (
   SELECT
     COUNT(*) AS requests,
-    time_bucket('1 day', metrics.created_at) AS time,
+    time_bucket(${timeBucket}, metrics.created_at) AS time,
     COUNT(*) FILTER (WHERE is_error) AS errors
 
   FROM metrics
@@ -684,42 +701,44 @@ json_data AS (
 SELECT * FROM json_data;`;
 
   const {
-    timeFrameData: _timeFrameData,
-    endpointData: _endpointData,
-    percentileData: { responseTime, requestSize, responseSize, cpuUsage, memoryUsage, memoryTotal },
-    statusCodeData: _statusCodeData,
-    userAgentData: { browserData: _browserData, osData: _osData, deviceData: _deviceData },
-    geoLocationData: { countryData: _countryData, regionData: _regionData, cityData: _cityData },
+    timeFrameData = [],
+    endpointData = [],
+    percentileData: {
+      responseTime = null,
+      requestSize = null,
+      responseSize = null,
+      cpuUsage = null,
+      memoryUsage = null,
+      memoryTotal = null,
+    } = {},
+    statusCodeData = [],
+    userAgentData: { browserData = [], osData = [], deviceData = [] } = {},
+    geoLocationData: { countryData = [], regionData = [], cityData = [] } = {},
     ...rest
-  } = data[0];
-
-  const timeFrameData = _timeFrameData ?? [];
-  const endpointData = _endpointData ?? [];
+  } = data[0] ?? {};
 
   const PERCENTILE_DATA_KEYS = ['avg', 'p50', 'p75', 'p90', 'p95', 'p99'] as const;
 
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
     key,
-    responseTime: responseTime[key],
-    requestSize: requestSize[key],
-    responseSize: responseSize[key],
-    cpuUsage: cpuUsage[key],
-    memoryUsage: memoryUsage[key],
-    memoryTotal: memoryTotal[key],
+    responseTime: responseTime && responseTime[key],
+    requestSize: requestSize && requestSize[key],
+    responseSize: responseSize && responseSize[key],
+    cpuUsage: cpuUsage && cpuUsage[key],
+    memoryUsage: memoryUsage && memoryUsage[key],
+    memoryTotal: memoryTotal && memoryTotal[key],
   }));
 
-  const statusCodeData = _statusCodeData ?? [];
-
   const userAgentData = {
-    browserData: _browserData ?? [],
-    osData: _osData ?? [],
-    deviceData: _deviceData ?? [],
+    browserData,
+    osData,
+    deviceData,
   };
 
   const geoLocationData = {
-    countryData: _countryData ?? [],
-    regionData: _regionData ?? [],
-    cityData: _cityData ?? [],
+    countryData,
+    regionData,
+    cityData,
   };
 
   return {
