@@ -8,11 +8,16 @@ import type { OriginInviteData } from 'types';
 export const CommonDataProvider: React.FC = ({ children }) => {
   const { setUser, setOriginInvites } = useContext();
 
-  useFetch<User>({ url: staticApiRoutes.user, successCallback: ({ data }) => setUser(data) });
+  useFetch<User>({
+    url: staticApiRoutes.user,
+    successCallback: ({ data }) => setUser(data),
+    hideErrorMessage: true,
+  });
 
   useFetch<OriginInviteData[]>({
     url: staticApiRoutes.originInvites,
     successCallback: ({ data }) => setOriginInvites(data),
+    hideErrorMessage: true,
   });
 
   return <>{children}</>;
