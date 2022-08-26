@@ -169,7 +169,15 @@ export enum EVENT_LOCATIONS {
 
 export const PERCENTILE_DATA_KEYS = ['avg', 'p50', 'p75', 'p90', 'p95', 'p99'] as const;
 
-export const DEVICES = ['console', 'mobile', 'tablet', 'smarttv', 'wearable', 'embedded'];
+export const DEVICES = [
+  'desktop',
+  'mobile',
+  'tablet',
+  'console',
+  'smarttv',
+  'embedded',
+  'wearable',
+];
 
 export enum ORIGIN_MENU_KEYS {
   SETTINGS = 'SETTINGS',

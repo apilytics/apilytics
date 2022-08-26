@@ -203,7 +203,7 @@ const handlePost: ApiHandler = async (req, res) => {
     const ua = uaParser(rawUserAgent);
     browser = ua.browser.name;
     os = ua.os.name;
-    device = ua.device.type;
+    device = ua.device.type ?? 'desktop';
   }
 
   let country;
