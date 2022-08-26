@@ -22,10 +22,12 @@ export const useFetch = <T>({
   url: _url,
   options: _options,
   successCallback: _successCallback,
+  hideErrorMessage = false,
 }: {
   url?: string;
   options?: RequestInit;
   successCallback?: ({ data, message }: SuccessCallbackParams<T>) => void;
+  hideErrorMessage?: boolean;
 } = {}): UseFetch<T> => {
   const [data, setData] = useState<T>();
   const [loading, setLoading] = useState(false);
@@ -49,7 +51,10 @@ export const useFetch = <T>({
       setErrorMessage('');
 
       const handleError = (msg = UNEXPECTED_ERROR): void => {
-        setErrorMessage(msg);
+        if (!hideErrorMessage) {
+          setErrorMessage(msg);
+        }
+
         setNotFound(true);
 
         if (errorCallback) {
@@ -98,7 +103,7 @@ export const useFetch = <T>({
         setLoading(false);
       }
     },
-    [_options, _successCallback, _url, setErrorMessage],
+    [_options, _successCallback, _url, hideErrorMessage, setErrorMessage],
   );
 
   // Fetch automatically only when the hook is provided with a URL.
