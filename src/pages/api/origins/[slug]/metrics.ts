@@ -12,7 +12,7 @@ import type { ApiHandler, OriginMetrics } from 'types';
 
 const handleGet: ApiHandler<{ data: OriginMetrics }> = async (req, res) => {
   const { query } = req;
-  const intervalDays = Number(query['interval-days']);
+  const intervalDays = Number(query['interval-days']) || undefined;
   const statusCode = query['status-code'];
 
   if (statusCode && typeof statusCode !== 'string') {
@@ -20,7 +20,7 @@ const handleGet: ApiHandler<{ data: OriginMetrics }> = async (req, res) => {
     return;
   }
 
-  if (!isValidIntervalDays(intervalDays)) {
+  if (intervalDays !== undefined && !isValidIntervalDays(intervalDays)) {
     sendInvalidInput(res, 'Invalid interval of days:' + intervalDays);
     return;
   }

@@ -395,7 +395,8 @@ WHERE origins.id = ${originId}::UUID
   ${region ? Prisma.sql`AND metrics.region = ${region}` : Prisma.empty}
   ${city ? Prisma.sql`AND metrics.city = ${city}` : Prisma.empty}`;
 
-  const data: Array<OriginMetrics & { percentileData: RawPercentileData }> = await prisma.$queryRaw`
+  const _data: Array<OriginMetrics & { percentileData: RawPercentileData }> =
+    await prisma.$queryRaw`
 WITH all_metrics AS (
   SELECT
     metrics.*
@@ -700,45 +701,54 @@ json_data AS (
 
 SELECT * FROM json_data;`;
 
+  const data = _data[0] as typeof _data[number] | undefined; // Improve type-checking.
   const {
-    timeFrameData = [],
-    endpointData = [],
-    percentileData: {
-      responseTime = null,
-      requestSize = null,
-      responseSize = null,
-      cpuUsage = null,
-      memoryUsage = null,
-      memoryTotal = null,
-    } = {},
-    statusCodeData = [],
-    userAgentData: { browserData = [], osData = [], deviceData = [] } = {},
-    geoLocationData: { countryData = [], regionData = [], cityData = [] } = {},
-    ...rest
-  } = data[0] ?? {};
+    timeFrameData: _timeFrameData,
+    endpointData: _endpointData,
+    percentileData: _percentileData,
+    statusCodeData: _statusCodeData,
+    userAgentData: _userAgentData,
+    geoLocationData: _geoLocationData,
+    generalData: _generalData,
+    apilyticsPackage,
+  } = data ?? {};
+
+  const timeFrameData = _timeFrameData ?? [];
+  const endpointData = _endpointData ?? [];
 
   const PERCENTILE_DATA_KEYS = ['avg', 'p50', 'p75', 'p90', 'p95', 'p99'] as const;
 
   const percentileData = PERCENTILE_DATA_KEYS.map((key) => ({
     key,
-    responseTime: responseTime && responseTime[key],
-    requestSize: requestSize && requestSize[key],
-    responseSize: responseSize && responseSize[key],
-    cpuUsage: cpuUsage && cpuUsage[key],
-    memoryUsage: memoryUsage && memoryUsage[key],
-    memoryTotal: memoryTotal && memoryTotal[key],
+    responseTime: _percentileData?.responseTime[key] ?? null,
+    requestSize: _percentileData?.requestSize[key] ?? null,
+    responseSize: _percentileData?.responseSize[key] ?? null,
+    cpuUsage: _percentileData?.cpuUsage[key] ?? null,
+    memoryUsage: _percentileData?.memoryUsage[key] ?? null,
+    memoryTotal: _percentileData?.memoryTotal[key] ?? null,
   }));
 
+  const statusCodeData = _statusCodeData ?? [];
+
   const userAgentData = {
-    browserData,
-    osData,
-    deviceData,
+    browserData: _userAgentData?.browserData ?? [],
+    osData: _userAgentData?.osData ?? [],
+    deviceData: _userAgentData?.deviceData ?? [],
   };
 
   const geoLocationData = {
-    countryData,
-    regionData,
-    cityData,
+    countryData: _geoLocationData?.countryData ?? [],
+    regionData: _geoLocationData?.regionData ?? [],
+    cityData: _geoLocationData?.cityData ?? [],
+  };
+
+  const generalData = {
+    totalRequests: _generalData?.totalRequests ?? 0,
+    totalRequestsGrowth: _generalData?.totalRequestsGrowth ?? 0,
+    totalErrors: _generalData?.totalErrors ?? 0,
+    totalErrorsGrowth: _generalData?.totalErrorsGrowth ?? 0,
+    errorRate: _generalData?.errorRate ?? 0,
+    errorRateGrowth: _generalData?.errorRateGrowth ?? 0,
   };
 
   return {
@@ -748,6 +758,7 @@ SELECT * FROM json_data;`;
     statusCodeData,
     userAgentData,
     geoLocationData,
-    ...rest,
+    generalData,
+    apilyticsPackage,
   };
 };
