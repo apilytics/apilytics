@@ -87,6 +87,7 @@ export const MISC_INDEXABLE_ROUTES = [
   staticRoutes.login,
   staticRoutes.register,
   staticRoutes.contact,
+  staticRoutes.privacyPolicy,
 ];
 
 export const INDEXABLE_ROUTES = [
