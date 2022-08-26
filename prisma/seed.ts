@@ -135,15 +135,13 @@ const createMetrics = async ({
 };
 
 const main = async (): Promise<void> => {
-  // Delete and re-create test users to cascade changes to all relations.
-  try {
-    await prisma.user.delete({ where: { id: READ_ONLY_ADMIN_USER_ID } });
-    await prisma.user.delete({ where: { id: ORIGIN_OWNER_USER_ID } });
-    await prisma.user.delete({ where: { id: ORIGIN_ADMIN_USER_ID } });
-    await prisma.user.delete({ where: { id: ORIGIN_VIEWER_USER_ID } });
-  } catch {
-    // User not found.
-  }
+  await Promise.allSettled([
+    prisma.user.delete({ where: { id: READ_ONLY_ADMIN_USER_ID } }),
+    prisma.user.delete({ where: { id: ORIGIN_OWNER_USER_ID } }),
+    prisma.user.delete({ where: { id: ORIGIN_ADMIN_USER_ID } }),
+    prisma.user.delete({ where: { id: ORIGIN_VIEWER_USER_ID } }),
+    prisma.origin.delete({ where: { id: ORIGIN_ID } }),
+  ]);
 
   await prisma.user.create({
     data: {
