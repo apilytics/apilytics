@@ -187,7 +187,7 @@ model Metric {
   excludedRoute   ExcludedRoute? @relation(fields: [excludedRouteId], references: [id], onDelete: SetNull)
 
   @@unique([id, originId, createdAt])
-  @@index([originId, path, endpoint, method, statusCode, browser, os, device, country, region, city, dynamicRouteId, excludedRouteId, createdAt])
+  @@index([originId, path, method, statusCode, browser, os, device, country, region, city, dynamicRouteId, excludedRouteId, createdAt])
   @@map("metrics")
 }
 
