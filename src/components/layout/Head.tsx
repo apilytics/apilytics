@@ -15,7 +15,7 @@ export const Head: React.FC<HeadProps> = ({ indexable, title, description, loadi
   const _description = description ?? DEFAULT_SEO_DESCRIPTION;
 
   if (process.env.NODE_ENV !== 'production' && !loading && !error) {
-    const path = asPath.split('#')[0].split('?')[0];
+    const path = asPath.split('#')[0]?.split('?')[0] ?? '';
 
     if (INDEXABLE_ROUTES.includes(path) && !indexable) {
       throw Error(`${asPath} is included in sitemap but isn't indexable.`);

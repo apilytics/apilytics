@@ -11,6 +11,8 @@ const METRIC_TYPES = {
   errors: 'errors',
 } as const;
 
+type MetricType = ValueOf<typeof METRIC_TYPES>;
+
 interface Props extends GeneralData {
   data: TimeFrameData[];
 }
@@ -24,7 +26,7 @@ export const TimeFrameMetrics: React.FC<Props> = ({
   errorRateGrowth,
   data,
 }) => {
-  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(METRIC_TYPES.requests);
+  const [metricType, setMetricType] = useState<MetricType>(METRIC_TYPES.requests);
   const positiveTotalRequestsGrowth = totalRequestsGrowth >= 0;
   const positiveTotalErrorsGrowth = totalErrorsGrowth <= 0;
   const positiveErrorRateGrowth = errorRateGrowth <= 0;

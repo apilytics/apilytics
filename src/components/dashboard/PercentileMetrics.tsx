@@ -15,14 +15,14 @@ const METRIC_TYPES = {
   memoryTotal: 'memoryTotal',
 } as const;
 
+type MetricType = ValueOf<typeof METRIC_TYPES>;
+
 interface Props {
   data: PercentileData[];
 }
 
 export const PercentileMetrics: React.FC<Props> = ({ data }) => {
-  const [metricType, setMetricType] = useState<ValueOf<typeof METRIC_TYPES>>(
-    METRIC_TYPES.responseTimes,
-  );
+  const [metricType, setMetricType] = useState<MetricType>(METRIC_TYPES.responseTimes);
 
   const attributes = {
     responseTimes: {

@@ -54,7 +54,7 @@ const isFirstVersionGreater = (first: string, second: string): boolean => {
   const firstArr = first.split('.').map((val) => Number(val));
   const secondArr = second.split('.').map((val) => Number(val));
   for (let i = 0; i < secondArr.length; i++) {
-    if (firstArr[i] < (secondArr[i] ?? 0)) {
+    if ((firstArr[i] ?? 0) < (secondArr[i] ?? 0)) {
       return false;
     }
   }
