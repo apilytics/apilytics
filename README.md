@@ -1,6 +1,6 @@
 # Apilytics 📈
 
-[![ci](https://github.com/blomqma/apilytics/actions/workflows/ci.yml/badge.svg)](https://github.com/blomqma/apilytics/actions)
+[![ci](https://github.com/apilytics/apilytics/actions/workflows/ci.yml/badge.svg)](https://github.com/apilytics/apilytics/actions)
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@
 
 ## Get the development environment up and running
 
-1. Clone this repository with: `git clone git@github.com:blomqma/apilytics.git`
+1. Clone this repository with: `git clone git@github.com:apilytics/apilytics.git`
 
 2. `cd apilytics`
 
@@ -30,7 +30,7 @@
 
 ## Seeding database with test data
 
-- Run `yarn seed` to manually seed your database with the seeding script in `src/prisma/seed.ts`. The script will also be automatically run after `yarn migrate`. More info at: https://www.prisma.io/docs/guides/database/seed-database
+- Run `yarn seed` to manually seed your database with the seeding script in `src/prisma/seed.ts`. The script will also be automatically run after the initial `yarn migrate`. More info at: https://www.prisma.io/docs/guides/database/seed-database
 
 ## Troubleshooting
 
@@ -44,3 +44,7 @@
 
 1. Run `yarn generate` outside the container, so the types matching the latest migrations populate your local `node_modules`.
 2. 🍻
+
+---
+
+![Dashboard](dashboard.png)
