@@ -30,7 +30,7 @@
 
 ## Seeding database with test data
 
-- Run `yarn seed` to manually seed your database with the seeding script in `src/prisma/seed.ts`. The script will also be automatically run after `yarn migrate`. More info at: https://www.prisma.io/docs/guides/database/seed-database
+- Run `yarn seed` to manually seed your database with the seeding script in `src/prisma/seed.ts`. The script will also be automatically run after the initial `yarn migrate`. More info at: https://www.prisma.io/docs/guides/database/seed-database
 
 ## Troubleshooting
 
@@ -44,3 +44,7 @@
 
 1. Run `yarn generate` outside the container, so the types matching the latest migrations populate your local `node_modules`.
 2. 🍻
+
+---
+
+![Dashboard](dashboard.png)
