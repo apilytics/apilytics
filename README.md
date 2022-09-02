@@ -1,6 +1,6 @@
 # Apilytics 📈
 
-[![ci](https://github.com/blomqma/apilytics/actions/workflows/ci.yml/badge.svg)](https://github.com/blomqma/apilytics/actions)
+[![ci](https://github.com/apilytics/apilytics/actions/workflows/ci.yml/badge.svg)](https://github.com/apilytics/apilytics/actions)
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@
 
 ## Get the development environment up and running
 
-1. Clone this repository with: `git clone git@github.com:blomqma/apilytics.git`
+1. Clone this repository with: `git clone git@github.com:apilytics/apilytics.git`
 
 2. `cd apilytics`
 
